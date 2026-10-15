@@ -119,8 +119,14 @@ export function splitDelegationHash(h: Hex): { hi: bigint; lo: bigint } {
   return { hi: v >> 128n, lo: v & U128_MAX };
 }
 
-/** Build the circuit input map and every derived commitment (no proving). */
-export async function buildWitnessInputs(req: MandateComplianceInputs): Promise<WitnessInputs> {
+/**
+ * Build the circuit input map and every derived commitment (no proving). `skipStatementChecks` leaves the
+ * cap and expiry checks to the circuit itself (used to demonstrate that the circuit refuses).
+ */
+export async function buildWitnessInputs(
+  req: MandateComplianceInputs,
+  opts: { skipStatementChecks?: boolean } = {},
+): Promise<WitnessInputs> {
   await initPoseidon();
   const { mandate, running, payment } = req;
   const { amount, nonce, claimedTime, chainId } = payment;
@@ -130,8 +136,10 @@ export async function buildWitnessInputs(req: MandateComplianceInputs): Promise<
   if (chainId < 0n || chainId >= FIELD_MODULUS) throw new RangeError("chainId must be below the field modulus");
   const newTotal = running.total + amount;
   if (newTotal > U128_MAX) throw new RangeError("running total overflows u128");
-  if (newTotal > mandate.cap) throw new RangeError("payment would exceed the mandate cap: no proof exists");
-  if (claimedTime > mandate.expiry) throw new RangeError("claimed time is after the mandate expiry: no proof exists");
+  if (!opts.skipStatementChecks) {
+    if (newTotal > mandate.cap) throw new RangeError("payment would exceed the mandate cap: no proof exists");
+    if (claimedTime > mandate.expiry) throw new RangeError("claimed time is after the mandate expiry: no proof exists");
+  }
 
   const tree = buildAllowlistTree(mandate.allowlist);
   const { index, path } = allowlistPath(tree, payment.payee);
@@ -252,6 +260,25 @@ export async function proveMandateCompliance(
     newRunning: w.newRunning,
     enforcerArgs: encodeEnforcerArgs(req.payment.nonce, req.payment.claimedTime, newRc, proof),
   };
+}
+
+/**
+ * Execute the circuit on the request without the TypeScript pre-checks and without proving. Returns the
+ * circuit's own verdict: `ok: false` with the failing constraint's message when no witness (and thus no
+ * proof) can exist, e.g. "cap exceeded".
+ */
+export async function checkStatement(
+  req: MandateComplianceInputs,
+  opts: ProverOptions = {},
+): Promise<{ ok: boolean; error?: string }> {
+  const w = await buildWitnessInputs(req, { skipStatementChecks: true });
+  const { noir } = await engine(opts);
+  try {
+    await noir.execute(w.inputs);
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
 }
 
 /** Off-chain check with bb.js (same keccak ZK flavour as the Solidity verifier). */

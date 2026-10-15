@@ -159,7 +159,12 @@ oracle with zero knowledge):
   It refuses before proving if the statement is false (cap, allowlist, expiry), and checks that bb.js
   returns exactly the public inputs it computed.
 * `mandateCommitment`, `runningCommitment`, `buildAllowlistTree`, `allowlistPath`,
-  `initialRunningCommitment`, `encodeEnforcerArgs`, `verifyMandateCompliance`.
+  `initialRunningCommitment`, `encodeEnforcerArgs`, `verifyMandateCompliance`, and `checkStatement`
+  (runs the circuit without the TypeScript pre-checks and without proving, returning the circuit's
+  own verdict, e.g. "cap exceeded").
+* Gas limit: the router reports an out-of-gas verifier as an invalid proof, so send redemptions with
+  `eth_estimateGas` plus a margin, never a hand-picked limit. FISCO BCOS charges far more gas for the
+  same verification than an Ethereum-style chain (see `apps/agent/data/zk-fisco.json`).
 * CLI: `pnpm --dir circuits prove prove request.json --out proof.json`, `... verify proof.json`,
   `... commit mandate.json`, `... initial`.
 

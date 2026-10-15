@@ -1,0 +1,382 @@
+{
+  "label": "Live run with real transactions and real UltraHonk proofs. Test units (tHKD) only. Not audited.",
+  "ledger": "fisco",
+  "rpcChainId": 20200,
+  "evmChainId": "20200",
+  "badge": "FISCO BCOS (team-run consortium ledger)",
+  "runAt": "2026-10-15T23:23:07.114Z",
+  "durationMs": 19447,
+  "toolchain": {
+    "nargo": "1.0.0-rc.5",
+    "noirc": "1.0.0-rc.5+0f759ffe9176ffbbe7f67b159ac2c3202e0748a0",
+    "bb": "5.2.1",
+    "noir_js": "1.0.0-rc.5",
+    "bb.js": "5.2.1",
+    "installed": {
+      "noir_js": "1.0.0-rc.5",
+      "bb.js": "5.2.1"
+    },
+    "verifierSolc": "0.8.27+commit.40a35a09",
+    "projectSolc": "0.8.23",
+    "evmVersion": "london",
+    "foundry": "1.8.5"
+  },
+  "principal": {
+    "account": "0x4F446A1068B429a931e3fb1Fc81e6c37FD13E886",
+    "did": "did:pkh:eip155:20200:0x4f446a1068b429a931e3fb1fc81e6c37fd13e886",
+    "signer": "scripted passkey (software P-256 key)"
+  },
+  "agent": {
+    "label": "agent-ying (private-mandate wallet)",
+    "wallet": "0x6712FF94f5f22B1D51Fc46B55F4b874289d9cAFF",
+    "agentId": "13",
+    "attestTxs": [],
+    "note": "agent-ying already holds passport #1 bound to another principal on fisco. guest-arena already holds passport #12 bound to another principal on fisco. Using agent Ying's dedicated private-mandate wallet (derived at runtime from Ying's testnet key, never stored) with its own passport bound to this principal."
+  },
+  "mandate": {
+    "mandateHash": "0x44dfbde1dca8a2fb0fd8d307610484f326aaf0276d1725a6bb86ce84df6ee5cf",
+    "delegationHash": "0x73f4d5bc244a7715fd259489665ba9659e43a7861aeb7985a4d0d9d824b43c06",
+    "commitment": "0x0bb57729e03c8d89f847902d510a8bc289d9349dd745d795eaab25d02064592a",
+    "publishTx": "0x9f85dc269b0063d5ff32591c0f8ae390876748b2e64e3314f7a9e03c4ebe6748",
+    "retiredMandate": "0x0c44172ffb9cb18972ff3ad6a9a217827d5a7eedb2140c6c06bf91da039d30ab",
+    "caveats": [
+      {
+        "name": "AllowedTargetsEnforcer",
+        "enforcer": "0x401fF9f822D1b1475272c090cea964a119F6fd23"
+      },
+      {
+        "name": "AllowedMethodsEnforcer",
+        "enforcer": "0xCe848804Adb705b3B4709e048a3Ab101770fa642"
+      },
+      {
+        "name": "ValueLteEnforcer",
+        "enforcer": "0x7D1bb83c30816847CD7ef4436c9a2492468A2125"
+      },
+      {
+        "name": "ForbiddenTargetsEnforcer",
+        "enforcer": "0x7ac856d4257CC0a9A3be8606912e9853b84a97c8"
+      },
+      {
+        "name": "GlobalPauseEnforcer",
+        "enforcer": "0x66E0dF12E1F2bFC6ed96903c4383973F5386A784"
+      },
+      {
+        "name": "AgentLineageEnforcer",
+        "enforcer": "0x2ee94183aD4cE72aee14F83bD15033A698AdBF0C"
+      },
+      {
+        "name": "MandateBindingEnforcer",
+        "enforcer": "0xF86370F739e571a0F4Afb432e1C12bE6A76fC05b"
+      },
+      {
+        "name": "ZKMandateEnforcer",
+        "enforcer": "0x5756806120CEdFC13eB942F5Ec2A6B1A5D79d4C3"
+      }
+    ],
+    "publicDocument": {
+      "kind": "yinglong.private-mandate/v1",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "principal": {
+        "account": "0x4F446A1068B429a931e3fb1Fc81e6c37FD13E886",
+        "did": "did:pkh:eip155:20200:0x4f446a1068b429a931e3fb1fc81e6c37fd13e886"
+      },
+      "agent": {
+        "wallet": "0x6712FF94f5f22B1D51Fc46B55F4b874289d9cAFF",
+        "agentId": "13"
+      },
+      "lineageId": "yinglong:zk:private-mandate",
+      "asset": {
+        "symbol": "tHKD",
+        "address": "0xC36ca5CA4Ea8d8662d5e7c38541Ac4A14b712424"
+      },
+      "methods": [
+        "transfer"
+      ],
+      "jurisdiction": "hk",
+      "validity": {
+        "from": 1792102970,
+        "until": 1823642570
+      },
+      "zk": {
+        "proofType": 1,
+        "circuit": "mandate_compliance",
+        "vkHash": "0x05c62f51284e760d87811fdcc9218c1ebd0b101695ceb6cf002e43c391a48494",
+        "router": "0x154F3583800A4023FfFD955E37B60bf24CFEfC3b",
+        "enforcer": "0x5756806120CEdFC13eB942F5Ec2A6B1A5D79d4C3",
+        "commitment": "0x0bb57729e03c8d89f847902d510a8bc289d9349dd745d795eaab25d02064592a",
+        "statement": "Each payment proves in zero knowledge that the payee is in the hidden allowlist, the claimed time is not after the hidden expiry, and the running total stays within the hidden cap; the running total is carried as a hiding commitment."
+      },
+      "nonce": "0x0ca2ac338caf750781b5c0242018b03ff682c6930cfbcd92a7dc3f1bdc18433d"
+    },
+    "sealedBy": "scripted passkey (software P-256 key)"
+  },
+  "demoDisclosure": {
+    "note": "Disclosed in this file for the demo narrative only. On-chain there is only the commitment; the salt, the expiry and the blindings are never written anywhere.",
+    "hiddenCap": "10000000000",
+    "hiddenAllowlist": [
+      {
+        "label": "Harbour Homes",
+        "address": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6"
+      },
+      {
+        "label": "HBU bursar",
+        "address": "0x81085F62863966c3c21ac5fAe866D36f8766980F"
+      },
+      {
+        "label": "Kowloon Food Mart",
+        "address": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc"
+      }
+    ]
+  },
+  "payments": [
+    {
+      "label": "rent deposit to Harbour Homes",
+      "payee": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6",
+      "amount": "4000000000",
+      "nonce": "1",
+      "claimedTime": "1792106571",
+      "proveMs": 1993,
+      "proofBytes": 7616,
+      "tx": "0xab553f9cb9ba3b3652d954104c5b784d93f2cbca77e39bce9d912a9e1bac6d0f",
+      "ok": true,
+      "gasUsed": "9462976",
+      "gasLimit": "12323374",
+      "block": "312",
+      "received": "4000000000",
+      "oldRunningCommitment": "0x0b63a53787021a4a962a452c2921b3663aff1ffd8d5510540f8e659e782956f1",
+      "newRunningCommitment": "0x1baac32ff2c5e74e95da5706d9f0898f13b655205a31ab8cfadb7bf117c39313",
+      "storedCommitmentMatches": true,
+      "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0xab553f9cb9ba3b3652d954104c5b784d93f2cbca77e39bce9d912a9e1bac6d0f"
+    },
+    {
+      "label": "course fee to the HBU bursar",
+      "payee": "0x81085F62863966c3c21ac5fAe866D36f8766980F",
+      "amount": "3500000000",
+      "nonce": "2",
+      "claimedTime": "1792106578",
+      "proveMs": 664,
+      "proofBytes": 7616,
+      "tx": "0xe538290232b780f50e47cfa8c0b6037d6f3a04c82fb7938acf2438a62e8c0939",
+      "ok": true,
+      "gasUsed": "9462986",
+      "gasLimit": "12323387",
+      "block": "313",
+      "received": "3500000000",
+      "oldRunningCommitment": "0x1baac32ff2c5e74e95da5706d9f0898f13b655205a31ab8cfadb7bf117c39313",
+      "newRunningCommitment": "0x177e9ec879b524657122d16d02f7febb2e8e998e65692ac6285dcc40143c7102",
+      "storedCommitmentMatches": true,
+      "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0xe538290232b780f50e47cfa8c0b6037d6f3a04c82fb7938acf2438a62e8c0939"
+    }
+  ],
+  "overCap": {
+    "label": "groceries at Kowloon Food Mart",
+    "payee": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc",
+    "attemptedAmount": "3000000000",
+    "runningTotalBefore": "7500000000",
+    "proverRefusal": "payment would exceed the mandate cap: no proof exists",
+    "circuitRefusal": "Circuit execution failed: cap exceeded"
+  },
+  "forged": {
+    "description": "payment 2's proof re-used for the 3,000 tHKD over-cap transfer under nonce 3",
+    "simulation": "InvalidMandateProof()",
+    "tx": "0x119f8389e965ecdfda9b90bfc621d71697bbb20746e41565aa1800c4dd9ce19e",
+    "ok": false,
+    "gasUsed": "1021310",
+    "gasLimit": "12000000",
+    "block": "314",
+    "revert": "InvalidMandateProof()",
+    "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0x119f8389e965ecdfda9b90bfc621d71697bbb20746e41565aa1800c4dd9ce19e"
+  },
+  "replayed": {
+    "description": "payment 2's redemption (same proof, same nonce) sent again",
+    "simulation": "NonceAlreadyUsed(2)",
+    "tx": "0x96374ae5fc4768a4bc4f5f15b3299c43038f63f5d84e6a0278c9575c1ffc75c3",
+    "ok": false,
+    "gasUsed": "543810",
+    "gasLimit": "12000000",
+    "block": "315",
+    "revert": "NonceAlreadyUsed(2)",
+    "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0x96374ae5fc4768a4bc4f5f15b3299c43038f63f5d84e6a0278c9575c1ffc75c3"
+  },
+  "finalRunningCommitment": "0x177e9ec879b524657122d16d02f7febb2e8e998e65692ac6285dcc40143c7102",
+  "steps": [
+    {
+      "step": "zk stack",
+      "ledger": "fisco",
+      "router": "0x154F3583800A4023FfFD955E37B60bf24CFEfC3b",
+      "enforcer": "0x5756806120CEdFC13eB942F5Ec2A6B1A5D79d4C3",
+      "verifier": "0xC980F05eb0aF368bFFDD78A865503b311856FF48",
+      "evmChainId": "20200",
+      "rpcChainId": 20200
+    },
+    {
+      "step": "principal",
+      "ledger": "fisco",
+      "account": "0x4F446A1068B429a931e3fb1Fc81e6c37FD13E886",
+      "did": "did:pkh:eip155:20200:0x4f446a1068b429a931e3fb1fc81e6c37fd13e886",
+      "signer": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "passport",
+      "ledger": "fisco",
+      "agent": "agent-ying (private-mandate wallet)",
+      "wallet": "0x6712FF94f5f22B1D51Fc46B55F4b874289d9cAFF",
+      "agentId": "13",
+      "attestTxs": [],
+      "note": "agent-ying already holds passport #1 bound to another principal on fisco. guest-arena already holds passport #12 bound to another principal on fisco. Using agent Ying's dedicated private-mandate wallet (derived at runtime from Ying's testnet key, never stored) with its own passport bound to this principal."
+    },
+    {
+      "step": "seal",
+      "ledger": "fisco",
+      "publishTx": "0x9f85dc269b0063d5ff32591c0f8ae390876748b2e64e3314f7a9e03c4ebe6748",
+      "retiredMandate": "0x0c44172ffb9cb18972ff3ad6a9a217827d5a7eedb2140c6c06bf91da039d30ab",
+      "mandateHash": "0x44dfbde1dca8a2fb0fd8d307610484f326aaf0276d1725a6bb86ce84df6ee5cf",
+      "delegationHash": "0x73f4d5bc244a7715fd259489665ba9659e43a7861aeb7985a4d0d9d824b43c06",
+      "commitment": "0x0bb57729e03c8d89f847902d510a8bc289d9349dd745d795eaab25d02064592a",
+      "caveats": [
+        "AllowedTargetsEnforcer",
+        "AllowedMethodsEnforcer",
+        "ValueLteEnforcer",
+        "ForbiddenTargetsEnforcer",
+        "GlobalPauseEnforcer",
+        "AgentLineageEnforcer",
+        "MandateBindingEnforcer",
+        "ZKMandateEnforcer"
+      ],
+      "sealedBy": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "payment 1: rent deposit to Harbour Homes",
+      "ledger": "fisco",
+      "label": "rent deposit to Harbour Homes",
+      "payee": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6",
+      "amount": "4000000000",
+      "nonce": "1",
+      "claimedTime": "1792106571",
+      "proveMs": 1993,
+      "proofBytes": 7616,
+      "tx": "0xab553f9cb9ba3b3652d954104c5b784d93f2cbca77e39bce9d912a9e1bac6d0f",
+      "ok": true,
+      "gasUsed": "9462976",
+      "gasLimit": "12323374",
+      "block": "312",
+      "received": "4000000000",
+      "oldRunningCommitment": "0x0b63a53787021a4a962a452c2921b3663aff1ffd8d5510540f8e659e782956f1",
+      "newRunningCommitment": "0x1baac32ff2c5e74e95da5706d9f0898f13b655205a31ab8cfadb7bf117c39313",
+      "storedCommitmentMatches": true,
+      "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0xab553f9cb9ba3b3652d954104c5b784d93f2cbca77e39bce9d912a9e1bac6d0f"
+    },
+    {
+      "step": "payment 2: course fee to the HBU bursar",
+      "ledger": "fisco",
+      "label": "course fee to the HBU bursar",
+      "payee": "0x81085F62863966c3c21ac5fAe866D36f8766980F",
+      "amount": "3500000000",
+      "nonce": "2",
+      "claimedTime": "1792106578",
+      "proveMs": 664,
+      "proofBytes": 7616,
+      "tx": "0xe538290232b780f50e47cfa8c0b6037d6f3a04c82fb7938acf2438a62e8c0939",
+      "ok": true,
+      "gasUsed": "9462986",
+      "gasLimit": "12323387",
+      "block": "313",
+      "received": "3500000000",
+      "oldRunningCommitment": "0x1baac32ff2c5e74e95da5706d9f0898f13b655205a31ab8cfadb7bf117c39313",
+      "newRunningCommitment": "0x177e9ec879b524657122d16d02f7febb2e8e998e65692ac6285dcc40143c7102",
+      "storedCommitmentMatches": true,
+      "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0xe538290232b780f50e47cfa8c0b6037d6f3a04c82fb7938acf2438a62e8c0939"
+    },
+    {
+      "step": "over-cap: no proof exists",
+      "ledger": "fisco",
+      "attempted": "3000000000",
+      "proverRefusal": "payment would exceed the mandate cap: no proof exists",
+      "circuitRefusal": "Circuit execution failed: cap exceeded"
+    },
+    {
+      "step": "forged proof reverted on-chain",
+      "ledger": "fisco",
+      "description": "payment 2's proof re-used for the 3,000 tHKD over-cap transfer under nonce 3",
+      "simulation": "InvalidMandateProof()",
+      "tx": "0x119f8389e965ecdfda9b90bfc621d71697bbb20746e41565aa1800c4dd9ce19e",
+      "ok": false,
+      "gasUsed": "1021310",
+      "gasLimit": "12000000",
+      "block": "314",
+      "revert": "InvalidMandateProof()",
+      "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0x119f8389e965ecdfda9b90bfc621d71697bbb20746e41565aa1800c4dd9ce19e"
+    },
+    {
+      "step": "replayed proof reverted on-chain",
+      "ledger": "fisco",
+      "description": "payment 2's redemption (same proof, same nonce) sent again",
+      "simulation": "NonceAlreadyUsed(2)",
+      "tx": "0x96374ae5fc4768a4bc4f5f15b3299c43038f63f5d84e6a0278c9575c1ffc75c3",
+      "ok": false,
+      "gasUsed": "543810",
+      "gasLimit": "12000000",
+      "block": "315",
+      "revert": "NonceAlreadyUsed(2)",
+      "explorer": "https://api.yinglong-agent.tech/v1/tx/fisco/0x96374ae5fc4768a4bc4f5f15b3299c43038f63f5d84e6a0278c9575c1ffc75c3"
+    }
+  ],
+  "supervisorView": {
+    "agentId": "13",
+    "agentWallet": "0x6712FF94f5f22B1D51Fc46B55F4b874289d9cAFF",
+    "principal": "did:pkh:eip155:20200:0x4f446a1068b429a931e3fb1fc81e6c37fd13e886",
+    "ledger": "fisco",
+    "commitment": "0x0bb57729e03c8d89f847902d510a8bc289d9349dd745d795eaab25d02064592a",
+    "mandateHash": "0x44dfbde1dca8a2fb0fd8d307610484f326aaf0276d1725a6bb86ce84df6ee5cf",
+    "delegationHash": "0x73f4d5bc244a7715fd259489665ba9659e43a7861aeb7985a4d0d9d824b43c06",
+    "runningCommitment": "0x177e9ec879b524657122d16d02f7febb2e8e998e65692ac6285dcc40143c7102",
+    "proofStatus": "verified on-chain: 2 payments accepted, over-cap payment unprovable, forged and replayed proofs rejected",
+    "verifierTx": {
+      "ledger": "fisco",
+      "chainId": 20200,
+      "txHash": "0xe538290232b780f50e47cfa8c0b6037d6f3a04c82fb7938acf2438a62e8c0939"
+    },
+    "verifier": {
+      "router": "0x154F3583800A4023FfFD955E37B60bf24CFEfC3b",
+      "enforcer": "0x5756806120CEdFC13eB942F5Ec2A6B1A5D79d4C3",
+      "honkVerifier": "0xC980F05eb0aF368bFFDD78A865503b311856FF48",
+      "vkHash": "0x05c62f51284e760d87811fdcc9218c1ebd0b101695ceb6cf002e43c391a48494",
+      "proofType": 1
+    },
+    "statements": [
+      {
+        "statement": "The mandate behind the commitment exists and the agent knows it (cap, payee allowlist, expiry hidden).",
+        "result": "proved",
+        "txHash": "0xab553f9cb9ba3b3652d954104c5b784d93f2cbca77e39bce9d912a9e1bac6d0f"
+      },
+      {
+        "statement": "Payment 1 (rent deposit to Harbour Homes): payee is in the hidden allowlist, claimed time is before the hidden expiry, running total stays within the hidden cap.",
+        "result": "proved and verified on-chain",
+        "amount": "4000000000",
+        "txHash": "0xab553f9cb9ba3b3652d954104c5b784d93f2cbca77e39bce9d912a9e1bac6d0f"
+      },
+      {
+        "statement": "Payment 2 (course fee to the HBU bursar): payee is in the hidden allowlist, claimed time is before the hidden expiry, running total stays within the hidden cap.",
+        "result": "proved and verified on-chain",
+        "amount": "3500000000",
+        "txHash": "0xe538290232b780f50e47cfa8c0b6037d6f3a04c82fb7938acf2438a62e8c0939"
+      },
+      {
+        "statement": "A third payment of 3,000 tHKD would push the running total over the hidden cap.",
+        "result": "no proof exists (Circuit execution failed: cap exceeded)"
+      },
+      {
+        "statement": "A forged proof (payment 2's proof for the over-cap transfer) is rejected.",
+        "result": "InvalidMandateProof()",
+        "txHash": "0x119f8389e965ecdfda9b90bfc621d71697bbb20746e41565aa1800c4dd9ce19e"
+      },
+      {
+        "statement": "A replayed proof (payment 2 resent) is rejected.",
+        "result": "NonceAlreadyUsed(2)",
+        "txHash": "0x96374ae5fc4768a4bc4f5f15b3299c43038f63f5d84e6a0278c9575c1ffc75c3"
+      }
+    ],
+    "note": "Amounts and payees of executed payments are public on the ledger; the cap, the rest of the allowlist, the expiry and the salt are not. Test units only."
+  }
+}
