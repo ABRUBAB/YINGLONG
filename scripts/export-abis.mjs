@@ -33,7 +33,14 @@ const CONTRACTS = [
   ["ProtectedPayment.sol", "ProtectedPayment"],
   ["SignedQuoteSettlement.sol", "SignedQuoteSettlement"],
   ["ConditionalPaymentInstructions.sol", "ConditionalPaymentInstructions"],
-  ["Errors.sol", null],
+  ["AgentLineageEnforcer.sol", "AgentLineageEnforcer"],
+  ["VerifiedPayeeEnforcer.sol", "VerifiedPayeeEnforcer"],
+  ["ReserveFloorEnforcer.sol", "ReserveFloorEnforcer"],
+  ["SuitabilityEnforcer.sol", "SuitabilityEnforcer"],
+  ["GlobalPauseEnforcer.sol", "GlobalPauseEnforcer"],
+  ["ReputationGateEnforcer.sol", "ReputationGateEnforcer"],
+  ["ForbiddenTargetsEnforcer.sol", "ForbiddenTargetsEnforcer"],
+  ["YinglongCreate2Deployer.sol", "YinglongCreate2Deployer"],
 ];
 
 const index = [];
