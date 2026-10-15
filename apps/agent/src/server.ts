@@ -10,6 +10,7 @@ import { ledgerContext } from "./chain/ledger";
 import { providerStatus } from "./llm/provider";
 import { ask, bypass, declineApproval, demoApprove, execute, hijack, proposals, submitApproval } from "./pipeline";
 import { receiptLog, type ReceiptRecord } from "./receipts";
+import { attempt, challenge, session } from "./challenge";
 import { apiJson } from "./store";
 import { config, onboard, PRINCIPALS, world, type PrincipalId, type PrincipalState } from "./world";
 
@@ -301,6 +302,16 @@ app.post("/v1/mandates/compile", async (c) => {
       hashRing: hashRingGeometry(compiled.delegationHash),
     }),
   );
+});
+
+app.get("/v1/challenge/session", (c) => c.json(apiJson(session())));
+app.get("/v1/challenge/attempts", (c) => c.json(apiJson(challenge.get().attempts.slice(-200).reverse().map(({ text: _t, ...rest }) => rest))));
+app.post("/v1/challenge/attempt", async (c) => {
+  const b = z
+    .object({ handle: z.string().max(40).optional(), text: z.string().min(1).max(1000), attachment: z.string().max(4000).optional(), bypass: z.boolean().optional() })
+    .parse(await c.req.json());
+  const ip = c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  return c.json(apiJson(await attempt({ ip, ...b })));
 });
 
 app.get("/v1/registry/agents", async (c) => {

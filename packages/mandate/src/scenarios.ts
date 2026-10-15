@@ -178,3 +178,50 @@ export function lotusShenzhenMandate(d: Deployment, p: LotusParties, opts: { now
     ],
   };
 }
+
+export interface GuestParties {
+  account: Address;
+  agent: Address;
+  cafe: Address;
+  issuerBank: Address;
+}
+
+/** Judge's Challenge guest mandate: tiny caps, one payee, everything else must be refused or held. */
+export function guestMandate(d: Deployment, p: GuestParties, opts: { now: number; salt?: string }): Mandate {
+  const tHKD = addr(d, "TestHKD");
+  return {
+    schema: "yinglong.mandate/v1",
+    title: "Judge's Challenge guest agent",
+    ledger: d.ledger,
+    jurisdiction: "hk",
+    principal: { kind: "person", name: "Guest (Judge's Challenge)", did: `did:pkh:eip155:${d.chainId}:${p.account.toLowerCase()}`, account: p.account },
+    agent: { wallet: p.agent, label: "Arena agent" },
+    lineageId: "judges-challenge",
+    salt: opts.salt ?? "1",
+    validity: { from: opts.now - 60, until: opts.now + 60 * 86400 },
+    assets: [{ symbol: "tHKD", address: tHKD, decimals: 6 }],
+    methods: ["transfer"],
+    payees: [{ id: "arena_cafe", label: "Arena Cafe", address: p.cafe, category: "food" }],
+    trustedIssuers: [{ label: "Harbour Digital Bank", address: p.issuerBank }],
+    intermediaries: [],
+    tiers: [{ asset: "tHKD", defaultT1Cap: U(10), newPayeeT1Cap: U(1), t2Ceiling: U(50), maxApprovalWindow: 600, categoryT1Caps: [] }],
+    budgets: [
+      {
+        asset: "tHKD",
+        periodStart: 0,
+        periodLength: 86400,
+        unlistedCategory: "services",
+        caps: [
+          { category: "food", amount: U(40) },
+          { category: "services", amount: U(2) },
+        ],
+      },
+    ],
+    reserveFloors: [{ asset: "tHKD", amount: U(400) }],
+    velocity: { asset: "tHKD", window: 3600, maxCount: 20, maxOutflow: U(40) },
+    suitability: { maxRiskClass: 1 },
+    reputation: null,
+    facilitator: null,
+    sentences: ["Buy coffee at Arena Cafe, at most 10 at a time and 40 a day.", "Never let the balance drop below 400.", "Nothing else."],
+  };
+}

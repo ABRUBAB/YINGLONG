@@ -2,7 +2,7 @@ import { encodeFunctionData, keccak256, stringToBytes, type Address, type Hex } 
 import { abi, type LedgerName } from "@yinglong/sdk";
 import { seededPasskey, type PasskeySigner } from "@yinglong/sdk/account";
 import { rolePrivateKey, type Role } from "@yinglong/sdk/server";
-import { lotusShenzhenMandate, nadiaMandate, type Delegation, type Mandate } from "@yinglong/mandate";
+import { guestMandate, lotusShenzhenMandate, nadiaMandate, type Delegation, type Mandate } from "@yinglong/mandate";
 import { ledgerContext, type LedgerContext } from "./chain/ledger";
 import { companyPrincipal, personPrincipal, type Principal } from "./chain/principal";
 import { ensurePassport } from "./chain/passport";
@@ -10,7 +10,7 @@ import { guardianCalls, sealMandate } from "./chain/mandates";
 import { DATA_DIR, DocStore } from "./store";
 import { resolve } from "node:path";
 
-export type PrincipalId = "nadia" | "lotus-sz";
+export type PrincipalId = "nadia" | "lotus-sz" | "guest";
 
 export interface PrincipalConfig {
   id: PrincipalId;
@@ -48,6 +48,17 @@ export const PRINCIPALS: PrincipalConfig[] = [
     identityCode: "YL-TEST-0002",
     issuers: [{ role: "issuer-harbour-digital-bank", claim: "treasury agent of a KYB-verified company" }],
     defaultUnit: "CNY",
+  },
+  {
+    id: "guest",
+    kind: "person",
+    name: "Guest (Judge's Challenge)",
+    ledger: env("GUEST_LEDGER", env("NADIA_LEDGER", "anvil")) as LedgerName,
+    agentRole: "guest-arena",
+    agentLabel: "Arena agent",
+    identityCode: "YL-TEST-0099",
+    issuers: [{ role: "issuer-harbour-digital-bank", claim: "Judge's Challenge sandbox agent (test units only)" }],
+    defaultUnit: "tHKD",
   },
 ];
 
@@ -106,6 +117,18 @@ export async function principalHandle(id: PrincipalId): Promise<{ ctx: LedgerCon
 }
 
 function mandateFor(id: PrincipalId, ctx: LedgerContext, p: Principal, now: number): Mandate {
+  if (id === "guest") {
+    return guestMandate(
+      ctx.deployment,
+      {
+        account: p.account,
+        agent: ctx.roleAddress("guest-arena"),
+        cafe: `0x${keccak256(stringToBytes("arena-cafe")).slice(26)}` as Address,
+        issuerBank: ctx.roleAddress("issuer-harbour-digital-bank"),
+      },
+      { now, salt: String(now) },
+    );
+  }
   if (id === "nadia") {
     const m = nadiaMandate(
       ctx.deployment,
@@ -151,7 +174,9 @@ export async function onboard(id: PrincipalId, opts: { reseal?: boolean } = {}):
   // Test units: tHKD for persons; posted coin-free balance for the company on the instruction rail.
   if (cfg.kind === "person") {
     const bal = await ctx.read<bigint>({ address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi, functionName: "balanceOf", args: [p.account] });
-    if (bal < 5_000_000_000n) {
+    if (id === "guest") {
+      if (bal < 450_000_000n) await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 500_000_000n] });
+    } else if (bal < 5_000_000_000n) {
       await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 20_000_000_000n] });
       await ctx.write("deployer", { address: ctx.addr("TestUSD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 3_000_000_000n] });
     }
