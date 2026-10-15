@@ -1,0 +1,492 @@
+{
+  "schema": "yinglong.codehash-compare/1",
+  "generatedAt": "2026-10-15T21:18:50.563Z",
+  "method": "Same forge artifacts (solc 0.8.23, london, 200 runs, no metadata hash) deployed by the same deployer key from nonce 0 on each chain. EXTCODEHASH read on-chain with the opcode; masked hash zeroes every immutable slot listed in the artifact's immutableReferences.",
+  "comparisons": [
+    {
+      "anvilFile": "deployments/anvil-spike-31337.json",
+      "anvilChainId": 31337,
+      "fiscoChainId": 20200,
+      "anvilHardfork": "london",
+      "allAddressesEqual": true,
+      "identicalRuntime": [
+        "EntryPoint",
+        "SCL_RIP7212",
+        "AllowedTargetsEnforcer",
+        "AllowedMethodsEnforcer",
+        "ValueLteEnforcer",
+        "TimestampEnforcer",
+        "LimitedCallsEnforcer",
+        "NonceEnforcer",
+        "RedeemerEnforcer",
+        "ERC20TransferAmountEnforcer",
+        "HybridDeleGatorProxy",
+        "SpikeTestToken",
+        "SenderCreator"
+      ],
+      "differOnlyInImmutables": [
+        "DelegationManager",
+        "HybridDeleGatorImpl",
+        "MultiSigDeleGatorImpl"
+      ],
+      "differOtherwise": [],
+      "perContract": [
+        {
+          "contract": "EntryPoint",
+          "fiscoAddress": "0x65005f35c005450f9E102db183672F780cD83d28",
+          "anvilAddress": "0x65005f35c005450f9E102db183672F780cD83d28",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xf1b49602dc4a377ac58c29d1b826ad5ed54f25b63ddcd5fc7dc9dfb5a6fac930",
+          "anvilExtcodehash": "0xf1b49602dc4a377ac58c29d1b826ad5ed54f25b63ddcd5fc7dc9dfb5a6fac930",
+          "extcodehashEqual": true,
+          "immutableSlots": 2,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "SCL_RIP7212",
+          "fiscoAddress": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f",
+          "anvilAddress": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x581401b1223186fcbb91547dee1bf1a04e85ef6520fae8c614120280d80e22cf",
+          "anvilExtcodehash": "0x581401b1223186fcbb91547dee1bf1a04e85ef6520fae8c614120280d80e22cf",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "DelegationManager",
+          "fiscoAddress": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+          "anvilAddress": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xbc5a55bcfb71d710751418a34b0c9a31b50add9ffda69494f586ebe78c8504a0",
+          "anvilExtcodehash": "0xc9d73fb7cbf6123cd7e2ec74930d64e43c573655b4d31a26eb425fc4b5b5adb3",
+          "extcodehashEqual": false,
+          "immutableSlots": 7,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "differingImmutables": [
+            {
+              "astId": "5485",
+              "fisco": "0x44a2100550c7f72e9f017cb3238f7710ad7710cf969b9731cc03a4d11c471909",
+              "anvil": "0xe697ef26aec90ab86068bef1e00099309073cd9cd33b09e0f45f9ff597699ad3",
+              "meaning": "EIP712._cachedDomainSeparator"
+            },
+            {
+              "astId": "5487",
+              "fisco": "0x0000000000000000000000000000000000000000000000000000000000004ee8",
+              "anvil": "0x0000000000000000000000000000000000000000000000000000000000007a69",
+              "meaning": "EIP712._cachedChainId (chain id: FISCO 20200, anvil 31337)"
+            }
+          ],
+          "explanation": "identical except immutables set in the constructor: EIP712._cachedDomainSeparator, EIP712._cachedChainId (chain id: FISCO 20200, anvil 31337)"
+        },
+        {
+          "contract": "HybridDeleGatorImpl",
+          "fiscoAddress": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+          "anvilAddress": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xbc1bd99a190c342a6f3f8b332d6e76f137d89c93b10d4ad45daf0db79dd58286",
+          "anvilExtcodehash": "0x576388897b7824f13382112029f20a9361452682defa22dc458a6b01cfea8883",
+          "extcodehashEqual": false,
+          "immutableSlots": 37,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "differingImmutables": [
+            {
+              "astId": "5485",
+              "fisco": "0xa207cbf40e79024a41ee13a310687eea0082c59041e350fcfc51d5fecbea4f2a",
+              "anvil": "0xcdad84e6e715305c9add22b3d17aa0aa38c2e2b0e13644549889fcb1edea05ea",
+              "meaning": "EIP712._cachedDomainSeparator"
+            },
+            {
+              "astId": "5487",
+              "fisco": "0x0000000000000000000000000000000000000000000000000000000000004ee8",
+              "anvil": "0x0000000000000000000000000000000000000000000000000000000000007a69",
+              "meaning": "EIP712._cachedChainId (chain id: FISCO 20200, anvil 31337)"
+            }
+          ],
+          "explanation": "identical except immutables set in the constructor: EIP712._cachedDomainSeparator, EIP712._cachedChainId (chain id: FISCO 20200, anvil 31337)"
+        },
+        {
+          "contract": "MultiSigDeleGatorImpl",
+          "fiscoAddress": "0x05282A658456a1444CE458d9F8bcb6D884E69f26",
+          "anvilAddress": "0x05282A658456a1444CE458d9F8bcb6D884E69f26",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x84ff5b738e017e243839d3a232719ea1b3b9114f23e127296d358b4c2a5aefab",
+          "anvilExtcodehash": "0x5e120359bebb332ef8d9e94fb6244b0078e88d38955338d27d1656917577ca0c",
+          "extcodehashEqual": false,
+          "immutableSlots": 37,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "differingImmutables": [
+            {
+              "astId": "5485",
+              "fisco": "0xd9628248d539552e4ab29826ab542a6f315ec9584f8a718a32e44843bb04a2e7",
+              "anvil": "0x372673729f451d31b9b04c758585cde38624d47335e8b47600d044f07cc6b6b5",
+              "meaning": "EIP712._cachedDomainSeparator"
+            },
+            {
+              "astId": "5487",
+              "fisco": "0x0000000000000000000000000000000000000000000000000000000000004ee8",
+              "anvil": "0x0000000000000000000000000000000000000000000000000000000000007a69",
+              "meaning": "EIP712._cachedChainId (chain id: FISCO 20200, anvil 31337)"
+            }
+          ],
+          "explanation": "identical except immutables set in the constructor: EIP712._cachedDomainSeparator, EIP712._cachedChainId (chain id: FISCO 20200, anvil 31337)"
+        },
+        {
+          "contract": "AllowedTargetsEnforcer",
+          "fiscoAddress": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+          "anvilAddress": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3",
+          "anvilExtcodehash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "AllowedMethodsEnforcer",
+          "fiscoAddress": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+          "anvilAddress": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2",
+          "anvilExtcodehash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "ValueLteEnforcer",
+          "fiscoAddress": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB",
+          "anvilAddress": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e",
+          "anvilExtcodehash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "TimestampEnforcer",
+          "fiscoAddress": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C",
+          "anvilAddress": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324",
+          "anvilExtcodehash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "LimitedCallsEnforcer",
+          "fiscoAddress": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3",
+          "anvilAddress": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a",
+          "anvilExtcodehash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "NonceEnforcer",
+          "fiscoAddress": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+          "anvilAddress": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf",
+          "anvilExtcodehash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "RedeemerEnforcer",
+          "fiscoAddress": "0x586B8032Db3b29287D205862C78dC14C69CFdC30",
+          "anvilAddress": "0x586B8032Db3b29287D205862C78dC14C69CFdC30",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220",
+          "anvilExtcodehash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "ERC20TransferAmountEnforcer",
+          "fiscoAddress": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+          "anvilAddress": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677",
+          "anvilExtcodehash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "HybridDeleGatorProxy",
+          "fiscoAddress": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+          "anvilAddress": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x8a909b59f80272a7f9361d39cc15f2e956f710e8b385bd8d2e7d604d1f04a4e6",
+          "anvilExtcodehash": "0x8a909b59f80272a7f9361d39cc15f2e956f710e8b385bd8d2e7d604d1f04a4e6",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "SpikeTestToken",
+          "fiscoAddress": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+          "anvilAddress": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xdcb0a4f389e153b89e1524ca0ce3b9c50a11ce082be9f8567f7808964329f95d",
+          "anvilExtcodehash": "0xdcb0a4f389e153b89e1524ca0ce3b9c50a11ce082be9f8567f7808964329f95d",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "SenderCreator",
+          "fiscoAddress": "0xd168c796E6Db529A15869341e3b4461a22C59Eee",
+          "anvilAddress": "0xd168c796E6Db529A15869341e3b4461a22C59Eee",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xf7ef70c5f65dd3a86b30faa8382f6ef083533f3aee47ee62e4bbe7993dfeece4",
+          "anvilExtcodehash": "0xf7ef70c5f65dd3a86b30faa8382f6ef083533f3aee47ee62e4bbe7993dfeece4",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        }
+      ]
+    },
+    {
+      "anvilFile": "deployments/anvil-spike-20200.json",
+      "anvilChainId": 20200,
+      "fiscoChainId": 20200,
+      "anvilHardfork": "london",
+      "allAddressesEqual": true,
+      "identicalRuntime": [
+        "EntryPoint",
+        "SCL_RIP7212",
+        "DelegationManager",
+        "HybridDeleGatorImpl",
+        "MultiSigDeleGatorImpl",
+        "AllowedTargetsEnforcer",
+        "AllowedMethodsEnforcer",
+        "ValueLteEnforcer",
+        "TimestampEnforcer",
+        "LimitedCallsEnforcer",
+        "NonceEnforcer",
+        "RedeemerEnforcer",
+        "ERC20TransferAmountEnforcer",
+        "HybridDeleGatorProxy",
+        "SpikeTestToken",
+        "SenderCreator"
+      ],
+      "differOnlyInImmutables": [],
+      "differOtherwise": [],
+      "perContract": [
+        {
+          "contract": "EntryPoint",
+          "fiscoAddress": "0x65005f35c005450f9E102db183672F780cD83d28",
+          "anvilAddress": "0x65005f35c005450f9E102db183672F780cD83d28",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xf1b49602dc4a377ac58c29d1b826ad5ed54f25b63ddcd5fc7dc9dfb5a6fac930",
+          "anvilExtcodehash": "0xf1b49602dc4a377ac58c29d1b826ad5ed54f25b63ddcd5fc7dc9dfb5a6fac930",
+          "extcodehashEqual": true,
+          "immutableSlots": 2,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "SCL_RIP7212",
+          "fiscoAddress": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f",
+          "anvilAddress": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x581401b1223186fcbb91547dee1bf1a04e85ef6520fae8c614120280d80e22cf",
+          "anvilExtcodehash": "0x581401b1223186fcbb91547dee1bf1a04e85ef6520fae8c614120280d80e22cf",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "DelegationManager",
+          "fiscoAddress": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+          "anvilAddress": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xbc5a55bcfb71d710751418a34b0c9a31b50add9ffda69494f586ebe78c8504a0",
+          "anvilExtcodehash": "0xbc5a55bcfb71d710751418a34b0c9a31b50add9ffda69494f586ebe78c8504a0",
+          "extcodehashEqual": true,
+          "immutableSlots": 7,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "HybridDeleGatorImpl",
+          "fiscoAddress": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+          "anvilAddress": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xbc1bd99a190c342a6f3f8b332d6e76f137d89c93b10d4ad45daf0db79dd58286",
+          "anvilExtcodehash": "0xbc1bd99a190c342a6f3f8b332d6e76f137d89c93b10d4ad45daf0db79dd58286",
+          "extcodehashEqual": true,
+          "immutableSlots": 37,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "MultiSigDeleGatorImpl",
+          "fiscoAddress": "0x05282A658456a1444CE458d9F8bcb6D884E69f26",
+          "anvilAddress": "0x05282A658456a1444CE458d9F8bcb6D884E69f26",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x84ff5b738e017e243839d3a232719ea1b3b9114f23e127296d358b4c2a5aefab",
+          "anvilExtcodehash": "0x84ff5b738e017e243839d3a232719ea1b3b9114f23e127296d358b4c2a5aefab",
+          "extcodehashEqual": true,
+          "immutableSlots": 37,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "AllowedTargetsEnforcer",
+          "fiscoAddress": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+          "anvilAddress": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3",
+          "anvilExtcodehash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "AllowedMethodsEnforcer",
+          "fiscoAddress": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+          "anvilAddress": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2",
+          "anvilExtcodehash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "ValueLteEnforcer",
+          "fiscoAddress": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB",
+          "anvilAddress": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e",
+          "anvilExtcodehash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "TimestampEnforcer",
+          "fiscoAddress": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C",
+          "anvilAddress": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324",
+          "anvilExtcodehash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "LimitedCallsEnforcer",
+          "fiscoAddress": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3",
+          "anvilAddress": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a",
+          "anvilExtcodehash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "NonceEnforcer",
+          "fiscoAddress": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+          "anvilAddress": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf",
+          "anvilExtcodehash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "RedeemerEnforcer",
+          "fiscoAddress": "0x586B8032Db3b29287D205862C78dC14C69CFdC30",
+          "anvilAddress": "0x586B8032Db3b29287D205862C78dC14C69CFdC30",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220",
+          "anvilExtcodehash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "ERC20TransferAmountEnforcer",
+          "fiscoAddress": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+          "anvilAddress": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677",
+          "anvilExtcodehash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "HybridDeleGatorProxy",
+          "fiscoAddress": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+          "anvilAddress": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0x8a909b59f80272a7f9361d39cc15f2e956f710e8b385bd8d2e7d604d1f04a4e6",
+          "anvilExtcodehash": "0x8a909b59f80272a7f9361d39cc15f2e956f710e8b385bd8d2e7d604d1f04a4e6",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "SpikeTestToken",
+          "fiscoAddress": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+          "anvilAddress": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xdcb0a4f389e153b89e1524ca0ce3b9c50a11ce082be9f8567f7808964329f95d",
+          "anvilExtcodehash": "0xdcb0a4f389e153b89e1524ca0ce3b9c50a11ce082be9f8567f7808964329f95d",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        },
+        {
+          "contract": "SenderCreator",
+          "fiscoAddress": "0xd168c796E6Db529A15869341e3b4461a22C59Eee",
+          "anvilAddress": "0xd168c796E6Db529A15869341e3b4461a22C59Eee",
+          "sameAddress": true,
+          "fiscoExtcodehash": "0xf7ef70c5f65dd3a86b30faa8382f6ef083533f3aee47ee62e4bbe7993dfeece4",
+          "anvilExtcodehash": "0xf7ef70c5f65dd3a86b30faa8382f6ef083533f3aee47ee62e4bbe7993dfeece4",
+          "extcodehashEqual": true,
+          "immutableSlots": 0,
+          "codeHashWithImmutablesZeroedEqual": true,
+          "explanation": "identical runtime bytecode"
+        }
+      ]
+    }
+  ]
+}

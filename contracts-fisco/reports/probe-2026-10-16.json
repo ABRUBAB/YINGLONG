@@ -1,0 +1,1010 @@
+{
+  "schema": "yinglong.fisco-probe/1",
+  "generatedAt": "2026-10-15T21:13:53.812Z",
+  "target": "fisco",
+  "rpc": "Web3 JSON-RPC of node0 through an SSH tunnel (127.0.0.1 only on the server)",
+  "compiler": {
+    "solc": "0.8.23",
+    "evmVersion": "london",
+    "optimizerRuns": 200,
+    "bytecodeHash": "none"
+  },
+  "signer": {
+    "address": "0x51e9d2e60b7492c73E941bcbecC76ECdC9d04744",
+    "note": "throwaway key generated for this run, never stored"
+  },
+  "results": {
+    "rpcMethods": {
+      "web3_clientVersion": {
+        "ok": true,
+        "result": "FISCO-BCOS-Web3RPC/3.17.1-Release/Linux/g++/b29d0cbe161e2cb743aba89967c71fc4160dc9bb"
+      },
+      "net_version": {
+        "ok": true,
+        "result": "0x4ee8"
+      },
+      "net_listening": {
+        "ok": true,
+        "result": true
+      },
+      "net_peerCount": {
+        "ok": true,
+        "result": 5
+      },
+      "eth_chainId": {
+        "ok": true,
+        "result": "0x4ee8"
+      },
+      "eth_protocolVersion": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "This API has not been implemented yet!"
+        }
+      },
+      "eth_syncing": {
+        "ok": true,
+        "result": false
+      },
+      "eth_blockNumber": {
+        "ok": true,
+        "result": "0x60"
+      },
+      "eth_gasPrice": {
+        "ok": true,
+        "result": "0x0"
+      },
+      "eth_maxPriorityFeePerGas": {
+        "ok": true,
+        "result": "0x0"
+      },
+      "eth_feeHistory": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      },
+      "eth_accounts": {
+        "ok": true,
+        "result": []
+      },
+      "eth_coinbase": {
+        "ok": true,
+        "result": "0x39d3094fc69abeee52eaab1c9640450e5856bcc3"
+      },
+      "eth_mining": {
+        "ok": true,
+        "result": false
+      },
+      "eth_getBalance": {
+        "ok": true,
+        "result": "0x0"
+      },
+      "eth_getTransactionCount(latest)": {
+        "ok": true,
+        "result": "0x0"
+      },
+      "eth_getTransactionCount(pending)": {
+        "ok": true,
+        "result": "0x0"
+      },
+      "eth_getBlockByNumber(latest)": {
+        "ok": true,
+        "result": "{\"baseFeePerGas\":\"0x0\",\"blobGasUsed\":\"0x0\",\"difficulty\":\"0x0\",\"excessBlobGas\":\"0x0\",\"extraData\":\"0x\",\"gasLimit\":\"0x1c9c380\",\"gasUsed\":\"0x43355\",\"hash\":\"0x6fcf3223a02c1d86746afb03bd7a9f557cf5e6b58c05c893f5527a4e801228e8\",\"logsBloom\":\"0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...(1702 chars)"
+      },
+      "eth_getBlockByNumber(pending)": {
+        "ok": true,
+        "result": "{\"baseFeePerGas\":\"0x0\",\"blobGasUsed\":\"0x0\",\"difficulty\":\"0x0\",\"excessBlobGas\":\"0x0\",\"extraData\":\"0x\",\"gasLimit\":\"0x1c9c380\",\"gasUsed\":\"0x43355\",\"hash\":\"0x6fcf3223a02c1d86746afb03bd7a9f557cf5e6b58c05c893f5527a4e801228e8\",\"logsBloom\":\"0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...(1702 chars)"
+      },
+      "eth_getBlockByNumber(safe)": {
+        "ok": true,
+        "result": "{\"baseFeePerGas\":\"0x0\",\"blobGasUsed\":\"0x0\",\"difficulty\":\"0x0\",\"excessBlobGas\":\"0x0\",\"extraData\":\"0x\",\"gasLimit\":\"0x1c9c380\",\"gasUsed\":\"0x43355\",\"hash\":\"0x6fcf3223a02c1d86746afb03bd7a9f557cf5e6b58c05c893f5527a4e801228e8\",\"logsBloom\":\"0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...(1702 chars)"
+      },
+      "eth_getBlockByNumber(finalized)": {
+        "ok": true,
+        "result": "{\"baseFeePerGas\":\"0x0\",\"blobGasUsed\":\"0x0\",\"difficulty\":\"0x0\",\"excessBlobGas\":\"0x0\",\"extraData\":\"0x\",\"gasLimit\":\"0x1c9c380\",\"gasUsed\":\"0x43355\",\"hash\":\"0x6fcf3223a02c1d86746afb03bd7a9f557cf5e6b58c05c893f5527a4e801228e8\",\"logsBloom\":\"0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...(1702 chars)"
+      },
+      "eth_getBlockByNumber(earliest)": {
+        "ok": true,
+        "result": "{\"baseFeePerGas\":\"0x0\",\"blobGasUsed\":\"0x0\",\"difficulty\":\"0x0\",\"excessBlobGas\":\"0x0\",\"extraData\":\"0x5b636861696e5d0a736d5f63727970746f3a300a636861696e49443a20636861696e300a67726f7549443a2067726f7570300a5b636f6e73656e7379735d0a636f6e73656e7375735f747970653a20706266740a626c6f636b5f74785f636f756e745f6c696d69743a313030300a6c65616465725f706572696f643a310a5b76657273696f6e5d0a636f6d7061746962696c6974795f7...(3560 chars)"
+      },
+      "eth_getBlockReceipts": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      },
+      "eth_getProof": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      },
+      "eth_createAccessList": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      },
+      "eth_estimateGas": {
+        "ok": true,
+        "result": "0x5208"
+      },
+      "eth_simulateV1": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      },
+      "eth_newBlockFilter": {
+        "ok": true,
+        "result": "0x15ef00e67075d431"
+      },
+      "eth_newPendingTransactionFilter": {
+        "ok": true,
+        "result": "0x480a68835a9e70fa"
+      },
+      "txpool_status": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      },
+      "debug_traceCall": {
+        "ok": false,
+        "error": {
+          "code": -32601,
+          "message": "Method not found"
+        }
+      }
+    },
+    "chain": {
+      "ethChainId": "0x4ee8",
+      "ethChainIdDecimal": 20200,
+      "gasPrice": "0x0",
+      "latestBlock": {
+        "number": 96,
+        "gasLimit": "0x1c9c380",
+        "gasLimitDecimal": 30000000,
+        "baseFeePerGas": "0x0",
+        "timestamp": "0x6ad1410e",
+        "miner": "0x39D3094Fc69aBEeE52eaAb1C9640450e5856BCc3"
+      }
+    },
+    "deployLegacyType0": {
+      "status": "0x1",
+      "tx": "0x47e250cb8bb3d94425ba44a403c1122425ae57c32ef17a79714be65fda7903cf",
+      "predictedCreateAddress": "0xdF711F8de8801225b9Ba7456C77E39a0Ed13FfF9",
+      "receiptContractAddress": "0xdF711F8de8801225b9Ba7456C77E39a0Ed13FfF9",
+      "createAddressMatchesEvmFormula": true,
+      "runtimeMatchesArtifact": true,
+      "runtimeSize": 2811
+    },
+    "txType2": {
+      "accepted": true,
+      "status": "0x1",
+      "tx": "0xb5de7f989b33fcfc003250d568854eeaec8978a429405a6f09d46f6aeb4c6222",
+      "reportedType": "0x2",
+      "receiptType": "0x2"
+    },
+    "txType0Details": {
+      "status": "0x1",
+      "tx": "0x61d3bbea3b744f05553f699b02f8045efbe4fbb565365128ee7a765b7be5bbf7",
+      "transaction": {
+        "type": "0x0",
+        "chainId": "0x4ee8",
+        "v": "0x1",
+        "gasPrice": "0x0",
+        "nonce": "0x2"
+      },
+      "receiptFields": [
+        "blockHash",
+        "blockNumber",
+        "contractAddress",
+        "cumulativeGasUsed",
+        "effectiveGasPrice",
+        "from",
+        "gasUsed",
+        "logs",
+        "logsBloom",
+        "status",
+        "to",
+        "transactionHash",
+        "transactionIndex",
+        "type"
+      ],
+      "effectiveGasPrice": "0x0"
+    },
+    "evmContext": {
+      "inTransaction": {
+        "chainId": "20200",
+        "timestamp": "1792098840",
+        "number": "100",
+        "gasLimit": "3000000000",
+        "baseFee": "0",
+        "coinbase": "0x0000000000000000000000000000000000000000",
+        "prevrandao": "0",
+        "gasPrice": "0",
+        "blockhashOfParent": "0xee71439f18d2119c57b3118763647cf144630b268f9064ba76be53178fdc8c8e"
+      },
+      "inEthCall": {
+        "chainId": "20200",
+        "timestamp": "1792098840",
+        "number": "100",
+        "gasLimit": "3000000000",
+        "baseFee": "0"
+      },
+      "receiptBlockNumber": 100,
+      "header": {
+        "timestamp": "0x6ad14218",
+        "timestampDecimal": "1792098840",
+        "hash": "0xc97b3b0e2020a567482c3e6768ccbad9cb463591d6696ae529d5e759843d6f58",
+        "parentHash": "0xee71439f18d2119c57b3118763647cf144630b268f9064ba76be53178fdc8c8e"
+      },
+      "parentHashFromRpc": "0xee71439f18d2119c57b3118763647cf144630b268f9064ba76be53178fdc8c8e",
+      "chainIdOpcodeEqualsEthChainId": true,
+      "timestampUnits": "seconds",
+      "timestampVsWallClockSec": 0,
+      "headerTimestampUnits": "seconds",
+      "blockhashOpcodeMatchesRpcParentHash": true
+    },
+    "createAddress": {
+      "child": "0xC2c32c5B80D22b1BDc05b5e43152109A5B7816F7",
+      "probeNonceBefore": "1",
+      "evmFormulaCandidates": {
+        "nonce0": "0x8047f22FC933798DBB21D0637Ac98FEa15Ad399a",
+        "nonce1": "0xC2c32c5B80D22b1BDc05b5e43152109A5B7816F7",
+        "nonce2": "0x87d4ef5f1E6156aFAAdE44EfBba64Fd988C33c97"
+      },
+      "matchesEvmFormulaAtNonce1": true,
+      "childTag": "7"
+    },
+    "create2": {
+      "actual": "0xc2cD300671BB66E7529548833eF8897e9B62688B",
+      "predictedInContract": "0xc2cD300671BB66E7529548833eF8897e9B62688B",
+      "predictedOffchain": "0xc2cD300671BB66E7529548833eF8897e9B62688B",
+      "works": true,
+      "childTag": "9"
+    },
+    "extcodehash": {
+      "self": "0x21b7662966fb758ce8eb813d1afb59665c920d8c9d919b4a25c709439db9e1e3",
+      "keccakOfEthGetCode": "0x21b7662966fb758ce8eb813d1afb59665c920d8c9d919b4a25c709439db9e1e3",
+      "selfMatchesKeccakOfCode": true,
+      "selfSize": 2811,
+      "eoaWithNonce": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "eoaIsKeccakOfEmpty": false,
+      "eoaCodeSize": 0,
+      "nonExistentAccount": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "nonExistentIsZero": true
+    },
+    "p256": {
+      "precompile0x100": {
+        "directEthCallResult": {
+          "code": 16,
+          "data": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001343616c6c2061646472657373206572726f722e00000000000000000000000000",
+          "message": ""
+        },
+        "viaContract": {
+          "success": "true",
+          "returnLength": 0
+        },
+        "available": false
+      },
+      "frameworkVerifier": {
+        "library": "0xb9826d6F9587AB2e0dA737827067B311A5E40B3E",
+        "wrapper": "0x91C96Fa06D51e9918E6D8aE328F720409e529fdE",
+        "validSignatureAccepted": true,
+        "tamperedSignatureRejected": true,
+        "estimateGasForVerify": 261807,
+        "path": "SCL Solidity verifier (fallback) unless the 0x100 precompile answers"
+      }
+    },
+    "fiscoCryptoPrecompile0x100a": {
+      "sm3Abc": "0x66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0",
+      "sm3MatchesGbtVector": true,
+      "sm3ViaContractStaticcall": {
+        "success": "true",
+        "ret": "0x66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0"
+      },
+      "keccak256HashAbc": "0x4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45",
+      "keccakMatchesOpcode": true,
+      "sm2Verify": {
+        "convention": "sm2Verify(M, pub64, r, s) checks (r, s) over e = SM3(Z_A || M), default user ID 1234567812345678",
+        "validSignatureVerified": true,
+        "returnedAccount": "0x3bC47243e7b310d7C081E3d1aE35d90463a43E1f",
+        "expectedAccountRight160Sm3Pub": "0x3bC47243e7b310d7C081E3d1aE35d90463a43E1f",
+        "accountMatches": true,
+        "localSelfCheck": true,
+        "wrongMessageRejected": true,
+        "signatureOverRawMWithoutZaRejected": true
+      }
+    },
+    "ethGetLogs": {
+      "filterShapes": {
+        "address+topics+range": {
+          "ok": true,
+          "count": 3
+        },
+        "address+range (no topics key)": {
+          "ok": false,
+          "error": "topics is null"
+        },
+        "address+range+topics[]": {
+          "ok": true,
+          "count": 3
+        },
+        "address[]+topics+range": {
+          "ok": true,
+          "count": 3
+        },
+        "topics+range (no address key)": {
+          "ok": false,
+          "error": "address is null"
+        },
+        "address:[]+topics+range": {
+          "ok": true,
+          "count": 3
+        },
+        "address+topics (no range)": {
+          "ok": false,
+          "error": "fromBlock is null"
+        },
+        "null wildcard + indexed sender topic (lowercase hex)": {
+          "ok": true,
+          "count": 3
+        },
+        "null wildcard + indexed sender topic (mixed-case hex)": {
+          "ok": true,
+          "count": 0
+        },
+        "OR list in topic0": {
+          "ok": true,
+          "count": 3
+        },
+        "blockHash only": {
+          "ok": false,
+          "error": "fromBlock is null"
+        },
+        "blockHash+address+topics": {
+          "ok": false,
+          "error": "fromBlock is null"
+        }
+      },
+      "newFilterThenGetFilterLogs": {
+        "ok": true,
+        "count": 3
+      },
+      "logFields": [
+        "address",
+        "blockHash",
+        "blockNumber",
+        "data",
+        "logIndex",
+        "removed",
+        "topics",
+        "transactionHash",
+        "transactionIndex"
+      ],
+      "works": true
+    },
+    "ethCallStateOverride": {
+      "plainCounter": "5",
+      "stateDiffResult": "5",
+      "stateDiffApplied": false,
+      "codeOverrideResult": "0x",
+      "codeOverrideApplied": false,
+      "balanceOverrideResult": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "estimateGas": {
+      "ping": {
+        "estimate": 49487,
+        "sentWithExactEstimate": {
+          "status": "0x1",
+          "gasUsed": 49487
+        },
+        "estimateMinusGasUsed": 0
+      },
+      "burn(200)": {
+        "estimate": 86201,
+        "sentWithExactEstimate": {
+          "status": "0x1",
+          "gasUsed": 86201
+        },
+        "estimateMinusGasUsed": 0
+      },
+      "deploy ProbeChild": {
+        "estimate": 2259,
+        "sentWithExactEstimate": {
+          "status": "0x1",
+          "gasUsed": 2259
+        },
+        "estimateMinusGasUsed": 0
+      },
+      "revert failWith": {
+        "estimate": null,
+        "error": {
+          "code": 16,
+          "data": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000c70726f62652d7265766572740000000000000000000000000000000000000000",
+          "message": ""
+        }
+      },
+      "plain transfer to EOA": {
+        "estimate": 21000
+      }
+    },
+    "revertOnChainAndReplay": {
+      "tx": "0x42a72eeb61c1a462d76e6e1c104fe67038a2a5d292d00fec8b25f3e8e9e35b18",
+      "receiptStatus": "0x0",
+      "receiptHasRevertData": [],
+      "replayAtParentBlock": {
+        "error": {
+          "code": 16,
+          "data": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001370726f62652d7265766572742d726561736f6e00000000000000000000000000",
+          "message": ""
+        },
+        "decoded": {
+          "kind": "Error(string)",
+          "reason": "probe-revert-reason"
+        }
+      },
+      "replayAtLatest": {
+        "error": {
+          "code": 16,
+          "data": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001370726f62652d7265766572742d726561736f6e00000000000000000000000000",
+          "message": ""
+        },
+        "decoded": {
+          "kind": "Error(string)",
+          "reason": "probe-revert-reason"
+        }
+      }
+    },
+    "historicalEthCall": {
+      "counterBefore": "79014361861415705852308947669237931485372674257769117918949589593051026833180",
+      "counterAfter": "79014361861415705852308947669237931485372674257769117918949589593051026833181",
+      "counterAtOldBlockTag": "79014361861415705852308947669237931485372674257769117918949589593051026833181",
+      "blockTagHonoured": false,
+      "atGenesis": "0xaeb08b42170d59aed1d90a17e990555ddfe8ee44db9ceb39231dcb1724f23f1d"
+    },
+    "blockTime": {
+      "samples": [
+        {
+          "block": 113,
+          "headerTimestamp": 1792098857,
+          "submitToReceiptMs": 518
+        },
+        {
+          "block": 114,
+          "headerTimestamp": 1792098858,
+          "submitToReceiptMs": 198
+        },
+        {
+          "block": 115,
+          "headerTimestamp": 1792098859,
+          "submitToReceiptMs": 198
+        },
+        {
+          "block": 116,
+          "headerTimestamp": 1792098859,
+          "submitToReceiptMs": 199
+        },
+        {
+          "block": 117,
+          "headerTimestamp": 1792098860,
+          "submitToReceiptMs": 198
+        },
+        {
+          "block": 118,
+          "headerTimestamp": 1792098861,
+          "submitToReceiptMs": 201
+        }
+      ],
+      "submitToReceiptMedianMs": 199,
+      "submitToReceiptMinMs": 198,
+      "submitToReceiptMaxMs": 518,
+      "blocksProducedWhileIdle5s": 0,
+      "note": "FISCO PBFT seals a block only when the txpool has transactions (min_seal_time 500 ms); there are no empty blocks."
+    },
+    "contractSizeLimits": {
+      "runtime_24576": {
+        "status": "0x1",
+        "deployedSize": 24576,
+        "gasUsed": 494982
+      },
+      "runtime_24577": {
+        "status": "0x1",
+        "deployedSize": 24577,
+        "gasUsed": 495008
+      },
+      "runtime_32768": {
+        "status": "0x1",
+        "deployedSize": 32768,
+        "gasUsed": 660486
+      },
+      "runtime_49152": {
+        "status": "0x1",
+        "deployedSize": 49152,
+        "gasUsed": 992262
+      },
+      "runtime_65536": {
+        "status": "0x1",
+        "deployedSize": 65536,
+        "gasUsed": 1325062
+      },
+      "initcode_49152": {
+        "status": "0x1",
+        "gasUsed": 29
+      },
+      "initcode_49153": {
+        "rejected": "eth_sendRawTransaction: MaxInitCodeSizeExceeded"
+      },
+      "initcode_65536": {
+        "rejected": "eth_sendRawTransaction: MaxInitCodeSizeExceeded"
+      }
+    },
+    "gasLimits": {
+      "txGas_30000000": {
+        "accepted": true,
+        "status": "0x1",
+        "gasUsed": 49487
+      },
+      "txGas_100000000": {
+        "accepted": true,
+        "status": "0x1",
+        "gasUsed": 49487
+      },
+      "txGas_3000000000": {
+        "accepted": true,
+        "status": "0x1",
+        "gasUsed": 49487
+      },
+      "txGas_3000000001": {
+        "accepted": true,
+        "status": "0x1",
+        "gasUsed": 49487
+      },
+      "burn20000Estimate": 11275908
+    },
+    "nativeValue": {
+      "accepted": true,
+      "status": "0x0",
+      "replay": {
+        "error": "",
+        "decoded": {
+          "kind": "Error(string)",
+          "reason": "Account balance is not enough!"
+        }
+      },
+      "balanceAfter": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "cancunOpcodesAtRuntime": {
+      "PUSH0": {
+        "works": true,
+        "returned": "42"
+      },
+      "TSTORE_TLOAD": {
+        "works": true,
+        "returned": "42"
+      },
+      "MCOPY": {
+        "works": true,
+        "returned": "42"
+      },
+      "BLOBBASEFEE": {
+        "works": true,
+        "returned": "0"
+      },
+      "BASEFEE": {
+        "works": true,
+        "returned": "0"
+      }
+    },
+    "nonces": {
+      "latest": 38,
+      "pending": 38,
+      "localNextNonce": 38,
+      "probeContractNonce": 3
+    },
+    "debugTrace": {
+      "supported": false,
+      "error": {
+        "code": -32601,
+        "message": "Method not found"
+      }
+    }
+  },
+  "transactions": [
+    {
+      "label": "deploy FiscoProbe (type 0)",
+      "hash": "0x47e250cb8bb3d94425ba44a403c1122425ae57c32ef17a79714be65fda7903cf",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 97,
+      "gasUsed": 56814,
+      "contractAddress": "0xdF711F8de8801225b9Ba7456C77E39a0Ed13FfF9",
+      "minedAfterMs": 516
+    },
+    {
+      "label": "ping (type 2)",
+      "hash": "0xb5de7f989b33fcfc003250d568854eeaec8978a429405a6f09d46f6aeb4c6222",
+      "type": 2,
+      "status": "0x1",
+      "blockNumber": 98,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 202
+    },
+    {
+      "label": "ping (type 0)",
+      "hash": "0x61d3bbea3b744f05553f699b02f8045efbe4fbb565365128ee7a765b7be5bbf7",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 99,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 206
+    },
+    {
+      "label": "recordEnv",
+      "hash": "0x9d49e93598eefd4d037911c6b714086da60970224d2c9df5eb8dc236aaebfd3e",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 100,
+      "gasUsed": 25104,
+      "contractAddress": null,
+      "minedAfterMs": 197
+    },
+    {
+      "label": "deployCreate",
+      "hash": "0x7d9fccde93aeeb279f15134f343bcf725c61951e4928a014478eaf7ac1ed49d4",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 101,
+      "gasUsed": 57500,
+      "contractAddress": null,
+      "minedAfterMs": 199
+    },
+    {
+      "label": "deployCreate2",
+      "hash": "0x72412a3df5daf42f4d9c674748617c6731f71190585c66745d40e95880d54b43",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 102,
+      "gasUsed": 59079,
+      "contractAddress": null,
+      "minedAfterMs": 197
+    },
+    {
+      "label": "deploy SCL_RIP7212 library",
+      "hash": "0x780427963d42b7274f687aa7a36db1664c6235b43837f755bb833589e47437cc",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 103,
+      "gasUsed": 64095,
+      "contractAddress": "0xb9826d6F9587AB2e0dA737827067B311A5E40B3E",
+      "minedAfterMs": 200
+    },
+    {
+      "label": "deploy ProbeP256",
+      "hash": "0x0c7aab016c5c273b1a6fe39fcf3ed1b06f9bb18d91b8a699a9d6517c9f607fb3",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 104,
+      "gasUsed": 15216,
+      "contractAddress": "0x91C96Fa06D51e9918E6D8aE328F720409e529fdE",
+      "minedAfterMs": 511
+    },
+    {
+      "label": "ping logs 0",
+      "hash": "0xe406286922d151b563794fbb074f784afaa91445da6d47f14c2d02d9390798bb",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 105,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 201
+    },
+    {
+      "label": "ping logs 1",
+      "hash": "0x68f28d423e07bff57290cc3dc5863d8e1584f39e1e433f4c82d7efeaafc87dd9",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 106,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 200
+    },
+    {
+      "label": "ping logs 2",
+      "hash": "0xca8a9a95562fe54a94adb9155471b04c3a22001acbabe873b0d0f1ce954a57ef",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 107,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 200
+    },
+    {
+      "label": "estimate check: ping",
+      "hash": "0xd4b2f219db0b427bb67a350063a7c22c6d56aaa79a17eb94c712857e11f5f399",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 108,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 504
+    },
+    {
+      "label": "estimate check: burn(200)",
+      "hash": "0x0fb8fe75469bd7e019409e737274804f595bba0fff85b8ffdb084ea95d09f31e",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 109,
+      "gasUsed": 86201,
+      "contractAddress": null,
+      "minedAfterMs": 512
+    },
+    {
+      "label": "estimate check: deploy ProbeChild",
+      "hash": "0x91b481e794cbb73be11d1499b7001874c9be3240bb4a4e641a1bb645f496ed6d",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 110,
+      "gasUsed": 2259,
+      "contractAddress": "0x692423ba758316564B8DCe62781C7C14B6F5daa8",
+      "minedAfterMs": 198
+    },
+    {
+      "label": "failWith (expected revert)",
+      "hash": "0x42a72eeb61c1a462d76e6e1c104fe67038a2a5d292d00fec8b25f3e8e9e35b18",
+      "type": 0,
+      "status": "0x0",
+      "blockNumber": 111,
+      "gasUsed": 21732,
+      "contractAddress": null,
+      "minedAfterMs": 197
+    },
+    {
+      "label": "ping for history check",
+      "hash": "0xe80a59a7822b649aa34f4dd1224bb384780e6f0daf740204419d47c77f249c0b",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 112,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 509
+    },
+    {
+      "label": "block time ping 0",
+      "hash": "0xa6a5bc55328d74074592e64e5e6e46c45f4e4564c535b1f56f6ca16564191401",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 113,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 518
+    },
+    {
+      "label": "block time ping 1",
+      "hash": "0x900c7fc55e8227215b7e34edabbfe636c920f01d96087be19b829565bd8076a1",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 114,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 198
+    },
+    {
+      "label": "block time ping 2",
+      "hash": "0xc5f4c481b94209d64b83c4e6ecd2b0a2b29a40fe80438184b0c9b54402a71ddd",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 115,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 198
+    },
+    {
+      "label": "block time ping 3",
+      "hash": "0xbe80173a63320339494b93664e58b0960f4d196cf6bf326b9b703082d0242d1c",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 116,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 199
+    },
+    {
+      "label": "block time ping 4",
+      "hash": "0xcaf5ee30ebc710e7405e66d3e5808b9e6bf4e0eb67ecce71d41ca70e3aac3b01",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 117,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 198
+    },
+    {
+      "label": "block time ping 5",
+      "hash": "0x96ebf7abae47c685717a3512348e61ce5aa0fa06d0a2869d93acc5940f4f208f",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 118,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 201
+    },
+    {
+      "label": "runtime size 24576",
+      "hash": "0xf724fb497e23a12e309e3b40e8df4a53ef0b3799e6fd4014c8513379606c12b2",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 119,
+      "gasUsed": 494982,
+      "contractAddress": "0xc3Bc1c5CD5870959c3b33b5e6d6651355613591F",
+      "minedAfterMs": 198
+    },
+    {
+      "label": "runtime size 24577",
+      "hash": "0x45391779e92c5e1c8cd20defda005090aed8d199d4a6db8b5138da126422b82b",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 120,
+      "gasUsed": 495008,
+      "contractAddress": "0x1629486b93277b236f60bA56f891260129D02C5F",
+      "minedAfterMs": 503
+    },
+    {
+      "label": "runtime size 32768",
+      "hash": "0x46cc568141a646065a42346c12e578d87bed8a3fb0fe6081bb2e269cb5ed5557",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 121,
+      "gasUsed": 660486,
+      "contractAddress": "0x9dA736f64aC3837e9C01Bd9924499Ea6d9568b27",
+      "minedAfterMs": 198
+    },
+    {
+      "label": "runtime size 49152",
+      "hash": "0x8088991c7378551a1b559ccec283c1a8875ab1e4490d8302562d36051989349f",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 122,
+      "gasUsed": 992262,
+      "contractAddress": "0x37D94abc23C12F451fC2A04b5DE138E60a183614",
+      "minedAfterMs": 195
+    },
+    {
+      "label": "runtime size 65536",
+      "hash": "0xf0c05b5173748b7071f767a7b288bdea62d38211d420e371e4b69cc637f1cf81",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 123,
+      "gasUsed": 1325062,
+      "contractAddress": "0x06139CE62B87D65944D74c11c083047d52D2e45a",
+      "minedAfterMs": 524
+    },
+    {
+      "label": "initcode size 49152",
+      "hash": "0x9025457cd9420b7f96900a51e79746d242de74ab0244460bf57d747cc2948d9f",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 124,
+      "gasUsed": 29,
+      "contractAddress": "0xF9F020196ccE732880796fab03c84D0006d68A3f",
+      "minedAfterMs": 380
+    },
+    {
+      "label": "ping gas 30000000",
+      "hash": "0x5d855406d0b0e69a7b1baff5cf9b02ddbfa0bbd5d3864cecdb7af717be62e0be",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 125,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 206
+    },
+    {
+      "label": "ping gas 100000000",
+      "hash": "0xc789bce66ea5f4c2267019150769cf3daee0af4fcfbbc9cba006902fa5b080b7",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 126,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 516
+    },
+    {
+      "label": "ping gas 3000000000",
+      "hash": "0x1f44c880efbee27ad0cd1d324c7035c241ccf6d15c8d231d867e4d35e7ad8f11",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 127,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 199
+    },
+    {
+      "label": "ping gas 3000000001",
+      "hash": "0xcf48b1b8483efedb06d60f4e873bf1523c3e7abea9a22a9bc452f9bc7d4867e9",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 128,
+      "gasUsed": 49487,
+      "contractAddress": null,
+      "minedAfterMs": 496
+    },
+    {
+      "label": "ping with value 1 wei",
+      "hash": "0x96fc8b3d46a47b71918d432a57053b20ce37c561347e46a4258b59115e86b0fe",
+      "type": 0,
+      "status": "0x0",
+      "blockNumber": 129,
+      "gasUsed": 300000,
+      "contractAddress": null,
+      "minedAfterMs": 197
+    },
+    {
+      "label": "deploy raw PUSH0",
+      "hash": "0x54f20e3e2a6207a6e78e994a0392e2d8368effa2a731b8acd6102658c09687c2",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 130,
+      "gasUsed": 184,
+      "contractAddress": "0x24CA0c6EF3f682B598B3747D63A5d7c0623334e5",
+      "minedAfterMs": 196
+    },
+    {
+      "label": "deploy raw TSTORE_TLOAD",
+      "hash": "0x6e8a32ef3e0676d53fe189bd457198b751072558a551bf8abf76bab561d41590",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 131,
+      "gasUsed": 344,
+      "contractAddress": "0x4cA37CCf3fcaf86B365313493468966BB1481673",
+      "minedAfterMs": 508
+    },
+    {
+      "label": "deploy raw MCOPY",
+      "hash": "0x68f58782d649b7c3567286bb37c7bbf89c703c925cb1457a1aed66058a468ea0",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 132,
+      "gasUsed": 364,
+      "contractAddress": "0x9f50FEC9d3543a10Be87F9EeaA4e0Ae8367C7e4a",
+      "minedAfterMs": 200
+    },
+    {
+      "label": "deploy raw BLOBBASEFEE",
+      "hash": "0xbc42c745fbe43a569d5cd090e9fe3b306aa0c20912f909edf250ea29ca4a7455",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 133,
+      "gasUsed": 204,
+      "contractAddress": "0xFe2b347f2CE40BB02e9c19f355666AE1BbB1BABB",
+      "minedAfterMs": 497
+    },
+    {
+      "label": "deploy raw BASEFEE",
+      "hash": "0x604e62715cf9b9130ed689c7d06b6986d832824dbb3370cf7ef4481a11256b81",
+      "type": 0,
+      "status": "0x1",
+      "blockNumber": 134,
+      "gasUsed": 204,
+      "contractAddress": "0x8EB9cEb1EC33259c0EBc7c10FcaCF392bb83481c",
+      "minedAfterMs": 202
+    }
+  ],
+  "errors": [],
+  "contracts": {
+    "FiscoProbe": "0xdF711F8de8801225b9Ba7456C77E39a0Ed13FfF9",
+    "ProbeP256": "0x91C96Fa06D51e9918E6D8aE328F720409e529fdE",
+    "SCL_RIP7212": "0xb9826d6F9587AB2e0dA737827067B311A5E40B3E"
+  }
+}

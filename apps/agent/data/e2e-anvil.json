@@ -1,0 +1,70 @@
+[
+  {
+    "step": "account",
+    "ledger": "anvil",
+    "account": "0x85C28f7e131714Be69C8887515df004dc894a925",
+    "signer": "scripted passkey (software P-256 key)"
+  },
+  {
+    "step": "passport",
+    "ledger": "anvil",
+    "agentId": "1",
+    "attestTxs": []
+  },
+  {
+    "step": "seal",
+    "ledger": "anvil",
+    "publishTx": "0x336c3e8f4fb2db12e74370ec3ca7012a97318496793f64da9a60bb12f4b21082",
+    "mandateHash": "0xd8ad7ee8cfbb42f2ebd737938216e3735d9f4fac55bf74f9a964e2b1f2b6f2e0",
+    "delegationHash": "0xd7b72deb565e3137227459731a055ec010e22fab954fb44dd225f94e0238afec",
+    "sealedBy": "scripted passkey (software P-256 key)"
+  },
+  {
+    "step": "T1 rent 9,500 tHKD to Harbour Homes",
+    "ledger": "anvil",
+    "tx": "0x8991109e8f1be0d6587198c50b5fdaea9a87c718d4f85d161100dabd6b2a5aa1",
+    "ok": true
+  },
+  {
+    "step": "T4 simulation",
+    "ledger": "anvil",
+    "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)"
+  },
+  {
+    "step": "T4 raw attack to Mirage reverted on-chain",
+    "ledger": "anvil",
+    "tx": "0x4a2ed6658fc740d712cd964ff45138b1cb0a15cd58563e5073b2a0d00c705e5b",
+    "ok": false,
+    "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)"
+  },
+  {
+    "step": "T2 without approval",
+    "ledger": "anvil",
+    "revert": "CoSignRequired(5000000000, 2000000000)"
+  },
+  {
+    "step": "T2 tuition escrow 5,000 tHKD co-signed by passkey",
+    "ledger": "anvil",
+    "tx": "0xcdd56f0cdeb67bda6a2d3f002a1e377ecbd2bdcb0782e7b16bac6280b39727b5",
+    "ok": true
+  },
+  {
+    "step": "pause (passkey signature relayed)",
+    "ledger": "anvil",
+    "tx": "0x08293ad07d566f8996b56948246d53ea0fce99088c10479033437c4d14b6b8ad",
+    "ok": true,
+    "msToConfirmed": 4030,
+    "block": "23"
+  },
+  {
+    "step": "agent blocked while paused",
+    "ledger": "anvil",
+    "revert": "Paused(0x85C28f7e131714Be69C8887515df004dc894a925, 0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)"
+  },
+  {
+    "step": "resume (passkey)",
+    "ledger": "anvil",
+    "tx": "0x0734a6b0a4de1e1a9894f33d412ca07382f0ff27b61c91e0412a48b19f404435",
+    "ok": true
+  }
+]

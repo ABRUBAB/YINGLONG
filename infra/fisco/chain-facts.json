@@ -1,0 +1,180 @@
+{
+  "schema": "yinglong.fisco-chain-facts/1",
+  "collectedAt": "2026-10-15T21:19:11Z",
+  "binary": {
+    "version": "3.17.1",
+    "gitCommit": "b29d0cbe161e2cb743aba89967c71fc4160dc9bb",
+    "buildType": "Linux/g++/Release",
+    "sha256": "e67cd8f869264cbf78e7b2155a420dd7b71ec747bdb9b1fbf7d464484a070541",
+    "releaseTarballSha256": "28eb054bb222b805e116bf7d2462709f99d1f460a732e978555abe61973b3cbb",
+    "buildChainShSha256": "ed667e1e346acbe2fea7b667856ddf05af9e4892ac0424ff9f703f0ea601dbe7"
+  },
+  "genesis": {
+    "sha256": "1057114f31ad2e0e945efd0f3949bc4d8f70c071da1757c5c74cfba7c6ef7c86",
+    "identicalOnAllNodes": true,
+    "smCrypto": "false",
+    "chainId": "chain0",
+    "groupId": "group0",
+    "authCheck": "false",
+    "executorVersion": "1",
+    "features": {
+      "feature_evm_timestamp": "1",
+      "feature_evm_address": "1",
+      "feature_evm_cancun": "1"
+    }
+  },
+  "consensus": {
+    "algorithm": "pbft",
+    "minSealTimeMs": "500",
+    "sealers": [
+      "40aa041fccd07cbde999844bdd71183f00537cf7b321aa365d95069f611044ef5f618e401716425a40a9ded74b858354b1e9dcb0563f01b278b11dd0141de51e",
+      "5e2aede5cdcbab87e380b23321e54fa49e31b3da866d464ed98ff597b2af6bb4ea275e881069a28e2089a5401a5f856c67a3f7008191c6da35bedb572cfa6864",
+      "7199ec3a26cdb3b8e10bcda5e701bd373ffac0d56f9d7e8241687a2cde8b6d8efbcb5491fb93fd5b375ec73523f88ac948b090d8bf4c89c3ef9b1ee5b1d9c934",
+      "eb9c9ae4ceb04d694c5b9355edbf5a0f1907152871bb17c71144ff832b0218eb51fc336c986af89b8800731554485b40a15a48cf464db1d512561768ac53df6a"
+    ],
+    "observers": [
+      "9265510cbbdc6d3dcf9ae3ef5aba93aa045370385f4b97f412812e79332bd0ec4a90eb7ed34d95c3582ec4c0b0caa2f9edbd31db752c0bbf0c10a04ff734688a"
+    ],
+    "addObserverTx": {
+      "hash": "0xf7944a362a768930854fa5c16edd93d37c5834004c4879bd322137af33e51f50",
+      "blockNumber": "0x1",
+      "status": "0x1",
+      "from": "0xa8A2Cb515AadCeafb2B0bcd7B214ceB0f0aB79cd",
+      "to": "0x0000000000000000000000000000000000001003"
+    }
+  },
+  "systemConfig": {
+    "compatibility_version": {
+      "value": "3.17.1",
+      "enableBlock": 0
+    },
+    "tx_gas_limit": {
+      "value": "3000000000",
+      "enableBlock": 0
+    },
+    "tx_gas_price": {
+      "value": "0x0",
+      "enableBlock": 0
+    },
+    "web3_chain_id": {
+      "value": "20200",
+      "enableBlock": 0
+    },
+    "executor_version": {
+      "value": "1",
+      "enableBlock": 0
+    },
+    "feature_evm_timestamp": {
+      "value": "1",
+      "enableBlock": 0
+    },
+    "feature_evm_address": {
+      "value": "1",
+      "enableBlock": 0
+    },
+    "feature_evm_cancun": {
+      "value": "1",
+      "enableBlock": 0
+    },
+    "feature_balance": {
+      "value": "",
+      "enableBlock": -1
+    }
+  },
+  "web3": {
+    "ethChainId": "0x4ee8",
+    "blockHeight": "0x86"
+  },
+  "nodes": [
+    {
+      "node": "node0",
+      "role": "consensus",
+      "nodeId": "7199ec3a26cdb3b8e10bcda5e701bd373ffac0d56f9d7e8241687a2cde8b6d8efbcb5491fb93fd5b375ec73523f88ac948b090d8bf4c89c3ef9b1ee5b1d9c934",
+      "p2p": "127.0.0.1:30300",
+      "nativeRpc": "127.0.0.1:20200",
+      "web3Rpc": "127.0.0.1:8545",
+      "web3Enabled": true,
+      "systemdUnit": "yinglong-fisco-node0.service",
+      "active": "active",
+      "enabled": "enabled",
+      "restartPolicy": "always"
+    },
+    {
+      "node": "node1",
+      "role": "consensus",
+      "nodeId": "eb9c9ae4ceb04d694c5b9355edbf5a0f1907152871bb17c71144ff832b0218eb51fc336c986af89b8800731554485b40a15a48cf464db1d512561768ac53df6a",
+      "p2p": "127.0.0.1:30301",
+      "nativeRpc": "127.0.0.1:20201",
+      "web3Rpc": "127.0.0.1:8546",
+      "web3Enabled": true,
+      "systemdUnit": "yinglong-fisco-node1.service",
+      "active": "active",
+      "enabled": "enabled",
+      "restartPolicy": "always"
+    },
+    {
+      "node": "node2",
+      "role": "consensus",
+      "nodeId": "5e2aede5cdcbab87e380b23321e54fa49e31b3da866d464ed98ff597b2af6bb4ea275e881069a28e2089a5401a5f856c67a3f7008191c6da35bedb572cfa6864",
+      "p2p": "127.0.0.1:30302",
+      "nativeRpc": "127.0.0.1:20202",
+      "web3Rpc": "127.0.0.1:8547",
+      "web3Enabled": true,
+      "systemdUnit": "yinglong-fisco-node2.service",
+      "active": "active",
+      "enabled": "enabled",
+      "restartPolicy": "always"
+    },
+    {
+      "node": "node3",
+      "role": "consensus",
+      "nodeId": "40aa041fccd07cbde999844bdd71183f00537cf7b321aa365d95069f611044ef5f618e401716425a40a9ded74b858354b1e9dcb0563f01b278b11dd0141de51e",
+      "p2p": "127.0.0.1:30303",
+      "nativeRpc": "127.0.0.1:20203",
+      "web3Rpc": "127.0.0.1:8548",
+      "web3Enabled": true,
+      "systemdUnit": "yinglong-fisco-node3.service",
+      "active": "active",
+      "enabled": "enabled",
+      "restartPolicy": "always"
+    },
+    {
+      "node": "node4",
+      "role": "observer (regulator)",
+      "nodeId": "9265510cbbdc6d3dcf9ae3ef5aba93aa045370385f4b97f412812e79332bd0ec4a90eb7ed34d95c3582ec4c0b0caa2f9edbd31db752c0bbf0c10a04ff734688a",
+      "p2p": "127.0.0.1:30304",
+      "nativeRpc": "127.0.0.1:20204",
+      "web3Rpc": "127.0.0.1:8549",
+      "web3Enabled": true,
+      "systemdUnit": "yinglong-fisco-node4.service",
+      "active": "active",
+      "enabled": "enabled",
+      "restartPolicy": "always"
+    }
+  ],
+  "fiscoListeners": [
+    "127.0.0.1:20200",
+    "127.0.0.1:20201",
+    "127.0.0.1:20202",
+    "127.0.0.1:20203",
+    "127.0.0.1:20204",
+    "127.0.0.1:30300",
+    "127.0.0.1:30301",
+    "127.0.0.1:30302",
+    "127.0.0.1:30303",
+    "127.0.0.1:30304",
+    "127.0.0.1:8545",
+    "127.0.0.1:8546",
+    "127.0.0.1:8547",
+    "127.0.0.1:8548",
+    "127.0.0.1:8549"
+  ],
+  "nonLoopbackListenersOnHost": [
+    "0.0.0.0:22",
+    "0.0.0.0:443",
+    "0.0.0.0:80",
+    "[::]:22",
+    "[::]:443",
+    "[::]:80"
+  ]
+}

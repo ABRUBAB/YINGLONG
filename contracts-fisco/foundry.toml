@@ -1,0 +1,28 @@
+# FISCO BCOS side of YINGLONG: probe contract and the MetaMask Delegation Framework v1.3.0 spike.
+# The framework is compiled from the pinned submodule in ../contracts/lib/delegation-framework
+# (tag v1.3.0) without modifying it. Compiler settings mirror ../contracts/foundry.toml so the
+# same bytecode can be deployed on every ledger.
+[profile.default]
+src = "src"
+out = "out"
+test = "test"
+script = "script"
+libs = ["../contracts/lib/delegation-framework/lib", "../contracts/lib"]
+allow_paths = ["../contracts/lib"]
+solc = "0.8.23"
+auto_detect_solc = false
+# london: no PUSH0, MCOPY or TSTORE, so the bytecode is valid on every target ledger.
+evm_version = "london"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+bytecode_hash = "none"
+cbor_metadata = false
+extra_output = ["storageLayout"]
+# AST in the artifacts lets script/compare-codehash.mjs name each immutable slot.
+ast = true
+fs_permissions = [{ access = "read", path = "./out" }, { access = "read-write", path = "./deployments" }, { access = "read-write", path = "./reports" }]
+
+[rpc_endpoints]
+fisco = "${FISCO_RPC_URL}"
+anvil = "http://127.0.0.1:8545"

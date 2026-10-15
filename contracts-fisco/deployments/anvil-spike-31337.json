@@ -1,0 +1,667 @@
+{
+  "schema": "yinglong.delegation-spike/1",
+  "generatedAt": "2026-10-15T21:10:06.382Z",
+  "target": "anvil",
+  "rpc": "local anvil http://127.0.0.1:28545",
+  "framework": {
+    "source": "contracts/lib/delegation-framework (git submodule, tag v1.3.0, commit bfbdf97), unmodified",
+    "entryPoint": "account-abstraction v0.7.0 from the framework's lib/",
+    "compiler": {
+      "solc": "0.8.23",
+      "evmVersion": "london",
+      "optimizer": true,
+      "optimizerRuns": 200,
+      "viaIR": false,
+      "bytecodeHash": "none",
+      "cborMetadata": false
+    }
+  },
+  "chain": {
+    "ethChainId": 31337,
+    "clientVersion": "anvil/v1.8.5",
+    "deployerStartNonce": 0
+  },
+  "roles": {
+    "deployer": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+    "delegationManagerOwner": {
+      "role": "supervisor",
+      "address": "0xbDc9EdC82A9958A1B49011C5f803f2E9188AdB12"
+    },
+    "accountOwner": {
+      "role": "director-1",
+      "address": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC"
+    },
+    "delegate": {
+      "role": "agent-treasurer",
+      "address": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50"
+    },
+    "recipient": {
+      "role": "svc-shenzhen-components",
+      "address": "0x4910d9e2545182d750f166421B5D6d07f8083a20"
+    }
+  },
+  "contracts": {
+    "EntryPoint": {
+      "address": "0x65005f35c005450f9E102db183672F780cD83d28",
+      "txHash": "0xe681ac1ea8e0c83cffc360b108fba7c3e50fc32023424d4e9a37a4ce2ba93530",
+      "blockNumber": 1,
+      "gasUsed": 3284469,
+      "deployNonce": 0,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0xf1b49602dc4a377ac58c29d1b826ad5ed54f25b63ddcd5fc7dc9dfb5a6fac930",
+      "keccakOfEthGetCode": "0xf1b49602dc4a377ac58c29d1b826ad5ed54f25b63ddcd5fc7dc9dfb5a6fac930",
+      "codeSize": 14267,
+      "immutableSlots": 2,
+      "maskedCodeHash": "0xe3854158d16d9c87a5c00a0b66fa1ed2a8de5770c43dc6d2df6b630d29607e08",
+      "runtimeMatchesArtifactModuloImmutables": true,
+      "immutableValues": {
+        "379": "0x000000000000000000000000d168c796e6db529a15869341e3b4461a22c59eee"
+      }
+    },
+    "SCL_RIP7212": {
+      "address": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f",
+      "txHash": "0x24c157e01eabe52d6f2798a015e1ef4d906a2a5b7a456cc4382c4be8b75ddf7d",
+      "blockNumber": 2,
+      "gasUsed": 738155,
+      "deployNonce": 1,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x581401b1223186fcbb91547dee1bf1a04e85ef6520fae8c614120280d80e22cf",
+      "keccakOfEthGetCode": "0x581401b1223186fcbb91547dee1bf1a04e85ef6520fae8c614120280d80e22cf",
+      "codeSize": 3170,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0x581401b1223186fcbb91547dee1bf1a04e85ef6520fae8c614120280d80e22cf",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "DelegationManager": {
+      "address": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+      "txHash": "0x1b9335acc493f83fb40f27a12de6a733706ec21982b370a4d983bd050f6faa1e",
+      "blockNumber": 3,
+      "gasUsed": 2579711,
+      "deployNonce": 2,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0xc9d73fb7cbf6123cd7e2ec74930d64e43c573655b4d31a26eb425fc4b5b5adb3",
+      "keccakOfEthGetCode": "0xc9d73fb7cbf6123cd7e2ec74930d64e43c573655b4d31a26eb425fc4b5b5adb3",
+      "codeSize": 11449,
+      "immutableSlots": 7,
+      "maskedCodeHash": "0x78fe7e9080afcd53e5bd58d5a997a1aaa4e2d95e0e221ae194584a1db7d0c826",
+      "runtimeMatchesArtifactModuloImmutables": true,
+      "immutableValues": {
+        "5485": "0xe697ef26aec90ab86068bef1e00099309073cd9cd33b09e0f45f9ff597699ad3",
+        "5487": "0x0000000000000000000000000000000000000000000000000000000000007a69",
+        "5489": "0x0000000000000000000000005025bd3a74c7773da5a9866fcf3d0a2f585f5704",
+        "5491": "0x604240e1ed005b9ba256cb7011059bf4ae645812b834bbcb5b22c93e2d1185cc",
+        "5493": "0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6",
+        "5496": "0x44656c65676174696f6e4d616e61676572000000000000000000000000000011",
+        "5499": "0x3100000000000000000000000000000000000000000000000000000000000001"
+      }
+    },
+    "HybridDeleGatorImpl": {
+      "address": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+      "txHash": "0xed0793fded2a38341ec331ca1eb61be18d8549133f44875fa2a1bf68cd4c0885",
+      "blockNumber": 4,
+      "gasUsed": 4443749,
+      "deployNonce": 3,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x576388897b7824f13382112029f20a9361452682defa22dc458a6b01cfea8883",
+      "keccakOfEthGetCode": "0x576388897b7824f13382112029f20a9361452682defa22dc458a6b01cfea8883",
+      "codeSize": 20150,
+      "immutableSlots": 37,
+      "maskedCodeHash": "0xe67e774b76a3a5fd0d0c632172108b5862ba4362afbe854a7a56e433a4244ae6",
+      "runtimeMatchesArtifactModuloImmutables": true,
+      "immutableValues": {
+        "4032": "0x000000000000000000000000e1498adc6b3b40dfb8321e9c99a75153800c1525",
+        "5485": "0xcdad84e6e715305c9add22b3d17aa0aa38c2e2b0e13644549889fcb1edea05ea",
+        "5487": "0x0000000000000000000000000000000000000000000000000000000000007a69",
+        "5489": "0x000000000000000000000000e1498adc6b3b40dfb8321e9c99a75153800c1525",
+        "5491": "0xbf838c9b47d9d027be2b5f5d5d56cccf97c5c8f854682d0ba052ed46c3cc1d15",
+        "5493": "0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6",
+        "5496": "0x48796272696444656c654761746f72000000000000000000000000000000000f",
+        "5499": "0x3100000000000000000000000000000000000000000000000000000000000001",
+        "23963": "0x0000000000000000000000005025bd3a74c7773da5a9866fcf3d0a2f585f5704",
+        "23967": "0x00000000000000000000000065005f35c005450f9e102db183672f780cd83d28"
+      }
+    },
+    "MultiSigDeleGatorImpl": {
+      "address": "0x05282A658456a1444CE458d9F8bcb6D884E69f26",
+      "txHash": "0x5ba56a781e5b36f488742cbb044da917cf1de9a4045598b1aec984996c51cf90",
+      "blockNumber": 5,
+      "gasUsed": 3766213,
+      "deployNonce": 4,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x5e120359bebb332ef8d9e94fb6244b0078e88d38955338d27d1656917577ca0c",
+      "keccakOfEthGetCode": "0x5e120359bebb332ef8d9e94fb6244b0078e88d38955338d27d1656917577ca0c",
+      "codeSize": 16896,
+      "immutableSlots": 37,
+      "maskedCodeHash": "0xd9d8b2d1235f21da9094c971e820c67004bb5976693f288dcbb0bb9697508f0e",
+      "runtimeMatchesArtifactModuloImmutables": true,
+      "immutableValues": {
+        "4032": "0x00000000000000000000000005282a658456a1444ce458d9f8bcb6d884e69f26",
+        "5485": "0x372673729f451d31b9b04c758585cde38624d47335e8b47600d044f07cc6b6b5",
+        "5487": "0x0000000000000000000000000000000000000000000000000000000000007a69",
+        "5489": "0x00000000000000000000000005282a658456a1444ce458d9f8bcb6d884e69f26",
+        "5491": "0xefb0e65f5993625fd90f15ffa29f65747745fa4da643e2a3b039c6b18d068b90",
+        "5493": "0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6",
+        "5496": "0x4d756c746953696744656c654761746f72000000000000000000000000000011",
+        "5499": "0x3100000000000000000000000000000000000000000000000000000000000001",
+        "23963": "0x0000000000000000000000005025bd3a74c7773da5a9866fcf3d0a2f585f5704",
+        "23967": "0x00000000000000000000000065005f35c005450f9e102db183672f780cd83d28"
+      }
+    },
+    "AllowedTargetsEnforcer": {
+      "address": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+      "txHash": "0x00a4c7f087880be813d83aea09d45035b8228a955c7e4998ef33d47920c4357f",
+      "blockNumber": 6,
+      "gasUsed": 440173,
+      "deployNonce": 5,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3",
+      "keccakOfEthGetCode": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3",
+      "codeSize": 1792,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "AllowedMethodsEnforcer": {
+      "address": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+      "txHash": "0x5fff4800d3de0aa2c44926efe651b60a8a602dd390c34e0ec04f27204a884dbe",
+      "blockNumber": 7,
+      "gasUsed": 482984,
+      "deployNonce": 6,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2",
+      "keccakOfEthGetCode": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2",
+      "codeSize": 1990,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "ValueLteEnforcer": {
+      "address": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB",
+      "txHash": "0xc3f432b16817cf4d2b3efeb6c321872685d3ef0bfe7c4063a68837145b492c59",
+      "blockNumber": 8,
+      "gasUsed": 316263,
+      "deployNonce": 7,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e",
+      "keccakOfEthGetCode": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e",
+      "codeSize": 1218,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "TimestampEnforcer": {
+      "address": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C",
+      "txHash": "0x9f7d144f45cc05d716d009b46b2a9a95a48b630fad8f82142313bc9c5d0a3bd3",
+      "blockNumber": 9,
+      "gasUsed": 312657,
+      "deployNonce": 8,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324",
+      "keccakOfEthGetCode": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324",
+      "codeSize": 1201,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "LimitedCallsEnforcer": {
+      "address": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3",
+      "txHash": "0x042c45747c4b8773b9d7e03e8c8613d80175921bc9798d0599ca0ceb29ab306c",
+      "blockNumber": 10,
+      "gasUsed": 312981,
+      "deployNonce": 9,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a",
+      "keccakOfEthGetCode": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a",
+      "codeSize": 1203,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "NonceEnforcer": {
+      "address": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+      "txHash": "0xad4d3dae348a8a7df81eeb4c4587b50e8bba051834e06b60de60da2a65dfefcb",
+      "blockNumber": 11,
+      "gasUsed": 320895,
+      "deployNonce": 10,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf",
+      "keccakOfEthGetCode": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf",
+      "codeSize": 1240,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "RedeemerEnforcer": {
+      "address": "0x586B8032Db3b29287D205862C78dC14C69CFdC30",
+      "txHash": "0xa6aebaad907fd177bf2cc237008411b8700be39f53c5b1566fc91c5d7500152f",
+      "blockNumber": 12,
+      "gasUsed": 389429,
+      "deployNonce": 11,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220",
+      "keccakOfEthGetCode": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220",
+      "codeSize": 1557,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "ERC20TransferAmountEnforcer": {
+      "address": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+      "txHash": "0xc69ac2c75322173eeafce08e6cc97557f5ef25a1fa78001fa8916497dfe7b9e2",
+      "blockNumber": 13,
+      "gasUsed": 490527,
+      "deployNonce": 12,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677",
+      "keccakOfEthGetCode": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677",
+      "codeSize": 2025,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "HybridDeleGatorProxy": {
+      "address": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+      "txHash": "0xb5f39451c8f125c4fa2aa9e51326762ae32cf91d3ff612eb385109ee943c884f",
+      "blockNumber": 14,
+      "gasUsed": 173340,
+      "deployNonce": 13,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0x8a909b59f80272a7f9361d39cc15f2e956f710e8b385bd8d2e7d604d1f04a4e6",
+      "keccakOfEthGetCode": "0x8a909b59f80272a7f9361d39cc15f2e956f710e8b385bd8d2e7d604d1f04a4e6",
+      "codeSize": 116,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0x8a909b59f80272a7f9361d39cc15f2e956f710e8b385bd8d2e7d604d1f04a4e6",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "SpikeTestToken": {
+      "address": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+      "txHash": "0x18d9e214c0620d424463e0b4ef8ea369de6babbd1167f4dd4e6b8d5a88b44165",
+      "blockNumber": 15,
+      "gasUsed": 543432,
+      "deployNonce": 14,
+      "addressMatchesCreateFormula": true,
+      "extcodehash": "0xdcb0a4f389e153b89e1524ca0ce3b9c50a11ce082be9f8567f7808964329f95d",
+      "keccakOfEthGetCode": "0xdcb0a4f389e153b89e1524ca0ce3b9c50a11ce082be9f8567f7808964329f95d",
+      "codeSize": 1771,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0xdcb0a4f389e153b89e1524ca0ce3b9c50a11ce082be9f8567f7808964329f95d",
+      "runtimeMatchesArtifactModuloImmutables": true
+    },
+    "SenderCreator": {
+      "address": "0xd168c796E6Db529A15869341e3b4461a22C59Eee",
+      "createdBy": "EntryPoint constructor (CREATE, nonce 1)",
+      "extcodehash": "0xf7ef70c5f65dd3a86b30faa8382f6ef083533f3aee47ee62e4bbe7993dfeece4",
+      "keccakOfEthGetCode": "0xf7ef70c5f65dd3a86b30faa8382f6ef083533f3aee47ee62e4bbe7993dfeece4",
+      "codeSize": 445,
+      "immutableSlots": 0,
+      "maskedCodeHash": "0xf7ef70c5f65dd3a86b30faa8382f6ef083533f3aee47ee62e4bbe7993dfeece4",
+      "runtimeMatchesArtifactModuloImmutables": true
+    }
+  },
+  "account": {
+    "address": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+    "implementation": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+    "owner": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC"
+  },
+  "token": {
+    "address": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+    "supply": "1000000000000000000000000",
+    "decimals": 18,
+    "holder": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2"
+  },
+  "checks": {
+    "delegationManager": {
+      "owner": "0xbDc9EdC82A9958A1B49011C5f803f2E9188AdB12",
+      "ownerIsSupervisor": true,
+      "paused": "false",
+      "version": "1.3.0",
+      "domainHash": "0xe697ef26aec90ab86068bef1e00099309073cd9cd33b09e0f45f9ff597699ad3",
+      "eip712DomainChainId": "31337",
+      "domainHashIfChainIdIsEthChainId": "0xe697ef26aec90ab86068bef1e00099309073cd9cd33b09e0f45f9ff597699ad3",
+      "domainHashIfChainIdIsZero": "0x9c1963bc5adda71a473395d85c848d4915f4e516c0bd16d4f860acb9b2214236",
+      "domainUsesChainId": 31337
+    },
+    "account": {
+      "address": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+      "implementationSlot": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+      "implementationIsHybridImpl": true,
+      "owner": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC",
+      "ownerIsDirector1": true,
+      "delegationManager": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+      "entryPoint": "0x65005f35c005450f9E102db183672F780cD83d28",
+      "passkeys": "none (initialize called with empty key arrays)"
+    },
+    "token": {
+      "address": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+      "name": "YINGLONG Spike Test Unit",
+      "accountBalance": "1000000000000000000000000",
+      "label": "test unit, no value"
+    }
+  },
+  "delegation": {
+    "delegate": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50",
+    "delegator": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+    "authority": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "salt": "13200389045746898497",
+    "caveats": [
+      {
+        "enforcer": "AllowedTargetsEnforcer",
+        "address": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+        "terms": "0xe8ab47fcaedaa1d709c3591d3a58043545d2ce71",
+        "meaning": "only the test token"
+      },
+      {
+        "enforcer": "AllowedMethodsEnforcer",
+        "address": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+        "terms": "0xa9059cbb",
+        "meaning": "only transfer(address,uint256)"
+      },
+      {
+        "enforcer": "ERC20TransferAmountEnforcer",
+        "address": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+        "terms": "0xe8ab47fcaedaa1d709c3591d3a58043545d2ce7100000000000000000000000000000000000000000000003635c9adc5dea00000",
+        "meaning": "cumulative cap 1000000000000000000000 base units"
+      }
+    ],
+    "signer": {
+      "role": "director-1",
+      "address": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC",
+      "scheme": "EIP-712 over the DelegationManager domain, ECDSA, verified by the account through ERC-1271"
+    },
+    "domainHash": "0xe697ef26aec90ab86068bef1e00099309073cd9cd33b09e0f45f9ff597699ad3",
+    "delegationHashOnchain": "0xd79be32bdd6ff0792fb40cf7b7dc7e5661cbf6cc4436e126184c207d3a374251",
+    "delegationHashOffchain": "0xd79be32bdd6ff0792fb40cf7b7dc7e5661cbf6cc4436e126184c207d3a374251",
+    "delegationHashesMatch": true,
+    "typedDataHash": "0xbd0777df793aa1ebea3462d675b0989fe83c4b0a03ba7849f07f02e5a75bf6ae",
+    "signature": "0x4d21107f2aa19ddc21055492d8d10d9a6d824031813c60de4b116270046cb5e71932b8cc9a61c457cc3a19b2f4bec27ad85135121ee32df30a642e44ea8ac6c61c",
+    "erc1271Result": "0x1626ba7e",
+    "erc1271Valid": true
+  },
+  "redemptions": [
+    {
+      "description": "redemption 1: 250 units, within cap",
+      "label": "redeemDelegations 250",
+      "hash": "0xae84aececa2471e759d263c1f0a474f11e7bc813f41cf6a19c3d9c039a8be982",
+      "from": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50",
+      "nonce": 0,
+      "status": "0x1",
+      "blockNumber": 17,
+      "gasUsed": 196069,
+      "amount": "250000000000000000000",
+      "balancesBefore": {
+        "account": "1000000000000000000000000",
+        "recipient": "0",
+        "spent": "0"
+      },
+      "balancesAfter": {
+        "account": "999750000000000000000000",
+        "recipient": "250000000000000000000",
+        "spent": "250000000000000000000"
+      },
+      "recipientReceived": "250000000000000000000",
+      "emitted": {
+        "RedeemedDelegation": true,
+        "Transfer": true,
+        "logCount": 3
+      }
+    },
+    {
+      "description": "redemption 2: 800 units, cumulative 1050 above the 1000 cap, must revert",
+      "label": "redeemDelegations 800 (over cap)",
+      "hash": "0x217b90c9ce306c5621c2b2b5af12deef866b82626b6b8536a58820eba05529f8",
+      "from": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50",
+      "nonce": 1,
+      "status": "0x0",
+      "blockNumber": 18,
+      "gasUsed": 102229,
+      "amount": "800000000000000000000",
+      "estimateGas": {
+        "rpcError": {
+          "code": 3,
+          "message": "execution reverted: ERC20TransferAmountEnforcer:allowance-exceeded"
+        },
+        "revert": {
+          "kind": "Error(string)",
+          "reason": "ERC20TransferAmountEnforcer:allowance-exceeded"
+        }
+      },
+      "replayAtParentBlock": {
+        "rpcError": {
+          "code": 3,
+          "message": "execution reverted: ERC20TransferAmountEnforcer:allowance-exceeded"
+        },
+        "revert": {
+          "kind": "Error(string)",
+          "reason": "ERC20TransferAmountEnforcer:allowance-exceeded"
+        }
+      },
+      "replayAtLatest": {
+        "rpcError": {
+          "code": 3,
+          "message": "execution reverted: ERC20TransferAmountEnforcer:allowance-exceeded"
+        },
+        "revert": {
+          "kind": "Error(string)",
+          "reason": "ERC20TransferAmountEnforcer:allowance-exceeded"
+        }
+      },
+      "balancesAfter": {
+        "account": "999750000000000000000000",
+        "recipient": "250000000000000000000",
+        "spent": "250000000000000000000"
+      },
+      "stateUnchanged": true
+    },
+    {
+      "description": "redemption 3: 750 units, cumulative exactly 1000 = cap",
+      "label": "redeemDelegations 750 (boundary)",
+      "hash": "0x00ae7fee60a522b41035b64c05ada9ff84a732a887f6f1cbe094b7fbb74af5ce",
+      "from": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50",
+      "nonce": 2,
+      "status": "0x1",
+      "blockNumber": 19,
+      "gasUsed": 161869,
+      "amount": "750000000000000000000",
+      "balancesAfter": {
+        "account": "999000000000000000000000",
+        "recipient": "1000000000000000000000",
+        "spent": "1000000000000000000000"
+      }
+    }
+  ],
+  "transactions": [
+    {
+      "label": "deploy EntryPoint",
+      "hash": "0xe681ac1ea8e0c83cffc360b108fba7c3e50fc32023424d4e9a37a4ce2ba93530",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 0,
+      "status": "0x1",
+      "blockNumber": 1,
+      "gasUsed": 3284469,
+      "contract": "0x65005f35c005450f9E102db183672F780cD83d28"
+    },
+    {
+      "label": "deploy SCL_RIP7212",
+      "hash": "0x24c157e01eabe52d6f2798a015e1ef4d906a2a5b7a456cc4382c4be8b75ddf7d",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 1,
+      "status": "0x1",
+      "blockNumber": 2,
+      "gasUsed": 738155,
+      "contract": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f"
+    },
+    {
+      "label": "deploy DelegationManager",
+      "hash": "0x1b9335acc493f83fb40f27a12de6a733706ec21982b370a4d983bd050f6faa1e",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 2,
+      "status": "0x1",
+      "blockNumber": 3,
+      "gasUsed": 2579711,
+      "contract": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704"
+    },
+    {
+      "label": "deploy HybridDeleGatorImpl",
+      "hash": "0xed0793fded2a38341ec331ca1eb61be18d8549133f44875fa2a1bf68cd4c0885",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 3,
+      "status": "0x1",
+      "blockNumber": 4,
+      "gasUsed": 4443749,
+      "contract": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525"
+    },
+    {
+      "label": "deploy MultiSigDeleGatorImpl",
+      "hash": "0x5ba56a781e5b36f488742cbb044da917cf1de9a4045598b1aec984996c51cf90",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 4,
+      "status": "0x1",
+      "blockNumber": 5,
+      "gasUsed": 3766213,
+      "contract": "0x05282A658456a1444CE458d9F8bcb6D884E69f26"
+    },
+    {
+      "label": "deploy AllowedTargetsEnforcer",
+      "hash": "0x00a4c7f087880be813d83aea09d45035b8228a955c7e4998ef33d47920c4357f",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 5,
+      "status": "0x1",
+      "blockNumber": 6,
+      "gasUsed": 440173,
+      "contract": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662"
+    },
+    {
+      "label": "deploy AllowedMethodsEnforcer",
+      "hash": "0x5fff4800d3de0aa2c44926efe651b60a8a602dd390c34e0ec04f27204a884dbe",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 6,
+      "status": "0x1",
+      "blockNumber": 7,
+      "gasUsed": 482984,
+      "contract": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7"
+    },
+    {
+      "label": "deploy ValueLteEnforcer",
+      "hash": "0xc3f432b16817cf4d2b3efeb6c321872685d3ef0bfe7c4063a68837145b492c59",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 7,
+      "status": "0x1",
+      "blockNumber": 8,
+      "gasUsed": 316263,
+      "contract": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB"
+    },
+    {
+      "label": "deploy TimestampEnforcer",
+      "hash": "0x9f7d144f45cc05d716d009b46b2a9a95a48b630fad8f82142313bc9c5d0a3bd3",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 8,
+      "status": "0x1",
+      "blockNumber": 9,
+      "gasUsed": 312657,
+      "contract": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C"
+    },
+    {
+      "label": "deploy LimitedCallsEnforcer",
+      "hash": "0x042c45747c4b8773b9d7e03e8c8613d80175921bc9798d0599ca0ceb29ab306c",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 9,
+      "status": "0x1",
+      "blockNumber": 10,
+      "gasUsed": 312981,
+      "contract": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3"
+    },
+    {
+      "label": "deploy NonceEnforcer",
+      "hash": "0xad4d3dae348a8a7df81eeb4c4587b50e8bba051834e06b60de60da2a65dfefcb",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 10,
+      "status": "0x1",
+      "blockNumber": 11,
+      "gasUsed": 320895,
+      "contract": "0x37dC4E452Ade815a8473156811563379eEbea3CF"
+    },
+    {
+      "label": "deploy RedeemerEnforcer",
+      "hash": "0xa6aebaad907fd177bf2cc237008411b8700be39f53c5b1566fc91c5d7500152f",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 11,
+      "status": "0x1",
+      "blockNumber": 12,
+      "gasUsed": 389429,
+      "contract": "0x586B8032Db3b29287D205862C78dC14C69CFdC30"
+    },
+    {
+      "label": "deploy ERC20TransferAmountEnforcer",
+      "hash": "0xc69ac2c75322173eeafce08e6cc97557f5ef25a1fa78001fa8916497dfe7b9e2",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 12,
+      "status": "0x1",
+      "blockNumber": 13,
+      "gasUsed": 490527,
+      "contract": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a"
+    },
+    {
+      "label": "deploy HybridDeleGatorProxy",
+      "hash": "0xb5f39451c8f125c4fa2aa9e51326762ae32cf91d3ff612eb385109ee943c884f",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 13,
+      "status": "0x1",
+      "blockNumber": 14,
+      "gasUsed": 173340,
+      "contract": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2"
+    },
+    {
+      "label": "deploy SpikeTestToken",
+      "hash": "0x18d9e214c0620d424463e0b4ef8ea369de6babbd1167f4dd4e6b8d5a88b44165",
+      "from": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+      "nonce": 14,
+      "status": "0x1",
+      "blockNumber": 15,
+      "gasUsed": 543432,
+      "contract": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71"
+    },
+    {
+      "label": "redeemDelegations 250",
+      "hash": "0xae84aececa2471e759d263c1f0a474f11e7bc813f41cf6a19c3d9c039a8be982",
+      "from": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50",
+      "nonce": 0,
+      "status": "0x1",
+      "blockNumber": 17,
+      "gasUsed": 196069
+    },
+    {
+      "label": "redeemDelegations 800 (over cap)",
+      "hash": "0x217b90c9ce306c5621c2b2b5af12deef866b82626b6b8536a58820eba05529f8",
+      "from": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50",
+      "nonce": 1,
+      "status": "0x0",
+      "blockNumber": 18,
+      "gasUsed": 102229
+    },
+    {
+      "label": "redeemDelegations 750 (boundary)",
+      "hash": "0x00ae7fee60a522b41035b64c05ada9ff84a732a887f6f1cbe094b7fbb74af5ce",
+      "from": "0x27D51dF9306022DB196b473E6721DBDE80aBBF50",
+      "nonce": 2,
+      "status": "0x1",
+      "blockNumber": 19,
+      "gasUsed": 161869
+    }
+  ],
+  "verdict": {
+    "allFrameworkContractsDeployed": true,
+    "runtimeMatchesArtifactForAll": true,
+    "extcodehashEqualsKeccakOfCodeForAll": true,
+    "delegationSignatureValidViaErc1271": true,
+    "redemptionWithinCapSucceeded": true,
+    "redemptionAboveCapReverted": true,
+    "revertReason": "ERC20TransferAmountEnforcer:allowance-exceeded",
+    "revertReasonIsCapExceeded": true,
+    "boundaryRedemptionSucceeded": true,
+    "go": true
+  },
+  "codehashReader": {
+    "address": "0x138F4b00Ef06926EaC55071A177Aa1bb945Fb2Be",
+    "note": "FiscoProbe deployed from a throwaway key; codeInfo(x, 0) returns x.codehash via EXTCODEHASH"
+  }
+}

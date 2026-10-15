@@ -1,0 +1,82 @@
+[
+  {
+    "step": "account",
+    "ledger": "fisco",
+    "account": "0x9D60c63B0b5180D295560c71D0E6Ba053Bfadd3A",
+    "signer": "scripted passkey (software P-256 key)"
+  },
+  {
+    "step": "passport",
+    "ledger": "fisco",
+    "agentId": "1",
+    "registerTx": "0x8e427d9150116af1b73c79012126054fb4f8ac800dd170c0e9d96cd134561ca5",
+    "attestTxs": [
+      "0x997d2285716a93602da86d489f94d687526ae617833977b3df377064545951d2"
+    ]
+  },
+  {
+    "step": "mint",
+    "ledger": "fisco",
+    "tx": "0x147f5984fdd96e09654cbf10eaa48717a13d5b876c2eb9023b802835d9e48cc5",
+    "amount": "20000000000"
+  },
+  {
+    "step": "seal",
+    "ledger": "fisco",
+    "publishTx": "0xc0e294dd54638c004a05d34e17f4df802f22af4e0e1e5ecc34c0dfbf0d2d4bc9",
+    "mandateHash": "0x239e5dfc4cb05c9ec2f5c2a6eb7179b47e003b3240860eb828b48d1654c5f543",
+    "delegationHash": "0x8144fc496393551cda5963049fea5ea764062279beda76cc29e3ae2edabe421a",
+    "sealedBy": "scripted passkey (software P-256 key)"
+  },
+  {
+    "step": "T1 rent 9,500 tHKD to Harbour Homes",
+    "ledger": "fisco",
+    "tx": "0xd2c56399e5897374b7d468657239ba532d3fce8c00aece3c469ff5b99b36edb7",
+    "ok": true,
+    "explorer": "https://app.yinglong-agent.tech/proof/tx/fisco/0xd2c56399e5897374b7d468657239ba532d3fce8c00aece3c469ff5b99b36edb7"
+  },
+  {
+    "step": "T4 simulation",
+    "ledger": "fisco",
+    "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)"
+  },
+  {
+    "step": "T4 raw attack to Mirage reverted on-chain",
+    "ledger": "fisco",
+    "tx": "0x78a18048db4fcd63f1faa3a9407ce3945d183f73dd40c4bbf2adc993f8833a03",
+    "ok": false,
+    "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)",
+    "explorer": "https://app.yinglong-agent.tech/proof/tx/fisco/0x78a18048db4fcd63f1faa3a9407ce3945d183f73dd40c4bbf2adc993f8833a03"
+  },
+  {
+    "step": "T2 without approval",
+    "ledger": "fisco",
+    "revert": "CoSignRequired(5000000000, 2000000000)"
+  },
+  {
+    "step": "T2 tuition escrow 5,000 tHKD co-signed by passkey",
+    "ledger": "fisco",
+    "tx": "0xf903dcbc4d9e62552d0e7bf248f35b67da86a3993eceef9b0dccdf1b46f180d3",
+    "ok": true,
+    "explorer": "https://app.yinglong-agent.tech/proof/tx/fisco/0xf903dcbc4d9e62552d0e7bf248f35b67da86a3993eceef9b0dccdf1b46f180d3"
+  },
+  {
+    "step": "pause (passkey signature relayed)",
+    "ledger": "fisco",
+    "tx": "0x0a95302cffbd30984e70ee998c83c47dc8279350f0186720e9ce470dce958a9d",
+    "ok": true,
+    "msToConfirmed": 487,
+    "block": "189"
+  },
+  {
+    "step": "agent blocked while paused",
+    "ledger": "fisco",
+    "revert": "Paused(0x9D60c63B0b5180D295560c71D0E6Ba053Bfadd3A, 0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)"
+  },
+  {
+    "step": "resume (passkey)",
+    "ledger": "fisco",
+    "tx": "0xf499c8a10398d12222d2ce2db9792639da5d60ab0be3a7f27716a99abbd0817c",
+    "ok": true
+  }
+]
