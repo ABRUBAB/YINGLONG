@@ -58,7 +58,7 @@ export interface ApprovalRequest {
   id: string;
   principal: PrincipalId;
   proposalId: string;
-  kind: "cosign";
+  kind: "cosign" | "pause" | "resume";
   decoded: { target: Address; targetLabel: string; method: string; payeeLabel: string; payeeAddress: Address; symbol: string; decimals: number; amount: string };
   typedData: { domain: Record<string, unknown>; types: Record<string, unknown>; primaryType: string; message: Record<string, unknown> };
   digest: Hex;
@@ -492,6 +492,7 @@ export async function submitApproval(approvalId: string, signature: Hex): Promis
   const a = proposals.get().approvals[approvalId];
   if (!a) throw new Error("unknown approval");
   if (a.status !== "pending") throw new Error(`approval is ${a.status}`);
+  if (a.kind === "pause" || a.kind === "resume") return submitPauseApproval(a, signature);
   const p = proposals.get().proposals[a.proposalId]!;
   const st = stateOf(a.principal);
   const ctx = ledgerContext(st.ledger);
@@ -513,6 +514,75 @@ export async function submitApproval(approvalId: string, signature: Hex): Promis
     x.approvals[approvalId]!.status = "signed";
   });
   return execute(p.id, { delegation: d, approvalSig: signature });
+}
+
+/** One-tap pause / resume: the principal signs Trip or Untrip; our relayer submits it as a plain transaction. */
+export async function createPauseApproval(id: PrincipalId, kind: "pause" | "resume"): Promise<ApprovalRequest> {
+  const st = stateOf(id);
+  const ctx = ledgerContext(st.ledger);
+  const ks = ctx.addr("KillSwitchRegistry");
+  const nonce = await ctx.read<bigint>({ address: ks, abi: abi.KillSwitchRegistryAbi, functionName: "nonces", args: [st.account] });
+  const now = (await ctx.pub.getBlock()).timestamp;
+  const deadline = now + (ctx.profile.timeUnit === "ms" ? 3_600_000n : 3600n);
+  const digest = await ctx.read<Hex>({ address: ks, abi: abi.KillSwitchRegistryAbi, functionName: kind === "pause" ? "tripDigest" : "untripDigest", args: [st.account, nonce, deadline] });
+  const primaryType = kind === "pause" ? "Trip" : "Untrip";
+  const a: ApprovalRequest = {
+    id: randomUUID(),
+    principal: id,
+    proposalId: "",
+    kind,
+    decoded: { target: ks, targetLabel: "KillSwitchRegistry", method: kind === "pause" ? "tripWithSig" : "untripWithSig", payeeLabel: "", payeeAddress: st.account, symbol: "", decimals: 0, amount: "0" },
+    typedData: {
+      domain: { name: "YINGLONG Kill Switch", version: "1", chainId: ctx.profile.chainId, verifyingContract: ks, salt: ctx.deployment.domainSalt },
+      types: { [primaryType]: [{ name: "account", type: "address" }, { name: "nonce", type: "uint256" }, { name: "deadline", type: "uint256" }] },
+      primaryType,
+      message: { account: st.account, nonce: nonce.toString(), deadline: deadline.toString() },
+    },
+    digest,
+    nonce,
+    expiry: deadline,
+    expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
+    status: "pending",
+    execution: { target: ks, value: "0", callData: "0x" },
+    reason: kind === "pause" ? "Pause every delegation of this account now." : "Resume the agent.",
+    explanation: { text: kind === "pause" ? "Sign to stop your agent immediately. Only you can resume it." : "Sign to let your agent act again inside your mandate.", aiGenerated: false },
+    threshold: config(id).kind === "company" ? 2 : 1,
+    signatures: [],
+  };
+  proposals.update((d) => {
+    d.approvals[a.id] = a;
+  });
+  return a;
+}
+
+async function submitPauseApproval(a: ApprovalRequest, signature: Hex): Promise<ReceiptRecord> {
+  const st = stateOf(a.principal);
+  const ctx = ledgerContext(st.ledger);
+  const t0 = Date.now();
+  const res = await ctx.write("relayer", {
+    address: ctx.addr("KillSwitchRegistry"),
+    abi: abi.KillSwitchRegistryAbi as never,
+    functionName: a.kind === "pause" ? "tripWithSig" : "untripWithSig",
+    args: [st.account, a.nonce, a.expiry, signature],
+  });
+  const ms = Date.now() - t0;
+  proposals.update((d) => {
+    d.approvals[a.id]!.status = "signed";
+  });
+  return recordReceipt({
+    principal: a.principal,
+    ledger: st.ledger,
+    agentId: st.agentId,
+    mandateHash: st.mandateHash!,
+    delegationHash: st.delegationHash!,
+    tier: "T3",
+    outcome: res.ok ? "confirmed" : "reverted",
+    txHash: res.hash,
+    approvalSig: signature,
+    documents: { plan: { action: a.kind, msToConfirmed: ms, block: res.receipt.blockNumber.toString() } },
+    explanation: { text: a.kind === "pause" ? `Paused every delegation of this account (confirmed in ${ms} ms, block ${res.receipt.blockNumber}).` : "Resumed the agent.", aiGenerated: false },
+    aigc: { model: "none (user signature)", provider: "local" },
+  });
 }
 
 export function declineApproval(approvalId: string): ApprovalRequest {
