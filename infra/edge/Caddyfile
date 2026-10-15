@@ -27,7 +27,9 @@ app.yinglong-agent.tech {
 	handle_errors 502 503 {
 		root * /srv/app
 		rewrite * /index.html
-		file_server
+		file_server {
+			status 200
+		}
 	}
 }
 
