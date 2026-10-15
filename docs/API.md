@@ -447,6 +447,25 @@ curl -s -X POST https://api.yinglong-agent.tech/v1/challenge/attempt \
 
 ---
 
+#### `GET /v1/tx/:ledger/:hash`: public
+
+A read-only transaction decoder for ledgers without a public explorer (FISCO BCOS is team-run; every FISCO link in `PROOF.md` points here). `:ledger` is `fisco`, `base-sepolia` or `anvil`; `:hash` is a 32-byte transaction hash. Response:
+
+| Field | Meaning |
+|---|---|
+| `ledger`, `ledgerBadge`, `chainId` | Which ledger answered, with its honest label |
+| `hash`, `status`, `blockNumber`, `from`, `to`, `toName`, `gasUsed` | From the transaction and its receipt; `toName` is the YINGLONG contract name when `to` is one of ours |
+| `call` | `{contract, function, args}` decoded against every exported ABI (for `redeemDelegations` the arguments are summarised) |
+| `events` | Each log decoded against every exported ABI: `{address, addressName, contract, event, args}` (includes child-delegation, budget and pause events) |
+| `revert` | For a failed transaction, the typed error recovered by replay (`{name, message}`) |
+| `note` | On FISCO: reverted transactions carry no revert data, so the reason is recovered by replaying the call against the latest state |
+
+400 on a malformed ledger or hash; 500 if the ledger does not know the hash.
+
+```sh
+curl -s https://api.yinglong-agent.tech/v1/tx/fisco/0x<txHash>
+```
+
 ## 4. Other paths on the same host
 
 These are served by other YINGLONG services and routed by the edge (`infra/edge/Caddyfile`); they are not part of `apps/agent/src/server.ts`.

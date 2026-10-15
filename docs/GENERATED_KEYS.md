@@ -83,7 +83,17 @@ Producer abbreviations: **FIN** `scripts/finalize`; **EVG** evidence generator o
 | `passkey.mode` | How the recorded seals were signed: "passkey", "virtual authenticator" or "ECDSA stand-in" | EVG (seal signature type) | CL |
 | `x402.mode` | How x402 payments settled: "facilitator", "seller-settled" or "custodial budget account" | EVG | CL |
 | `zk.mode` | `ZKMandateEnforcer` mode: "stateful", "stateless" or "public caps fallback" | EVG | CL |
-| `evidence.tx_count` | Transaction hashes in the evidence bundle across both ledgers | EVG | CL |
+| `evidence.tx_count` | Distinct live-ledger transaction hashes in the evidence bundle (live receipts, scripted runs, ZK runs, anchors; Anvil excluded) | FIN | CL, README |
+| `evidence.receipts` | Receipts returned by the live API at generation time (on-chain and refused) | FIN (`GET /v1/receipts`) | README |
+| `evidence.reverts` | Of those, receipts whose transaction reverted on chain with a typed error | FIN | README |
+| `evidence.refused_offchain` | Of those, actions refused by the deterministic mirror before anything was signed | FIN | README |
+| `evidence.anchored_receipts` | Receipts included in Merkle batches anchored by the indexer | FIN (`GET /batches`) | README |
+| `deploy.base.status` | "deployed (n contracts)" when `contracts/deployments/base-sepolia.json` exists, otherwise the fork-rehearsal status | FIN (deployment files) | JG, README |
+| `chain.bytecode.equal` | Contracts whose runtime code hash is identical on the two ledgers compared | FIN (deployment files) | JG, README |
+| `chain.bytecode.total` | Contracts compared | FIN | JG, README |
+| `chain.bytecode.pair` | Which two ledgers were compared (Base Sepolia vs FISCO BCOS when Base is deployed, otherwise Anvil vs FISCO BCOS) | FIN | JG, README |
+| `chain.bytecode.differ` | Names of the contracts whose code hashes differ | FIN | EVG |
+| `chain.ledgers` | Live ledgers with a deployment file | FIN | README |
 | `tx.seal.base` | Hash of the mandate-seal transaction on Base Sepolia | EVG | CL |
 | `tx.x402.base` | Hash of an x402 settlement through ERC-7710 on Base Sepolia | EVG | CL |
 | `tx.zk.base` | Hash of a redemption enforced by `ZKMandateEnforcer` | EVG | CL |

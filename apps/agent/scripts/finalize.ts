@@ -97,7 +97,6 @@ try {
 } catch {
   /* offline */
 }
-metrics["evidence.tx_count"] = String(receipts.filter((r) => r.txHash && (r.ledger === "fisco" || r.ledger === "base-sepolia")).length);
 metrics["evidence.receipts"] = String(receipts.length);
 metrics["evidence.reverts"] = String(receipts.filter((r) => r.outcome === "reverted").length);
 metrics["evidence.refused_offchain"] = String(receipts.filter((r) => r.outcome === "rejected_policy").length);
@@ -172,11 +171,13 @@ if (existsSync(zkManifest)) {
 }
 
 // ---------------------------------------------------------------- anchoring, ZK, FISCO, passkeys, verifier
+const anchorTxs: string[] = [];
 try {
   const r = await fetch(`${API}/batches`);
   if (r.ok) {
     const b = (await r.json()) as { batches: { batchId: number; count: number; anchors: { ledger: string; txHash: string }[] }[] };
     const anchored = b.batches.flatMap((x) => x.anchors.map((a) => ({ ...a, count: x.count })));
+    for (const a of anchored) anchorTxs.push(a.txHash);
     const f = anchored.find((a) => a.ledger === "fisco");
     if (f) metrics["tx.anchor.fisco"] = `[\`${f.txHash.slice(0, 12)}...\`](${LEDGERS.fisco.explorerTx!(f.txHash as `0x${string}`)}) (${f.count} receipts in one Merkle root)`;
     const bs = anchored.find((a) => a.ledger === "base-sepolia");
@@ -229,6 +230,19 @@ if (args.includes("--reach")) {
     /* unreachable measurement service */
   }
 }
+
+// Distinct live-ledger transaction hashes anywhere in the bundle: receipts, scripted runs, ZK runs, anchors.
+const liveTx = new Set<string>();
+for (const r of receipts) if (r.txHash && r.ledger !== "anvil") liveTx.add(r.txHash.toLowerCase());
+for (const r of e2e) if (r.ledger !== "anvil") for (const k of ["tx", "publishTx"]) if (typeof r[k] === "string") liveTx.add(String(r[k]).toLowerCase());
+for (const l of ["fisco", "base-sepolia"] as LedgerName[]) {
+  const f = resolve(root, "apps/agent/data", `zk-${l}.json`);
+  if (!existsSync(f)) continue;
+  const z = JSON.parse(readFileSync(f, "utf8"));
+  for (const t of [...(z.payments ?? []).map((x: { tx?: string }) => x.tx), z.forged?.tx, z.replayed?.tx, z.publishTx, z.sealTx]) if (typeof t === "string") liveTx.add(t.toLowerCase());
+}
+for (const h of anchorTxs) liveTx.add(h.toLowerCase());
+metrics["evidence.tx_count"] = String(liveTx.size);
 
 // ---------------------------------------------------------------- write EXECUTION_EVIDENCE.md
 const fmt = (r: RView) => (r.payment ? `${(Number(BigInt(r.payment.amount)) / 10 ** r.payment.decimals).toLocaleString("en-US")} ${r.payment.symbol} to ${r.payment.payeeLabel}` : "");
