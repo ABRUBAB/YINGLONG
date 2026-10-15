@@ -5,7 +5,7 @@ import { compileMandate } from "./compile";
 import { decompile } from "./decompile";
 import { delegationHash, rootDelegation, type Caveat } from "./delegation";
 import { namesFor } from "./names";
-import type { Mandate } from "./schema";
+import { MandateSchema, type Mandate } from "./schema";
 
 export interface RoundTripCheck {
   name: string;
@@ -62,7 +62,7 @@ export function verifyRoundTrip(args: {
     detail: recomputed,
   });
 
-  const docHash = canonicalHash(args.mandate);
+  const docHash = canonicalHash(MandateSchema.parse(args.mandate));
   const { rules, sentences } = decompile(args.onChainCaveats, args.deployment, namesFor(args.deployment, args.mandate), args.timeUnit);
   const binding = rules.find((r) => r.kind === "mandateBinding");
   checks.push({

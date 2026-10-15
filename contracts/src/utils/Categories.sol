@@ -3,7 +3,7 @@ pragma solidity 0.8.23;
 
 /// @title Categories
 /// @notice Budget category ids shared by PayeeBook entries, CategoryBudgetEnforcer, CoSignEnforcer and the
-/// TypeScript mandate compiler (packages/mandate/src/categories.ts must match).
+/// TypeScript mandate compiler (packages/mandate/src/constants.ts must match).
 library Categories {
     uint32 internal constant RENT = 1;
     uint32 internal constant FOOD = 2;

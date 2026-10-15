@@ -35,6 +35,7 @@ export type DecodedRule =
   | { kind: "reserveFloor"; asset: Address; amount: bigint }
   | { kind: "velocity"; asset: Address; window: bigint; maxCount: number; maxOutflow: bigint }
   | { kind: "suitability"; registry: Address; maxRiskClass: number }
+  | { kind: "zkMandate"; router: Address; commitment: Hex }
   | { kind: "unknown"; enforcer: Address; terms: Hex };
 
 export interface Names {
@@ -159,6 +160,10 @@ export function decodeCaveat(c: Caveat, d: Deployment): DecodedRule {
       const [registry, maxRiskClass] = decodeAbiParameters([{ type: "address" }, { type: "uint8" }], t);
       return { kind: "suitability", registry, maxRiskClass };
     }
+    case "ZKMandateEnforcer": {
+      const [router, commitment] = decodeAbiParameters([{ type: "address" }, { type: "bytes32" }], t);
+      return { kind: "zkMandate", router, commitment };
+    }
     default:
       return { kind: "unknown", enforcer: c.enforcer, terms: c.terms };
   }
@@ -230,6 +235,8 @@ export function sentence(r: DecodedRule, names: Names, timeUnit: "s" | "ms" = "s
       return `At most ${r.maxCount} payments and ${amt(r.asset, r.maxOutflow)} per ${duration(r.window, timeUnit)}.`;
     case "suitability":
       return `Idle cash goes only into products of risk class ${r.maxRiskClass} or lower.`;
+    case "zkMandate":
+      return `Private mandate: every payment must carry a zero-knowledge proof that it stays within the hidden cap, payee list and expiry committed as ${r.commitment.slice(0, 10)}...`;
     case "unknown":
       return `Unknown rule at ${r.enforcer}; refuse to seal.`;
   }
