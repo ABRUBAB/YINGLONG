@@ -1,0 +1,16 @@
+# Public edge: the only process bound to 0.0.0.0 (ports 80/443). Host networking so it can reach the
+# YINGLONG services, which all listen on 127.0.0.1.
+services:
+  caddy:
+    image: caddy:2.11.7-alpine
+    container_name: edge-caddy
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv/app:ro
+      - caddy_data:/data
+      - caddy_config:/config
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,52 @@
+{
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+(security) {
+	header {
+		Strict-Transport-Security "max-age=86400"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+yinglong-agent.tech {
+	import security
+	redir https://app.yinglong-agent.tech{uri} 302
+}
+
+app.yinglong-agent.tech {
+	import security
+	header X-Frame-Options "DENY"
+	encode zstd gzip
+	@web {
+		not path /static-placeholder/*
+	}
+	# The web app (Next.js) runs on 127.0.0.1:3000 once deployed; until then serve the static placeholder.
+	reverse_proxy @web 127.0.0.1:3000 {
+		fail_duration 10s
+		@down status 502 503
+		handle_response @down {
+			root * /srv/app
+			rewrite * /index.html
+			file_server
+		}
+	}
+}
+
+api.yinglong-agent.tech {
+	import security
+	encode zstd gzip
+	@agent path /v1/*
+	reverse_proxy @agent 127.0.0.1:8787
+	@services path /fx/* /kyb/* /mirage/* /.well-known/* /agents/*
+	reverse_proxy @services 127.0.0.1:8790
+	@indexer path /proof/* /rpc/fisco /breaker/*
+	reverse_proxy @indexer 127.0.0.1:8791
+	header /healthz Content-Type "application/json"
+	respond /healthz `{"status":"ok","service":"yinglong-api"}` 200
+	respond `{"error":"not_found"}` 404
+}
