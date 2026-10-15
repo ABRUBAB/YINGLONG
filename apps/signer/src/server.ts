@@ -6,6 +6,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { decodeRevert, ledger as ledgerProfile, revertDataOf, type LedgerName } from "@yinglong/sdk";
 import { loadDeployment, rolePrivateKey } from "@yinglong/sdk/server";
 import { guardRedemption } from "./guard";
+import { wrapWithChild } from "./child";
 
 /**
  * apps/signer: the only process that holds agent keys. Listens on 127.0.0.1 only. It signs a redemption only
@@ -70,11 +71,15 @@ app.post("/v1/redeem", async (c) => {
   const g = guardRedemption({ deployment, agent: account.address, to: deployment.contracts.DelegationManager.address as Address, data: r.calldata as Hex, value: 0n });
   if (!g.ok) return refuse(`guard: ${g.reason}`, true);
 
+  let calldata = r.calldata as Hex;
+  let children: Hex[] = [];
   if (r.mode === "normal") {
     const allowed = r.decision.tier === "T1" || (r.decision.tier === "T2" && r.decision.approved === true);
     if (!allowed) return refuse(`decision ${r.decision.tier} is not signable`, true);
+    // Narrow the execution with a per-execution child delegation (two-minute window, single use).
+    ({ calldata, children } = await wrapWithChild({ calldata, deployment, agent: account.address, agentKey: rolePrivateKey(r.agentRole), pub, timeUnit: p.timeUnit }));
     try {
-      await pub.call({ account: account.address, to: deployment.contracts.DelegationManager.address, data: r.calldata as Hex });
+      await pub.call({ account: account.address, to: deployment.contracts.DelegationManager.address, data: calldata });
     } catch (e) {
       return refuse(`simulation at head failed: ${decodeRevert(revertDataOf(e)).message}`, true);
     }
@@ -84,14 +89,14 @@ app.post("/v1/redeem", async (c) => {
 
   const txHash = await wallet.sendTransaction({
     to: deployment.contracts.DelegationManager.address,
-    data: r.calldata as Hex,
+    data: calldata,
     chain,
     account,
     ...(r.mode === "chain-test" ? { gas: 1_500_000n } : {}),
     ...(p.legacyTx ? { type: "legacy" as const, gasPrice: p.gasPrice ?? 0n } : {}),
   });
   log.push({ at: new Date().toISOString(), ledger: r.ledger, role: r.agentRole, ok: true, txHash, mode: r.mode });
-  return c.json({ ok: true, txHash });
+  return c.json({ ok: true, txHash, childDelegations: children });
 });
 
 const port = Number(process.env.SIGNER_PORT ?? 8788);

@@ -4,16 +4,16 @@
 
 **Summary (5 lines)**
 1. YINGLONG is a research prototype on a public testnet (Base Sepolia) and a team-run FISCO BCOS test chain; it moves test units only, has had no third-party audit, holds no licence and is not production-ready.
-2. An agent can move value only by redeeming an ERC-7710 delegation whose caveat enforcers are the user's sealed rules; out-of-mandate movement is measured on every bench run: <!-- gen:bench.oom.count -->TBD<!-- /gen --> of <!-- gen:bench.attacks.n -->TBD<!-- /gen --> attack runs.
+2. An agent can move value only by redeeming an ERC-7710 delegation whose caveat enforcers are the user's sealed rules; out-of-mandate movement is measured on every bench run: <!-- gen:bench.oom.count -->not yet measured<!-- /gen --> of <!-- gen:bench.attacks.n -->not yet measured<!-- /gen --> attack runs.
 3. Six permission states (T0 Observe, T1 Act, T2 Confirm, T3 Reserved, T4 Refuse, T? Ask) implement the three decision classes of the 2026 CAC/NDRC/MIIT agent Opinions, item 6; an AI signal can only raise a tier, never lower it and never refuse.
 4. Chapters 3 to 7 follow the five areas of the Beijing FinTech Industry Alliance agent security standard (secondary source); every control names the contract or module that implements it and the test that checks it.
 5. Known risks KR-01 to KR-19 and open design checks DC-01 to DC-11 are listed with mitigation and residual risk; chapter 10 contrasts what exists now with what production would require.
 
 | Field | Value |
 |---|---|
-| Release | <!-- gen:meta.release_tag -->TBD<!-- /gen --> |
-| Commit assessed | <!-- gen:meta.commit -->TBD<!-- /gen --> |
-| Numbers generated at | <!-- gen:meta.generated_at -->TBD<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->eb5695d<!-- /gen --> |
+| Commit assessed | <!-- gen:meta.commit -->eb5695d<!-- /gen --> |
+| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-15T22:14:24.649Z<!-- /gen --> |
 | Owners | R4 (AI security) and R2 (contracts), per plan section 17 |
 | Companion documents | `docs/THREAT_MODEL.md`, `docs/PIA.md`, `docs/INCIDENT_RESPONSE.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/SECURITY_REVIEW.md`, `docs/CLAIMS.md` |
 
@@ -54,7 +54,7 @@ The standard this document follows: *Security Requirements for Financial Applica
 | Tier | Name | Examples | Who decides | Where enforced | Decision class (2026 agent Opinions [V]) | Implementing contract or module |
 |---|---|---|---|---|---|---|
 | **T0** | Observe | Balances, receipts, forecasts, insights, coverage-gap analysis | Agent | Read-only tools; no signing path exists | None (information only) | `apps/agent` read tools; MCP server is proposal-only (no sign or submit tool); `apps/indexer` |
-| **T1** | Act | Rent to a verified payee within budget; recurring bills; x402 purchases up to the cap; payroll inside the board mandate; repeat sweeps into a product approved once | Agent alone; user notified | On-chain at delegation redemption: the DelegationManager runs every caveat | Autonomous agent decision, inside the user's mandate (item 6) | DelegationManager v1.3.0 with stock `AllowedTargets`, `AllowedMethods`, `ValueLte`, `Timestamp`, `Nonce`, `Redeemer`; custom `MandateBindingEnforcer`, `ForbiddenTargetsEnforcer`, `AgentLineageEnforcer`, `VerifiedPayeeEnforcer`, `CategoryBudgetEnforcer`, `ReserveFloorEnforcer`, `VelocityEnforcer`, `SuitabilityEnforcer`, `JurisdictionEnforcer`, `GlobalPauseEnforcer`, `ReputationGateEnforcer`, `ZKMandateEnforcer` (private mandates); per-execution child with `Timestamp` + `LimitedCalls`; x402 leaf with `ERC20TransferAmount` + `LimitedCalls` + `Redeemer`; reads `MandateRegistry`, `PayeeBook`, `KillSwitchRegistry`, `YinglongPassportRegistry`; receipt to `AccountabilityLedger`. Off-chain: `apps/agent` policy mirror, `apps/signer`, the nine scales |
+| **T1** | Act | Rent to a verified payee within budget; recurring bills; x402 purchases up to the cap; payroll inside the board mandate; repeat sweeps into a product approved once | Agent alone; user notified | On-chain at delegation redemption: the DelegationManager runs every caveat | Autonomous agent decision, inside the user's mandate (item 6) | DelegationManager v1.3.0 with stock `AllowedTargets`, `AllowedMethods`, `ValueLte`; custom `MandateBindingEnforcer`, `ForbiddenTargetsEnforcer`, `AgentLineageEnforcer`, `VerifiedPayeeEnforcer`, `CategoryBudgetEnforcer`, `ReserveFloorEnforcer`, `VelocityEnforcer`, `SuitabilityEnforcer`, `JurisdictionEnforcer`, `GlobalPauseEnforcer`, `ZKMandateEnforcer` (private mandates; `ReputationGateEnforcer` is built and tested but not emitted by the compiler yet); per-execution child delegation signed by `apps/signer` with `Timestamp(now - 1, now + 120 s)` + `LimitedCalls(1)`; x402 leaf with `ERC20TransferAmount` + `LimitedCalls(1)` + `Timestamp`; reads `MandateRegistry`, `PayeeBook`, `KillSwitchRegistry`, `YinglongPassportRegistry`; receipt to `AccountabilityLedger`. Off-chain: `apps/agent` policy mirror, `apps/signer`, the nine scales |
 | **T2** | Confirm | Above the T1 cap and under the T2 ceiling; first payment to a verified new counterparty; first sweep into any product; anything an AI signal flagged | User approves on the phone with a passkey; optional veto window | `CoSignEnforcer` checks the account's own ERC-1271 signature over the approval hash; `VetoTimelockEnforcer` for scheduled items | Decision needing user authorisation (item 6) | `CoSignEnforcer`, `VetoTimelockEnforcer`, plus every T1 caveat; approval page `/approve/[id]` in `apps/web` behind the signing-domain guard; orchestrator state `awaiting_approval` |
 | **T3** | Reserved | Change the mandate, add a payee, raise limits, withdraw to a new address, change the guardian; treasury: 2-of-3 directors | Only the user's own account (passkey user operation); the directors for the treasury | No delegation can reach it: allowlist first, `ForbiddenTargetsEnforcer`, invariant 5, symbolic proofs | Decision only the user makes (item 6) | `MandateRegistry.publish` / `supersede`, `PayeeBook` writes, `KillSwitchRegistry.untripWithSig`, HybridDeleGator `addKey` / `removeKey`, guardian change; MultiSigDeleGator for the treasury; all listed in `ForbiddenTargetsEnforcer` |
 | **T4** | Refuse | Token approvals, arbitrary calls, unlisted contracts, sanctioned counterparties, a rail the jurisdiction forbids | Nobody through the agent. The user may change the mandate at T3 so a future action is no longer T4; a jurisdiction-forbidden rail cannot be enabled by any mandate | Deterministic rules only: refused off-chain and reverted on-chain with a typed error | Behaviour fence (item 7), consistent with item 6's "never exceed the authorised scope" | Typed errors in `contracts/src/utils/Errors.sol` [V, repo]; stock `AllowedTargets` / `AllowedMethods` / `ValueLte`; `ForbiddenTargetsEnforcer`, `JurisdictionEnforcer`, `VerifiedPayeeEnforcer`; off-chain policy mirror, counterparty scale (sanctions), simulator |
@@ -77,7 +77,7 @@ Item 6 of the *Implementation Opinions on the Standardized Application and Innov
 
 | Where it holds | How |
 |---|---|
-| `apps/agent` tier function | The AI signal type is an enum `{none, confirm, ask}`; final tier = maximum of `det(a)` and the AI tier in the order T1 < T2 < T?; T3 and T4 are outside the AI type by construction. Property test: <!-- gen:tests.monotonic.status -->TBD<!-- /gen --> |
+| `apps/agent` tier function | The AI signal type is an enum `{none, confirm, ask}`; final tier = maximum of `det(a)` and the AI tier in the order T1 < T2 < T?; T3 and T4 are outside the AI type by construction. Property test: <!-- gen:tests.monotonic.status -->not yet measured<!-- /gen --> |
 | `apps/signer` | Re-runs the deterministic policy check; AI signals can only stop it from signing, never cause it to sign |
 | On-chain | Enforcers never read AI output; they read signed `terms`, calldata and chain state only |
 
@@ -91,10 +91,10 @@ Trust rule for every custom enforcer [I]: `terms` are signed by the user (truste
 |---|---|---|---|---|---|
 | `AllowedTargets`, `AllowedMethods` | Stock v1.3.0 | Target and selector allowlists; always the first caveats the compiler emits | Framework reverts | T1 boundary, T3/T4 fence | 3 |
 | `ValueLte` | Stock | Native value cap (compiled as 0) | Framework revert | T4 fence | 3 |
-| `Timestamp` | Stock | Validity window of the mandate; `(now, now + 120 s)` on per-execution children | Framework revert | T1 | 3 |
+| `Timestamp` | Stock | `(now - 1, now + 120 s)` on the per-execution child delegation the signer adds to every redemption; the mandate's own validity window is enforced by `MandateBindingEnforcer` through `MandateRegistry.isLive` | Framework revert | T1 | 3 |
 | `LimitedCalls` | Stock | `1` on per-execution children and x402 leaves | Framework revert | T1, x402 | 3 |
-| `Nonce` | Stock | Revocation epoch: one bump invalidates every delegation of the account | Framework revert | Revoke | 5 |
-| `Redeemer` | Stock | Restricts who may redeem (facilitator on x402 leaves) | Framework revert | x402 | 3 |
+| `Nonce` | Stock | Deployed; not emitted by the compiler today. Revocation is `MandateRegistry.revoke`/`supersede` plus `DelegationManager.disableDelegation` in one user operation (any revoked mandate also fails `MandateBindingEnforcer`) | Framework revert | Revoke | 5 |
+| `Redeemer` | Stock | Deployed; redeemer restriction is done by `AgentLineageEnforcer` (passport-bound agent or the pinned facilitator) | Framework revert | x402 | 3 |
 | `ERC20TransferAmount` | Stock | Exact price on x402 leaves (cumulative cap, hence `LimitedCalls(1)`) | Framework revert | x402 | 5 |
 | `MandateBindingEnforcer` | Custom | `MandateRegistry.delegationOf(mandateHash) == delegationHash` and status Live; logs mandate hash, intent hash, receipt nonce | `MandateNotLive`, `MandateDelegationMismatch` | All | 3 |
 | `ForbiddenTargetsEnforcer` | Custom | Reverts on the delegator itself, DelegationManager, all EntryPoints, paymasters, ERC-8004 registries, `PayeeBook`, `MandateRegistry`, `KillSwitchRegistry`, `ProductRegistry`, `YinglongPassportRegistry`, `AccountabilityLedger`; re-checks execution mode | `ForbiddenTarget`, `InvalidExecutionMode` | T3 unreachable | 3 |
@@ -116,7 +116,7 @@ Trust rule for every custom enforcer [I]: `terms` are signed by the user (truste
 
 ### 2.4 Off-chain controls
 
-**`apps/agent` policy mirror.** A TypeScript mirror of every enforcer. It and the Solidity enforcers read the same JSON test vectors in vitest and Foundry (<!-- gen:tests.vectors.shared -->TBD<!-- /gen --> shared vectors; agreement: <!-- gen:tests.vectors.agreement -->TBD<!-- /gen -->). Each decision record carries `blockNumber`, `blockTimestamp` and `stateReadsHash`. The mirror refuses early (T4) so the chain rarely has to; the chain is still the final word.
+**`apps/agent` policy mirror.** A TypeScript mirror of every enforcer (`apps/agent/src/scales/policy.ts`), evaluated on the same decoded caveat bytes and the same on-chain counters. Every proposal is also simulated on the ledger itself (scale 7); if the mirror and the ledger disagree, the agent stops and asks instead of signing (a live differential check on every action). Each decision record carries `blockNumber`, `blockTimestamp` and `stateReadsHash`. The mirror refuses early (T4) so the chain rarely has to; the chain is still the final word.
 
 **`apps/signer` signing-domain guard.** One allowlist of message types with two enforcement points [I]:
 
@@ -125,7 +125,7 @@ Trust rule for every custom enforcer [I]: `terms` are signed by the user (truste
 | Agent signer vault (`apps/signer`) | Agent EOA | `redeemDelegations` calldata, child delegations (narrowing only), receipts; only after re-running the policy check and re-simulating if the head moved more than 2 blocks past the simulated block | Everything else |
 | Approval page (`/approve/[id]`), the only code path that creates a WebAuthn challenge for the user's passkey | User passkeys | (1) DelegationManager `Delegation`, (2) `CoSignEnforcer` approval, (3) `AccountabilityLedger` receipt, (4) `KillSwitchRegistry` trip and untrip, (5) `VetoTimelockEnforcer` veto, (6) ERC-4337 `userOpHash` (EntryPoint v0.7 domain) with calldata decoded field by field | EIP-3009 transfers, ERC-2612 Permit, Permit2, raw `personal_sign`, unknown EIP-712 domains (typed error) |
 
-Message kinds allowed at the assessed commit: <!-- gen:guard.allowlist.count -->TBD<!-- /gen --> (printed from the allowlist, never typed).
+Message kinds allowed at the assessed commit: <!-- gen:guard.allowlist.count -->not yet measured<!-- /gen --> (printed from the allowlist, never typed).
 
 **The nine scales** (plan section 12.2), in order. Only deterministic scales can refuse.
 
@@ -150,19 +150,19 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | ID | Control | Implemented by | Verified by | Bench family or suite |
 |---|---|---|---|---|
 | C-IN-01 | Fail-closed startup: models, prompts, schemas, policy and the enforcer table are SHA-256 pinned; any mismatch stops the runtime; the hashes go into the passport and every `planHash` | `apps/agent` provenance registry, `packages/provenance` | Tampered-prompt startup test | CI |
-| C-IN-02 | Deterministic deployment: own CREATE2 factory from a fresh deployer at nonce 0; solc 0.8.23, `evm_version = london`, `bytecode_hash = "none"`, `cbor_metadata = false` [V, `contracts/foundry.toml`]; deployer keeps no admin role (result: <!-- gen:deploy.deployer_roles -->TBD<!-- /gen -->) | Deployment scripts, `deployments/*/v2.json` | Post-deploy role scan | CI |
-| C-IN-03 | Signed enforcer table (addresses + code hashes); its hash sits in the passport; `yinglong verify` compares `extcodehash` on both ledgers | `packages/mandate`, `tools/verify-py`, `YinglongPassportRegistry` | Bytecode equality: <!-- gen:bytecode.equal -->TBD<!-- /gen --> of <!-- gen:bytecode.total -->TBD<!-- /gen --> enforcers | CI |
+| C-IN-02 | Deterministic deployment: own CREATE2 factory from a fresh deployer at nonce 0; solc 0.8.23, `evm_version = london`, `bytecode_hash = "none"`, `cbor_metadata = false` [V, `contracts/foundry.toml`]; deployer keeps no admin role (result: <!-- gen:deploy.deployer_roles -->not yet measured<!-- /gen -->) | Deployment scripts, `deployments/*/v2.json` | Post-deploy role scan | CI |
+| C-IN-03 | Signed enforcer table (addresses + code hashes); its hash sits in the passport; `yinglong verify` compares `extcodehash` on both ledgers | `packages/mandate`, `tools/verify-py`, `YinglongPassportRegistry` | Bytecode equality: <!-- gen:bytecode.equal -->not yet measured<!-- /gen --> of <!-- gen:bytecode.total -->not yet measured<!-- /gen --> enforcers | CI |
 | C-IN-04 | Account initialisation: HybridDeleGator with owner `address(0)` and two passkeys (phone + laptop), deployed in the first sponsored user operation; passkey RP ID fixed to `yinglong-agent.tech` | `apps/web` onboarding, framework HybridDeleGator | Onboarding e2e test | — |
 | C-IN-05 | FISCO initialisation: standard (non-SM) build only (an SM build replaces KECCAK256 with SM3 and breaks every EIP-712 check [S, secondary source]); chain ID 0 ledger profile; YINGLONG domains add a salt; feature flags verified on the chain | `contracts-fisco/`, `infra/` | Ledger-profile golden tests | — |
 | C-IN-06 | Mandate compilation: `AllowedTargets` + `AllowedMethods` first; allowlist and forbidden set asserted disjoint; `ValueLte(0)`, `GlobalPauseEnforcer` and `MandateBindingEnforcer` always present; the root delegate is never `ANY_DELEGATE` | `packages/mandate` compiler | Compiler property tests | S-PRIV |
-| C-IN-07 | Round-trip verification: caveat array published in `MandateRegistry`; delegation hash recomputed; enforcer code hashes checked; terms decoded back to sentences; two independent implementations (TypeScript, Python) agree on <!-- gen:verify.golden.n -->TBD<!-- /gen --> golden files and <!-- gen:verify.property.n -->TBD<!-- /gen --> property cases | `packages/mandate`, `tools/verify-py` | Golden and property tests | — |
-| C-IN-08 | Input normaliser: homoglyphs, bidi controls, invisible characters; PII scrubber (mainland mobile numbers, 18-digit ID numbers, UnionPay card numbers, private keys, seed phrases) | `apps/agent` normaliser | Scrubber recall on a labelled set: <!-- gen:pia.scrubber.recall -->TBD<!-- /gen --> | `direct_injection` |
-| C-IN-09 | Injection sentinel M1; escalates only | ML serving | Bench per family; FNR <!-- gen:sentinel.fnr -->TBD<!-- /gen --> | `direct_injection`, `multilingual`, TXT, `memory_implant` |
+| C-IN-07 | Round-trip verification: caveat array published in `MandateRegistry`; delegation hash recomputed; enforcer code hashes checked; terms decoded back to sentences; two independent implementations (TypeScript, Python) agree on <!-- gen:verify.golden.n -->not yet measured<!-- /gen --> golden files and <!-- gen:verify.property.n -->not yet measured<!-- /gen --> property cases | `packages/mandate`, `tools/verify-py` | Golden and property tests | — |
+| C-IN-08 | Input normaliser: homoglyphs, bidi controls, invisible characters; PII scrubber (mainland mobile numbers, 18-digit ID numbers, UnionPay card numbers, private keys, seed phrases) | `apps/agent` normaliser | Scrubber recall on a labelled set: <!-- gen:pia.scrubber.recall -->not yet measured<!-- /gen --> | `direct_injection` |
+| C-IN-09 | Injection sentinel M1; escalates only | ML serving | Bench per family; FNR <!-- gen:sentinel.fnr -->not yet measured<!-- /gen --> | `direct_injection`, `multilingual`, TXT, `memory_implant` |
 | C-IN-10 | Quarantine: readers return a closed schema of enums, numbers, verified IDs and opaque handles, each a `Tagged<T>` with source, reader model hash and taint; a snapshot test proves no quarantined bytes reach any planner prompt | `apps/agent`, `packages/provenance` | Snapshot test | TXT, `visual_injection` |
 | C-IN-11 | `PayeeBook` enum: the intent's recipient is a `PayeeBook` id or `NEW_PAYEE_REQUEST`; the model cannot emit an address; a new payee is always a T3 request | `packages/mandate` intent schema | Schema tests | TXT, `lookalike_address` |
 | C-IN-12 | Two-reader agreement on tainted financial fields (amount, payee), including the vision reader; readers of different model families; disagreement → T? | `apps/agent` readers | Bench | `visual_injection` |
 | C-IN-13 | Untrusted protocol input: x402 `description`, A2A card fields, token names, invoice memos are untrusted; A2A cards canonicalised (RFC 8785) and JWS ES256-signed; `kid` and JWKS hash in the passport | `apps/agent`, `apps/services`, `YinglongPassportRegistry` | Card-verification tests | TXT, S-ID, S-X402 |
-| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->TBD<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
+| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->not yet measured<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
 | C-IN-15 | Device capture: the quarantined readers never use screen or microphone capture; they read only files the user supplies (BFIA device-capture requirement [S, secondary source]) | `apps/agent` readers | Code review | — |
 
 ---
@@ -178,11 +178,11 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | C-MD-01 | Role separation above: no amount, address or date is produced by a model | `apps/agent` | Snapshot and grounding tests | TXT |
 | C-MD-02 | Grammar-constrained output (llama-server `json_schema`, vLLM structured outputs, zod schemas on API paths); invalid output retried at most twice, then T? | `apps/agent` | JSON validity rate in the bench | — |
 | C-MD-03 | Grounding: every amount, address, date and counterparty traces to the user's words, the mandate, the `PayeeBook` or verified chain state; missing grounding → T? | `apps/agent` | Bench | TXT, `memory_implant`, `within_mandate` |
-| C-MD-04 | Deterministic policy mirror with shared vectors; differential fuzzing against the Solidity enforcers with time and block warps | `apps/agent`, `contracts/test` | Differential fuzz split (policy-rejected / reverted attack / reverted divergence): <!-- gen:fuzz.differential.split -->TBD<!-- /gen --> | `split_payment`, S-PRIV |
+| C-MD-04 | Deterministic policy mirror with shared vectors; differential fuzzing against the Solidity enforcers with time and block warps | `apps/agent`, `contracts/test` | Differential fuzz split (policy-rejected / reverted attack / reverted divergence): <!-- gen:fuzz.differential.split -->not yet measured<!-- /gen --> | `split_payment`, S-PRIV |
 | C-MD-05 | Simulation conformance: `eth_simulateV1` via viem `simulateCalls` with asset tracing (answers on `sepolia.base.org` [V, live call per plan]); the asset diff must equal the intent; FISCO path uses `eth_call` | `apps/agent` simulator | Bench | S-PRIV, S-X402 |
-| C-MD-06 | Monotonic-safety rule (section 2.2) | `apps/agent` tier function | <!-- gen:tests.monotonic.status -->TBD<!-- /gen --> | All |
+| C-MD-06 | Monotonic-safety rule (section 2.2) | `apps/agent` tier function | <!-- gen:tests.monotonic.status -->not yet measured<!-- /gen --> | All |
 | C-MD-07 | Anomaly model M3 (IsolationForest + LightGBM + Mondrian conformal); escalates only | ML | Held-out anomaly family | `urgency_authority`, `split_payment` |
-| C-MD-08 | Anti-hallucination: the explainer writes prose with placeholders from reason codes; code fills every number, date, address, hash and name; a validator checks every numeral, hex string and entity against the record; any miss → template fallback | `apps/agent` explainer | Ungrounded-claim rate <!-- gen:bench.ungrounded.rate -->TBD<!-- /gen --> | — |
+| C-MD-08 | Anti-hallucination: the explainer writes prose with placeholders from reason codes; code fills every number, date, address, hash and name; a validator checks every numeral, hex string and entity against the record; any miss → template fallback | `apps/agent` explainer | Ungrounded-claim rate <!-- gen:bench.ungrounded.rate -->not yet measured<!-- /gen --> | — |
 | C-MD-09 | AI-content labelling: "AI-generated" chip on explanations; `aigc` block (label, model, provider, contentId) in every receipt | `apps/web`, receipt schema in `packages/mandate` | Receipt schema test | — |
 | C-MD-10 | Model provenance: executor model recorded per receipt; model and prompt hashes in the passport | `apps/agent`, `YinglongPassportRegistry` | Evidence table | — |
 | C-MD-11 | Content safety on the mainland profile (Qwen3Guard-Stream-0.6B on chat replies): escalates to "not sure", never refuses money movement, not an injection defence | `apps/agent` | Config test | — |
@@ -206,14 +206,14 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | C-ID-06 | T2 co-signature: `CoSignEnforcer` (section 2.3) | Enforcer | Invariant 9; nonce replay tests | S-PRIV |
 | C-ID-07 | Approval page decodes `executionCallData` itself, resolves the payee name from the on-chain `PayeeBook`, and refuses to sign if its decoding differs from the runtime's description | `apps/web` `/approve/[id]` | e2e test with a lying runtime | `urgency_authority`, S-SIG |
 | C-ID-08 | Signing-domain guard (section 2.4) | `apps/signer`, approval page | Guard unit tests per refused type | S-SIG |
-| C-ID-09 | Agent signer: signs only allowlisted payloads; re-runs policy; re-simulates on head drift; per-execution child delegation with `Timestamp(now, now + 120 s)` and `LimitedCalls(1)` | `apps/signer` | Signer tests | S-PRIV |
+| C-ID-09 | Agent signer: signs only `redeemDelegations` of payment shapes (guard); signs only T1 or approved T2 decisions; re-simulates at the head; adds a per-execution child delegation with `Timestamp(now - 1, now + 120 s)` and `LimitedCalls(1)`; asks the breaker to pause on refusal | `apps/signer` | Signer tests | S-PRIV |
 | C-ID-10 | T3 unreachable through any delegation: allowlist first, `ForbiddenTargetsEnforcer`, invariant 5; T3 only by a user operation signed by the user's passkeys (or 2-of-3 directors) | Enforcers, compiler | Invariant 5 (fuzz and symbolic) | S-PRIV |
 | C-ID-11 | Veto window for scheduled items: `VetoTimelockEnforcer` | Enforcer | Enforcer tests | `urgency_authority` |
 | C-ID-12 | Mandate binding: `MandateBindingEnforcer`; at most one live delegation per mandate lineage; atomic `supersede` | Enforcer, `MandateRegistry` | Invariant 7 | S-PRIV |
 | C-ID-13 | Payment decoding from calldata only (`PaymentDecoder`) | `contracts/src/libraries/PaymentDecoder.sol` [V, repo] | Decoder tests | S-PRIV |
 | C-ID-14 | Enforcer trust rule (terms trusted, args untrusted, mode and length checks) | All custom enforcers | Review checklist | S-PRIV |
-| C-ID-15 | Invariants 1 to 10 under fuzzing; invariants 1 to 5 under bounded symbolic execution | `contracts/test`, proof directory | <!-- gen:invariants.passing -->TBD<!-- /gen --> invariants pass; symbolic: <!-- gen:proofs.symbolic.status -->TBD<!-- /gen --> | All |
-| C-ID-16 | Reentrancy bounded, not absent: allowlisted targets, `nonReentrant` on every YINGLONG-authored target, stateful enforcers update before execution, Slither detectors, a malicious ERC-777-style token test | Contracts, CI | Static analysis: <!-- gen:static.slither.high -->TBD<!-- /gen --> high open | S-PRIV |
+| C-ID-15 | Invariants 1 to 10 under fuzzing; invariants 1 to 5 under bounded symbolic execution | `contracts/test`, proof directory | <!-- gen:invariants.passing -->not yet measured<!-- /gen --> invariants pass; symbolic: <!-- gen:proofs.symbolic.status -->not yet measured<!-- /gen --> | All |
+| C-ID-16 | Reentrancy bounded, not absent: allowlisted targets, `nonReentrant` on every YINGLONG-authored target, stateful enforcers update before execution, Slither detectors, a malicious ERC-777-style token test | Contracts, CI | Static analysis: <!-- gen:static.slither.high -->not yet measured<!-- /gen --> high open | S-PRIV |
 | C-ID-17 | Re-delegation narrows only; sub-agent chains decrement the root user's counters exactly once; re-sealing never widens aggregate counters | Framework + custom enforcers | Invariants 6 and 7 | S-PRIV |
 
 ### 5.2 Institution authorisation ("dual authorisation")
@@ -242,7 +242,7 @@ The BFIA standard is reported to require that a third-party agent may not operat
 | 9 | A 65-byte ECDSA signature never satisfies `CoSignEnforcer` on a passkey-only account | Yes | — |
 | 10 | The facilitator cannot redeem an x402 child twice or above the price | Yes | — |
 
-The "Fuzz" and "Symbolic" columns are the plan; per-invariant results are generated: <!-- gen:invariants.table -->TBD<!-- /gen -->
+The "Fuzz" and "Symbolic" columns are the plan; per-invariant results are generated: <!-- gen:invariants.table -->not yet measured<!-- /gen -->
 
 ---
 
@@ -253,7 +253,7 @@ Full analysis: `docs/PIA.md`.
 | ID | Control | Implemented by | Verified by |
 |---|---|---|---|
 | C-DP-01 | On-chain minimisation: only addresses, hashes, Merkle roots and caveat terms go on chain; no names, no free text, no document content | Schemas in `packages/mandate`, contracts | Schema review |
-| C-DP-02 | PII scrubber before any third-party model API call (KR-14) | `apps/agent` normaliser | Recall <!-- gen:pia.scrubber.recall -->TBD<!-- /gen --> |
+| C-DP-02 | PII scrubber before any third-party model API call (KR-14) | `apps/agent` normaliser | Recall <!-- gen:pia.scrubber.recall -->not yet measured<!-- /gen --> |
 | C-DP-03 | Mainland profile: domestic model endpoints or the on-device intent model, no free API models, a locally mirrored sanctions list (no address export to screening services) | Provider config in `apps/agent` | Config test (but see DC-07) |
 | C-DP-04 | Training and bench data are synthetic or public with no real identifiers; Chinese-script data only in private HuggingFace datasets referenced by revision and SHA-256; every licence recorded | `ml/`, `bench/`, `docs/third_party.md` | Licence register |
 | C-DP-05 | Secrets outside the tree: runtime loaders read from a directory outside the repository [V, `ml/common/keys.py`]; `.gitignore` patterns for keys and tokens [V]; secret patterns in the rules gate [V]; gitleaks over history in CI | Repo tooling | CI |
@@ -269,11 +269,11 @@ Full analysis: `docs/PIA.md`.
 
 | ID | Control | Implemented by | Verified by |
 |---|---|---|---|
-| C-RC-01 | Kill switch: `trip()` (guardian, breaker watcher); `tripWithSig(account, nonce, deadline, sig)` verified through the account's ERC-1271 and relayable by anyone (no bundler); `untripWithSig` owner only; `supervisorPause(agentId)` pause only; dead-man timer; `GlobalPauseEnforcer` in every delegation | `KillSwitchRegistry`, `GlobalPauseEnforcer` | Time-to-pause p50 <!-- gen:time.pause.p50 -->TBD<!-- /gen --> (n = <!-- gen:time.pause.n -->TBD<!-- /gen -->) |
+| C-RC-01 | Kill switch: `trip()` (guardian, breaker watcher); `tripWithSig(account, nonce, deadline, sig)` verified through the account's ERC-1271 and relayable by anyone (no bundler); `untripWithSig` owner only; `supervisorPause(agentId)` pause only; dead-man timer; `GlobalPauseEnforcer` in every delegation | `KillSwitchRegistry`, `GlobalPauseEnforcer` | Time-to-pause p50 <!-- gen:time.pause.p50 -->not yet measured<!-- /gen --> (n = <!-- gen:time.pause.n -->not yet measured<!-- /gen -->) |
 | C-RC-02 | Breaker: a reverted transaction writes nothing, so the breaker trips off-chain: policy and signer refusals call `trip()`; on-chain reverts are recovered by `eth_call` replay at the parent block | `apps/indexer` breaker watcher | Beat 8 evidence |
-| C-RC-03 | Revocation: `disableDelegation` plus `Nonce` bump in one user operation sent by our relayer straight to `EntryPoint.handleOps` (bundler as fallback); atomic `supersede` | `MandateRegistry`, relayer | Time-to-revoke p50 <!-- gen:time.revoke.p50 -->TBD<!-- /gen --> |
-| C-RC-04 | Rotation: new agent key, `setAgentWallet` signed by the new key, mandate re-sealed | Signer, `YinglongPassportRegistry` | Time-to-rotate p50 <!-- gen:time.rotate.p50 -->TBD<!-- /gen --> |
-| C-RC-05 | Exposure bound: "max funds at risk now" = remaining period caps, read on-chain and shown in the key-compromise drill | `apps/web`, enforcers | Bench max at risk <!-- gen:bench.max_at_risk -->TBD<!-- /gen --> |
+| C-RC-03 | Revocation: `MandateRegistry.revoke`/`supersede` plus `disableDelegation` in one user operation sent by our relayer straight to `EntryPoint.handleOps`; atomic `supersede` | `MandateRegistry`, relayer | Time-to-revoke p50 <!-- gen:time.revoke.p50 -->not yet measured<!-- /gen --> |
+| C-RC-04 | Rotation: new agent key, `setAgentWallet` signed by the new key, mandate re-sealed | Signer, `YinglongPassportRegistry` | Time-to-rotate p50 <!-- gen:time.rotate.p50 -->not yet measured<!-- /gen --> |
+| C-RC-05 | Exposure bound: "max funds at risk now" = remaining period caps, read on-chain and shown in the key-compromise drill | `apps/web`, enforcers | Bench max at risk <!-- gen:bench.max_at_risk -->not yet measured<!-- /gen --> |
 | C-RC-06 | Budgets, reserve and velocity enforcers | Enforcers | Invariants 1, 2 |
 | C-RC-07 | Suitability as code; first sweep into any product at T2 | `SuitabilityEnforcer`, policy | `UnsuitableProduct` revert (beat 10) |
 | C-RC-08 | Jurisdiction as code: rail chosen by the mandate's profile; mainland rail is coin-free; a jurisdiction-forbidden rail cannot be enabled by any mandate | `JurisdictionEnforcer`, rail adapters | `RailNotPermitted` revert (beat 10) |
@@ -282,9 +282,9 @@ Full analysis: `docs/PIA.md`.
 | C-RC-11 | Supervisory halt: FISCO DelegationManager owner is a 2-of-3 (KR-18) | FISCO deployment | Ownership read |
 | C-RC-12 | Honest labels: test units, simulator and testnet labels on every surface; receipt `source` field (`live-base`, `live-fisco`, `anvil-bench`); vocabulary rules | `apps/web`, receipt schema | Review checklist |
 | C-RC-13 | Incident response: five playbooks; playbook 1 rehearsed in beat 11 | `docs/INCIDENT_RESPONSE.md` | Drill record |
-| C-RC-14 | Public attack endpoint controls (Judge's Challenge): guest mandates with tiny caps in team-minted `tHKD`, signed expiring QR tokens, per-QR daily quota, daily gas budget (<!-- gen:challenge.gas_budget -->TBD<!-- /gen -->), moderation, shadow mode on an Anvil fork labelled "simulated, not on-chain" | `apps/services` | Quota tests |
+| C-RC-14 | Public attack endpoint controls (Judge's Challenge): guest mandates with tiny caps in team-minted `tHKD`, signed expiring QR tokens, per-QR daily quota, daily gas budget (<!-- gen:challenge.gas_budget -->not yet measured<!-- /gen -->), moderation, shadow mode on an Anvil fork labelled "simulated, not on-chain" | `apps/services` | Quota tests |
 | C-RC-15 | Non-custodial primary path; any agent-held fallback account is labelled custodial | Architecture | Review |
-| C-RC-16 | Evidence integrity: numbers only from code; held-out family hash committed before training (<!-- gen:bench.heldout.sha256 -->TBD<!-- /gen -->); nightly re-verification of every evidence hash (21 to 31 Oct); `MANIFEST.sha256` | `scripts/finalize`, CI | Manifest |
+| C-RC-16 | Evidence integrity: numbers only from code; held-out family hash committed before training (<!-- gen:bench.heldout.sha256 -->not yet measured<!-- /gen -->); nightly re-verification of every evidence hash (21 to 31 Oct); `MANIFEST.sha256` | `scripts/finalize`, CI | Manifest |
 
 Compliance mapping per rule: `docs/COMPLIANCE_MATRIX.md`.
 
@@ -323,14 +323,14 @@ What a receipt proves and does not prove:
 | KR-03 | Mainland settlement is an e-CNY-style simulator | 5 | Labelled "e-CNY-style simulator. Not the PBoC sandbox; no connection to PBoC or operator-bank systems." | Nothing about real mainland settlement is demonstrated |
 | KR-04 | FISCO BCOS chain is run by the team (four nodes plus the regulator node) | 5 | Two-way anchoring to Base makes later rewrites detectable | Anchoring proves consistency, not independent consensus |
 | KR-05 | ERC-8004 reputation is Sybil-prone | 3 | Trusted issuers and trusted clients (10 at most) sealed in the mandate; `PayeeBook` is primary | A compromised trusted client can inflate reputation |
-| KR-06 | Sentinel false negatives | 1 | Layered scales; the chain is the backstop; measured FNR <!-- gen:sentinel.fnr -->TBD<!-- /gen --> | Undetected injections can still cause within-mandate manipulation (KR-07) |
-| KR-07 | Within-mandate manipulation up to the caps | 5 | Idempotency keys, invoice-payee-amount cross-checks, anomaly → T?, T2 for new counterparties | Measured rate <!-- gen:bench.wmm.rate -->TBD<!-- /gen -->; max funds at risk = remaining cap (<!-- gen:bench.max_at_risk -->TBD<!-- /gen -->) |
+| KR-06 | Sentinel false negatives | 1 | Layered scales; the chain is the backstop; measured FNR <!-- gen:sentinel.fnr -->not yet measured<!-- /gen --> | Undetected injections can still cause within-mandate manipulation (KR-07) |
+| KR-07 | Within-mandate manipulation up to the caps | 5 | Idempotency keys, invoice-payee-amount cross-checks, anomaly → T?, T2 for new counterparties | Measured rate <!-- gen:bench.wmm.rate -->not yet measured<!-- /gen -->; max funds at risk = remaining cap (<!-- gen:bench.max_at_risk -->not yet measured<!-- /gen -->) |
 | KR-08 | LLM availability in mainland China | 2 | Domestic endpoints, on-device intent model, template explanations, recorded-demo mode; no model → T? | Degraded understanding, never wider authority |
 | KR-09 | Passkey loss | 3 | Two passkeys; guardian-initiated recovery with a delay the owner can cancel (see DC-05) | Both passkeys lost and guardian unavailable = locked account |
 | KR-10 | Demo time compression | 5 | A flag runs budget periods at demo speed; labelled on screen | Period results under compression differ from real time |
 | KR-11 | Self-hosted ValidationRegistry and facilitator are experimental | 5 | Labelled "self-attested" and "experimental"; facilitator limited to single-use, exact-amount children | Validation entries are self-attested |
 | KR-12 | GB/Z 185 identity code is a placeholder | 3 | Field shows "YL-TEST-..." labelled placeholder | No official identity code; no interoperability claim |
-| KR-13 | Faucet limits | 5 | `tHKD` minted by the team for the challenge; shadow mode | Live sample sizes are small (<!-- gen:bench.live.n -->TBD<!-- /gen --> live items) |
+| KR-13 | Faucet limits | 5 | `tHKD` minted by the team for the challenge; shadow mode | Live sample sizes are small (<!-- gen:bench.live.n -->not yet measured<!-- /gen --> live items) |
 | KR-14 | Free API models may log prompts | 4 | PII scrubber before any API call; synthetic data only; mainland profile excludes free APIs | Scrubber misses would leak what a user typed |
 | KR-15 | USDC v2.2 accepts ERC-1271 signatures on `permit` and `transferWithAuthorization` [V per plan]; HybridDeleGator validates any 32-byte hash without domain checks [V, framework source] | 3 | Signing-domain guard is the only path that creates a passkey challenge and refuses EIP-3009, Permit, Permit2, `personal_sign` and unknown domains; `TestHKD` accepts EOA signers only for EIP-3009 and Permit | Closed by our client code, not by the chain, for USDC (see DC-09) |
 | KR-16 | FISCO DelegationManager domain uses chain ID 0 (FISCO `CHAINID` returns 0) and cannot carry a salt | 3 | YINGLONG's own domains add a salt; chain IDs differ from Base (84532) | A delegation signed for one chain-ID-0 deployment is distinguishable only by the verifying contract address |
@@ -379,9 +379,9 @@ What a receipt proves and does not prove:
 
 ## 11. Control status at the assessed commit (generated)
 
-Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`), test or evidence path. Implemented <!-- gen:controls.implemented -->TBD<!-- /gen --> of <!-- gen:controls.total -->TBD<!-- /gen --> controls.
+Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`), test or evidence path. Implemented <!-- gen:controls.implemented -->not yet measured<!-- /gen --> of <!-- gen:controls.total -->not yet measured<!-- /gen --> controls.
 
-<!-- gen:controls.status_table -->TBD<!-- /gen -->
+<!-- gen:controls.status_table -->not yet measured<!-- /gen -->
 
 ---
 
@@ -389,8 +389,8 @@ Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`)
 
 | Evidence | Location |
 |---|---|
-| Automated tests | <!-- gen:tests.total -->TBD<!-- /gen --> passing, <!-- gen:tests.failed -->TBD<!-- /gen --> failing (contracts <!-- gen:tests.contracts -->TBD<!-- /gen -->, TypeScript <!-- gen:tests.ts -->TBD<!-- /gen -->, Python <!-- gen:tests.py -->TBD<!-- /gen -->, end-to-end <!-- gen:tests.e2e -->TBD<!-- /gen -->) |
-| Bytecode equality table | <!-- gen:bytecode.table -->TBD<!-- /gen --> |
+| Automated tests | <!-- gen:tests.total -->100<!-- /gen --> passing, <!-- gen:tests.failed -->not yet measured<!-- /gen --> failing (contracts <!-- gen:tests.contracts -->89<!-- /gen -->, TypeScript <!-- gen:tests.ts -->not yet measured<!-- /gen -->, Python <!-- gen:tests.py -->11<!-- /gen -->, end-to-end <!-- gen:tests.e2e -->not yet measured<!-- /gen -->) |
+| Bytecode equality table | <!-- gen:bytecode.table -->not yet measured<!-- /gen --> |
 | On-chain execution evidence | `docs/EXECUTION_EVIDENCE.md`, `docs/evidence/bundle.json` |
 | Bench report | `bench/` reports; per-family table in `docs/THREAT_MODEL.md` |
 | Security review | `docs/SECURITY_REVIEW.md` |

@@ -66,6 +66,9 @@ if (eq) {
   metrics["chain.bytecode.pair"] = eqBaseFisco ? "Base Sepolia vs FISCO BCOS" : "Anvil vs FISCO BCOS";
   metrics["chain.bytecode.differ"] = eq.differ.join(", ") || "none";
 }
+metrics["deploy.base.status"] = deps["base-sepolia"]
+  ? `deployed (${Object.values(deps["base-sepolia"]!).filter((v) => v && typeof v === "object").length} contracts)`
+  : "rehearsed end to end on a local fork of Base Sepolia; live deployment pending testnet ETH";
 metrics["chain.ledgers"] = liveLedgers.map((l) => LEDGERS[l].label).join(", ") || "none yet";
 
 // ---------------------------------------------------------------- receipts (live API, then local file)
@@ -139,7 +142,12 @@ if (args.includes("--tests")) {
 const zkManifest = resolve(root, "circuits/MANIFEST.json");
 if (existsSync(zkManifest)) {
   const z = JSON.parse(readFileSync(zkManifest, "utf8"));
-  metrics["zk.mode"] = deps.fisco && (deps.fisco as Dep).ZKMandateEnforcer ? "deployed; real UltraHonk proof verifies on FISCO BCOS and Anvil" : "built and tested";
+  const zkLive = ["fisco", "anvil"].map((l) => resolve(root, "apps/agent/data", `zk-${l}.json`)).filter((f) => existsSync(f));
+  metrics["zk.mode"] = zkLive.length
+    ? `live private-mandate payments with real proofs recorded in ${zkLive.map((f) => f.split(/[\/]/).pop()).join(", ")}`
+    : deps.fisco && (deps.fisco as Dep).ZKMandateEnforcer
+      ? "verifier stack deployed on FISCO BCOS and Anvil; fixture proofs verify through the router (eth_call)"
+      : "built and tested";
   if (z.gas) metrics["zk.verify.gas"] = String(z.gas.verify ?? z.gas.honkVerify ?? "");
 }
 
