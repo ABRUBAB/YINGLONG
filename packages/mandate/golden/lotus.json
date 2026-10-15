@@ -24,7 +24,7 @@
     },
     "assets": [
       {
-        "symbol": "CNY-instr",
+        "symbol": "CNY",
         "address": "0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8",
         "decimals": 2
       }
@@ -55,7 +55,7 @@
     "intermediaries": [],
     "tiers": [
       {
-        "asset": "CNY-instr",
+        "asset": "CNY",
         "defaultT1Cap": "5000000",
         "newPayeeT1Cap": "100000",
         "t2Ceiling": "20000000",
@@ -70,7 +70,7 @@
     ],
     "budgets": [
       {
-        "asset": "CNY-instr",
+        "asset": "CNY",
         "periodStart": 0,
         "periodLength": 2592000,
         "unlistedCategory": "services",
@@ -92,12 +92,12 @@
     ],
     "reserveFloors": [
       {
-        "asset": "CNY-instr",
+        "asset": "CNY",
         "amount": "10000000"
       }
     ],
     "velocity": {
-      "asset": "CNY-instr",
+      "asset": "CNY",
       "window": 86400,
       "maxCount": 6,
       "maxOutflow": "25000000"
@@ -112,8 +112,8 @@
       "No more than six payments a day."
     ]
   },
-  "canonicalJson": "{\"agent\":{\"label\":\"Lotus Lane treasurer\",\"wallet\":\"0x0000000000000000000000000000000000000002\"},\"assets\":[{\"address\":\"0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8\",\"decimals\":2,\"symbol\":\"CNY-instr\"}],\"budgets\":[{\"asset\":\"CNY-instr\",\"caps\":[{\"amount\":\"30000000\",\"category\":\"supplier\"},{\"amount\":\"12000000\",\"category\":\"payroll\"},{\"amount\":\"500000\",\"category\":\"services\"}],\"periodLength\":2592000,\"periodStart\":0,\"unlistedCategory\":\"services\"}],\"facilitator\":null,\"intermediaries\":[],\"jurisdiction\":\"mainland\",\"ledger\":\"anvil\",\"lineageId\":\"lotus-shenzhen-treasury\",\"methods\":[\"instruct\"],\"payees\":[{\"address\":\"0x0000000000000000000000000000000000000301\",\"category\":\"supplier\",\"id\":\"shenzhen_components\",\"label\":\"Shenzhen Components\"},{\"address\":\"0x0000000000000000000000000000000000000302\",\"category\":\"payroll\",\"id\":\"staff_payroll\",\"label\":\"Staff payroll account\"}],\"principal\":{\"account\":\"0x0000000000000000000000000000000000000b0b\",\"did\":\"did:pkh:eip155:31337:0x0000000000000000000000000000000000000b0b\",\"kind\":\"company\",\"name\":\"Lotus Lane Trading (Shenzhen) Co. (fictional)\"},\"reputation\":null,\"reserveFloors\":[{\"amount\":\"10000000\",\"asset\":\"CNY-instr\"}],\"salt\":\"1\",\"schema\":\"yinglong.mandate/v1\",\"sentences\":[\"Pay approved suppliers up to 300,000 a month and run payroll up to 120,000.\",\"Keep at least 100,000 in the account at all times.\",\"Anything above 50,000 to a supplier needs a director's approval; above 200,000 the board decides.\",\"No more than six payments a day.\"],\"suitability\":null,\"tiers\":[{\"asset\":\"CNY-instr\",\"categoryT1Caps\":[{\"amount\":\"12000000\",\"category\":\"payroll\"}],\"defaultT1Cap\":\"5000000\",\"maxApprovalWindow\":600,\"newPayeeT1Cap\":\"100000\",\"t2Ceiling\":\"20000000\"}],\"title\":\"Lotus Lane Trading (Shenzhen): board treasury mandate\",\"trustedIssuers\":[{\"address\":\"0x0000000000000000000000000000000000000202\",\"label\":\"Harbour Digital Bank\"}],\"validity\":{\"from\":1791999940,\"until\":1807552000},\"velocity\":{\"asset\":\"CNY-instr\",\"maxCount\":6,\"maxOutflow\":\"25000000\",\"window\":86400}}",
-  "mandateHash": "0x95875dfc0e96e75d7fc3bfbe4c33d6c6e2262cbf1cd9b9dae3d5ec181ab654b3",
+  "canonicalJson": "{\"agent\":{\"label\":\"Lotus Lane treasurer\",\"wallet\":\"0x0000000000000000000000000000000000000002\"},\"assets\":[{\"address\":\"0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8\",\"decimals\":2,\"symbol\":\"CNY\"}],\"budgets\":[{\"asset\":\"CNY\",\"caps\":[{\"amount\":\"30000000\",\"category\":\"supplier\"},{\"amount\":\"12000000\",\"category\":\"payroll\"},{\"amount\":\"500000\",\"category\":\"services\"}],\"periodLength\":2592000,\"periodStart\":0,\"unlistedCategory\":\"services\"}],\"facilitator\":null,\"intermediaries\":[],\"jurisdiction\":\"mainland\",\"ledger\":\"anvil\",\"lineageId\":\"lotus-shenzhen-treasury\",\"methods\":[\"instruct\"],\"payees\":[{\"address\":\"0x0000000000000000000000000000000000000301\",\"category\":\"supplier\",\"id\":\"shenzhen_components\",\"label\":\"Shenzhen Components\"},{\"address\":\"0x0000000000000000000000000000000000000302\",\"category\":\"payroll\",\"id\":\"staff_payroll\",\"label\":\"Staff payroll account\"}],\"principal\":{\"account\":\"0x0000000000000000000000000000000000000b0b\",\"did\":\"did:pkh:eip155:31337:0x0000000000000000000000000000000000000b0b\",\"kind\":\"company\",\"name\":\"Lotus Lane Trading (Shenzhen) Co. (fictional)\"},\"reputation\":null,\"reserveFloors\":[{\"amount\":\"10000000\",\"asset\":\"CNY\"}],\"salt\":\"1\",\"schema\":\"yinglong.mandate/v1\",\"sentences\":[\"Pay approved suppliers up to 300,000 a month and run payroll up to 120,000.\",\"Keep at least 100,000 in the account at all times.\",\"Anything above 50,000 to a supplier needs a director's approval; above 200,000 the board decides.\",\"No more than six payments a day.\"],\"suitability\":null,\"tiers\":[{\"asset\":\"CNY\",\"categoryT1Caps\":[{\"amount\":\"12000000\",\"category\":\"payroll\"}],\"defaultT1Cap\":\"5000000\",\"maxApprovalWindow\":600,\"newPayeeT1Cap\":\"100000\",\"t2Ceiling\":\"20000000\"}],\"title\":\"Lotus Lane Trading (Shenzhen): board treasury mandate\",\"trustedIssuers\":[{\"address\":\"0x0000000000000000000000000000000000000202\",\"label\":\"Harbour Digital Bank\"}],\"validity\":{\"from\":1791999940,\"until\":1807552000},\"velocity\":{\"asset\":\"CNY\",\"maxCount\":6,\"maxOutflow\":\"25000000\",\"window\":86400}}",
+  "mandateHash": "0x902dada37c0741af29ef10678f32515c901a6ca85b65033add5c67b3086099f4",
   "lineageIdHash": "0xc2282a59e1ff4916eb6b0dc32d49256d607ea949bbcd74112f1efac9b5bf4091",
   "delegation": {
     "delegate": "0x0000000000000000000000000000000000000002",
@@ -154,7 +154,7 @@
     },
     {
       "enforcer": "0xCe848804Adb705b3B4709e048a3Ab101770fa642",
-      "terms": "0x00000000000000000000000039d289d8572f07a3f64f4e4d80208ce65076647695875dfc0e96e75d7fc3bfbe4c33d6c6e2262cbf1cd9b9dae3d5ec181ab654b3",
+      "terms": "0x00000000000000000000000039d289d8572f07a3f64f4e4d80208ce650766476902dada37c0741af29ef10678f32515c901a6ca85b65033add5c67b3086099f4",
       "args": "0x"
     },
     {
@@ -188,7 +188,7 @@
       "args": "0x"
     }
   ],
-  "delegationHash": "0x46110e14cd1d5661459062d16c2e2866ea35875e08a0b5f1016bf6e1b365887b",
+  "delegationHash": "0x142e2fc7fd0de8936b2a7a8b2788ed58adf047c5d0d51c04b68917ee03daba59",
   "rules": [
     {
       "kind": "allowedTargets",
@@ -233,7 +233,7 @@
     {
       "kind": "mandateBinding",
       "registry": "0x39D289d8572F07a3f64F4E4d80208CE650766476",
-      "mandateHash": "0x95875dfc0e96e75d7fc3bfbe4c33d6c6e2262cbf1cd9b9dae3d5ec181ab654b3"
+      "mandateHash": "0x902dada37c0741af29ef10678f32515c901a6ca85b65033add5c67b3086099f4"
     },
     {
       "kind": "jurisdiction",
@@ -302,86 +302,86 @@
     }
   ],
   "sentences": [
-    "The agent can only touch these assets: CNY-instr.",
+    "The agent can only touch these assets: CNY.",
     "It can only call: instruct. Approvals and any other function are refused.",
     "It can never send the native coin.",
     "It can never call your own account or 8 protocol contracts (DelegationManager, EntryPoint, PayeeBook, MandateRegistry, KillSwitchRegistry, YinglongPassportRegistry, AccountabilityLedger and ProductRegistry).",
     "Everything stops the moment you press Pause, your guardian pauses, or the supervisor halts this agent.",
     "Only agents whose passport is bound to your identity can use this mandate.",
-    "It works only while mandate 0x95875dfc... is live in the public mandate registry.",
-    "Jurisdiction: Mainland China (coin-free rail). Rails allowed: CNY-instr.",
+    "It works only while mandate 0x902dada3... is live in the public mandate registry.",
+    "Jurisdiction: Mainland China (coin-free rail). Rails allowed: CNY.",
     "Money goes only to payees in your payee book or to agents attested by Harbour Digital Bank.",
-    "Payments above 50,000 CNY-instr need your approval on your phone (except payroll up to 120,000 CNY-instr); anyone new above 1,000 CNY-instr also needs you; nothing above 200,000 CNY-instr is possible at all.",
-    "Every 30 days: supplier at most 300,000 CNY-instr, payroll at most 120,000 CNY-instr and services at most 5,000 CNY-instr.",
-    "Your CNY-instr balance never goes below 100,000 CNY-instr.",
-    "At most 6 payments and 250,000 CNY-instr per day."
+    "Payments above 50,000 CNY need your approval on your phone (except payroll up to 120,000 CNY); anyone new above 1,000 CNY also needs you; nothing above 200,000 CNY is possible at all.",
+    "Every 30 days: supplier at most 300,000 CNY, payroll at most 120,000 CNY and services at most 5,000 CNY.",
+    "Your CNY balance never goes below 100,000 CNY.",
+    "At most 6 payments and 250,000 CNY per day."
   ],
   "hashRing": {
-    "hash": "0x46110e14cd1d5661459062d16c2e2866ea35875e08a0b5f1016bf6e1b365887b",
+    "hash": "0x142e2fc7fd0de8936b2a7a8b2788ed58adf047c5d0d51c04b68917ee03daba59",
     "revoked": false,
     "ticks": [
       {
         "i": 0,
-        "nibble": 4,
+        "nibble": 1,
         "angleDeg": -90,
+        "r0": 0.8,
+        "r1": 0.85
+      },
+      {
+        "i": 1,
+        "nibble": 4,
+        "angleDeg": -84.375,
         "r0": 0.8,
         "r1": 0.88
       },
       {
-        "i": 1,
-        "nibble": 6,
-        "angleDeg": -84.375,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
         "i": 2,
-        "nibble": 1,
+        "nibble": 2,
         "angleDeg": -78.75,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.86
       },
       {
         "i": 3,
-        "nibble": 1,
-        "angleDeg": -73.125,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 4,
-        "nibble": 0,
-        "angleDeg": -67.5,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 5,
         "nibble": 14,
-        "angleDeg": -61.875,
+        "angleDeg": -73.125,
         "r0": 0.8,
         "r1": 0.98
       },
       {
+        "i": 4,
+        "nibble": 2,
+        "angleDeg": -67.5,
+        "r0": 0.8,
+        "r1": 0.86
+      },
+      {
+        "i": 5,
+        "nibble": 15,
+        "angleDeg": -61.875,
+        "r0": 0.8,
+        "r1": 0.99
+      },
+      {
         "i": 6,
-        "nibble": 1,
+        "nibble": 12,
         "angleDeg": -56.25,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.96
       },
       {
         "i": 7,
-        "nibble": 4,
+        "nibble": 7,
         "angleDeg": -50.625,
         "r0": 0.8,
-        "r1": 0.88
+        "r1": 0.91
       },
       {
         "i": 8,
-        "nibble": 12,
+        "nibble": 15,
         "angleDeg": -45,
         "r0": 0.8,
-        "r1": 0.96
+        "r1": 0.99
       },
       {
         "i": 9,
@@ -392,10 +392,10 @@
       },
       {
         "i": 10,
-        "nibble": 1,
+        "nibble": 0,
         "angleDeg": -33.75,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.84
       },
       {
         "i": 11,
@@ -406,178 +406,178 @@
       },
       {
         "i": 12,
-        "nibble": 5,
+        "nibble": 14,
         "angleDeg": -22.5,
         "r0": 0.8,
-        "r1": 0.89
+        "r1": 0.98
       },
       {
         "i": 13,
-        "nibble": 6,
+        "nibble": 8,
         "angleDeg": -16.875,
         "r0": 0.8,
-        "r1": 0.9
+        "r1": 0.92
       },
       {
         "i": 14,
-        "nibble": 6,
-        "angleDeg": -11.25,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 15,
-        "nibble": 1,
-        "angleDeg": -5.625,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 16,
-        "nibble": 4,
-        "angleDeg": 0,
-        "r0": 0.8,
-        "r1": 0.88
-      },
-      {
-        "i": 17,
-        "nibble": 5,
-        "angleDeg": 5.625,
-        "r0": 0.8,
-        "r1": 0.89
-      },
-      {
-        "i": 18,
         "nibble": 9,
-        "angleDeg": 11.25,
+        "angleDeg": -11.25,
         "r0": 0.8,
         "r1": 0.93
       },
       {
-        "i": 19,
-        "nibble": 0,
-        "angleDeg": 16.875,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 20,
-        "nibble": 6,
-        "angleDeg": 22.5,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 21,
-        "nibble": 2,
-        "angleDeg": 28.125,
-        "r0": 0.8,
-        "r1": 0.86
-      },
-      {
-        "i": 22,
-        "nibble": 13,
-        "angleDeg": 33.75,
-        "r0": 0.8,
-        "r1": 0.97
-      },
-      {
-        "i": 23,
-        "nibble": 1,
-        "angleDeg": 39.375,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 24,
-        "nibble": 6,
-        "angleDeg": 45,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 25,
-        "nibble": 12,
-        "angleDeg": 50.625,
-        "r0": 0.8,
-        "r1": 0.96
-      },
-      {
-        "i": 26,
-        "nibble": 2,
-        "angleDeg": 56.25,
-        "r0": 0.8,
-        "r1": 0.86
-      },
-      {
-        "i": 27,
-        "nibble": 14,
-        "angleDeg": 61.875,
-        "r0": 0.8,
-        "r1": 0.98
-      },
-      {
-        "i": 28,
-        "nibble": 2,
-        "angleDeg": 67.5,
-        "r0": 0.8,
-        "r1": 0.86
-      },
-      {
-        "i": 29,
-        "nibble": 8,
-        "angleDeg": 73.125,
-        "r0": 0.8,
-        "r1": 0.92
-      },
-      {
-        "i": 30,
-        "nibble": 6,
-        "angleDeg": 78.75,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 31,
-        "nibble": 6,
-        "angleDeg": 84.375,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 32,
-        "nibble": 14,
-        "angleDeg": 90,
-        "r0": 0.8,
-        "r1": 0.98
-      },
-      {
-        "i": 33,
-        "nibble": 10,
-        "angleDeg": 95.625,
-        "r0": 0.8,
-        "r1": 0.94
-      },
-      {
-        "i": 34,
+        "i": 15,
         "nibble": 3,
-        "angleDeg": 101.25,
+        "angleDeg": -5.625,
         "r0": 0.8,
         "r1": 0.87
       },
       {
-        "i": 35,
+        "i": 16,
+        "nibble": 6,
+        "angleDeg": 0,
+        "r0": 0.8,
+        "r1": 0.9
+      },
+      {
+        "i": 17,
+        "nibble": 11,
+        "angleDeg": 5.625,
+        "r0": 0.8,
+        "r1": 0.95
+      },
+      {
+        "i": 18,
+        "nibble": 2,
+        "angleDeg": 11.25,
+        "r0": 0.8,
+        "r1": 0.86
+      },
+      {
+        "i": 19,
+        "nibble": 10,
+        "angleDeg": 16.875,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 20,
+        "nibble": 7,
+        "angleDeg": 22.5,
+        "r0": 0.8,
+        "r1": 0.91
+      },
+      {
+        "i": 21,
+        "nibble": 10,
+        "angleDeg": 28.125,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 22,
+        "nibble": 8,
+        "angleDeg": 33.75,
+        "r0": 0.8,
+        "r1": 0.92
+      },
+      {
+        "i": 23,
+        "nibble": 11,
+        "angleDeg": 39.375,
+        "r0": 0.8,
+        "r1": 0.95
+      },
+      {
+        "i": 24,
+        "nibble": 2,
+        "angleDeg": 45,
+        "r0": 0.8,
+        "r1": 0.86
+      },
+      {
+        "i": 25,
+        "nibble": 7,
+        "angleDeg": 50.625,
+        "r0": 0.8,
+        "r1": 0.91
+      },
+      {
+        "i": 26,
+        "nibble": 8,
+        "angleDeg": 56.25,
+        "r0": 0.8,
+        "r1": 0.92
+      },
+      {
+        "i": 27,
+        "nibble": 8,
+        "angleDeg": 61.875,
+        "r0": 0.8,
+        "r1": 0.92
+      },
+      {
+        "i": 28,
+        "nibble": 14,
+        "angleDeg": 67.5,
+        "r0": 0.8,
+        "r1": 0.98
+      },
+      {
+        "i": 29,
+        "nibble": 13,
+        "angleDeg": 73.125,
+        "r0": 0.8,
+        "r1": 0.97
+      },
+      {
+        "i": 30,
         "nibble": 5,
-        "angleDeg": 106.875,
+        "angleDeg": 78.75,
         "r0": 0.8,
         "r1": 0.89
       },
       {
-        "i": 36,
+        "i": 31,
         "nibble": 8,
-        "angleDeg": 112.5,
+        "angleDeg": 84.375,
         "r0": 0.8,
         "r1": 0.92
+      },
+      {
+        "i": 32,
+        "nibble": 10,
+        "angleDeg": 90,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 33,
+        "nibble": 13,
+        "angleDeg": 95.625,
+        "r0": 0.8,
+        "r1": 0.97
+      },
+      {
+        "i": 34,
+        "nibble": 15,
+        "angleDeg": 101.25,
+        "r0": 0.8,
+        "r1": 0.99
+      },
+      {
+        "i": 35,
+        "nibble": 0,
+        "angleDeg": 106.875,
+        "r0": 0.8,
+        "r1": 0.84
+      },
+      {
+        "i": 36,
+        "nibble": 4,
+        "angleDeg": 112.5,
+        "r0": 0.8,
+        "r1": 0.88
       },
       {
         "i": 37,
@@ -588,115 +588,115 @@
       },
       {
         "i": 38,
-        "nibble": 5,
+        "nibble": 12,
         "angleDeg": 123.75,
+        "r0": 0.8,
+        "r1": 0.96
+      },
+      {
+        "i": 39,
+        "nibble": 5,
+        "angleDeg": 129.375,
         "r0": 0.8,
         "r1": 0.89
       },
       {
-        "i": 39,
-        "nibble": 14,
-        "angleDeg": 129.375,
+        "i": 40,
+        "nibble": 13,
+        "angleDeg": 135,
         "r0": 0.8,
-        "r1": 0.98
+        "r1": 0.97
       },
       {
-        "i": 40,
+        "i": 41,
         "nibble": 0,
-        "angleDeg": 135,
+        "angleDeg": 140.625,
         "r0": 0.8,
         "r1": 0.84
       },
       {
-        "i": 41,
+        "i": 42,
+        "nibble": 13,
+        "angleDeg": 146.25,
+        "r0": 0.8,
+        "r1": 0.97
+      },
+      {
+        "i": 43,
+        "nibble": 5,
+        "angleDeg": 151.875,
+        "r0": 0.8,
+        "r1": 0.89
+      },
+      {
+        "i": 44,
+        "nibble": 1,
+        "angleDeg": 157.5,
+        "r0": 0.8,
+        "r1": 0.85
+      },
+      {
+        "i": 45,
+        "nibble": 12,
+        "angleDeg": 163.125,
+        "r0": 0.8,
+        "r1": 0.96
+      },
+      {
+        "i": 46,
+        "nibble": 0,
+        "angleDeg": 168.75,
+        "r0": 0.8,
+        "r1": 0.84
+      },
+      {
+        "i": 47,
+        "nibble": 4,
+        "angleDeg": 174.375,
+        "r0": 0.8,
+        "r1": 0.88
+      },
+      {
+        "i": 48,
+        "nibble": 11,
+        "angleDeg": 180,
+        "r0": 0.8,
+        "r1": 0.95
+      },
+      {
+        "i": 49,
+        "nibble": 6,
+        "angleDeg": 185.625,
+        "r0": 0.8,
+        "r1": 0.9
+      },
+      {
+        "i": 50,
         "nibble": 8,
-        "angleDeg": 140.625,
+        "angleDeg": 191.25,
         "r0": 0.8,
         "r1": 0.92
       },
       {
-        "i": 42,
-        "nibble": 10,
-        "angleDeg": 146.25,
-        "r0": 0.8,
-        "r1": 0.94
-      },
-      {
-        "i": 43,
-        "nibble": 0,
-        "angleDeg": 151.875,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 44,
-        "nibble": 11,
-        "angleDeg": 157.5,
-        "r0": 0.8,
-        "r1": 0.95
-      },
-      {
-        "i": 45,
-        "nibble": 5,
-        "angleDeg": 163.125,
-        "r0": 0.8,
-        "r1": 0.89
-      },
-      {
-        "i": 46,
-        "nibble": 15,
-        "angleDeg": 168.75,
-        "r0": 0.8,
-        "r1": 0.99
-      },
-      {
-        "i": 47,
-        "nibble": 1,
-        "angleDeg": 174.375,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 48,
-        "nibble": 0,
-        "angleDeg": 180,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 49,
-        "nibble": 1,
-        "angleDeg": 185.625,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 50,
-        "nibble": 6,
-        "angleDeg": 191.25,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
         "i": 51,
-        "nibble": 11,
+        "nibble": 9,
         "angleDeg": 196.875,
         "r0": 0.8,
-        "r1": 0.95
+        "r1": 0.93
       },
       {
         "i": 52,
-        "nibble": 15,
+        "nibble": 1,
         "angleDeg": 202.5,
         "r0": 0.8,
-        "r1": 0.99
+        "r1": 0.85
       },
       {
         "i": 53,
-        "nibble": 6,
+        "nibble": 7,
         "angleDeg": 208.125,
         "r0": 0.8,
-        "r1": 0.9
+        "r1": 0.91
       },
       {
         "i": 54,
@@ -707,17 +707,17 @@
       },
       {
         "i": 55,
-        "nibble": 1,
+        "nibble": 14,
         "angleDeg": 219.375,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.98
       },
       {
         "i": 56,
-        "nibble": 11,
+        "nibble": 0,
         "angleDeg": 225,
         "r0": 0.8,
-        "r1": 0.95
+        "r1": 0.84
       },
       {
         "i": 57,
@@ -728,156 +728,156 @@
       },
       {
         "i": 58,
-        "nibble": 6,
+        "nibble": 13,
         "angleDeg": 236.25,
         "r0": 0.8,
-        "r1": 0.9
+        "r1": 0.97
       },
       {
         "i": 59,
-        "nibble": 5,
+        "nibble": 10,
         "angleDeg": 241.875,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 60,
+        "nibble": 11,
+        "angleDeg": 247.5,
+        "r0": 0.8,
+        "r1": 0.95
+      },
+      {
+        "i": 61,
+        "nibble": 10,
+        "angleDeg": 253.125,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 62,
+        "nibble": 5,
+        "angleDeg": 258.75,
         "r0": 0.8,
         "r1": 0.89
       },
       {
-        "i": 60,
-        "nibble": 8,
-        "angleDeg": 247.5,
-        "r0": 0.8,
-        "r1": 0.92
-      },
-      {
-        "i": 61,
-        "nibble": 8,
-        "angleDeg": 253.125,
-        "r0": 0.8,
-        "r1": 0.92
-      },
-      {
-        "i": 62,
-        "nibble": 7,
-        "angleDeg": 258.75,
-        "r0": 0.8,
-        "r1": 0.91
-      },
-      {
         "i": 63,
-        "nibble": 11,
+        "nibble": 9,
         "angleDeg": 264.375,
         "r0": 0.8,
-        "r1": 0.95
+        "r1": 0.93
       }
     ],
     "arcs": [
       {
         "j": 0,
-        "startDeg": 98.4375,
-        "sweepDeg": 9,
+        "startDeg": 246.09375,
+        "sweepDeg": 12,
         "r": 0.7
       },
       {
         "j": 1,
-        "startDeg": 215.15625,
-        "sweepDeg": 17,
+        "startDeg": 109.6875,
+        "sweepDeg": 18,
         "r": 0.675
       },
       {
         "j": 2,
-        "startDeg": -54.84375,
-        "sweepDeg": 26,
+        "startDeg": -68.90625,
+        "sweepDeg": 8,
         "r": 0.65
       },
       {
         "j": 3,
-        "startDeg": 12.65625,
-        "sweepDeg": 18,
+        "startDeg": 91.40625,
+        "sweepDeg": 25,
         "r": 0.625
       },
       {
         "j": 4,
-        "startDeg": 205.3125,
-        "sweepDeg": 26,
+        "startDeg": 158.90625,
+        "sweepDeg": 28,
         "r": 0.6
       },
       {
         "j": 5,
-        "startDeg": 113.90625,
-        "sweepDeg": 35,
+        "startDeg": 26.71875,
+        "sweepDeg": 25,
         "r": 0.575
       },
       {
         "j": 6,
-        "startDeg": -90,
-        "sweepDeg": 13,
+        "startDeg": 135,
+        "sweepDeg": 11,
         "r": 0.55
       },
       {
         "j": 7,
-        "startDeg": 170.15625,
-        "sweepDeg": 32,
+        "startDeg": -75.9375,
+        "sweepDeg": 18,
         "r": 0.525
       },
       {
         "j": 8,
-        "startDeg": -14.0625,
-        "sweepDeg": 28,
+        "startDeg": 217.96875,
+        "sweepDeg": 36,
         "r": 0.5
       }
     ]
   },
   "hashRingRevoked": {
-    "hash": "0x46110e14cd1d5661459062d16c2e2866ea35875e08a0b5f1016bf6e1b365887b",
+    "hash": "0x142e2fc7fd0de8936b2a7a8b2788ed58adf047c5d0d51c04b68917ee03daba59",
     "revoked": true,
     "ticks": [
       {
         "i": 2,
-        "nibble": 1,
+        "nibble": 2,
         "angleDeg": -78.75,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.86
       },
       {
         "i": 3,
-        "nibble": 1,
-        "angleDeg": -73.125,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 4,
-        "nibble": 0,
-        "angleDeg": -67.5,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 5,
         "nibble": 14,
-        "angleDeg": -61.875,
+        "angleDeg": -73.125,
         "r0": 0.8,
         "r1": 0.98
       },
       {
+        "i": 4,
+        "nibble": 2,
+        "angleDeg": -67.5,
+        "r0": 0.8,
+        "r1": 0.86
+      },
+      {
+        "i": 5,
+        "nibble": 15,
+        "angleDeg": -61.875,
+        "r0": 0.8,
+        "r1": 0.99
+      },
+      {
         "i": 6,
-        "nibble": 1,
+        "nibble": 12,
         "angleDeg": -56.25,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.96
       },
       {
         "i": 7,
-        "nibble": 4,
+        "nibble": 7,
         "angleDeg": -50.625,
         "r0": 0.8,
-        "r1": 0.88
+        "r1": 0.91
       },
       {
         "i": 8,
-        "nibble": 12,
+        "nibble": 15,
         "angleDeg": -45,
         "r0": 0.8,
-        "r1": 0.96
+        "r1": 0.99
       },
       {
         "i": 9,
@@ -888,10 +888,10 @@
       },
       {
         "i": 10,
-        "nibble": 1,
+        "nibble": 0,
         "angleDeg": -33.75,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.84
       },
       {
         "i": 11,
@@ -902,178 +902,178 @@
       },
       {
         "i": 12,
-        "nibble": 5,
+        "nibble": 14,
         "angleDeg": -22.5,
         "r0": 0.8,
-        "r1": 0.89
+        "r1": 0.98
       },
       {
         "i": 13,
-        "nibble": 6,
+        "nibble": 8,
         "angleDeg": -16.875,
         "r0": 0.8,
-        "r1": 0.9
+        "r1": 0.92
       },
       {
         "i": 14,
-        "nibble": 6,
-        "angleDeg": -11.25,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 15,
-        "nibble": 1,
-        "angleDeg": -5.625,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 16,
-        "nibble": 4,
-        "angleDeg": 0,
-        "r0": 0.8,
-        "r1": 0.88
-      },
-      {
-        "i": 17,
-        "nibble": 5,
-        "angleDeg": 5.625,
-        "r0": 0.8,
-        "r1": 0.89
-      },
-      {
-        "i": 18,
         "nibble": 9,
-        "angleDeg": 11.25,
+        "angleDeg": -11.25,
         "r0": 0.8,
         "r1": 0.93
       },
       {
-        "i": 19,
-        "nibble": 0,
-        "angleDeg": 16.875,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 20,
-        "nibble": 6,
-        "angleDeg": 22.5,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 21,
-        "nibble": 2,
-        "angleDeg": 28.125,
-        "r0": 0.8,
-        "r1": 0.86
-      },
-      {
-        "i": 22,
-        "nibble": 13,
-        "angleDeg": 33.75,
-        "r0": 0.8,
-        "r1": 0.97
-      },
-      {
-        "i": 23,
-        "nibble": 1,
-        "angleDeg": 39.375,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 24,
-        "nibble": 6,
-        "angleDeg": 45,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 25,
-        "nibble": 12,
-        "angleDeg": 50.625,
-        "r0": 0.8,
-        "r1": 0.96
-      },
-      {
-        "i": 26,
-        "nibble": 2,
-        "angleDeg": 56.25,
-        "r0": 0.8,
-        "r1": 0.86
-      },
-      {
-        "i": 27,
-        "nibble": 14,
-        "angleDeg": 61.875,
-        "r0": 0.8,
-        "r1": 0.98
-      },
-      {
-        "i": 28,
-        "nibble": 2,
-        "angleDeg": 67.5,
-        "r0": 0.8,
-        "r1": 0.86
-      },
-      {
-        "i": 29,
-        "nibble": 8,
-        "angleDeg": 73.125,
-        "r0": 0.8,
-        "r1": 0.92
-      },
-      {
-        "i": 30,
-        "nibble": 6,
-        "angleDeg": 78.75,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 31,
-        "nibble": 6,
-        "angleDeg": 84.375,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
-        "i": 32,
-        "nibble": 14,
-        "angleDeg": 90,
-        "r0": 0.8,
-        "r1": 0.98
-      },
-      {
-        "i": 33,
-        "nibble": 10,
-        "angleDeg": 95.625,
-        "r0": 0.8,
-        "r1": 0.94
-      },
-      {
-        "i": 34,
+        "i": 15,
         "nibble": 3,
-        "angleDeg": 101.25,
+        "angleDeg": -5.625,
         "r0": 0.8,
         "r1": 0.87
       },
       {
-        "i": 35,
+        "i": 16,
+        "nibble": 6,
+        "angleDeg": 0,
+        "r0": 0.8,
+        "r1": 0.9
+      },
+      {
+        "i": 17,
+        "nibble": 11,
+        "angleDeg": 5.625,
+        "r0": 0.8,
+        "r1": 0.95
+      },
+      {
+        "i": 18,
+        "nibble": 2,
+        "angleDeg": 11.25,
+        "r0": 0.8,
+        "r1": 0.86
+      },
+      {
+        "i": 19,
+        "nibble": 10,
+        "angleDeg": 16.875,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 20,
+        "nibble": 7,
+        "angleDeg": 22.5,
+        "r0": 0.8,
+        "r1": 0.91
+      },
+      {
+        "i": 21,
+        "nibble": 10,
+        "angleDeg": 28.125,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 22,
+        "nibble": 8,
+        "angleDeg": 33.75,
+        "r0": 0.8,
+        "r1": 0.92
+      },
+      {
+        "i": 23,
+        "nibble": 11,
+        "angleDeg": 39.375,
+        "r0": 0.8,
+        "r1": 0.95
+      },
+      {
+        "i": 24,
+        "nibble": 2,
+        "angleDeg": 45,
+        "r0": 0.8,
+        "r1": 0.86
+      },
+      {
+        "i": 25,
+        "nibble": 7,
+        "angleDeg": 50.625,
+        "r0": 0.8,
+        "r1": 0.91
+      },
+      {
+        "i": 26,
+        "nibble": 8,
+        "angleDeg": 56.25,
+        "r0": 0.8,
+        "r1": 0.92
+      },
+      {
+        "i": 27,
+        "nibble": 8,
+        "angleDeg": 61.875,
+        "r0": 0.8,
+        "r1": 0.92
+      },
+      {
+        "i": 28,
+        "nibble": 14,
+        "angleDeg": 67.5,
+        "r0": 0.8,
+        "r1": 0.98
+      },
+      {
+        "i": 29,
+        "nibble": 13,
+        "angleDeg": 73.125,
+        "r0": 0.8,
+        "r1": 0.97
+      },
+      {
+        "i": 30,
         "nibble": 5,
-        "angleDeg": 106.875,
+        "angleDeg": 78.75,
         "r0": 0.8,
         "r1": 0.89
       },
       {
-        "i": 36,
+        "i": 31,
         "nibble": 8,
-        "angleDeg": 112.5,
+        "angleDeg": 84.375,
         "r0": 0.8,
         "r1": 0.92
+      },
+      {
+        "i": 32,
+        "nibble": 10,
+        "angleDeg": 90,
+        "r0": 0.8,
+        "r1": 0.94
+      },
+      {
+        "i": 33,
+        "nibble": 13,
+        "angleDeg": 95.625,
+        "r0": 0.8,
+        "r1": 0.97
+      },
+      {
+        "i": 34,
+        "nibble": 15,
+        "angleDeg": 101.25,
+        "r0": 0.8,
+        "r1": 0.99
+      },
+      {
+        "i": 35,
+        "nibble": 0,
+        "angleDeg": 106.875,
+        "r0": 0.8,
+        "r1": 0.84
+      },
+      {
+        "i": 36,
+        "nibble": 4,
+        "angleDeg": 112.5,
+        "r0": 0.8,
+        "r1": 0.88
       },
       {
         "i": 37,
@@ -1084,115 +1084,115 @@
       },
       {
         "i": 38,
-        "nibble": 5,
+        "nibble": 12,
         "angleDeg": 123.75,
+        "r0": 0.8,
+        "r1": 0.96
+      },
+      {
+        "i": 39,
+        "nibble": 5,
+        "angleDeg": 129.375,
         "r0": 0.8,
         "r1": 0.89
       },
       {
-        "i": 39,
-        "nibble": 14,
-        "angleDeg": 129.375,
+        "i": 40,
+        "nibble": 13,
+        "angleDeg": 135,
         "r0": 0.8,
-        "r1": 0.98
+        "r1": 0.97
       },
       {
-        "i": 40,
+        "i": 41,
         "nibble": 0,
-        "angleDeg": 135,
+        "angleDeg": 140.625,
         "r0": 0.8,
         "r1": 0.84
       },
       {
-        "i": 41,
+        "i": 42,
+        "nibble": 13,
+        "angleDeg": 146.25,
+        "r0": 0.8,
+        "r1": 0.97
+      },
+      {
+        "i": 43,
+        "nibble": 5,
+        "angleDeg": 151.875,
+        "r0": 0.8,
+        "r1": 0.89
+      },
+      {
+        "i": 44,
+        "nibble": 1,
+        "angleDeg": 157.5,
+        "r0": 0.8,
+        "r1": 0.85
+      },
+      {
+        "i": 45,
+        "nibble": 12,
+        "angleDeg": 163.125,
+        "r0": 0.8,
+        "r1": 0.96
+      },
+      {
+        "i": 46,
+        "nibble": 0,
+        "angleDeg": 168.75,
+        "r0": 0.8,
+        "r1": 0.84
+      },
+      {
+        "i": 47,
+        "nibble": 4,
+        "angleDeg": 174.375,
+        "r0": 0.8,
+        "r1": 0.88
+      },
+      {
+        "i": 48,
+        "nibble": 11,
+        "angleDeg": 180,
+        "r0": 0.8,
+        "r1": 0.95
+      },
+      {
+        "i": 49,
+        "nibble": 6,
+        "angleDeg": 185.625,
+        "r0": 0.8,
+        "r1": 0.9
+      },
+      {
+        "i": 50,
         "nibble": 8,
-        "angleDeg": 140.625,
+        "angleDeg": 191.25,
         "r0": 0.8,
         "r1": 0.92
       },
       {
-        "i": 42,
-        "nibble": 10,
-        "angleDeg": 146.25,
-        "r0": 0.8,
-        "r1": 0.94
-      },
-      {
-        "i": 43,
-        "nibble": 0,
-        "angleDeg": 151.875,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 44,
-        "nibble": 11,
-        "angleDeg": 157.5,
-        "r0": 0.8,
-        "r1": 0.95
-      },
-      {
-        "i": 45,
-        "nibble": 5,
-        "angleDeg": 163.125,
-        "r0": 0.8,
-        "r1": 0.89
-      },
-      {
-        "i": 46,
-        "nibble": 15,
-        "angleDeg": 168.75,
-        "r0": 0.8,
-        "r1": 0.99
-      },
-      {
-        "i": 47,
-        "nibble": 1,
-        "angleDeg": 174.375,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 48,
-        "nibble": 0,
-        "angleDeg": 180,
-        "r0": 0.8,
-        "r1": 0.84
-      },
-      {
-        "i": 49,
-        "nibble": 1,
-        "angleDeg": 185.625,
-        "r0": 0.8,
-        "r1": 0.85
-      },
-      {
-        "i": 50,
-        "nibble": 6,
-        "angleDeg": 191.25,
-        "r0": 0.8,
-        "r1": 0.9
-      },
-      {
         "i": 51,
-        "nibble": 11,
+        "nibble": 9,
         "angleDeg": 196.875,
         "r0": 0.8,
-        "r1": 0.95
+        "r1": 0.93
       },
       {
         "i": 52,
-        "nibble": 15,
+        "nibble": 1,
         "angleDeg": 202.5,
         "r0": 0.8,
-        "r1": 0.99
+        "r1": 0.85
       },
       {
         "i": 53,
-        "nibble": 6,
+        "nibble": 7,
         "angleDeg": 208.125,
         "r0": 0.8,
-        "r1": 0.9
+        "r1": 0.91
       },
       {
         "i": 54,
@@ -1203,17 +1203,17 @@
       },
       {
         "i": 55,
-        "nibble": 1,
+        "nibble": 14,
         "angleDeg": 219.375,
         "r0": 0.8,
-        "r1": 0.85
+        "r1": 0.98
       },
       {
         "i": 56,
-        "nibble": 11,
+        "nibble": 0,
         "angleDeg": 225,
         "r0": 0.8,
-        "r1": 0.95
+        "r1": 0.84
       },
       {
         "i": 57,
@@ -1224,89 +1224,89 @@
       },
       {
         "i": 58,
-        "nibble": 6,
+        "nibble": 13,
         "angleDeg": 236.25,
         "r0": 0.8,
-        "r1": 0.9
+        "r1": 0.97
       },
       {
         "i": 59,
-        "nibble": 5,
+        "nibble": 10,
         "angleDeg": 241.875,
         "r0": 0.8,
-        "r1": 0.89
+        "r1": 0.94
       },
       {
         "i": 60,
-        "nibble": 8,
+        "nibble": 11,
         "angleDeg": 247.5,
         "r0": 0.8,
-        "r1": 0.92
+        "r1": 0.95
       },
       {
         "i": 61,
-        "nibble": 8,
+        "nibble": 10,
         "angleDeg": 253.125,
         "r0": 0.8,
-        "r1": 0.92
+        "r1": 0.94
       }
     ],
     "arcs": [
       {
         "j": 0,
-        "startDeg": 98.4375,
-        "sweepDeg": 9,
+        "startDeg": 246.09375,
+        "sweepDeg": 12,
         "r": 0.7
       },
       {
         "j": 1,
-        "startDeg": 215.15625,
-        "sweepDeg": 17,
+        "startDeg": 109.6875,
+        "sweepDeg": 18,
         "r": 0.675
       },
       {
         "j": 2,
-        "startDeg": -54.84375,
-        "sweepDeg": 26,
+        "startDeg": -68.90625,
+        "sweepDeg": 8,
         "r": 0.65
       },
       {
         "j": 3,
-        "startDeg": 12.65625,
-        "sweepDeg": 18,
+        "startDeg": 91.40625,
+        "sweepDeg": 25,
         "r": 0.625
       },
       {
         "j": 4,
-        "startDeg": 205.3125,
-        "sweepDeg": 26,
+        "startDeg": 158.90625,
+        "sweepDeg": 28,
         "r": 0.6
       },
       {
         "j": 5,
-        "startDeg": 113.90625,
-        "sweepDeg": 35,
+        "startDeg": 26.71875,
+        "sweepDeg": 25,
         "r": 0.575
       },
       {
         "j": 6,
-        "startDeg": -90,
-        "sweepDeg": 13,
+        "startDeg": 135,
+        "sweepDeg": 11,
         "r": 0.55
       },
       {
         "j": 7,
-        "startDeg": 170.15625,
-        "sweepDeg": 32,
+        "startDeg": -75.9375,
+        "sweepDeg": 18,
         "r": 0.525
       },
       {
         "j": 8,
-        "startDeg": -14.0625,
-        "sweepDeg": 28,
+        "startDeg": 217.96875,
+        "sweepDeg": 36,
         "r": 0.5
       }
     ]
   },
-  "hashRingAscii": "=*.. E.=CD.D+**.=+@ *:D.*C:E:%**EA-+%#+E %A B+F. .*BF*E.B-*+%%#B"
+  "hashRingAscii": ".=:E:FC#FD DE%@-*B:A#A%B:#%%ED+%ADF =#C+D D+.C =B*%@.#EE -DABA+@"
 }

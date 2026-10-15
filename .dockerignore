@@ -1,0 +1,16 @@
+**/node_modules
+**/.next
+**/.turbo
+contracts/lib
+contracts/out
+contracts/cache
+contracts-fisco/out
+contracts-fisco/cache
+circuits/**/target
+circuits/node_modules
+ml
+bench/runs
+.git
+.claude
+**/*.log
+apps/agent/data

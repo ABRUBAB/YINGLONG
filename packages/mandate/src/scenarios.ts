@@ -134,7 +134,7 @@ export function lotusShenzhenMandate(d: Deployment, p: LotusParties, opts: { now
     lineageId: "lotus-shenzhen-treasury",
     salt: opts.salt ?? "1",
     validity: { from: opts.now - 60, until: opts.now + 180 * 86400 },
-    assets: [{ symbol: "CNY-instr", address: cpi, decimals: 2 }],
+    assets: [{ symbol: "CNY", address: cpi, decimals: 2 }],
     methods: ["instruct"],
     payees: [
       { id: "shenzhen_components", label: "Shenzhen Components", address: p.shenzhenComponents, category: "supplier" },
@@ -144,7 +144,7 @@ export function lotusShenzhenMandate(d: Deployment, p: LotusParties, opts: { now
     intermediaries: [],
     tiers: [
       {
-        asset: "CNY-instr",
+        asset: "CNY",
         defaultT1Cap: FEN(50_000),
         newPayeeT1Cap: FEN(1_000),
         t2Ceiling: FEN(200_000),
@@ -154,7 +154,7 @@ export function lotusShenzhenMandate(d: Deployment, p: LotusParties, opts: { now
     ],
     budgets: [
       {
-        asset: "CNY-instr",
+        asset: "CNY",
         periodStart: 0,
         periodLength: 30 * 86400,
         unlistedCategory: "services",
@@ -165,8 +165,8 @@ export function lotusShenzhenMandate(d: Deployment, p: LotusParties, opts: { now
         ],
       },
     ],
-    reserveFloors: [{ asset: "CNY-instr", amount: FEN(100_000) }],
-    velocity: { asset: "CNY-instr", window: 86400, maxCount: 6, maxOutflow: FEN(250_000) },
+    reserveFloors: [{ asset: "CNY", amount: FEN(100_000) }],
+    velocity: { asset: "CNY", window: 86400, maxCount: 6, maxOutflow: FEN(250_000) },
     suitability: null,
     reputation: null,
     facilitator: null,

@@ -1,0 +1,37 @@
+# YINGLONG application stack on the VPS. Every service listens on 127.0.0.1 only; Caddy (edge) is the
+# only public entry point. FISCO BCOS runs natively on the host (systemd) at 127.0.0.1:8545.
+name: yinglong
+x-node: &node
+  image: yinglong/node:latest
+  build: { context: ../.., dockerfile: infra/app/Dockerfile }
+  network_mode: host
+  restart: unless-stopped
+  environment: &env
+    YINGLONG_ROOT: /app
+    YINGLONG_SECRETS: /run/secrets/testnet-keys.json
+    OPENROUTER_KEY_FILE: /run/secrets/openrouter.txt
+    FISCO_RPC_URL: http://127.0.0.1:8545
+    BASE_SEPOLIA_RPC_URL: ${BASE_SEPOLIA_RPC_URL:-https://sepolia.base.org}
+    NADIA_LEDGER: ${NADIA_LEDGER:-fisco}
+    LOTUS_SZ_LEDGER: fisco
+    RUN_ID: ${RUN_ID:-live1}
+    SIGNER_URL: http://127.0.0.1:8788
+    SENTINEL_URL: ${SENTINEL_URL:-}
+  volumes:
+    - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
+    - /opt/yinglong/secrets/openrouter.txt:/run/secrets/openrouter.txt:ro
+services:
+  signer:
+    <<: *node
+    command: ["npx", "tsx", "apps/signer/src/server.ts"]
+  agent:
+    <<: *node
+    command: ["npx", "tsx", "apps/agent/src/server.ts"]
+    environment:
+      <<: *env
+      AGENT_DATA_DIR: /data
+    volumes:
+      - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
+      - /opt/yinglong/secrets/openrouter.txt:/run/secrets/openrouter.txt:ro
+      - /opt/yinglong/data/agent:/data
+    depends_on: [signer]
