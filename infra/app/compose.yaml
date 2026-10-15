@@ -30,7 +30,9 @@ services:
     environment:
       <<: *env
       AGENT_DATA_DIR: /data
+      AGENT_ADMIN_TOKEN_FILE: /run/secrets/admin-token.txt
     volumes:
+      - /opt/yinglong/secrets/admin-token.txt:/run/secrets/admin-token.txt:ro
       - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
       - /opt/yinglong/secrets/openrouter.txt:/run/secrets/openrouter.txt:ro
       - /opt/yinglong/data/agent:/data
