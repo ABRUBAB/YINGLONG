@@ -15,6 +15,7 @@ x-node: &node
     NADIA_LEDGER: ${NADIA_LEDGER:-fisco}
     LOTUS_SZ_LEDGER: fisco
     RUN_ID: ${RUN_ID:-v1}
+    RUN_ID_GUEST: ${RUN_ID_GUEST:-live1}
     # Demo time compression (labelled in the UI): budget periods of one day instead of 30 days.
     DEMO_PERIOD_SECONDS: ${DEMO_PERIOD_SECONDS:-86400}
     SIGNER_URL: http://127.0.0.1:8788

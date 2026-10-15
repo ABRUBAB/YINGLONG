@@ -93,14 +93,18 @@ export function config(id: PrincipalId): PrincipalConfig {
 }
 
 /** Scripted passkey for the demo principal (labelled everywhere as a software P-256 key). */
+export function runFor(id: PrincipalId): string {
+  return process.env[`RUN_ID_${id.replace(/-/g, "_").toUpperCase()}`] ?? process.env.RUN_ID ?? "v1";
+}
+
 export function demoPasskey(id: PrincipalId): PasskeySigner {
-  return seededPasskey(`${id}-phone`, `yinglong demo passkey ${id} ${process.env.RUN_ID ?? "v1"}`);
+  return seededPasskey(`${id}-phone`, `yinglong demo passkey ${id} ${runFor(id)}`);
 }
 
 export async function principalHandle(id: PrincipalId): Promise<{ ctx: LedgerContext; p: Principal; cfg: PrincipalConfig }> {
   const cfg = config(id);
   const ctx = ledgerContext(cfg.ledger);
-  const run = process.env.RUN_ID ?? "v1";
+  const run = runFor(id);
   const p =
     cfg.kind === "person"
       ? await personPrincipal(ctx, cfg.name, demoPasskey(id), `yinglong:${id}:${run}`)
@@ -176,9 +180,11 @@ export async function onboard(id: PrincipalId, opts: { reseal?: boolean } = {}):
     const bal = await ctx.read<bigint>({ address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi, functionName: "balanceOf", args: [p.account] });
     if (id === "guest") {
       if (bal < 450_000_000n) await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 500_000_000n] });
-    } else if (bal < 5_000_000_000n) {
-      await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 20_000_000_000n] });
-      await ctx.write("deployer", { address: ctx.addr("TestUSD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 3_000_000_000n] });
+    } else if (bal < 15_000_000_000n) {
+      // Top up to 20,000 test units (team-minted test units; no monetary value).
+      await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 20_000_000_000n - bal] });
+      const usd = await ctx.read<bigint>({ address: ctx.addr("TestUSD"), abi: abi.TestUnitsAbi, functionName: "balanceOf", args: [p.account] });
+      if (usd < 3_000_000_000n) await ctx.write("deployer", { address: ctx.addr("TestUSD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 3_000_000_000n - usd] });
     }
   } else {
     const posted = await ctx.read<bigint>({ address: ctx.addr("ConditionalPaymentInstructions"), abi: abi.ConditionalPaymentInstructionsAbi, functionName: "postedBalance", args: [p.account] });
