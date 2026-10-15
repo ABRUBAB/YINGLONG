@@ -1,0 +1,296 @@
+{
+  "ledger": "anvil",
+  "chainId": 31337,
+  "updatedAt": "2026-10-15T21:33:01.977Z",
+  "label": "YINGLONG Agent City service identities (fictional, test environment). No secrets in this file.",
+  "contracts": {
+    "YinglongPassportRegistry": "0x28734131bF29Be297C59352C2b23c08932F315A8",
+    "DelegationManager": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+    "SignedQuoteSettlement": "0x659458ca15dcd1AC7493513a37fD36063642f8E6",
+    "ConditionalPaymentInstructions": "0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8",
+    "TestHKD": "0x1A3a563AF72A2D47d9cf84cF2e728F3596F2A4d2",
+    "TestUSD": "0x7C8EbCc7667692d1211555b3929BE79F4be1A4C0",
+    "AccountabilityLedger": "0xE42990C2308C71ea3c53907Bf312075028Fbb2E0",
+    "KillSwitchRegistry": "0x391053922676eC4E720d5725d5721646c62c0652",
+    "PayeeBook": "0xbE03873a53eD8F6d48EBFC3b095bED34d7C4b0a1",
+    "MandateRegistry": "0x39D289d8572F07a3f64F4E4d80208CE650766476",
+    "ERC20TransferAmountEnforcer": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+    "LimitedCallsEnforcer": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+    "TimestampEnforcer": "0x586B8032Db3b29287D205862C78dC14C69CFdC30"
+  },
+  "services": {
+    "pearl-river-fx": {
+      "slug": "pearl-river-fx",
+      "role": "svc-pearl-river-fx",
+      "name": "Pearl River FX Desk",
+      "wallet": "0x525fFCA51b2CDcB455F9088F19D6BFd6E1E2D459",
+      "agentId": "1",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "pearl-river-fx-card-1",
+      "jwksHash": "0x1edc41fd24a2fd7188c14063a23667136c55b66725f478dc78f9c9d1ff96a51c",
+      "identityCode": "YL-TEST-0101",
+      "attestedBy": [
+        "0x1dCcf815e57BBFC818808337103513ced80523ce"
+      ]
+    },
+    "victoria-fx": {
+      "slug": "victoria-fx",
+      "role": "svc-victoria-fx",
+      "name": "Victoria FX",
+      "wallet": "0xB10392761cC3F834F113a1b96830a67Ad884f434",
+      "agentId": "2",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "victoria-fx-card-1",
+      "jwksHash": "0xa38f70c9044a7bc9565a59d24a083ab04a32b0f002278cc3320f11bafd247990",
+      "identityCode": "YL-TEST-0102",
+      "attestedBy": [
+        "0x1dCcf815e57BBFC818808337103513ced80523ce"
+      ]
+    },
+    "kyb-verifier": {
+      "slug": "kyb-verifier",
+      "role": "svc-kyb-verifier",
+      "name": "KYB Verifier",
+      "wallet": "0x716cc5CE07ec1619BeD5Ff16Ca0F7874D655527e",
+      "agentId": "3",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "kyb-verifier-card-1",
+      "jwksHash": "0x8b48f1951807af11fa1476bf28303ac2b64feea518a6703d32d29c42cd2ce0f1",
+      "identityCode": "YL-TEST-0103",
+      "attestedBy": [
+        "0x1dCcf815e57BBFC818808337103513ced80523ce"
+      ]
+    },
+    "harbour-homes": {
+      "slug": "harbour-homes",
+      "role": "svc-harbour-homes",
+      "name": "Harbour Homes",
+      "wallet": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6",
+      "agentId": "4",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "harbour-homes-card-1",
+      "jwksHash": "0x7bc5975cb751dbbcac17a474ac19feb5951689ebb7dba7a12067a9002151a5cd",
+      "identityCode": "YL-TEST-0201",
+      "attestedBy": [
+        "0x1dCcf815e57BBFC818808337103513ced80523ce"
+      ]
+    },
+    "hbu-bursar": {
+      "slug": "hbu-bursar",
+      "role": "svc-hbu-bursar",
+      "name": "HBU Bursar",
+      "wallet": "0x81085F62863966c3c21ac5fAe866D36f8766980F",
+      "agentId": "5",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "hbu-bursar-card-1",
+      "jwksHash": "0x46166c774ce61f4bdab47d8437096091addccb424852b3e476d9480bf4d2e9fe",
+      "identityCode": "YL-TEST-0202",
+      "attestedBy": [
+        "0x6B3f7EE85b510a02380c1d278Cb3E85cfB0d774F"
+      ]
+    },
+    "shenzhen-components": {
+      "slug": "shenzhen-components",
+      "role": "svc-shenzhen-components",
+      "name": "Shenzhen Components",
+      "wallet": "0x4910d9e2545182d750f166421B5D6d07f8083a20",
+      "agentId": "6",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "shenzhen-components-card-1",
+      "jwksHash": "0x9ffcb591ca7cdc18f6c6132d717cc10c5c9388a563b590632fdccfc4771da239",
+      "identityCode": "YL-TEST-0301",
+      "attestedBy": [
+        "0x1dCcf815e57BBFC818808337103513ced80523ce"
+      ]
+    },
+    "kowloon-forwarders": {
+      "slug": "kowloon-forwarders",
+      "role": "svc-kowloon-forwarders",
+      "name": "Kowloon Forwarders",
+      "wallet": "0x4eFd68dC8243b5368Be3126ABD2A3167868B7835",
+      "agentId": "7",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "kowloon-forwarders-card-1",
+      "jwksHash": "0x6ac11ee23f337a81118000ca7fbb45d873bdcc071f3555b950c5b16394fa3b48",
+      "identityCode": "YL-TEST-0302",
+      "attestedBy": [
+        "0x1dCcf815e57BBFC818808337103513ced80523ce"
+      ]
+    },
+    "scholarship-foundation": {
+      "slug": "scholarship-foundation",
+      "role": "svc-scholarship-foundation",
+      "name": "Scholarship Foundation",
+      "wallet": "0x2870a83075054c3b79B8Ba9197CF77f6e005A08B",
+      "agentId": "8",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "scholarship-foundation-card-1",
+      "jwksHash": "0x0e5122a7cd5cc42c8fa72afc6c427ab76c1b48a4e7fb9dcad713f0d898cdbb97",
+      "identityCode": "YL-TEST-0401",
+      "attestedBy": [
+        "0x1dCcf815e57BBFC818808337103513ced80523ce"
+      ]
+    },
+    "mirage": {
+      "slug": "mirage",
+      "role": "mirage",
+      "name": "Mirage",
+      "wallet": "0x3705eee97764b06c20Ce15594214168cA462C977",
+      "agentId": "9",
+      "controller": "0x6DFf7fC1f7Ff3d19b30B006d18dF3886c3B74F51",
+      "kid": "mirage-card-1",
+      "jwksHash": "0xe37644de1dd0be7d33d0e394826853782ab80b7f57020430a77fa0fd033f0e69",
+      "identityCode": "YL-TEST-0666",
+      "attestedBy": []
+    }
+  },
+  "liquidity": {
+    "svc-pearl-river-fx": {
+      "tHKD": "500000000000",
+      "tUSD": "50000000000"
+    },
+    "svc-victoria-fx": {
+      "tHKD": "500000000000",
+      "tUSD": "50000000000"
+    }
+  },
+  "minted": {
+    "agent-ying": {
+      "tHKD": "20000000000",
+      "tUSD": "3000000000"
+    },
+    "svc-scholarship-foundation": {
+      "tUSD": "100000000000"
+    }
+  },
+  "txs": [
+    {
+      "step": "passport:pearl-river-fx",
+      "hash": "0xda204dc1f90f74ee534c50b89cf500d6d34888a4ff3ce1ddf582260cbb4d6f1e"
+    },
+    {
+      "step": "passport:pearl-river-fx",
+      "hash": "0xac74d60d9a04c819f50de2da1c46f2c9f60596fc4dd14ddfa0e60fa956425208"
+    },
+    {
+      "step": "passport:victoria-fx",
+      "hash": "0xfac2e5581893d60a36e6eff3c335fc2986bf95769d5484aae015e11c168857d8"
+    },
+    {
+      "step": "passport:victoria-fx",
+      "hash": "0xebcfce5745c43913a64539b45ad3c05d68f164503f232038474c2a11b6d69ffc"
+    },
+    {
+      "step": "passport:kyb-verifier",
+      "hash": "0x31751d517874111a6913edc08bc171e66cb683a6d84c9d184e2f6ad83b5269f3"
+    },
+    {
+      "step": "passport:kyb-verifier",
+      "hash": "0x5f5dbc2a3ee096fd595a0fda10f05bb43da1e13b2313bd25b992a5ddba413e89"
+    },
+    {
+      "step": "passport:harbour-homes",
+      "hash": "0x6f725068192ac3478f3e1ffc9420a634f7c6024eae304d0fbf5c92fb3d551e2b"
+    },
+    {
+      "step": "passport:harbour-homes",
+      "hash": "0xb85d2e5197fe4ad4f0947fe6cb66a37a690875e115d7eee5200e4307fbc1940f"
+    },
+    {
+      "step": "passport:hbu-bursar",
+      "hash": "0xd681b3a9cb18009d39f866ca01524404a194e326b9a619af836494c23c68ca9b"
+    },
+    {
+      "step": "passport:hbu-bursar",
+      "hash": "0xc9963a558c381bdbbfdc816504c6ccd3168409e35d23d59ac27fff5f6d89cf27"
+    },
+    {
+      "step": "passport:shenzhen-components",
+      "hash": "0xc57f800d7fcbca637492879041cd97b733b1e7c8be997a25793439b4ee88d61a"
+    },
+    {
+      "step": "passport:shenzhen-components",
+      "hash": "0x40bdc2639ee6140c0ae62ac84733f4ca9e789ff53f0d2c79699e97b9d0eebc04"
+    },
+    {
+      "step": "passport:kowloon-forwarders",
+      "hash": "0x7184a45864de98c6092ac16c237da867fc8b26bd93fd06b08c3cdceaa0eefc2d"
+    },
+    {
+      "step": "passport:kowloon-forwarders",
+      "hash": "0xefbb1af40760d8e14b019c3ffceba61cbb748d6c4f0635ecf41109ef0e25cb1f"
+    },
+    {
+      "step": "passport:scholarship-foundation",
+      "hash": "0xbbf45dfa24fad6374bced74b08ffda8055bf084ad7b1983a4a77e0af2657130f"
+    },
+    {
+      "step": "passport:scholarship-foundation",
+      "hash": "0xa4ef426699f1f34ba8ae17c8044c515477bdaf29394debaa409bec6a5cfd6679"
+    },
+    {
+      "step": "passport:mirage",
+      "hash": "0x388636d1a027f3e1cc5ca68ae570f51c705f8fa4d9621333db0800b04e470fbb"
+    },
+    {
+      "step": "mint:tHKD:agent-ying",
+      "hash": "0x88d5c99d9f0930f9547a4e6cb6fafeed70056494bf4d60c82275e9a5452f5650"
+    },
+    {
+      "step": "mint:tUSD:agent-ying",
+      "hash": "0xf0919ea7137dcbde45fe51454cedaf1cfe31e402406d1055561d0392776af257"
+    },
+    {
+      "step": "mint:tUSD:svc-scholarship-foundation",
+      "hash": "0x257f0eef1bedd2a93bb9c6d27c6354be7b446ba9a4e16a69636faacbaaef5d94"
+    },
+    {
+      "step": "liquidity:svc-pearl-river-fx",
+      "hash": "0xba1e11a4350670b7069d0a9d834b52fbff84bb0b6114217f087472a936c15259"
+    },
+    {
+      "step": "liquidity:svc-pearl-river-fx",
+      "hash": "0xd37e58236c308dbac8988d70b5895f6793038f3c570e79962772a808df074aa8"
+    },
+    {
+      "step": "liquidity:svc-pearl-river-fx",
+      "hash": "0x87f908421d9ed969b0a33945f3a6cb27456ffe1fea0d167bfd4e2a6398fcf7ab"
+    },
+    {
+      "step": "liquidity:svc-pearl-river-fx",
+      "hash": "0x1c5e8d2d6887696861a648aace82b066609d13aaa737490c9074d7d17b42fc09"
+    },
+    {
+      "step": "liquidity:svc-pearl-river-fx",
+      "hash": "0x5465dcca9b785e3b980db6afd9b948d2271fcc831284058fe59ff912bdd2edc1"
+    },
+    {
+      "step": "liquidity:svc-pearl-river-fx",
+      "hash": "0x42b29fb344caae37b384b73d470dccbc890490a0cbce7db5c0af751bbd30213a"
+    },
+    {
+      "step": "liquidity:svc-victoria-fx",
+      "hash": "0xe87d8991a99f8084f9eb9580eb1d36448b27480d9b6a935fec8618ec47ba45d5"
+    },
+    {
+      "step": "liquidity:svc-victoria-fx",
+      "hash": "0x2cc235c44053b391325121d5540c73a1f3ec6e23c7d17df945a84ef85d7970a8"
+    },
+    {
+      "step": "liquidity:svc-victoria-fx",
+      "hash": "0x7d149b16c507550b38627bbd073bec4367f26c4b5230b02b2525f6488dd2ea95"
+    },
+    {
+      "step": "liquidity:svc-victoria-fx",
+      "hash": "0x371343929fb5559caab2d45b14e6e682a9ef703d156b17f5ee00b075406a0f79"
+    },
+    {
+      "step": "liquidity:svc-victoria-fx",
+      "hash": "0xf9280c0c4ad8daa51674ffbb238d577f677e36561295d04ea6738b9d7e6faa6b"
+    },
+    {
+      "step": "liquidity:svc-victoria-fx",
+      "hash": "0xa966a0f27e4e949d27487345214d12b4b8dd34764b92db5579fc95de238eaf07"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@yinglong/ecny-sim",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "e-CNY-style simulator. Not the PBoC sandbox; no connection to PBoC or operator-bank systems.",
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@hono/node-server": "catalog:",
+    "@yinglong/sdk": "workspace:*",
+    "hono": "catalog:",
+    "viem": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,2 @@
+# Runtime artifacts (the setup output state/<ledger>.json and jwks-<ledger>.json are intended; logs are not)
+state/settlements-*.jsonl
