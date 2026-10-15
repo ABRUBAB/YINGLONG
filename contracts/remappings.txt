@@ -1,0 +1,10 @@
+@delegation-framework/=lib/delegation-framework/src/
+@account-abstraction/=lib/delegation-framework/lib/account-abstraction/contracts/
+@openzeppelin/contracts/=lib/delegation-framework/lib/openzeppelin-contracts/contracts/
+forge-std/=lib/delegation-framework/lib/forge-std/src/
+@erc7579/=lib/delegation-framework/lib/erc7579-implementation/src/
+@FCL/=lib/delegation-framework/lib/FCL/solidity/src/
+@SCL/=lib/delegation-framework/lib/SCL/src/
+FreshCryptoLib/=lib/delegation-framework/lib/FreshCryptoLib/solidity/src/
+@solidity-stringutils/=lib/delegation-framework/lib/solidity-stringutils/src/
+@bytes-utils/=lib/delegation-framework/lib/solidity-bytes-utils/contracts/

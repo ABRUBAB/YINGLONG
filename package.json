@@ -1,0 +1,21 @@
+{
+  "name": "yinglong",
+  "private": true,
+  "description": "YINGLONG: Personal Agent Identity & Mandated Finance",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "rules": "node scripts/check-rules.mjs --history",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "2.11.8",
+    "typescript": "catalog:"
+  }
+}

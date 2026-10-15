@@ -1,0 +1,57 @@
+# dependencies and builds
+node_modules/
+.pnpm-store/
+.turbo/
+.next/
+out/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.ruff_cache/
+.pytest_cache/
+
+# foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
+contracts-fisco/out/
+contracts-fisco/cache/
+
+# ml artefacts (weights live in GitHub Releases and HuggingFace)
+ml/artifacts/
+ml/runs/
+*.gguf
+*.safetensors
+*.onnx
+*.bin
+*.pt
+
+# secrets: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+**/kaggle.json
+*keys*.txt
+*token*.txt
+*API_KEY*
+*apiKey*
+.secrets/
+secrets/
+
+# os and editors
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.log
+.claude/worktrees/
