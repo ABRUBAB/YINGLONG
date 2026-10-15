@@ -168,5 +168,31 @@
   "deployer": "0x5C470480380dC2014898345aC6226c67cbF5E407",
   "domainSalt": "0x5d43c60c69ee00070407a527d2e98fa82b9b78aa256563e16d33f58d1cdf3084",
   "frameworkMode": "deploy",
-  "ledger": "anvil"
+  "ledger": "anvil",
+  "ZKRelationsLib": {
+    "address": "0x6a5fee8c741bab0ea8b2ba5b5adbec894ba52612",
+    "codeHash": "0x23b729652420571168299a8bb12c634142f88986d26c0da976766bdc3b455c3c",
+    "txHash": "0x9e1d169144c33ba2bd31e6436947b10635981bfa1c420da27eb88fec0211b92f"
+  },
+  "ZKTranscriptLib": {
+    "address": "0xa159229cd592b698404eccad9ef26f785e166869",
+    "codeHash": "0x9cb28b53d814a6647686e9c90ffe8a81f01579e290feb721d8447cd1c12c3a6f",
+    "txHash": "0x0440f1547f408144b8daf0f466c4c2d82873d91ecea2753f0638dbd8f5f4a16f"
+  },
+  "HonkVerifier": {
+    "address": "0xf469fd199605708564da7ac23c5837e66672f238",
+    "codeHash": "0x8cce738235fa482c2d5d52216f32044303d370c27546e74566cf6250d6f2ac28",
+    "txHash": "0x09c8f08ebdfc30904938973200d9aa2fd90af3cdec99b06a66f0d1deea5e1eae"
+  },
+  "ZKVerifierRouter": {
+    "address": "0x919eab55b82f2c4127f30c2f0f84af94d1e99d17",
+    "codeHash": "0x2fdd97fd3156db1895dac164f978144ba67c44277b9e8a3927b2303ba8872a82",
+    "txHash": "0x9e3dad869ac62cc0f52387818fa1c1c055c397b84dacf55fa758e28193d5c85b"
+  },
+  "ZKMandateEnforcer": {
+    "address": "0xacaf72bf91fa0b07b5d8961d211e41647b5deffe",
+    "codeHash": "0x6967465c90c35cb3dd6a2b47ee6a6c6e33b19e46dc271f35472b516fc3cc1fe6",
+    "txHash": "0x9c3e5bc6eb0afd07b7a2d989bd79a5e0bfa60bdba8239ef2a05e3e23c71d56b0"
+  },
+  "zkRegisterVerifierTx": "0xb04fd72b285a2e069cac0d1fe079a3a92aab34af7ec616ca31c67e9ab2942ba5"
 }
