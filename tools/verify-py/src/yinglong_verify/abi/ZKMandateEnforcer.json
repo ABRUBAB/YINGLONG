@@ -1,0 +1,504 @@
+[
+ {
+  "inputs": [],
+  "name": "INITIAL_RUNNING_COMMITMENT",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "MAX_CLAIMED_TIME_AGE",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "MAX_CLAIMED_TIME_SKEW",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "NUM_PUBLIC_INPUTS",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "PROOF_TYPE_MANDATE_COMPLIANCE",
+  "outputs": [
+   {
+    "internalType": "uint8",
+    "name": "",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "SNARK_SCALAR_FIELD",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "beforeAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_args",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "_mode",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_executionCallData",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_redeemer",
+    "type": "address"
+   }
+  ],
+  "name": "beforeHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_args",
+    "type": "bytes"
+   }
+  ],
+  "name": "getArgsInfo",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "nonce_",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint64",
+    "name": "claimedTime_",
+    "type": "uint64"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "newRunningCommitment_",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "proof_",
+    "type": "bytes"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   }
+  ],
+  "name": "getTermsInfo",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "router_",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "mandateCommitment_",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "delegationManager",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "nonce",
+    "type": "uint256"
+   }
+  ],
+  "name": "nonceUsed",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "used",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_delegationManager",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "runningCommitment",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "delegationManager",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "redeemer",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "token",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "payee",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "nonce",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint64",
+    "name": "claimedTime",
+    "type": "uint64"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "newRunningCommitment",
+    "type": "bytes32"
+   }
+  ],
+  "name": "MandatePaymentProven",
+  "type": "event"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   }
+  ],
+  "name": "AmountOutOfRange",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint64",
+    "name": "claimedTime",
+    "type": "uint64"
+   },
+   {
+    "internalType": "uint256",
+    "name": "blockTimestamp",
+    "type": "uint256"
+   }
+  ],
+  "name": "ClaimedTimeOutOfRange",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidArgs",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidExecutionMode",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidMandateProof",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidTerms",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "value",
+    "type": "uint256"
+   }
+  ],
+  "name": "NativeValueNotAllowed",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "nonce",
+    "type": "uint256"
+   }
+  ],
+  "name": "NonceAlreadyUsed",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes4",
+    "name": "selector",
+    "type": "bytes4"
+   }
+  ],
+  "name": "UndecodableExecution",
+  "type": "error"
+ }
+]

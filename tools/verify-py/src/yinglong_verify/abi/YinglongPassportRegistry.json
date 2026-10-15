@@ -1,0 +1,966 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_supervisor",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_domainSalt",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [],
+  "name": "BIND_WALLET_TYPEHASH",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "STATUS_ACTIVE",
+  "outputs": [
+   {
+    "internalType": "uint8",
+    "name": "",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "STATUS_HALTED",
+  "outputs": [
+   {
+    "internalType": "uint8",
+    "name": "",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "STATUS_NONE",
+  "outputs": [
+   {
+    "internalType": "uint8",
+    "name": "",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "STATUS_REVOKED",
+  "outputs": [
+   {
+    "internalType": "uint8",
+    "name": "",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "acceptSupervisor",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "wallet",
+    "type": "address"
+   }
+  ],
+  "name": "agentIdOf",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_claimHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint64",
+    "name": "_expiresAt",
+    "type": "uint64"
+   }
+  ],
+  "name": "attest",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "address",
+    "name": "_issuer",
+    "type": "address"
+   }
+  ],
+  "name": "attestationOf",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "bytes32",
+      "name": "claimHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint64",
+      "name": "issuedAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "expiresAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "bool",
+      "name": "revoked",
+      "type": "bool"
+     }
+    ],
+    "internalType": "struct YinglongPassportRegistry.Attestation",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "address",
+    "name": "_controller",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_wallet",
+    "type": "address"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_deadline",
+    "type": "uint256"
+   }
+  ],
+  "name": "bindWalletDigest",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "domainSalt",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "domainSeparator",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_wallet",
+    "type": "address"
+   }
+  ],
+  "name": "erc8004IdOfWallet",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "address",
+    "name": "_issuer",
+    "type": "address"
+   }
+  ],
+  "name": "isAttestedBy",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_wallet",
+    "type": "address"
+   },
+   {
+    "internalType": "address[]",
+    "name": "_trustedIssuers",
+    "type": "address[]"
+   }
+  ],
+  "name": "isTrustedAgentWallet",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "issuersOf",
+  "outputs": [
+   {
+    "internalType": "address[]",
+    "name": "",
+    "type": "address[]"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "nextAgentId",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "passportOf",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "address",
+      "name": "controller",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "agentWallet",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "ownerDidHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "passportVcHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "provenanceHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "enforcerTableHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "jwksHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint256",
+      "name": "erc8004AgentId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint8",
+      "name": "status",
+      "type": "uint8"
+     },
+     {
+      "internalType": "string",
+      "name": "identityCode",
+      "type": "string"
+     },
+     {
+      "internalType": "string",
+      "name": "kid",
+      "type": "string"
+     },
+     {
+      "internalType": "string",
+      "name": "registrationURI",
+      "type": "string"
+     }
+    ],
+    "internalType": "struct YinglongPassportRegistry.Passport",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "pendingSupervisor",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "components": [
+     {
+      "internalType": "address",
+      "name": "agentWallet",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "ownerDidHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "passportVcHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "provenanceHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "enforcerTableHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "jwksHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint256",
+      "name": "erc8004AgentId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "string",
+      "name": "identityCode",
+      "type": "string"
+     },
+     {
+      "internalType": "string",
+      "name": "kid",
+      "type": "string"
+     },
+     {
+      "internalType": "string",
+      "name": "registrationURI",
+      "type": "string"
+     },
+     {
+      "internalType": "uint256",
+      "name": "deadline",
+      "type": "uint256"
+     },
+     {
+      "internalType": "bytes",
+      "name": "walletSig",
+      "type": "bytes"
+     }
+    ],
+    "internalType": "struct YinglongPassportRegistry.RegisterParams",
+    "name": "_p",
+    "type": "tuple"
+   }
+  ],
+  "name": "register",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "agentId_",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "revoke",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "revokeAttestation",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "address",
+    "name": "_newWallet",
+    "type": "address"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_deadline",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_walletSig",
+    "type": "bytes"
+   }
+  ],
+  "name": "setAgentWallet",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_erc8004AgentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "setErc8004AgentId",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "supervisor",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bool",
+    "name": "_halted",
+    "type": "bool"
+   }
+  ],
+  "name": "supervisorSetStatus",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_to",
+    "type": "address"
+   }
+  ],
+  "name": "transferSupervisor",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_agentId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_passportVcHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_provenanceHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_enforcerTableHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_jwksHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "string",
+    "name": "_kid",
+    "type": "string"
+   }
+  ],
+  "name": "updateHashes",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_wallet",
+    "type": "address"
+   }
+  ],
+  "name": "walletInfo",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "agentId_",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint8",
+    "name": "status_",
+    "type": "uint8"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "ownerDidHash_",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "oldWallet",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "newWallet",
+    "type": "address"
+   }
+  ],
+  "name": "AgentWalletChanged",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   }
+  ],
+  "name": "AttestationRevoked",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "claimHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint64",
+    "name": "expiresAt",
+    "type": "uint64"
+   }
+  ],
+  "name": "Attested",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "controller",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "agentWallet",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "ownerDidHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "PassportRegistered",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "passportVcHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "provenanceHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "enforcerTableHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "jwksHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "PassportUpdated",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint8",
+    "name": "status",
+    "type": "uint8"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "by",
+    "type": "address"
+   }
+  ],
+  "name": "StatusChanged",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "from",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "to",
+    "type": "address"
+   }
+  ],
+  "name": "SupervisorTransferStarted",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "from",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "to",
+    "type": "address"
+   }
+  ],
+  "name": "SupervisorTransferred",
+  "type": "event"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidSignature",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "PassportRevoked",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "deadline",
+    "type": "uint256"
+   }
+  ],
+  "name": "SignatureExpired",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "caller",
+    "type": "address"
+   }
+  ],
+  "name": "Unauthorized",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "UnknownAgent",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "wallet",
+    "type": "address"
+   },
+   {
+    "internalType": "uint256",
+    "name": "agentId",
+    "type": "uint256"
+   }
+  ],
+  "name": "WalletAlreadyBound",
+  "type": "error"
+ }
+]

@@ -1,0 +1,224 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "beforeAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "_mode",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_redeemer",
+    "type": "address"
+   }
+  ],
+  "name": "beforeHook",
+  "outputs": [],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   }
+  ],
+  "name": "getTermsInfo",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "registry_",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "ownerDidHash_",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "facilitator_",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidExecutionMode",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidTerms",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "redeemer",
+    "type": "address"
+   }
+  ],
+  "name": "LineageViolation",
+  "type": "error"
+ }
+]

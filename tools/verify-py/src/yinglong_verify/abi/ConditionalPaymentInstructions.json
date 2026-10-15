@@ -1,0 +1,518 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_operator",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_account",
+    "type": "address"
+   }
+  ],
+  "name": "balanceOf",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "decimals",
+  "outputs": [
+   {
+    "internalType": "uint8",
+    "name": "",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_simulatorRef",
+    "type": "bytes32"
+   }
+  ],
+  "name": "execute",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+   }
+  ],
+  "name": "expire",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_payee",
+    "type": "address"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_amount",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_purposeHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_conditionHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint64",
+    "name": "_validUntil",
+    "type": "uint64"
+   }
+  ],
+  "name": "instruct",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "id_",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "instructionCount",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+   }
+  ],
+  "name": "instructionOf",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "address",
+      "name": "account",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "payee",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "purposeHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "conditionHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint64",
+      "name": "validUntil",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "createdAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "enum ConditionalPaymentInstructions.Status",
+      "name": "status",
+      "type": "uint8"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "resultRef",
+      "type": "bytes32"
+     }
+    ],
+    "internalType": "struct ConditionalPaymentInstructions.Instruction",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "name",
+  "outputs": [
+   {
+    "internalType": "string",
+    "name": "",
+    "type": "string"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "operator",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "pendingTotal",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_account",
+    "type": "address"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_balance",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_statementRef",
+    "type": "bytes32"
+   }
+  ],
+  "name": "postBalance",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "postedBalance",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "railKind",
+  "outputs": [
+   {
+    "internalType": "uint8",
+    "name": "",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_reasonCode",
+    "type": "bytes32"
+   }
+  ],
+  "name": "reject",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_to",
+    "type": "address"
+   }
+  ],
+  "name": "transferOperator",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "balance",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "statementRef",
+    "type": "bytes32"
+   }
+  ],
+  "name": "BalancePosted",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "simulatorRef",
+    "type": "bytes32"
+   }
+  ],
+  "name": "Executed",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+   }
+  ],
+  "name": "Expired",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "payee",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "purposeHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "conditionHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint64",
+    "name": "validUntil",
+    "type": "uint64"
+   }
+  ],
+  "name": "Instructed",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "from",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "to",
+    "type": "address"
+   }
+  ],
+  "name": "OperatorTransferred",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "reasonCode",
+    "type": "bytes32"
+   }
+  ],
+  "name": "Rejected",
+  "type": "event"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "available",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   }
+  ],
+  "name": "InsufficientAvailable",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+   }
+  ],
+  "name": "InvalidStatus",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+   }
+  ],
+  "name": "NotExpired",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "caller",
+    "type": "address"
+   }
+  ],
+  "name": "Unauthorized",
+  "type": "error"
+ }
+]

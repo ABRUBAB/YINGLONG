@@ -11,6 +11,7 @@ import { providerStatus } from "./llm/provider";
 import { ask, bypass, declineApproval, demoApprove, execute, hijack, proposals, submitApproval } from "./pipeline";
 import { receiptLog, type ReceiptRecord } from "./receipts";
 import { attempt, challenge, session } from "./challenge";
+import { board, createBoardProposal, directorSign } from "./board";
 import { apiJson } from "./store";
 import { config, onboard, PRINCIPALS, world, type PrincipalId, type PrincipalState } from "./world";
 
@@ -37,7 +38,7 @@ function readSecret(path?: string): string | undefined {
     return undefined;
   }
 }
-const PROTECTED = [/\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
+const PROTECTED = [/\/board-proposals$/, /\/sign$/, /\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
 app.use("/v1/*", async (c, next) => {
   if (ADMIN && c.req.method === "POST" && PROTECTED.some((re) => re.test(c.req.path)) && c.req.header("x-admin-token") !== ADMIN) {
     return c.json({ ok: false, error: "this action needs the operator token (judges: use the Judge's Challenge guest agent)" }, 403);
@@ -312,6 +313,23 @@ app.post("/v1/challenge/attempt", async (c) => {
     .parse(await c.req.json());
   const ip = c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   return c.json(apiJson(await attempt({ ip, ...b })));
+});
+
+app.get("/v1/board-proposals", (c) => {
+  const principal = c.req.query("principal");
+  return c.json(apiJson(Object.values(board.get().proposals).filter((b) => !principal || b.principal === principal)));
+});
+app.post("/v1/principals/:id/board-proposals", async (c) => {
+  const id = c.req.param("id");
+  if (!isPid(id) || config(id).kind !== "company") return c.json({ ok: false, error: "board proposals are for company principals" }, 400);
+  const b = z
+    .object({ kind: z.enum(["payment", "resume"]).default("payment"), payeeId: z.string().default(""), amount: z.string().regex(/^[0-9]+$/).default("0"), title: z.string().min(1).max(120) })
+    .parse(await c.req.json());
+  return c.json(apiJson(await createBoardProposal(id, { kind: b.kind, payeeId: b.payeeId, amount: BigInt(b.amount), title: b.title })));
+});
+app.post("/v1/board-proposals/:id/sign", async (c) => {
+  const b = z.object({ director: z.enum(["director-1", "director-2", "director-3"]) }).parse(await c.req.json());
+  return c.json(apiJson(await directorSign(c.req.param("id"), b.director)));
 });
 
 app.get("/v1/registry/agents", async (c) => {

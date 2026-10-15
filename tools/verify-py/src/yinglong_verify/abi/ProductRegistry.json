@@ -1,0 +1,188 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_admin",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [],
+  "name": "admin",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "allProducts",
+  "outputs": [
+   {
+    "internalType": "address[]",
+    "name": "",
+    "type": "address[]"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_product",
+    "type": "address"
+   }
+  ],
+  "name": "delist",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_product",
+    "type": "address"
+   },
+   {
+    "internalType": "uint8",
+    "name": "_riskClass",
+    "type": "uint8"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_nameHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "list",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_product",
+    "type": "address"
+   }
+  ],
+  "name": "productInfo",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "listed_",
+    "type": "bool"
+   },
+   {
+    "internalType": "uint8",
+    "name": "riskClass_",
+    "type": "uint8"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "product",
+    "type": "address"
+   }
+  ],
+  "name": "products",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "listed",
+    "type": "bool"
+   },
+   {
+    "internalType": "uint8",
+    "name": "riskClass",
+    "type": "uint8"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "nameHash",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "product",
+    "type": "address"
+   }
+  ],
+  "name": "ProductDelisted",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "product",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint8",
+    "name": "riskClass",
+    "type": "uint8"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "nameHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "ProductListed",
+  "type": "event"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint8",
+    "name": "riskClass",
+    "type": "uint8"
+   }
+  ],
+  "name": "InvalidRiskClass",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "caller",
+    "type": "address"
+   }
+  ],
+  "name": "Unauthorized",
+  "type": "error"
+ }
+]

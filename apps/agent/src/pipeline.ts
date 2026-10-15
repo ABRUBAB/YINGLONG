@@ -46,6 +46,7 @@ export interface Proposal {
   counterparty?: CounterpartyResult;
   answer?: unknown;
   approvalId?: string;
+  breaker?: { tripped: boolean; txHash?: Hex; reason: string };
   execution?: Hex;
   calldata?: Hex;
   status: "open" | "executed" | "refused" | "awaiting_approval" | "asked" | "answered";
@@ -385,6 +386,14 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     const rec = writeReceipt(p, st, decision === "ask" ? "asked" : "rejected_policy");
     p.receiptIds.push(rec.receipt.receiptId);
   }
+  // Circuit breaker: a deterministic refusal of a breaker-class rule pauses the account through the breaker
+  // watcher (pause only; only the principal can resume). Reverted transactions write nothing on-chain, so the
+  // breaker trips off-chain from the policy decision.
+  const breakerRules = (process.env.BREAKER_RULES ?? "VelocityExceeded").split(",");
+  const tripRule = policy?.refusals.find((r) => breakerRules.includes(r.typedError));
+  if (tier === "T4" && tripRule && config(id).kind === "company" && policy?.stateReads.paused !== "true") {
+    p.breaker = await tripBreaker(ctx, st.account, `${tripRule.typedError}: ${tripRule.detail}`);
+  }
   proposals.update((d) => {
     d.proposals[p.id] = p;
   });
@@ -401,6 +410,23 @@ function buildPlan(intent: Intent, method: string, tier: Tier) {
   if (tier === "T2") steps.push("wait for your approval on your phone (passkey)");
   if (tier === "T1" || tier === "T2") steps.push("sign the redemption in the isolated signer and submit", "verify the result and record a receipt");
   return steps.map((d, i) => ({ step: i + 1, description: d }));
+}
+
+// ---------------------------------------------------------------- circuit breaker
+
+async function tripBreaker(ctx: LedgerContext, account: Address, reason: string): Promise<{ tripped: boolean; txHash?: Hex; reason: string }> {
+  const url = process.env.BREAKER_URL;
+  if (url) {
+    try {
+      const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ account, reason, ledger: ctx.name, by: "policy" }) });
+      const j = (await r.json()) as { txHash?: Hex };
+      return { tripped: r.ok, txHash: j.txHash, reason };
+    } catch {
+      /* fall through to the local watcher key */
+    }
+  }
+  const res = await ctx.write("breaker-watcher", { address: ctx.addr("KillSwitchRegistry"), abi: abi.KillSwitchRegistryAbi as never, functionName: "trip", args: [account] });
+  return { tripped: res.ok, txHash: res.hash, reason };
 }
 
 // ---------------------------------------------------------------- approvals (T2)

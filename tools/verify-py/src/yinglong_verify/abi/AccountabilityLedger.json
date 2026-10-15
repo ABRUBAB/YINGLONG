@@ -1,0 +1,537 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_admin",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [],
+  "name": "admin",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "_root",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint64",
+    "name": "_count",
+    "type": "uint64"
+   },
+   {
+    "internalType": "string",
+    "name": "_uri",
+    "type": "string"
+   }
+  ],
+  "name": "anchorBatch",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchId_",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "batchCount",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "root",
+    "type": "bytes32"
+   }
+  ],
+  "name": "batchIdOfRoot",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchIdPlusOne",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_batchId",
+    "type": "uint256"
+   }
+  ],
+  "name": "batchOf",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "bytes32",
+      "name": "root",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "prevRoot",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint64",
+      "name": "count",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "anchoredAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "blockNumber",
+      "type": "uint64"
+     }
+    ],
+    "internalType": "struct AccountabilityLedger.Batch",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_remoteChainId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_remoteBlockNumber",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_remoteBlockHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_remoteRoot",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_remoteBatchId",
+    "type": "uint256"
+   }
+  ],
+  "name": "crossAnchor",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "crossId_",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "crossAnchorCount",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_crossId",
+    "type": "uint256"
+   }
+  ],
+  "name": "crossAnchorOf",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "uint256",
+      "name": "remoteChainId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "remoteBlockNumber",
+      "type": "uint256"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "remoteBlockHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "remoteRoot",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint256",
+      "name": "remoteBatchId",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint64",
+      "name": "recordedAt",
+      "type": "uint64"
+     }
+    ],
+    "internalType": "struct AccountabilityLedger.CrossAnchor",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "isAnchorer",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "latestRoot",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "root_",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "batchId_",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "_receiptHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "_agent",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_mandateHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint8",
+    "name": "_outcome",
+    "type": "uint8"
+   }
+  ],
+  "name": "logReceipt",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_anchorer",
+    "type": "address"
+   },
+   {
+    "internalType": "bool",
+    "name": "_enabled",
+    "type": "bool"
+   }
+  ],
+  "name": "setAnchorer",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_to",
+    "type": "address"
+   }
+  ],
+  "name": "transferAdmin",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "_batchId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_leaf",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32[]",
+    "name": "_proof",
+    "type": "bytes32[]"
+   }
+  ],
+  "name": "verifyReceipt",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "from",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "to",
+    "type": "address"
+   }
+  ],
+  "name": "AdminTransferred",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "anchorer",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "enabled",
+    "type": "bool"
+   }
+  ],
+  "name": "AnchorerSet",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "crossId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "remoteChainId",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "remoteBlockNumber",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "remoteBlockHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "remoteRoot",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "remoteBatchId",
+    "type": "uint256"
+   }
+  ],
+  "name": "CrossAnchored",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "root",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "prevRoot",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint64",
+    "name": "count",
+    "type": "uint64"
+   },
+   {
+    "indexed": false,
+    "internalType": "string",
+    "name": "uri",
+    "type": "string"
+   }
+  ],
+  "name": "ReceiptBatchAnchored",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "receiptHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "agent",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "mandateHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint8",
+    "name": "outcome",
+    "type": "uint8"
+   }
+  ],
+  "name": "ReceiptLogged",
+  "type": "event"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "root",
+    "type": "bytes32"
+   }
+  ],
+  "name": "DuplicateRoot",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "EmptyBatch",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "caller",
+    "type": "address"
+   }
+  ],
+  "name": "Unauthorized",
+  "type": "error"
+ }
+]

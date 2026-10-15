@@ -1,0 +1,185 @@
+{
+  "description": "Files bundled into yinglong-verify by tools/verify-py/scripts/sync-data.py; do not edit by hand.",
+  "files": {
+    "abi/AccountabilityLedger.json": {
+      "source": "contracts/out/AccountabilityLedger.sol/AccountabilityLedger.json (abi only)",
+      "sha256": "841b58caca0481a9c0565fe32d4973588bf09934bf484cdb991a37dcb0a52fc0"
+    },
+    "abi/AgentLineageEnforcer.json": {
+      "source": "contracts/out/AgentLineageEnforcer.sol/AgentLineageEnforcer.json (abi only)",
+      "sha256": "0b6162ca8d575e46c147a7fd136370515e2100bd537e9d303436b2a5e4cdf832"
+    },
+    "abi/AllowedCalldataEnforcer.json": {
+      "source": "contracts/out/AllowedCalldataEnforcer.sol/AllowedCalldataEnforcer.json (abi only)",
+      "sha256": "b6b4a239183ef3285523607bb278f0bc585c37486a629dce6372f39149621eb3"
+    },
+    "abi/AllowedMethodsEnforcer.json": {
+      "source": "contracts/out/AllowedMethodsEnforcer.sol/AllowedMethodsEnforcer.json (abi only)",
+      "sha256": "1eee14cbd1a80891647c3b447bca269fc12cc6aac5e6e22566a16ffeb011c091"
+    },
+    "abi/AllowedTargetsEnforcer.json": {
+      "source": "contracts/out/AllowedTargetsEnforcer.sol/AllowedTargetsEnforcer.json (abi only)",
+      "sha256": "c1f4f6750bfa7f6770f66b81cf092ec889f47db907bf59ad4768cdf0d44eeaac"
+    },
+    "abi/CategoryBudgetEnforcer.json": {
+      "source": "contracts/out/CategoryBudgetEnforcer.sol/CategoryBudgetEnforcer.json (abi only)",
+      "sha256": "0959a4cb4bb774b641b5f8d0eafa6f216d520ceb216c5f1784a94b2444a900aa"
+    },
+    "abi/CoSignEnforcer.json": {
+      "source": "contracts/out/CoSignEnforcer.sol/CoSignEnforcer.json (abi only)",
+      "sha256": "65dfe8f65c95c3bd6be8cf9d8eae37f15ce446fdf384444c6fdeda4142413245"
+    },
+    "abi/ConditionalPaymentInstructions.json": {
+      "source": "contracts/out/ConditionalPaymentInstructions.sol/ConditionalPaymentInstructions.json (abi only)",
+      "sha256": "20fe8ae82a11e4aa4da54b6b7fdda8a4997fdad5d2db612c50fcf103aaea1b22"
+    },
+    "abi/DelegationManager.json": {
+      "source": "contracts/out/DelegationManager.sol/DelegationManager.json (abi only)",
+      "sha256": "d97cb2b2f82259970a01fe0b4fb5029be7953baad68817cb50b7f9402e55966e"
+    },
+    "abi/ERC20TransferAmountEnforcer.json": {
+      "source": "contracts/out/ERC20TransferAmountEnforcer.sol/ERC20TransferAmountEnforcer.json (abi only)",
+      "sha256": "4e866034fdff1a8bd29a078672e7c7dcc06c2aa36e241a94d0be5dc35435c78d"
+    },
+    "abi/EntryPoint.json": {
+      "source": "contracts/out/EntryPoint.sol/EntryPoint.json (abi only)",
+      "sha256": "dcbe521875cc85c9dcd616594910035f5bedfa5d054cce15fde5c44fe8c23b60"
+    },
+    "abi/ForbiddenTargetsEnforcer.json": {
+      "source": "contracts/out/ForbiddenTargetsEnforcer.sol/ForbiddenTargetsEnforcer.json (abi only)",
+      "sha256": "abcaad1b28fe14ac75d165deb37464645970caaf6692944ed8e1666535032d25"
+    },
+    "abi/GlobalPauseEnforcer.json": {
+      "source": "contracts/out/GlobalPauseEnforcer.sol/GlobalPauseEnforcer.json (abi only)",
+      "sha256": "3f7f280e73e390a4656f1b6b56a67dbb8d37b66c4949a8057bdbc927983d2cde"
+    },
+    "abi/HybridDeleGator.json": {
+      "source": "contracts/out/HybridDeleGator.sol/HybridDeleGator.json (abi only)",
+      "sha256": "2ac30dfc453a4441f6471220a8505f68f402af06ba6514c2233a6f032fc28c86"
+    },
+    "abi/JurisdictionEnforcer.json": {
+      "source": "contracts/out/JurisdictionEnforcer.sol/JurisdictionEnforcer.json (abi only)",
+      "sha256": "de6eb4a7bab7af98742fc2ce90e0b9153903c097183a245d498d3e1b3e0afb98"
+    },
+    "abi/KillSwitchRegistry.json": {
+      "source": "contracts/out/KillSwitchRegistry.sol/KillSwitchRegistry.json (abi only)",
+      "sha256": "0e09764c6eaf4ae744520617ede4f4e7e6e117965d8027cdb410861c2aef5a3c"
+    },
+    "abi/LimitedCallsEnforcer.json": {
+      "source": "contracts/out/LimitedCallsEnforcer.sol/LimitedCallsEnforcer.json (abi only)",
+      "sha256": "b2fd7fafb316cd3f9097aee7c68aad993987dd9be5d1d3ecc79df290b82b769b"
+    },
+    "abi/MandateBindingEnforcer.json": {
+      "source": "contracts/out/MandateBindingEnforcer.sol/MandateBindingEnforcer.json (abi only)",
+      "sha256": "7f58e89807466968228d07a93988d787622b2fa2212f0f7372d51498832ad2a1"
+    },
+    "abi/MandateRegistry.json": {
+      "source": "contracts/out/MandateRegistry.sol/MandateRegistry.json (abi only)",
+      "sha256": "7eeed5dc3ee32344f8a19defb67122619099e0e6677e2a3d6234b60597533be9"
+    },
+    "abi/MultiSigDeleGator.json": {
+      "source": "contracts/out/MultiSigDeleGator.sol/MultiSigDeleGator.json (abi only)",
+      "sha256": "b48fdf8765bfb9db863b310de6618bf9ce3648cd2f7b1f7e75b27c4a976642f3"
+    },
+    "abi/NonceEnforcer.json": {
+      "source": "contracts/out/NonceEnforcer.sol/NonceEnforcer.json (abi only)",
+      "sha256": "28e847ff1c7cf44a38e9fb8025d98f57640376759ec7b80d959bc32e2d1b2bae"
+    },
+    "abi/PayeeBook.json": {
+      "source": "contracts/out/PayeeBook.sol/PayeeBook.json (abi only)",
+      "sha256": "7b941b78fa760afb6cb6db80673917eb7d6690359a76a1958e144bb711d260df"
+    },
+    "abi/ProductRegistry.json": {
+      "source": "contracts/out/ProductRegistry.sol/ProductRegistry.json (abi only)",
+      "sha256": "b69305ebb2234c63b4ea41758ba764f53b065983ea6c508b68b648edce019d3e"
+    },
+    "abi/ProtectedPayment.json": {
+      "source": "contracts/out/ProtectedPayment.sol/ProtectedPayment.json (abi only)",
+      "sha256": "6a3a538afe94666a1b248a64b3157dc62b384cd40d268e35409fa2f274876a91"
+    },
+    "abi/RedeemerEnforcer.json": {
+      "source": "contracts/out/RedeemerEnforcer.sol/RedeemerEnforcer.json (abi only)",
+      "sha256": "932187fbe33a19cd0f05394453861dd5d88ef98e99dc039041d4026d62ddc95e"
+    },
+    "abi/ReputationGateEnforcer.json": {
+      "source": "contracts/out/ReputationGateEnforcer.sol/ReputationGateEnforcer.json (abi only)",
+      "sha256": "6d1d6b659a6c98ae05fa9355e30948e135e620180582cc63d6829384dc0c1541"
+    },
+    "abi/ReserveFloorEnforcer.json": {
+      "source": "contracts/out/ReserveFloorEnforcer.sol/ReserveFloorEnforcer.json (abi only)",
+      "sha256": "55a537cb22783865d45cbc16f2262062d4ff18e42af8f584ed3fdf89ca4dcade"
+    },
+    "abi/SignedQuoteSettlement.json": {
+      "source": "contracts/out/SignedQuoteSettlement.sol/SignedQuoteSettlement.json (abi only)",
+      "sha256": "9846228792203f9c245f0c0eae37def59b70ae3d2f7f50e20fb7446695bc3962"
+    },
+    "abi/SimpleFactory.json": {
+      "source": "contracts/out/SimpleFactory.sol/SimpleFactory.json (abi only)",
+      "sha256": "e8c31b963ce2145258dc14cde75f0e4a34b8aa099e53d7e34b138b515c295664"
+    },
+    "abi/SuitabilityEnforcer.json": {
+      "source": "contracts/out/SuitabilityEnforcer.sol/SuitabilityEnforcer.json (abi only)",
+      "sha256": "b414b4f1edd04b35875dc937b91c1b5d9915d2d8c869a3309ad96cb339457546"
+    },
+    "abi/TestMoneyMarketFund.json": {
+      "source": "contracts/out/TestMoneyMarketFund.sol/TestMoneyMarketFund.json (abi only)",
+      "sha256": "7f13a870540cb7dcd07657f9206db7a122418d7a282733579f19cf6facd34ff2"
+    },
+    "abi/TestUnits.json": {
+      "source": "contracts/out/TestUnits.sol/TestUnits.json (abi only)",
+      "sha256": "e7fc084d91667a745e05ab8427bc6279f82cd06242d0d8df53cfe3011bdee720"
+    },
+    "abi/TimestampEnforcer.json": {
+      "source": "contracts/out/TimestampEnforcer.sol/TimestampEnforcer.json (abi only)",
+      "sha256": "b3bd7c5abcf5c2ecf5074eace6ae7ffb0e32a0c9a7d05f4984b00463fc5d11ac"
+    },
+    "abi/ValueLteEnforcer.json": {
+      "source": "contracts/out/ValueLteEnforcer.sol/ValueLteEnforcer.json (abi only)",
+      "sha256": "ed752c566f037eb527d1145819cfd499d69d166786e7907d529c8a765dbc5034"
+    },
+    "abi/VelocityEnforcer.json": {
+      "source": "contracts/out/VelocityEnforcer.sol/VelocityEnforcer.json (abi only)",
+      "sha256": "1f9fea3238445ed6fd08aa02672c40d5a603467fa3d6f266ab668d643b3672fd"
+    },
+    "abi/VerifiedPayeeEnforcer.json": {
+      "source": "contracts/out/VerifiedPayeeEnforcer.sol/VerifiedPayeeEnforcer.json (abi only)",
+      "sha256": "e62f420a89067162d0183bbc4da6451bd82815a34b6f83919516d6c665db6190"
+    },
+    "abi/VetoTimelockEnforcer.json": {
+      "source": "contracts/out/VetoTimelockEnforcer.sol/VetoTimelockEnforcer.json (abi only)",
+      "sha256": "26c091d943ecd493d4f1a417b0d6c55e275ee2390c8e7edec90737848a8b8fb5"
+    },
+    "abi/YinglongCreate2Deployer.json": {
+      "source": "contracts/out/YinglongCreate2Deployer.sol/YinglongCreate2Deployer.json (abi only)",
+      "sha256": "a7e6c69295690d72f42cfab3f274fcb167e534fb0da4bc9025a65f68af6c83cb"
+    },
+    "abi/YinglongPassportRegistry.json": {
+      "source": "contracts/out/YinglongPassportRegistry.sol/YinglongPassportRegistry.json (abi only)",
+      "sha256": "1de803014eb6bc4381076055209611a98a24d3c3452a9e5f54076b0deabaec1c"
+    },
+    "abi/ZKMandateEnforcer.json": {
+      "source": "contracts/out/ZKMandateEnforcer.sol/ZKMandateEnforcer.json (abi only)",
+      "sha256": "352b710749ed3f98817377ceb419fe77c83060bf2cd6a6ebc8f7d0bf00d59450"
+    },
+    "abi/ZKVerifierRouter.json": {
+      "source": "contracts/out/ZKVerifierRouter.sol/ZKVerifierRouter.json (abi only)",
+      "sha256": "7dc64c8ca38d2655a426b648edd69b5c551e0c6059afb9b158a95bab2f4321ce"
+    },
+    "data/deployments/anvil.json": {
+      "source": "contracts/deployments/anvil.json",
+      "sha256": "286630ccd9aab739ddb9fe11c4998e1457b3563d0d32192d9455baad779cd195"
+    },
+    "data/deployments/fisco.json": {
+      "source": "contracts/deployments/fisco.json",
+      "sha256": "8af4d47775a30d2f65aab659d3a3cd30296d4f800faae35969075db7724f043b"
+    },
+    "data/golden/lotus.json": {
+      "source": "packages/mandate/golden/lotus.json",
+      "sha256": "b7523ede1d004c25d664c91e29005c804e0aa77ba7054d874688f4379db2fdb3"
+    },
+    "data/golden/nadia.json": {
+      "source": "packages/mandate/golden/nadia.json",
+      "sha256": "dc67ca2d506916789be06d91acdffdd5d78077434bbabc944f5b7ca681b44f8d"
+    }
+  }
+}

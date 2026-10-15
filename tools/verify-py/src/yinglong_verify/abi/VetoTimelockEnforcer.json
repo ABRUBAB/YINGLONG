@@ -1,0 +1,580 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "_domainSalt",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [],
+  "name": "VETO_TYPEHASH",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "beforeAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "_mode",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_executionCallData",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "_delegator",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_redeemer",
+    "type": "address"
+   }
+  ],
+  "name": "beforeHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "domainSalt",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "domainSeparator",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   }
+  ],
+  "name": "getTermsInfo",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "window_",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_dm",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "_delegator",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_executionCallData",
+    "type": "bytes"
+   }
+  ],
+  "name": "schedule",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_dm",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_executionHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "scheduleKey",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "key",
+    "type": "bytes32"
+   }
+  ],
+  "name": "schedules",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "scheduler",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "delegator",
+    "type": "address"
+   },
+   {
+    "internalType": "uint64",
+    "name": "scheduledAt",
+    "type": "uint64"
+   },
+   {
+    "internalType": "bool",
+    "name": "vetoed",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_dm",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_executionHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "veto",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_dm",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_executionHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_deadline",
+    "type": "uint256"
+   }
+  ],
+  "name": "vetoDigest",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_dm",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_executionHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_deadline",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_sig",
+    "type": "bytes"
+   }
+  ],
+  "name": "vetoWithSig",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "delegationManager",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "executionHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "ScheduleConsumed",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "delegationManager",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "executionHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "delegator",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "scheduler",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint64",
+    "name": "scheduledAt",
+    "type": "uint64"
+   }
+  ],
+  "name": "Scheduled",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "delegationManager",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "executionHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "VetoRecorded",
+  "type": "event"
+ },
+ {
+  "inputs": [],
+  "name": "AlreadyScheduled",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidExecutionMode",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidSignature",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidTerms",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "NotScheduled",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "deadline",
+    "type": "uint256"
+   }
+  ],
+  "name": "SignatureExpired",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "caller",
+    "type": "address"
+   }
+  ],
+  "name": "Unauthorized",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint64",
+    "name": "readyAt",
+    "type": "uint64"
+   }
+  ],
+  "name": "VetoWindowOpen",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "Vetoed",
+  "type": "error"
+ }
+]

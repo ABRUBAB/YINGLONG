@@ -1,0 +1,251 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "beforeAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "_mode",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_executionCallData",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "_delegator",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "beforeHook",
+  "outputs": [],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   }
+  ],
+  "name": "getTermsInfo",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "payeeBook_",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "passport_",
+    "type": "address"
+   },
+   {
+    "internalType": "address[]",
+    "name": "issuers_",
+    "type": "address[]"
+   },
+   {
+    "internalType": "address[]",
+    "name": "intermediaries_",
+    "type": "address[]"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidExecutionMode",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidTerms",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "value",
+    "type": "uint256"
+   }
+  ],
+  "name": "NativeValueNotAllowed",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "payee",
+    "type": "address"
+   }
+  ],
+  "name": "PayeeNotVerified",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes4",
+    "name": "selector",
+    "type": "bytes4"
+   }
+  ],
+  "name": "UndecodableExecution",
+  "type": "error"
+ }
+]

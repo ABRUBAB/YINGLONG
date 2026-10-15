@@ -1,0 +1,215 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_account",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_payee",
+    "type": "address"
+   }
+  ],
+  "name": "entryOf",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "uint32",
+      "name": "categoryId",
+      "type": "uint32"
+     },
+     {
+      "internalType": "bool",
+      "name": "active",
+      "type": "bool"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "labelHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint64",
+      "name": "addedAt",
+      "type": "uint64"
+     }
+    ],
+    "internalType": "struct PayeeBook.Entry",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_account",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_payee",
+    "type": "address"
+   }
+  ],
+  "name": "lookup",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "active_",
+    "type": "bool"
+   },
+   {
+    "internalType": "uint32",
+    "name": "categoryId_",
+    "type": "uint32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_account",
+    "type": "address"
+   }
+  ],
+  "name": "payeesOf",
+  "outputs": [
+   {
+    "internalType": "address[]",
+    "name": "",
+    "type": "address[]"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_payee",
+    "type": "address"
+   }
+  ],
+  "name": "removePayee",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_payee",
+    "type": "address"
+   },
+   {
+    "internalType": "uint32",
+    "name": "_categoryId",
+    "type": "uint32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_labelHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "setPayee",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address[]",
+    "name": "_payeeList",
+    "type": "address[]"
+   },
+   {
+    "internalType": "uint32[]",
+    "name": "_categories",
+    "type": "uint32[]"
+   },
+   {
+    "internalType": "bytes32[]",
+    "name": "_labels",
+    "type": "bytes32[]"
+   }
+  ],
+  "name": "setPayees",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "payee",
+    "type": "address"
+   }
+  ],
+  "name": "PayeeRemoved",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "payee",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint32",
+    "name": "categoryId",
+    "type": "uint32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "labelHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "PayeeSet",
+  "type": "event"
+ },
+ {
+  "inputs": [],
+  "name": "LengthMismatch",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "ZeroPayee",
+  "type": "error"
+ }
+]

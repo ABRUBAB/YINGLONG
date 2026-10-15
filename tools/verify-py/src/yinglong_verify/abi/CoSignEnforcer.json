@@ -1,0 +1,541 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "_domainSalt",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [],
+  "name": "APPROVAL_TYPEHASH",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "afterHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_executionHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_nonce",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_expiry",
+    "type": "uint256"
+   }
+  ],
+  "name": "approvalDigest",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "beforeAllHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_args",
+    "type": "bytes"
+   },
+   {
+    "internalType": "ModeCode",
+    "name": "_mode",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_executionCallData",
+    "type": "bytes"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "_delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "_delegator",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "beforeHook",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "domainSalt",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "domainSeparator",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes",
+    "name": "_terms",
+    "type": "bytes"
+   }
+  ],
+  "name": "getTermsInfo",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "address",
+      "name": "payeeBook",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "asset",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "defaultT1Cap",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "newPayeeT1Cap",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "t2Ceiling",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "maxApprovalWindow",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint32[]",
+      "name": "categoryIds",
+      "type": "uint32[]"
+     },
+     {
+      "internalType": "uint256[]",
+      "name": "categoryT1Caps",
+      "type": "uint256[]"
+     }
+    ],
+    "internalType": "struct CoSignEnforcer.Terms",
+    "name": "t_",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "dm",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "nonce",
+    "type": "uint256"
+   }
+  ],
+  "name": "nonceUsed",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "components": [
+     {
+      "internalType": "address",
+      "name": "payeeBook",
+      "type": "address"
+     },
+     {
+      "internalType": "address",
+      "name": "asset",
+      "type": "address"
+     },
+     {
+      "internalType": "uint256",
+      "name": "defaultT1Cap",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "newPayeeT1Cap",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "t2Ceiling",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "maxApprovalWindow",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint32[]",
+      "name": "categoryIds",
+      "type": "uint32[]"
+     },
+     {
+      "internalType": "uint256[]",
+      "name": "categoryT1Caps",
+      "type": "uint256[]"
+     }
+    ],
+    "internalType": "struct CoSignEnforcer.Terms",
+    "name": "_t",
+    "type": "tuple"
+   },
+   {
+    "internalType": "address",
+    "name": "_delegator",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_beneficiary",
+    "type": "address"
+   }
+  ],
+  "name": "thresholdFor",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "delegationManager",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "delegationHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "nonce",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   }
+  ],
+  "name": "CoSigned",
+  "type": "event"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "ceiling",
+    "type": "uint256"
+   }
+  ],
+  "name": "AboveTierCeiling",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "threshold",
+    "type": "uint256"
+   }
+  ],
+  "name": "CoSignRequired",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidArgs",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidExecutionMode",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidTerms",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "value",
+    "type": "uint256"
+   }
+  ],
+  "name": "NativeValueNotAllowed",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "nonce",
+    "type": "uint256"
+   }
+  ],
+  "name": "NonceAlreadyUsed",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "deadline",
+    "type": "uint256"
+   }
+  ],
+  "name": "SignatureExpired",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes4",
+    "name": "selector",
+    "type": "bytes4"
+   }
+  ],
+  "name": "UndecodableExecution",
+  "type": "error"
+ }
+]

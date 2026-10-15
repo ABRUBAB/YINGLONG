@@ -1,0 +1,148 @@
+{
+  "proposals": {
+    "fb7b13c3-addd-4aa7-9f6a-68e29a531446": {
+      "id": "fb7b13c3-addd-4aa7-9f6a-68e29a531446",
+      "principal": "lotus-sz",
+      "ledger": "fisco",
+      "title": "Resume the treasurer after the velocity breach review",
+      "payee": {
+        "id": "kill_switch",
+        "label": "Resume the treasurer agent (untrip)",
+        "address": "0xA77e5C328A29b29dB6df21d0C479E0B01A53e558"
+      },
+      "amount": "0",
+      "decimals": 2,
+      "symbol": "CNY-instr",
+      "op": {
+        "sender": "0xde2929e28569331FA51195AcE296A5d37c214333",
+        "nonce": {
+          "$n": "1"
+        },
+        "initCode": "0x",
+        "callData": "0xe9ae5c53000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000038a77e5c328a29b29db6df21d0c479e0b01a53e558000000000000000000000000000000000000000000000000000000000000000021b7f6270000000000000000",
+        "accountGasLimits": "0x0000000000000000000000000016e360000000000000000000000000001e8480",
+        "preVerificationGas": {
+          "$n": "60000"
+        },
+        "gasFees": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "paymasterAndData": "0x",
+        "signature": "0x"
+      },
+      "digest": "0x6078cd7bde3780152ff9a63a1fc40f4626655cb7dd0baecad6a768b1013fbbe4",
+      "threshold": 2,
+      "signatures": [
+        {
+          "director": "director-1",
+          "address": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC",
+          "signature": "0x8ce46ea8bbac734034cf6f63063356f3975512522dfd5d36de36e711d041a55c0d949ed5123ef3911c7cb9861358df40910b65557c3ed523e01f042de9d6eead1c",
+          "signedAt": "2026-10-15T21:56:46.608Z"
+        },
+        {
+          "director": "director-3",
+          "address": "0xb3BEd54f01a4C91d3d1108D08d6f0e1bC08CF176",
+          "signature": "0x957153423aa0ef967343e4baee39521d91d506c8e97d47faf20434f3343a9733271b9b9b11447d1a4f3e9575102ba12a3463973552f91be78c00ca4fdb6479fe1b",
+          "signedAt": "2026-10-15T21:56:46.734Z"
+        }
+      ],
+      "status": "executed",
+      "createdAt": "2026-10-15T21:56:46.167Z",
+      "txHash": "0xa9ce22ae27324328a22bab4bf851f36c7a255c9cf6c4ebee3757a18303b85f26"
+    },
+    "7a620ec9-1420-431d-ba59-323b595c43eb": {
+      "id": "7a620ec9-1420-431d-ba59-323b595c43eb",
+      "principal": "lotus-sz",
+      "ledger": "fisco",
+      "title": "Equipment purchase: SMT line (board resolution 2026-07)",
+      "payee": {
+        "id": "shenzhen_components",
+        "label": "Shenzhen Components",
+        "address": "0x4910d9e2545182d750f166421B5D6d07f8083a20"
+      },
+      "amount": "30000000",
+      "decimals": 2,
+      "symbol": "CNY-instr",
+      "op": {
+        "sender": "0xde2929e28569331FA51195AcE296A5d37c214333",
+        "nonce": {
+          "$n": "2"
+        },
+        "initCode": "0x",
+        "callData": "0xe9ae5c53000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000078413a920c685778070fcc00c82718e0649e63ffb10000000000000000000000000000000000000000000000000000000000000000a9059cbb0000000000000000000000004910d9e2545182d750f166421b5d6d07f8083a200000000000000000000000000000000000000000000000000000000001c9c3800000000000000000",
+        "accountGasLimits": "0x0000000000000000000000000016e360000000000000000000000000001e8480",
+        "preVerificationGas": {
+          "$n": "60000"
+        },
+        "gasFees": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "paymasterAndData": "0x",
+        "signature": "0x"
+      },
+      "digest": "0xf4a2d1fda26d8058f6091f4f5c7482eaaa55c39064aebf57c50c84fc73de4997",
+      "threshold": 2,
+      "signatures": [
+        {
+          "director": "director-2",
+          "address": "0xf8aaf43E45142269F90AE7144F04DE5D31D73a57",
+          "signature": "0x5927fc81217b2f3231a5511c0ebdc316395a6afd13e87dd6ab56ac5d1095235468cda02047ec6c17ae07fbacb2e68539efcf2c52608cf21be7fd35ee96f462cc1c",
+          "signedAt": "2026-10-15T21:56:47.913Z"
+        },
+        {
+          "director": "director-1",
+          "address": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC",
+          "signature": "0x2cab006565cf5b981dd519b5e0165aa0bdadef00577dbf8fc62384048705ccb1441dc28f1735623eccfba9de2a733b9b1793dcb9858e9c0288f8b46f99be3a871b",
+          "signedAt": "2026-10-15T21:56:48.127Z"
+        }
+      ],
+      "status": "failed",
+      "createdAt": "2026-10-15T21:56:47.545Z",
+      "txHash": "0xa512af49de0aa7a06889d31dccf36dc9c50a27ac27ffe52044ca60d646ba7b49"
+    },
+    "b346b00c-ab6b-4528-a24c-f33fd4694e2b": {
+      "id": "b346b00c-ab6b-4528-a24c-f33fd4694e2b",
+      "principal": "lotus-sz",
+      "ledger": "fisco",
+      "title": "Equipment purchase: SMT line (board resolution 2026-07)",
+      "payee": {
+        "id": "shenzhen_components",
+        "label": "Shenzhen Components",
+        "address": "0x4910d9e2545182d750f166421B5D6d07f8083a20"
+      },
+      "amount": "30000000",
+      "decimals": 2,
+      "symbol": "CNY-instr",
+      "op": {
+        "sender": "0xde2929e28569331FA51195AcE296A5d37c214333",
+        "nonce": {
+          "$n": "3"
+        },
+        "initCode": "0x",
+        "callData": "0xe9ae5c530000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000d8413a920c685778070fcc00c82718e0649e63ffb10000000000000000000000000000000000000000000000000000000000000000a755512d0000000000000000000000004910d9e2545182d750f166421b5d6d07f8083a200000000000000000000000000000000000000000000000000000000001c9c380c9cc29836794ab9f022b48ebab3b288a38722cefed972252eac34eebc7e6c0c8965188e4706f4c798284a23910ce1dbea6bd57ef82c61e2d0bae3fac3c94a585000000000000000000000000000000000000000000000000000000006ada86a00000000000000000",
+        "accountGasLimits": "0x0000000000000000000000000016e360000000000000000000000000001e8480",
+        "preVerificationGas": {
+          "$n": "60000"
+        },
+        "gasFees": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "paymasterAndData": "0x",
+        "signature": "0x"
+      },
+      "digest": "0xdc89c8d60b766be9a2bcb0db0356cf51bd32ed334d9bf2669e94d6d240c7a1c1",
+      "threshold": 2,
+      "signatures": [
+        {
+          "director": "director-2",
+          "address": "0xf8aaf43E45142269F90AE7144F04DE5D31D73a57",
+          "signature": "0x3404e1f06cee9728505dcc7adbe74758340042490469224f9383fa56a30ac30b49ad34493aec2c4413030df2ae0641ef606b3849ce99ccc659bea9cfbb2cf5f81c",
+          "signedAt": "2026-10-15T21:58:10.023Z"
+        },
+        {
+          "director": "director-1",
+          "address": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC",
+          "signature": "0x562c180085c367f6f82f321c6910db77f63d13ceaa63c593fd6e3976bbf12eee14a681f45ab76a8238d44a0d4b69e71513c99f5bb3b19e085efef631bb1c11a01c",
+          "signedAt": "2026-10-15T21:58:10.166Z"
+        }
+      ],
+      "status": "executed",
+      "createdAt": "2026-10-15T21:58:09.567Z",
+      "txHash": "0x2d2cd5367c775b8f8c4cf8e7c37ac7ea1e33c0e0fd1599befa7e1ce267ca31dd"
+    }
+  }
+}
