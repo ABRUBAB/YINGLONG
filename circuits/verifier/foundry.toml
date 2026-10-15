@@ -1,0 +1,32 @@
+# Standalone build of the bb-generated UltraHonk verifiers.
+#
+# Why a separate project: bb 5.2.1 emits `pragma solidity ^0.8.27` and `require(condition, CustomError())`
+# (17 times), which solc supports only from 0.8.26 (via-IR) / 0.8.27 (legacy pipeline). The main
+# project in contracts/ pins solc 0.8.23 for every file, so the generated source cannot live there
+# without breaking `forge build`. The generated code is kept verbatim here, compiled with the oldest
+# solc its pragma accepts, for evm_version london (no PUSH0, MCOPY or TSTORE, so it also runs on FISCO
+# BCOS), and exported as a linkable bytecode artifact to contracts/src/zk/generated/ by
+# circuits/scripts/export-verifier.mjs.
+#
+# Build (Windows, solc kept on D:):  FOUNDRY_SOLC=D:/tools/solc/solc-0.8.27.exe forge build --sizes
+# Build (Linux):                     forge build --sizes   (svm installs 0.8.27)
+
+[profile.default]
+src = "src"
+out = "out"
+cache_path = "cache"
+libs = []
+test = "test"
+script = "script"
+solc = "0.8.27"
+auto_detect_solc = false
+evm_version = "london"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+bytecode_hash = "none"
+cbor_metadata = false
+
+# The generated code is not ours to restyle.
+[lint]
+lint_on_build = false

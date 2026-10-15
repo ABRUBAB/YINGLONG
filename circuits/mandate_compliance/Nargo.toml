@@ -1,0 +1,7 @@
+[package]
+name = "mandate_compliance"
+type = "bin"
+authors = ["YINGLONG"]
+compiler_version = ">=1.0.0"
+
+[dependencies]

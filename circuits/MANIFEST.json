@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "generatedBy": "circuits/scripts/manifest.mjs",
+  "label": "Test build. Not audited. Test units only.",
+  "toolchain": {
+    "nargo": "1.0.0-rc.5",
+    "noirc": "1.0.0-rc.5+0f759ffe9176ffbbe7f67b159ac2c3202e0748a0",
+    "bb": "5.2.1",
+    "noir_js": "1.0.0-rc.5",
+    "bb.js": "5.2.1",
+    "installed": {
+      "noir_js": "1.0.0-rc.5",
+      "bb.js": "5.2.1"
+    },
+    "verifierSolc": "0.8.27+commit.40a35a09",
+    "projectSolc": "0.8.23",
+    "evmVersion": "london",
+    "foundry": "1.8.5"
+  },
+  "circuit": {
+    "name": "mandate_compliance",
+    "proofType": 1,
+    "statement": "Knows (cap, allowlistRoot, expiry, salt) opening mandateCommitment, a depth-8 Poseidon2 path putting payee in the allowlist, and (oldTotal, oldBlind) opening oldRunningCommitment, with claimedTime <= expiry, oldTotal + amount <= cap (u128, no overflow) and newRunningCommitment = Poseidon2(oldTotal + amount, newBlind).",
+    "publicInputs": [
+      "mandate_commitment",
+      "delegation_hash_hi",
+      "delegation_hash_lo",
+      "chain_id",
+      "payee",
+      "amount",
+      "nonce",
+      "claimed_time",
+      "old_running_commitment",
+      "new_running_commitment"
+    ],
+    "firstPaymentConvention": "oldRunningCommitment = Poseidon2(0, 0) = 0x0b63a53787021a4a962a452c2921b3663aff1ffd8d5510540f8e659e782956f1",
+    "hash": "Poseidon2 (barretenberg sponge, BN254, width 4, rate 3, IV = len * 2^64)",
+    "allowlistTreeDepth": 8,
+    "acirOpcodes": 135,
+    "circuitSize": 4554,
+    "dyadicSize": 8192,
+    "logN": 13,
+    "files": {
+      "circuits/mandate_compliance/src/main.nr": "47b64ab72b064429f135b942583043bb4598150544784325705a1154e865ce46",
+      "circuits/mandate_compliance/Nargo.toml": "725c726937434f86f19fbf5981588acb86b778215ca3ab43c9832fb5603d49de",
+      "circuits/mandate_compliance/target/mandate_compliance.json": "883121714e36c5be1392268ce7aeaa1c3f92a70c9ec86db1c4a68f4b1212c82c"
+    },
+    "acirBytecodeSha256": "0a12de4f2b9c2dc8bf99d85315abdad1e8b8088d468245b1518a492445f837e2",
+    "abiSha256": "f1df0de1ada792dbabd66f29b7c41ad860aee8a1bee267060b3b0e45782ecbf9",
+    "artifactNote": "The compiled JSON embeds the build directory in file_map, so its file hash depends on where nargo ran; acirBytecodeSha256 and abiSha256 do not and are what a rebuild must match."
+  },
+  "verificationKey": {
+    "flavour": "UltraHonk, zero knowledge, keccak oracle (bb write_vk --scheme ultra_honk --oracle_hash keccak; same as -t evm)",
+    "file": "contracts/src/zk/generated/mandate_compliance/vk.hex",
+    "vkBinarySha256": "102fba1d5e2e5ae077d285cd9ad687bca6320ff1e35c0b7fcc5368721e728138",
+    "vkBinaryBytes": 1888,
+    "vkHash": "0x05c62f51284e760d87811fdcc9218c1ebd0b101695ceb6cf002e43c391a48494",
+    "vkHashMatchesVerifierConstant": true
+  },
+  "verifier": {
+    "source": "circuits/verifier/src/mandate_compliance/HonkVerifier.sol",
+    "sourceSha256": "47e3e510b7a8ceb79cbeacb583114e1cf63bfe5a84558aeec2680fe72d49a9b9",
+    "sourceNote": "Verbatim bb 5.2.1 output (pragma ^0.8.27, require with custom errors). Compiled in the standalone project circuits/verifier with solc 0.8.27 for london; never edited or split.",
+    "artifact": "contracts/src/zk/generated/mandate_compliance/HonkVerifier.artifact.json",
+    "artifactSha256": "0480a99727afed15b0851a40d656f07eef86b1b967827a395d15c4104480e413",
+    "testCopySha256": "0480a99727afed15b0851a40d656f07eef86b1b967827a395d15c4104480e413",
+    "compiler": {
+      "solc": "0.8.27+commit.40a35a09",
+      "evmVersion": "london",
+      "optimizer": true,
+      "optimizerRuns": 200,
+      "viaIR": false,
+      "bytecodeHash": "none",
+      "cborMetadata": false
+    },
+    "sizes": {
+      "HonkVerifier": {
+        "runtime": 18530,
+        "initcode": 18867
+      },
+      "RelationsLib": {
+        "runtime": 8074,
+        "initcode": 8131
+      },
+      "ZKTranscriptLib": {
+        "runtime": 6216,
+        "initcode": 6273
+      }
+    },
+    "eip170Limit": 24576,
+    "londonOpcodeScan": {
+      "HonkVerifier": {
+        "ok": true,
+        "opcodes": 11380
+      },
+      "RelationsLib": {
+        "ok": true,
+        "opcodes": 4936
+      },
+      "ZKTranscriptLib": {
+        "ok": true,
+        "opcodes": 4339
+      }
+    },
+    "numberOfPublicInputsInclPairingPoints": 18
+  },
+  "contracts": {
+    "IZKVerifierRouter": {
+      "source": "contracts/src/zk/IZKVerifierRouter.sol",
+      "sourceSha256": "a25db0126d9e62d90f4827948763b14eea7144a2093c05d6d0e94a4b6af47943"
+    },
+    "ZKErrors": {
+      "source": "contracts/src/zk/ZKErrors.sol",
+      "sourceSha256": "590718cc1ac0350d1d26a172dc648f4b117bbfcd1fd788768a1999322733bd9b"
+    },
+    "ZKVerifierRouter": {
+      "source": "contracts/src/zk/ZKVerifierRouter.sol",
+      "sourceSha256": "5a6e48e256a9498b2983f68c472c83a2a9f8ca3f63748ecd99ecdaa192d4e4b8",
+      "runtimeBytes": 1949,
+      "immutables": "none (checked by test_noImmutables_runtimeBytecodeIsChainIndependent)",
+      "londonOpcodeScan": {
+        "ok": true,
+        "opcodes": 1336
+      }
+    },
+    "ZKMandateEnforcer": {
+      "source": "contracts/src/zk/ZKMandateEnforcer.sol",
+      "sourceSha256": "ad4f133e5b322d8bb41ac7295ef0e60e4543b88aa9532a0d2be49ea614696514",
+      "runtimeBytes": 4134,
+      "immutables": "none (checked by test_noImmutables_runtimeBytecodeIsChainIndependent)",
+      "londonOpcodeScan": {
+        "ok": true,
+        "opcodes": 2803
+      }
+    }
+  },
+  "fixtures": {
+    "file": "contracts/test/vectors/zk/mandate_compliance.fixtures.json",
+    "sha256": "be3b78626d6afbf541e3c5a86771a81bbeb182a6bd742f0bc9e83e66bc9e62af",
+    "cases": 8,
+    "proofBytes": 7616,
+    "proveMillisTotal": 7680,
+    "proveMillisNote": "bb.js WASM on the development PC (Windows 11, Node 22.14), including backend start-up; indicative only"
+  },
+  "gas": {
+    "beforeHook.laterPayment": 2543348,
+    "beforeHook.laterPayment.atCap": 2543312,
+    "honkVerifier.verify": 2324637,
+    "router.verifyProof": 2359529,
+    "beforeHook.firstPayment": 2566806,
+    "redeemDelegations.firstPayment": 2832510,
+    "redeemDelegations.laterPayment": 2815420,
+    "note": "Foundry (london, solc 0.8.23 for our contracts), measured with gasleft() around the call; excludes the 21000 base and calldata cost of the outer transaction"
+  },
+  "tests": {
+    "foundry": {
+      "suites": [
+        "test/zk/ZKMandateEnforcer.t.sol:ZKMandateEnforcerTest",
+        "test/zk/ZKMandateEnforcerDM.t.sol:ZKMandateEnforcerDMTest",
+        "test/zk/ZKVerifierRouter.t.sol:ZKVerifierRouterTest"
+      ],
+      "passed": 59,
+      "total": 59
+    }
+  }
+}

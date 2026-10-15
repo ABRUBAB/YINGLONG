@@ -1,0 +1,7 @@
+# staging for nargo/bb outputs (binary vk, gate counts, test logs); the committed copies live in
+# contracts/src/zk/generated/ and circuits/MANIFEST.json
+build/
+# standalone verifier build
+verifier/out/
+verifier/cache/
+node_modules/

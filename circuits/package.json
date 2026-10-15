@@ -1,0 +1,28 @@
+{
+  "name": "@yinglong/circuits",
+  "version": "0.1.0",
+  "private": true,
+  "description": "YINGLONG zero-knowledge circuits: private mandate compliance prover (Noir + UltraHonk, keccak oracle)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "prove": "tsx prover/src/cli.ts",
+    "fixtures": "tsx prover/scripts/make-fixtures.ts",
+    "manifest": "node scripts/manifest.mjs",
+    "test": "tsx --test prover/test/*.test.ts",
+    "typecheck": "tsc -p prover/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@aztec/bb.js": "5.2.1",
+    "@noir-lang/noir_js": "1.0.0-rc.5",
+    "viem": "2.57.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}
