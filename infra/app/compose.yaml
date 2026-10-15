@@ -18,6 +18,7 @@ x-node: &node
     # Demo time compression (labelled in the UI): budget periods of one day instead of 30 days.
     DEMO_PERIOD_SECONDS: ${DEMO_PERIOD_SECONDS:-86400}
     SIGNER_URL: http://127.0.0.1:8788
+    BREAKER_URL: http://127.0.0.1:8791/breaker/trip
     SENTINEL_URL: ${SENTINEL_URL:-}
   volumes:
     - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
@@ -39,3 +40,34 @@ services:
       - /opt/yinglong/secrets/openrouter.txt:/run/secrets/openrouter.txt:ro
       - /opt/yinglong/data/agent:/data
     depends_on: [signer]
+  services:
+    <<: *node
+    command: ["npx", "tsx", "apps/services/src/main.ts"]
+    environment:
+      <<: *env
+      LEDGER: fisco
+      RPC_URL: http://127.0.0.1:8545
+      SERVICES_PUBLIC_URL: https://api.yinglong-agent.tech
+  ecny-sim:
+    <<: *node
+    command: ["npx", "tsx", "apps/ecny-sim/src/main.ts"]
+    environment:
+      <<: *env
+      ECNY_LEDGER: fisco
+      ECNY_STATE_DIR: /data
+    volumes:
+      - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
+      - /opt/yinglong/data/ecny:/data
+  indexer:
+    <<: *node
+    command: ["npx", "tsx", "apps/indexer/src/main.ts"]
+    environment:
+      <<: *env
+      ANCHOR_LEDGERS: ${ANCHOR_LEDGERS:-fisco}
+      AGENT_API_URL: http://127.0.0.1:8787
+      INDEXER_DATA_DIR: /data
+      FISCO_PROXY_UPSTREAM: http://127.0.0.1:8549
+    volumes:
+      - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
+      - /opt/yinglong/data/indexer:/data
+    depends_on: [agent]

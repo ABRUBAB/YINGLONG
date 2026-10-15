@@ -8,7 +8,11 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY packages ./packages
 COPY apps/agent ./apps/agent
 COPY apps/signer ./apps/signer
+COPY apps/services ./apps/services
+COPY apps/ecny-sim ./apps/ecny-sim
+COPY apps/indexer ./apps/indexer
 COPY contracts/deployments ./contracts/deployments
-RUN pnpm install --frozen-lockfile --prod=false --filter @yinglong/agent... --filter @yinglong/signer...
+RUN pnpm install --frozen-lockfile --prod=false --filter @yinglong/agent... --filter @yinglong/signer... --filter @yinglong/services... --filter @yinglong/ecny-sim... --filter @yinglong/indexer...
+RUN mkdir -p /app/apps/services/state /app/apps/indexer/data /app/apps/ecny-sim/data && chown -R node:node /app/apps/services /app/apps/indexer /app/apps/ecny-sim
 ENV YINGLONG_ROOT=/app YINGLONG_SECRETS=/run/secrets/testnet-keys.json
 USER node
