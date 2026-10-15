@@ -13,6 +13,7 @@ import { ask, bypass, createPauseApproval, declineApproval, demoApprove, execute
 import { receiptLog, type ReceiptRecord } from "./receipts";
 import { attempt, challenge, session } from "./challenge";
 import { board, createBoardProposal, directorSign } from "./board";
+import { explainTx } from "./explorer";
 import { apiJson, DATA_DIR } from "./store";
 import { config, onboard, PRINCIPALS, world, type PrincipalId, type PrincipalState } from "./world";
 
@@ -221,7 +222,10 @@ app.get("/v1/principals/:id/state", async (c) => {
 
 const AskBody = z.object({
   text: z.string().min(1).max(4000),
-  attachments: z.array(z.object({ kind: z.enum(["invoice", "email", "quote"]), content: z.string().max(20_000) })).optional(),
+  attachments: z
+    .array(z.object({ kind: z.enum(["invoice", "email", "quote", "invoice_image"]), content: z.string().max(3_000_000) }))
+    .max(3)
+    .optional(),
   autoExecute: z.boolean().optional(),
 });
 
@@ -229,6 +233,9 @@ app.post("/v1/principals/:id/ask", async (c) => {
   const id = c.req.param("id");
   if (!isPid(id)) return c.json({ ok: false, error: "unknown principal" }, 404);
   const body = AskBody.parse(await c.req.json());
+  if (body.autoExecute && id !== "guest" && ADMIN && c.req.header("x-admin-token") !== ADMIN) {
+    return c.json({ ok: false, error: "autoExecute on this principal needs the operator token (judges: use the Judge's Challenge)" }, 403);
+  }
   const p = await ask(id, body.text, body.attachments ?? []);
   if (body.autoExecute && p.decision === "execute") {
     const rec = await execute(p.id);
@@ -389,6 +396,12 @@ app.get("/v1/supervisor/agents/:agentId/private-mandate", (c) => {
     }
   }
   return c.json({ ok: false, error: "no private mandate recorded for this agent" }, 404);
+});
+
+app.get("/v1/tx/:ledger/:hash", async (c) => {
+  const ledger = z.enum(["anvil", "base-sepolia", "fisco"]).parse(c.req.param("ledger"));
+  const hash = z.string().regex(/^0x[0-9a-fA-F]{64}$/).parse(c.req.param("hash")) as Hex;
+  return c.json(apiJson(await explainTx(ledger, hash)));
 });
 
 app.get("/v1/evidence", (c) => {

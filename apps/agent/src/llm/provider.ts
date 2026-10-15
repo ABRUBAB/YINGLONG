@@ -17,9 +17,11 @@ export interface LlmResult<T> {
   latencyMs: number;
 }
 
+export type LlmContent = string | ({ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } })[];
+
 export interface LlmMessage {
   role: "system" | "user" | "assistant";
-  content: string;
+  content: LlmContent;
 }
 
 function openRouterKey(): string | undefined {
@@ -113,10 +115,15 @@ export async function structured<T>(args: {
   schemaName: string;
   messages: LlmMessage[];
   timeoutMs?: number;
+  /** Override the model list (e.g. vision models for image readers). */
+  models?: string[];
+  /** Skip these models (used to force a second reader from a different family). */
+  exclude?: string[];
 }): Promise<LlmResult<T> | null> {
   if (process.env.LLM_DISABLED === "1") return null;
   const timeoutMs = args.timeoutMs ?? 20_000;
-  for (const model of modelChain()) {
+  const hasImage = args.messages.some((m) => Array.isArray(m.content));
+  for (const model of (args.models ?? modelChain()).filter((x) => !(args.exclude ?? []).includes(x))) {
     if ((failed.get(model) ?? 0) > Date.now()) continue;
     for (let attempt = 0; attempt < 2; attempt++) {
       const t0 = Date.now();
@@ -129,6 +136,7 @@ export async function structured<T>(args: {
       }
     }
   }
+  if (hasImage) return null;
   try {
     const t0 = Date.now();
     const { text, model } = await llamaCall(args.messages, args.jsonSchema, timeoutMs * 2);
@@ -138,6 +146,13 @@ export async function structured<T>(args: {
     /* fall through to deterministic code */
   }
   return null;
+}
+
+/** Vision-capable models for quarantined image readers (two families for the agreement check). */
+export function visionModels(): string[] {
+  const env = process.env.OPENROUTER_VISION_MODELS;
+  if (env) return env.split(",").map((s) => s.trim()).filter(Boolean);
+  return ["qwen/qwen3.8-omni-flash", "google/gemini-3.5-flash-lite", "nvidia/nemotron-3.5-super-vl:free"];
 }
 
 /** For /v1/health: which providers are configured (never the keys). */

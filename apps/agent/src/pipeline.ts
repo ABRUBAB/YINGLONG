@@ -10,7 +10,7 @@ import { recordReceipt, receiptLog, type ReceiptRecord } from "./receipts";
 import { checkCounterparty, type CounterpartyResult } from "./scales/counterparty";
 import { normalise } from "./scales/normalise";
 import { evaluatePolicy, type Payment, type PolicyDecision } from "./scales/policy";
-import { readDocument, type QuarantinedRead } from "./scales/quarantine";
+import { readDocument, readImage, type QuarantinedRead } from "./scales/quarantine";
 import { sentinel, type SentinelResult } from "./scales/sentinel";
 import { DATA_DIR, DocStore } from "./store";
 import { understand, type Intent, type UnderstandResult } from "./understand/intent";
@@ -95,7 +95,7 @@ const ESCALATE: Record<Tier, Tier> = { T0: "T0", T1: "T2", T2: "ASK", T3: "T3", 
 
 // ---------------------------------------------------------------- ask
 
-export async function ask(id: PrincipalId, text: string, attachments: { kind: "invoice" | "email" | "quote"; content: string }[] = []): Promise<Proposal> {
+export async function ask(id: PrincipalId, text: string, attachments: { kind: "invoice" | "email" | "quote" | "invoice_image"; content: string }[] = []): Promise<Proposal> {
   const st = stateOf(id);
   const cfg = config(id);
   const ctx = ledgerContext(st.ledger);
@@ -106,7 +106,8 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
 
   // 1. Normalise.
   const norm = normalise(text);
-  const normAtt = attachments.map((a) => ({ ...a, n: normalise(a.content) }));
+  const images = attachments.filter((a) => a.kind === "invoice_image" && a.content.startsWith("data:image/"));
+  const normAtt = attachments.filter((a) => a.kind !== "invoice_image").map((a) => ({ ...a, kind: a.kind as "invoice" | "email" | "quote", n: normalise(a.content) }));
   const nflags = [...norm.flags, ...normAtt.flatMap((a) => a.n.flags)];
   scales.push({
     n: 1,
@@ -132,6 +133,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   const reads: QuarantinedRead[] = [];
   const payees = m.payees.map((p) => ({ id: p.id, label: p.label, category: p.category, address: p.address as Address }));
   for (const a of normAtt) reads.push(await readDocument(handles, a.n.text, a.kind, payees));
+  for (const img of images) reads.push(await readImage(handles, img.content, payees));
   const qflags = reads.flatMap((r) => r.flags);
   scales.push({
     n: 3,
@@ -597,10 +599,10 @@ export function declineApproval(approvalId: string): ApprovalRequest {
   if (a.status !== "pending") throw new Error(`approval is ${a.status}`);
   proposals.update((d) => {
     d.approvals[approvalId]!.status = "declined";
-    d.proposals[a.proposalId]!.status = "refused";
+    if (a.proposalId && d.proposals[a.proposalId]) d.proposals[a.proposalId]!.status = "refused";
   });
-  const p = proposals.get().proposals[a.proposalId]!;
-  writeReceipt(p, stateOf(a.principal), "rejected_policy");
+  const p = a.proposalId ? proposals.get().proposals[a.proposalId] : undefined;
+  if (p) writeReceipt(p, stateOf(a.principal), "rejected_policy");
   return proposals.get().approvals[approvalId]!;
 }
 

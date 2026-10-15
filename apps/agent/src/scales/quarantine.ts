@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { HandleStore, tag, type Tagged } from "@yinglong/provenance";
-import { structured } from "../llm/provider";
+import { structured, visionModels } from "../llm/provider";
 
 /**
  * Scale 3: quarantine and taint. Untrusted documents (invoices, emails, 402 descriptions, agent cards) are
@@ -110,6 +110,61 @@ export async function readDocument(
       amount: tag(agreement.amount ? a.amount : null, source),
       currency: tag(a.currency, source),
       dueDate: tag(a.dueDate, source),
+    },
+    flags,
+    readers,
+    agreement,
+  };
+}
+
+/**
+ * M7 vision reader: an invoice PHOTO is read by two vision models from different families, inside the
+ * quarantine (closed schema, no instructions followed). Financial fields count only if both agree.
+ */
+export async function readImage(store: HandleStore, dataUrl: string, payees: { id: string; label: string }[]): Promise<QuarantinedRead> {
+  const handle = store.put(`[image ${dataUrl.length} bytes]`, "untrusted:invoice");
+  const messages = [
+    { role: "system" as const, content: READER_PROMPT },
+    {
+      role: "user" as const,
+      content: [
+        { type: "text" as const, text: JSON.stringify({ payees: payees.map((p) => ({ id: p.id, label: p.label })), task: "Read this invoice image." }) },
+        { type: "image_url" as const, image_url: { url: dataUrl } },
+      ],
+    },
+  ];
+  const readers: { name: string; output: ReaderOutput }[] = [];
+  const first = await structured({ schema: ReaderOutput, jsonSchema: READER_SCHEMA, schemaName: "document_fields", messages, models: visionModels(), timeoutMs: 45_000 });
+  if (first) {
+    readers.push({ name: `vision reader A (${first.model})`, output: first.value });
+    const family = first.model.split("/")[0];
+    const second = await structured({
+      schema: ReaderOutput,
+      jsonSchema: READER_SCHEMA,
+      schemaName: "document_fields",
+      messages,
+      models: visionModels().filter((m) => m.split("/")[0] !== family),
+      timeoutMs: 45_000,
+    });
+    if (second) readers.push({ name: `vision reader B (${second.model})`, output: second.value });
+  }
+  const flags: string[] = [];
+  if (readers.length === 0) flags.push("no vision reader available: the image was not read");
+  if (readers.length === 1) flags.push("only one vision reader answered: no agreement check");
+  const a = readers[0]?.output;
+  const b = readers[readers.length - 1]?.output;
+  const agreement = { payee: !!a && !!b && a.payee === b.payee, amount: !!a && !!b && (a.amount ?? "") === (b.amount ?? "") && readers.length > 1 };
+  if (readers.length > 1 && (!agreement.payee || !agreement.amount)) flags.push("readers disagree on a financial field");
+  if (readers.some((r) => r.output.claimsPayeeDetailsChanged)) flags.push("claims payee details changed");
+  if (readers.some((r) => r.output.containsInstructionsToAgent)) flags.push("contains instructions aimed at the agent");
+  if (readers.some((r) => r.output.urgencyOrAuthorityPressure)) flags.push("urgency or authority pressure");
+  return {
+    handle,
+    fields: {
+      payee: tag(a?.payee ?? "NEW_PAYEE_REQUEST", "untrusted:invoice"),
+      amount: tag(agreement.amount ? (a?.amount ?? null) : null, "untrusted:invoice"),
+      currency: tag(a?.currency ?? "unknown", "untrusted:invoice"),
+      dueDate: tag(a?.dueDate ?? null, "untrusted:invoice"),
     },
     flags,
     readers,
