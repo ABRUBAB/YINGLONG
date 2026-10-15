@@ -14,6 +14,7 @@ import { readDocument, readImage, type QuarantinedRead } from "./scales/quaranti
 import { sentinel, type SentinelResult } from "./scales/sentinel";
 import { DATA_DIR, DocStore } from "./store";
 import { understand, type Intent, type UnderstandResult } from "./understand/intent";
+import { finalTier } from "./tiers";
 import { config, nextCosignNonce, principalHandle, stateOf, type PrincipalId, type PrincipalState } from "./world";
 import { resolve } from "node:path";
 
@@ -91,7 +92,6 @@ function toBaseUnits(value: string, decimals: number): bigint {
   return BigInt(w!) * 10n ** BigInt(decimals) + BigInt(f.padEnd(decimals, "0") || "0");
 }
 
-const ESCALATE: Record<Tier, Tier> = { T0: "T0", T1: "T2", T2: "ASK", T3: "T3", T4: "T4", ASK: "ASK" };
 
 // ---------------------------------------------------------------- ask
 
@@ -339,9 +339,8 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   }
   scales.push({ n: 8, name: "Anomaly", status: anomaly.startsWith("within") ? "passed" : "escalated", reason: anomaly });
 
-  // Monotonic safety: AI signals can only raise the tier, never lower it, never produce T4.
-  if (aiFlags.length && (tier === "T1" || tier === "T2")) tier = ESCALATE[tier];
-  if (asked && tier !== "T4" && tier !== "T3") tier = "ASK";
+  // Monotonic safety: AI signals can only raise the tier, never lower it, never produce T3 or T4.
+  tier = finalTier(tier, aiFlags.length, !!asked);
   scales.push({
     n: 9,
     name: "Chain",
