@@ -279,7 +279,7 @@ const proofItems = [
   ["Allowed payment inside the mandate (T1)", pick((r) => r.outcome === "confirmed" && r.tier === "T1")],
   ["Payment approved on the user's passkey (T2)", pick((r) => r.outcome === "confirmed" && r.tier === "T2")],
   ["Attack reverted on-chain: PayeeNotVerified", pick((r) => r.revertError?.name === "PayeeNotVerified")],
-  ["Board resolution executed by 2 of 3 directors (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed" && r.explanation.text.startsWith("Board resolution"))],
+  ["Board resolution executed by 2 of 3 directors (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed" && r.explanation.text.startsWith("Board resolution") && !/Resume/.test(r.explanation.text))],
   ["One-tap pause signed by the principal and relayed (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed" && r.explanation.text.startsWith("Paused"))],
   ["Velocity breach trips the circuit breaker", pick((r) => r.revertError?.name === "VelocityExceeded")],
   ["Company payment on the coin-free rail (FISCO)", pick((r) => r.ledger === "fisco" && r.outcome === "confirmed" && r.principal.startsWith("lotus"))],
