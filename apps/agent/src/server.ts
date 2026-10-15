@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -12,7 +13,7 @@ import { ask, bypass, createPauseApproval, declineApproval, demoApprove, execute
 import { receiptLog, type ReceiptRecord } from "./receipts";
 import { attempt, challenge, session } from "./challenge";
 import { board, createBoardProposal, directorSign } from "./board";
-import { apiJson } from "./store";
+import { apiJson, DATA_DIR } from "./store";
 import { config, onboard, PRINCIPALS, world, type PrincipalId, type PrincipalState } from "./world";
 
 const VERSION = "0.9.0";
@@ -38,7 +39,7 @@ function readSecret(path?: string): string | undefined {
     return undefined;
   }
 }
-const PROTECTED = [/\/board-proposals$/, /\/sign$/, /\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
+const PROTECTED = [/\/halt$/, /\/board-proposals$/, /\/sign$/, /\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
 app.use("/v1/*", async (c, next) => {
   if (ADMIN && c.req.method === "POST" && PROTECTED.some((re) => re.test(c.req.path)) && c.req.header("x-admin-token") !== ADMIN) {
     return c.json({ ok: false, error: "this action needs the operator token (judges: use the Judge's Challenge guest agent)" }, 403);
@@ -291,9 +292,17 @@ app.get("/v1/receipts", (c) => {
   const rows = all.slice(since).filter((r) => !principal || r.principal === principal);
   return c.json(apiJson(rows.slice(-limit).map(receiptView)));
 });
-app.get("/v1/receipts/:id", (c) => {
+app.get("/v1/receipts/:id", async (c) => {
   const r = receiptLog.all().find((x) => x.receipt.receiptId === c.req.param("id"));
-  return r ? c.json(apiJson(receiptView(r))) : c.json({ ok: false, error: "not found" }, 404);
+  if (!r) return c.json({ ok: false, error: "not found" }, 404);
+  let anchor: unknown;
+  try {
+    const res = await fetch(`${process.env.INDEXER_URL ?? "http://127.0.0.1:8791"}/proof/${r.receipt.receiptId}`);
+    if (res.ok) anchor = await res.json();
+  } catch {
+    /* not anchored yet or indexer down */
+  }
+  return c.json(apiJson({ ...receiptView(r), anchor, proofPairing: "sorted" }));
 });
 
 app.post("/v1/mandates/compile", async (c) => {
@@ -360,12 +369,45 @@ app.get("/v1/registry/agents", async (c) => {
   return c.json(apiJson(out));
 });
 
+app.post("/v1/supervisor/agents/:agentId/halt", async (c) => {
+  const b = z.object({ halted: z.boolean(), ledger: z.enum(["anvil", "base-sepolia", "fisco"]) }).parse(await c.req.json());
+  const ctx = ledgerContext(b.ledger);
+  const res = await ctx.write("supervisor", {
+    address: ctx.addr("YinglongPassportRegistry"),
+    abi: abi.YinglongPassportRegistryAbi as never,
+    functionName: "supervisorSetStatus",
+    args: [BigInt(c.req.param("agentId")), b.halted],
+  });
+  return c.json(apiJson({ ok: res.ok, txHash: res.hash, explorerUrl: ctx.explorerTx(res.hash), halted: b.halted, note: "Supervisory halt: pause only. The supervisor cannot spend, rotate keys or change mandates." }));
+});
+app.get("/v1/supervisor/agents/:agentId/private-mandate", (c) => {
+  for (const l of ["fisco", "base-sepolia", "anvil"]) {
+    const f = [resolve(DATA_DIR, `zk-${l}.json`), resolve(import.meta.dirname, "..", "data", `zk-${l}.json`)].find((x) => existsSync(x));
+    if (f) {
+      const j = JSON.parse(readFileSync(f, "utf8")) as { supervisorView?: { agentId?: string | number } };
+      if (j.supervisorView && String(j.supervisorView.agentId) === c.req.param("agentId")) return c.json(j.supervisorView);
+    }
+  }
+  return c.json({ ok: false, error: "no private mandate recorded for this agent" }, 404);
+});
+
 app.get("/v1/evidence", (c) => {
   const items = receiptLog
     .all()
     .filter((r) => r.receipt.txHash && !r.receipt.txHash.startsWith("0x0000000000"))
     .map((r) => ({ title: r.explanation.text, principal: r.principal, ledger: r.ledger, txHash: r.receipt.txHash, explorerUrl: r.explorerUrl, outcome: r.receipt.outcome, tier: r.receipt.tier, revertError: r.revertError?.message }));
-  return c.json(apiJson({ generatedAt: new Date().toISOString(), items }));
+  const contracts: { name: string; ledger: string; chainId: number; address: string; codeHash: string }[] = [];
+  for (const l of ["fisco", "base-sepolia", "anvil"] as const) {
+    try {
+      const ctx = ledgerContext(l);
+      for (const [name, v] of Object.entries({ ...ctx.deployment.contracts, ...ctx.deployment.optional })) {
+        if (v) contracts.push({ name, ledger: l, chainId: ctx.profile.chainId, address: v.address, codeHash: v.codeHash });
+      }
+    } catch {
+      /* ledger not deployed */
+    }
+  }
+  return c.json(apiJson({ generatedAt: new Date().toISOString(), commit: process.env.GIT_COMMIT ?? "", items, contracts }));
 });
 
 const port = Number(process.env.AGENT_PORT ?? 8787);
