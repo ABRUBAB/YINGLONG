@@ -45,3 +45,6 @@ wrap_comments = true
 [rpc_endpoints]
 base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
 fisco = "${FISCO_RPC_URL}"
+
+[lint]
+lint_on_build = false
