@@ -12,8 +12,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const HOST = process.env.VPS_HOST ?? "azureuser@20.239.152.146";
 const KEY = process.env.VPS_KEY ?? join(process.env.USERPROFILE ?? process.env.HOME ?? "", ".ssh", "yinglong-vps_key.pem");
 const win = process.platform === "win32";
-const SSH = win ? `${process.env.WINDIR}\System32\OpenSSH\ssh.exe` : "ssh";
-const SCP = win ? `${process.env.WINDIR}\System32\OpenSSH\scp.exe` : "scp";
+const SSH = win ? join(process.env.WINDIR ?? "C:/Windows", "System32", "OpenSSH", "ssh.exe") : "ssh";
+const SCP = win ? join(process.env.WINDIR ?? "C:/Windows", "System32", "OpenSSH", "scp.exe") : "scp";
 const run = (cmd, args, opts = {}) => {
   const r = spawnSync(cmd, args, { stdio: "inherit", ...opts });
   if (r.status !== 0) throw new Error(`${cmd} ${args[0]} failed`);
