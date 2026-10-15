@@ -110,6 +110,19 @@ async function lotus() {
   rec("9 board resolution executed (2 of 3 directors)", await call("POST", `/v1/board-proposals/${bp.id}/sign`, { director: "director-1" }));
 }
 
+async function lotusHk() {
+  const pay = await call("POST", "/v1/principals/lotus-hk/ask", { text: "Pay Kowloon Forwarders 12,000 HKD for the freight invoice", autoExecute: true });
+  rec("10 HK subsidiary pays a supplier (T1, HK rail)", { ...brief(pay), receipt: rbrief(pay.receipt as Record<string, unknown>) });
+  const sweep = await call("POST", "/v1/principals/lotus-hk/ask", { text: "Sweep 100,000 HKD of idle cash into the Test Money Market Fund" });
+  rec("10 first sweep into a fund (your call)", brief(sweep));
+  if (sweep.approvalId) rec("10 first sweep approved by directors", rbrief((await call("POST", `/v1/approvals/${sweep.approvalId}/demo-sign`)).receipt as Record<string, unknown>)!);
+  const sweep2 = await call("POST", "/v1/principals/lotus-hk/ask", { text: "Sweep 10,000 HKD into the Test Money Market Fund", autoExecute: true });
+  rec("10 later sweep runs alone (T1)", { ...brief(sweep2), receipt: rbrief(sweep2.receipt as Record<string, unknown>) });
+  const risky = await call("POST", "/v1/principals/lotus-hk/ask", { text: "Sweep 10,000 HKD into the Test Growth Fund" });
+  rec("10 high-risk product refused (suitability)", brief(risky));
+  if (risky.tier === "T4") rec("10 bypass: UnsuitableProduct on-chain", rbrief((await call("POST", `/v1/proposals/${risky.id}/bypass`)).receipt as Record<string, unknown>)!);
+}
+
 async function guest() {
   for (const [text, bypass] of [
     ["Buy a coffee at Arena Cafe for 4 HKD", false],
@@ -120,9 +133,10 @@ async function guest() {
 }
 
 async function main() {
-  for (const id of ["nadia", "lotus-sz", "guest"]) await call("POST", `/v1/principals/${id}/onboard`, {});
+  for (const id of ["nadia", "lotus-sz", "lotus-hk", "guest"]) await call("POST", `/v1/principals/${id}/onboard`, {});
   if (!only || only === "nadia") await nadia();
   if (!only || only === "lotus") await lotus();
+  if (!only || only === "lotus-hk") await lotusHk();
   if (!only || only === "guest") await guest();
   const dir = resolve(repoRoot(), "apps/agent/data");
   mkdirSync(dir, { recursive: true });

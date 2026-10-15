@@ -330,6 +330,10 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
       anomaly = "amount is more than three times the largest past payment to this payee";
       aiFlags.push(anomaly);
     }
+    if (intent.kind === "sweep" && past.length === 0) {
+      anomaly = "first sweep into this product: you decide once, later sweeps can run alone";
+      aiFlags.push(anomaly);
+    }
   }
   scales.push({ n: 8, name: "Anomaly", status: anomaly.startsWith("within") ? "passed" : "escalated", reason: anomaly });
 
@@ -379,7 +383,9 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     status: decision === "execute" ? "open" : decision === "needs_approval" ? "awaiting_approval" : decision === "ask" ? "asked" : "refused",
   };
 
-  if (decision === "needs_approval" && execution && payment && assetDoc && payee) {
+  // T2, and an "ask" that came only from AI escalation (a valid payment exists): the user decides with an
+  // explicit passkey approval. An ask caused by missing or ungrounded data has no payment to approve.
+  if ((decision === "needs_approval" || (decision === "ask" && groundIssues.length === 0 && !intent.ambiguities.length)) && execution && payment && assetDoc && payee && simulation) {
     p.approvalId = await createCosignApproval(ctx, st, p, execution);
   }
   if (decision === "refused" || decision === "ask") {
@@ -680,12 +686,12 @@ export async function execute(proposalId: string, opts: { delegation?: Delegatio
   const p = proposals.get().proposals[proposalId];
   if (!p) throw new Error("unknown proposal");
   if (p.status === "executed") throw new Error("already executed");
-  const allowed = p.tier === "T1" || (p.tier === "T2" && !!opts.approvalSig);
+  const allowed = p.tier === "T1" || ((p.tier === "T2" || p.tier === "ASK") && !!opts.approvalSig);
   if (!allowed) throw new Error(`a ${p.tier} proposal cannot be executed by the agent`);
   const st = stateOf(p.principal);
   const ctx = ledgerContext(st.ledger);
   const calldata = redeemCallData([opts.delegation ?? st.delegation!], p.execution!);
-  const txHash = await signerRedeem(st.ledger, config(p.principal).agentRole, calldata, { tier: p.tier, proposalId, approved: !!opts.approvalSig }, "normal", st.account);
+  const txHash = await signerRedeem(st.ledger, config(p.principal).agentRole, calldata, { tier: p.tier === "ASK" ? "T2" : p.tier, proposalId, approved: !!opts.approvalSig }, "normal", st.account);
   const rcpt = await ctx.pub.waitForTransactionReceipt({ hash: txHash, timeout: 120_000 });
   const ok = rcpt.status === "success";
   const revert = ok ? undefined : await replayRevert(ctx, txHash);

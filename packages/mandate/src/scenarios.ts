@@ -225,3 +225,62 @@ export function guestMandate(d: Deployment, p: GuestParties, opts: { now: number
     sentences: ["Buy coffee at Arena Cafe, at most 10 at a time and 40 a day.", "Never let the balance drop below 400.", "Nothing else."],
   };
 }
+
+export interface LotusHkParties {
+  account: Address;
+  agent: Address;
+  kowloonForwarders: Address;
+  issuerBank: Address;
+}
+
+/**
+ * Lotus Lane (HK) Ltd: the same treasurer agent identity, re-sealed for Hong Kong. HK test rail (tHKD),
+ * supplier payments, and sweeps of idle cash into suitable (risk class <= 2) test money-market products.
+ */
+export function lotusHkMandate(d: Deployment, p: LotusHkParties, opts: { now: number; salt?: string; did?: string }): Mandate {
+  const tHKD = addr(d, "TestHKD");
+  return {
+    schema: "yinglong.mandate/v1",
+    title: "Lotus Lane (HK) Ltd: treasury mandate re-sealed for Hong Kong",
+    ledger: d.ledger,
+    jurisdiction: "hk",
+    principal: { kind: "company", name: "Lotus Lane (HK) Ltd (fictional)", did: opts.did ?? "did:web:lotus-lane.example", account: p.account },
+    agent: { wallet: p.agent, label: "Lotus Lane treasurer" },
+    lineageId: "lotus-hk-treasury",
+    salt: opts.salt ?? "1",
+    validity: { from: opts.now - 60, until: opts.now + 180 * 86400 },
+    assets: [{ symbol: "tHKD", address: tHKD, decimals: 6 }],
+    methods: ["transfer", "transferAndCall"],
+    payees: [
+      { id: "kowloon_forwarders", label: "Kowloon Forwarders", address: p.kowloonForwarders, category: "supplier" },
+      { id: "test_mmf", label: "Test Money Market Fund", address: addr(d, "TestMoneyMarketFund"), category: "treasury" },
+      { id: "test_growth", label: "Test Growth Fund", address: addr(d, "TestGrowthFund"), category: "treasury" },
+    ],
+    trustedIssuers: [{ label: "Harbour Digital Bank", address: p.issuerBank }],
+    intermediaries: [{ label: "escrow (ProtectedPayment)", address: addr(d, "ProtectedPayment") }],
+    tiers: [{ asset: "tHKD", defaultT1Cap: U(20_000), newPayeeT1Cap: U(100), t2Ceiling: U(150_000), maxApprovalWindow: 600, categoryT1Caps: [] }],
+    budgets: [
+      {
+        asset: "tHKD",
+        periodStart: 0,
+        periodLength: 30 * 86400,
+        unlistedCategory: "services",
+        caps: [
+          { category: "supplier", amount: U(200_000) },
+          { category: "treasury", amount: U(300_000) },
+          { category: "services", amount: U(2_000) },
+        ],
+      },
+    ],
+    reserveFloors: [{ asset: "tHKD", amount: U(50_000) }],
+    velocity: { asset: "tHKD", window: 86400, maxCount: 10, maxOutflow: U(250_000) },
+    suitability: { maxRiskClass: 2 },
+    reputation: null,
+    facilitator: null,
+    sentences: [
+      "Same treasurer, Hong Kong rules: pay Kowloon Forwarders up to 200,000 a month.",
+      "Sweep idle cash into low-risk money-market products only; ask me before the first sweep.",
+      "Keep at least 50,000 in the account.",
+    ],
+  };
+}

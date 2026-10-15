@@ -2,7 +2,7 @@ import { encodeFunctionData, keccak256, stringToBytes, type Address, type Hex } 
 import { abi, type LedgerName } from "@yinglong/sdk";
 import { seededPasskey, type PasskeySigner } from "@yinglong/sdk/account";
 import { rolePrivateKey, type Role } from "@yinglong/sdk/server";
-import { guestMandate, lotusShenzhenMandate, nadiaMandate, type Delegation, type Mandate } from "@yinglong/mandate";
+import { guestMandate, lotusHkMandate, lotusShenzhenMandate, nadiaMandate, type Delegation, type Mandate } from "@yinglong/mandate";
 import { ledgerContext, type LedgerContext } from "./chain/ledger";
 import { companyPrincipal, personPrincipal, type Principal } from "./chain/principal";
 import { ensurePassport } from "./chain/passport";
@@ -10,7 +10,7 @@ import { guardianCalls, sealMandate } from "./chain/mandates";
 import { DATA_DIR, DocStore } from "./store";
 import { resolve } from "node:path";
 
-export type PrincipalId = "nadia" | "lotus-sz" | "guest";
+export type PrincipalId = "nadia" | "lotus-sz" | "lotus-hk" | "guest";
 
 export interface PrincipalConfig {
   id: PrincipalId;
@@ -48,6 +48,17 @@ export const PRINCIPALS: PrincipalConfig[] = [
     identityCode: "YL-TEST-0002",
     issuers: [{ role: "issuer-harbour-digital-bank", claim: "treasury agent of a KYB-verified company" }],
     defaultUnit: "CNY",
+  },
+  {
+    id: "lotus-hk",
+    kind: "company",
+    name: "Lotus Lane (HK) Ltd (fictional)",
+    ledger: env("LOTUS_HK_LEDGER", env("NADIA_LEDGER", "anvil")) as LedgerName,
+    agentRole: "agent-treasurer",
+    agentLabel: "Lotus Lane treasurer",
+    identityCode: "YL-TEST-0002",
+    issuers: [{ role: "issuer-harbour-digital-bank", claim: "treasury agent of a KYB-verified company" }],
+    defaultUnit: "tHKD",
   },
   {
     id: "guest",
@@ -121,6 +132,13 @@ export async function principalHandle(id: PrincipalId): Promise<{ ctx: LedgerCon
 }
 
 function mandateFor(id: PrincipalId, ctx: LedgerContext, p: Principal, now: number): Mandate {
+  if (id === "lotus-hk") {
+    return lotusHkMandate(
+      ctx.deployment,
+      { account: p.account, agent: ctx.roleAddress("agent-treasurer"), kowloonForwarders: ctx.roleAddress("svc-kowloon-forwarders"), issuerBank: ctx.roleAddress("issuer-harbour-digital-bank") },
+      { now, salt: String(now), did: p.did },
+    );
+  }
   if (id === "guest") {
     return guestMandate(
       ctx.deployment,
@@ -176,10 +194,12 @@ export async function onboard(id: PrincipalId, opts: { reseal?: boolean } = {}):
   const existing = world.get().principals[id];
 
   // Test units: tHKD for persons; posted coin-free balance for the company on the instruction rail.
-  if (cfg.kind === "person") {
+  if (cfg.kind === "person" || cfg.defaultUnit === "tHKD") {
     const bal = await ctx.read<bigint>({ address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi, functionName: "balanceOf", args: [p.account] });
     if (id === "guest") {
       if (bal < 450_000_000n) await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 500_000_000n] });
+    } else if (id === "lotus-hk") {
+      if (bal < 200_000_000_000n) await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 400_000_000_000n - bal] });
     } else if (bal < 15_000_000_000n) {
       // Top up to 20,000 test units (team-minted test units; no monetary value).
       await ctx.write("deployer", { address: ctx.addr("TestHKD"), abi: abi.TestUnitsAbi as never, functionName: "mint", args: [p.account, 20_000_000_000n - bal] });
