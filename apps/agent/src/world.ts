@@ -141,7 +141,7 @@ function mandateFor(id: PrincipalId, ctx: LedgerContext, p: Principal, now: numb
         issuerHbu: ctx.roleAddress("issuer-hbu"),
         issuerBank: ctx.roleAddress("issuer-harbour-digital-bank"),
       },
-      { now, salt: String(now) },
+      { now, salt: String(now), periodLength: Number(process.env.DEMO_PERIOD_SECONDS ?? 30 * 86400) },
     );
     return m;
   }

@@ -14,7 +14,9 @@ x-node: &node
     BASE_SEPOLIA_RPC_URL: ${BASE_SEPOLIA_RPC_URL:-https://sepolia.base.org}
     NADIA_LEDGER: ${NADIA_LEDGER:-fisco}
     LOTUS_SZ_LEDGER: fisco
-    RUN_ID: ${RUN_ID:-live1}
+    RUN_ID: ${RUN_ID:-v1}
+    # Demo time compression (labelled in the UI): budget periods of one day instead of 30 days.
+    DEMO_PERIOD_SECONDS: ${DEMO_PERIOD_SECONDS:-86400}
     SIGNER_URL: http://127.0.0.1:8788
     SENTINEL_URL: ${SENTINEL_URL:-}
   volumes:
