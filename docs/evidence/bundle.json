@@ -1,0 +1,1994 @@
+{
+  "generatedAt": "2026-10-15T23:30:00.607Z",
+  "metrics": {
+    "tests.contracts": "90",
+    "tests.contracts.failed": "0",
+    "tests.py": "106",
+    "tests.total": "223",
+    "meta.generated_at": "2026-10-15T23:30:00.607Z",
+    "meta.commit": "1da0e0e",
+    "meta.release_tag": "1da0e0e",
+    "chain.bytecode.equal": "39",
+    "chain.bytecode.total": "46",
+    "chain.bytecode.pair": "Anvil vs FISCO BCOS",
+    "chain.bytecode.differ": "DelegationManager, EntryPoint, HybridDeleGatorImpl, MultiSigDeleGatorImpl, ZKRelationsLib, ZKTranscriptLib, HonkVerifier",
+    "deploy.base.status": "rehearsed end to end on a local fork of Base Sepolia; live deployment pending testnet ETH",
+    "chain.ledgers": "FISCO BCOS 3.17.1 (consortium ledger)",
+    "evidence.tx_count": "8",
+    "evidence.receipts": "19",
+    "evidence.reverts": "3",
+    "evidence.refused_offchain": "7",
+    "tests.ts": "27",
+    "zk.mode": "live private-mandate payments with real proofs recorded in zk-fisco.json, zk-anvil.json",
+    "zk.verify.gas": "",
+    "proof.table": "\n| What it proves | Ledger | Transaction |\n|---|---|---|\n| Mandate sealed and published with its full caveat array (fisco) | fisco | `0xc0e294dd54638c004a05d34e17f4df802f22af4e0e1e5ecc34c0dfbf0d2d4bc9` |\n| Allowed payment inside the mandate (T1) | - | not yet recorded |\n| Payment approved on the user's passkey (T2) | FISCO BCOS (team-run consortium ledger) | [`0x4a6d4c185b...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x4a6d4c185be114a6208ae6048828b2c13e52fd9061189609d7033c46f93bc8d8) |\n| Attack reverted on-chain: PayeeNotVerified | FISCO BCOS (team-run consortium ledger) | [`0xf95e545d34...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xf95e545d34e041df9f568e23749bdc8d52649db52cf989985a3baaa1e9f63546) |\n| Board resolution executed by 2 of 3 directors (T3) | FISCO BCOS (team-run consortium ledger) | [`0x50ac49e1c7...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x50ac49e1c7447286d3214932a9d8b707d1839f63dbfd300be021c845ad910eea) |\n| One-tap pause signed by the principal and relayed (T3) | FISCO BCOS (team-run consortium ledger) | [`0xf8351130e3...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xf8351130e374ac7f05c0c7f17d55ce35b4d906984c5eb838edb3f026e06473cd) |\n| Velocity breach trips the circuit breaker | - | not yet recorded |\n| Company payment on the coin-free rail (FISCO) | FISCO BCOS (team-run consortium ledger) | [`0x4a6d4c185b...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x4a6d4c185be114a6208ae6048828b2c13e52fd9061189609d7033c46f93bc8d8) |\n| Private mandate: payment verified by a zero-knowledge proof at redemption (hidden cap and payees) | FISCO BCOS (team-run consortium ledger) | [`0xab553f9cb9...`](https://api.yinglong-agent.tech/v1/tx/fisco/0xab553f9cb9ba3b3652d954104c5b784d93f2cbca77e39bce9d912a9e1bac6d0f) |\n| Private mandate: forged proof reverts InvalidMandateProof() | FISCO BCOS (team-run consortium ledger) | [`0x119f8389e9...`](https://api.yinglong-agent.tech/v1/tx/fisco/0x119f8389e965ecdfda9b90bfc621d71697bbb20746e41565aa1800c4dd9ce19e) |\n| Private mandate: replayed proof reverts NonceAlreadyUsed(2) | FISCO BCOS (team-run consortium ledger) | [`0x96374ae5fc...`](https://api.yinglong-agent.tech/v1/tx/fisco/0x96374ae5fc4768a4bc4f5f15b3299c43038f63f5d84e6a0278c9575c1ffc75c3) |\n| One-tap pause, passkey signature relayed (fisco) | fisco | `0x0a95302cffbd30984e70ee998c83c47dc8279350f0186720e9ce470dce958a9d` |\n"
+  },
+  "contracts": [
+    {
+      "name": "AccountabilityLedger",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xE42990C2308C71ea3c53907Bf312075028Fbb2E0",
+      "codeHash": "0xd6e5a44cd0504c4d3dd27eae1564175e67329c5b7dac7984d727415a526efe79"
+    },
+    {
+      "name": "AgentLineageEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x7D1bb83c30816847CD7ef4436c9a2492468A2125",
+      "codeHash": "0xd3807e7a283bf4bdb905f47da33c382a590ca158a9d1807cba34d577d879303e"
+    },
+    {
+      "name": "AllowedCalldataEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C",
+      "codeHash": "0x5de09977a5a275de0e101e666dbf87c6ebe2480d67867b6b234d92deabec66fd"
+    },
+    {
+      "name": "AllowedMethodsEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB",
+      "codeHash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2"
+    },
+    {
+      "name": "AllowedTargetsEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+      "codeHash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3"
+    },
+    {
+      "name": "CategoryBudgetEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x8Bd87Eeca3FB1011421a2B8A3445426a23BedC85",
+      "codeHash": "0xe2b29ed37b400d5763f4a06b45a77fd1f356dfa56a0fa0c1b7c606b8eb1e1072"
+    },
+    {
+      "name": "CoSignEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xCD901317f70459f4bCc8FAE0d0d4503bb9D53629",
+      "codeHash": "0xcac545a2bef4f4427b42e53eee1718c36d9688233a0d4870663c43aaddf7ab85"
+    },
+    {
+      "name": "ConditionalPaymentInstructions",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8",
+      "codeHash": "0xcb3f598fd0a384b6eaf39fa6332dc8af308b0ca7b32d5f5d82d3b3bbf52f3a3d"
+    },
+    {
+      "name": "DelegationManager",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+      "codeHash": "0xc9d73fb7cbf6123cd7e2ec74930d64e43c573655b4d31a26eb425fc4b5b5adb3"
+    },
+    {
+      "name": "ERC20TransferAmountEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+      "codeHash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677"
+    },
+    {
+      "name": "EntryPoint",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f",
+      "codeHash": "0xc741fcbd691a98d21af50c203342c6e8b9b2f1a4c1bfee6f4f2c7aeb7ff3d475"
+    },
+    {
+      "name": "ForbiddenTargetsEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xf936387f3aA038fEd260a0F701A7209961a47b68",
+      "codeHash": "0x9011c8455ef546ba751012ceea833382cd55958125c921824d8e1c12fd7157e0"
+    },
+    {
+      "name": "GlobalPauseEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xC313B762639e6492549F55D2fD1B5079fcCD65b6",
+      "codeHash": "0x146eab35ecd379b884ee3a8738fd137642123c313714ae50409b2d4b882ab9d6"
+    },
+    {
+      "name": "HybridDeleGatorImpl",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+      "codeHash": "0xc27a3a26f1690d0b46144ac1ffb5e4ee418bdc927551c5a336cea948de0e4552"
+    },
+    {
+      "name": "JurisdictionEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xA77e5C328A29b29dB6df21d0C479E0B01A53e558",
+      "codeHash": "0x3c18ad73f732e746093718eea6520b80e311063f7adc6114397c6fb4cd46154c"
+    },
+    {
+      "name": "KillSwitchRegistry",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x391053922676eC4E720d5725d5721646c62c0652",
+      "codeHash": "0xb35b73d46606b2430a7482a13b80e64a35940711ec43f6400f15a16e3d5eec60"
+    },
+    {
+      "name": "LimitedCallsEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+      "codeHash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a"
+    },
+    {
+      "name": "MandateBindingEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xCe848804Adb705b3B4709e048a3Ab101770fa642",
+      "codeHash": "0x20d077292dac232c197e3b90a67f780ed88cb3db7d55c6fe29897c1603ceec7d"
+    },
+    {
+      "name": "MandateRegistry",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x39D289d8572F07a3f64F4E4d80208CE650766476",
+      "codeHash": "0xa19baa91fc846b90b32633092ca7e1b911ca5afe38866c57d16a348ae6968805"
+    },
+    {
+      "name": "MultiSigDeleGatorImpl",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x05282A658456a1444CE458d9F8bcb6D884E69f26",
+      "codeHash": "0x560cd4c33021a4c67290ed7a98ab037587e27b94b866c71df99c5d6a77f4144c"
+    },
+    {
+      "name": "NonceEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+      "codeHash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf"
+    },
+    {
+      "name": "PayeeBook",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xbE03873a53eD8F6d48EBFC3b095bED34d7C4b0a1",
+      "codeHash": "0xc89074307612cf3598767fe69e7a76efffd89922e85c6fea51c50f144d6eb1b0"
+    },
+    {
+      "name": "ProductRegistry",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xF86370F739e571a0F4Afb432e1C12bE6A76fC05b",
+      "codeHash": "0xa7af81b390d4ae4ceb35a7983a42cbd530ec9c545b5151c3ed1b38de7d3ee147"
+    },
+    {
+      "name": "ProtectedPayment",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x3A50F926300c42b8304711Bdc8eb35dF4fB56617",
+      "codeHash": "0x83ec2ad387318d511b554b798210bcbde77a6206f19be8ccf5fa8de649da15dc"
+    },
+    {
+      "name": "RedeemerEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+      "codeHash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220"
+    },
+    {
+      "name": "ReputationGateEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xe9909B519f9F5963422C1650a88A738777d0EAaF",
+      "codeHash": "0xeee353be492a0ceda0ac5caa86293b8c7e8b0049d126cafc27c7a7d1072c7466"
+    },
+    {
+      "name": "ReserveFloorEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xDb48F57DEF3B0faeb4D790479EED2D8eb43755E7",
+      "codeHash": "0x5d7aef15a922b63649f6315524ea063b7f340c5884da95919f37a7224d6c826c"
+    },
+    {
+      "name": "SignedQuoteSettlement",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x659458ca15dcd1AC7493513a37fD36063642f8E6",
+      "codeHash": "0x5f349ae3ea4bf7f5aec3385eb30988da0f32a5c6a4b2f1daa598585cc04f8485"
+    },
+    {
+      "name": "SimpleFactory",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+      "codeHash": "0xbb3c53151553258d46f86670e686c1a263bf0fae6c29a38988c4637cd286cd29"
+    },
+    {
+      "name": "SuitabilityEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x2226D5508f5c6D3A24cD15Be35d4F5Df43583846",
+      "codeHash": "0x38732451a588e925d2cda59c0618647586cd0fa41d154f6a357edbde6e9df333"
+    },
+    {
+      "name": "TestGrowthFund",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x2ee94183aD4cE72aee14F83bD15033A698AdBF0C",
+      "codeHash": "0x186478b25bec430d5278614579ed449cf24c34a1f152777de9a4541f4073f098"
+    },
+    {
+      "name": "TestHKD",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x1A3a563AF72A2D47d9cf84cF2e728F3596F2A4d2",
+      "codeHash": "0x77ef8498fa74a7cbb1ea71ab1cb105a5e0d415fb2ddaa75c8fcd90db8d7b541a"
+    },
+    {
+      "name": "TestMoneyMarketFund",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x7ac856d4257CC0a9A3be8606912e9853b84a97c8",
+      "codeHash": "0x186478b25bec430d5278614579ed449cf24c34a1f152777de9a4541f4073f098"
+    },
+    {
+      "name": "TestUSD",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x7C8EbCc7667692d1211555b3929BE79F4be1A4C0",
+      "codeHash": "0x77ef8498fa74a7cbb1ea71ab1cb105a5e0d415fb2ddaa75c8fcd90db8d7b541a"
+    },
+    {
+      "name": "TimestampEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x586B8032Db3b29287D205862C78dC14C69CFdC30",
+      "codeHash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324"
+    },
+    {
+      "name": "ValueLteEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3",
+      "codeHash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e"
+    },
+    {
+      "name": "VelocityEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xAfC2bC04bB16DBc42d04c6b4BD99675b163ef2a8",
+      "codeHash": "0x57816b708ba6b0414e9f2f2430f40bc241ea2fccf7c449a6be10fe253816a707"
+    },
+    {
+      "name": "VerifiedPayeeEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x565f3eC5983a67a6d207709F6BCf88105e37257E",
+      "codeHash": "0x96dcfc1e152bd1ca0e9397ddd9618f573ef9eee83e34ce550a322660c23b004d"
+    },
+    {
+      "name": "VetoTimelockEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xf3792671423A1ef50a45c7d68F86768F0AA040F3",
+      "codeHash": "0xdf2c8aa906f46a6648de08e53fd51da93f7d8318156c5ae3bd6279badec69941"
+    },
+    {
+      "name": "YinglongCreate2Deployer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x6AfAd65A0cF138f52C4E00b07A96B59e77E0c21E",
+      "codeHash": "0x091792f1c4eb33338a1e6bf2fefa2e053c3407145b1c979307fa1acf6a4c3cae"
+    },
+    {
+      "name": "YinglongPassportRegistry",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x28734131bF29Be297C59352C2b23c08932F315A8",
+      "codeHash": "0x19328c627f7baf92f2a890d76443e09d0d87b7fcddef3724400c84b850932e1c"
+    },
+    {
+      "name": "ZKRelationsLib",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x6a5fee8c741bab0ea8b2ba5b5adbec894ba52612",
+      "codeHash": "0x23b729652420571168299a8bb12c634142f88986d26c0da976766bdc3b455c3c"
+    },
+    {
+      "name": "ZKTranscriptLib",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xa159229cd592b698404eccad9ef26f785e166869",
+      "codeHash": "0x9cb28b53d814a6647686e9c90ffe8a81f01579e290feb721d8447cd1c12c3a6f"
+    },
+    {
+      "name": "HonkVerifier",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xf469fd199605708564da7ac23c5837e66672f238",
+      "codeHash": "0x8cce738235fa482c2d5d52216f32044303d370c27546e74566cf6250d6f2ac28"
+    },
+    {
+      "name": "ZKVerifierRouter",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0x919eab55b82f2c4127f30c2f0f84af94d1e99d17",
+      "codeHash": "0x2fdd97fd3156db1895dac164f978144ba67c44277b9e8a3927b2303ba8872a82"
+    },
+    {
+      "name": "ZKMandateEnforcer",
+      "ledger": "anvil",
+      "chainId": 31337,
+      "address": "0xacaf72bf91fa0b07b5d8961d211e41647b5deffe",
+      "codeHash": "0x6967465c90c35cb3dd6a2b47ee6a6c6e33b19e46dc271f35472b516fc3cc1fe6"
+    },
+    {
+      "name": "AccountabilityLedger",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xf3792671423A1ef50a45c7d68F86768F0AA040F3",
+      "codeHash": "0xd6e5a44cd0504c4d3dd27eae1564175e67329c5b7dac7984d727415a526efe79"
+    },
+    {
+      "name": "AgentLineageEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x2ee94183aD4cE72aee14F83bD15033A698AdBF0C",
+      "codeHash": "0xd3807e7a283bf4bdb905f47da33c382a590ca158a9d1807cba34d577d879303e"
+    },
+    {
+      "name": "AllowedCalldataEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xf936387f3aA038fEd260a0F701A7209961a47b68",
+      "codeHash": "0x5de09977a5a275de0e101e666dbf87c6ebe2480d67867b6b234d92deabec66fd"
+    },
+    {
+      "name": "AllowedMethodsEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xCe848804Adb705b3B4709e048a3Ab101770fa642",
+      "codeHash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2"
+    },
+    {
+      "name": "AllowedTargetsEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x401fF9f822D1b1475272c090cea964a119F6fd23",
+      "codeHash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3"
+    },
+    {
+      "name": "CategoryBudgetEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x0FBA56325B5c59F0E5cF589D25bFe6818850ae97",
+      "codeHash": "0xe2b29ed37b400d5763f4a06b45a77fd1f356dfa56a0fa0c1b7c606b8eb1e1072"
+    },
+    {
+      "name": "CoSignEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x8b143D8a816F309C7426E620E4540F686b12A853",
+      "codeHash": "0xcac545a2bef4f4427b42e53eee1718c36d9688233a0d4870663c43aaddf7ab85"
+    },
+    {
+      "name": "ConditionalPaymentInstructions",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x413a920c685778070FcC00C82718E0649e63fFb1",
+      "codeHash": "0xcb3f598fd0a384b6eaf39fa6332dc8af308b0ca7b32d5f5d82d3b3bbf52f3a3d"
+    },
+    {
+      "name": "DelegationManager",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x39D289d8572F07a3f64F4E4d80208CE650766476",
+      "codeHash": "0x06e09d5e2911c35187d4f7717590eeda3d12889e1c863d5932587775e3052826"
+    },
+    {
+      "name": "ERC20TransferAmountEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x2226D5508f5c6D3A24cD15Be35d4F5Df43583846",
+      "codeHash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677"
+    },
+    {
+      "name": "EntryPoint",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xbE03873a53eD8F6d48EBFC3b095bED34d7C4b0a1",
+      "codeHash": "0xc76338b86120bbcb53b27f65de8dc5350601d5da9731bdede8ffa079034bff5b"
+    },
+    {
+      "name": "ForbiddenTargetsEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x7ac856d4257CC0a9A3be8606912e9853b84a97c8",
+      "codeHash": "0x9011c8455ef546ba751012ceea833382cd55958125c921824d8e1c12fd7157e0"
+    },
+    {
+      "name": "GlobalPauseEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x66E0dF12E1F2bFC6ed96903c4383973F5386A784",
+      "codeHash": "0x146eab35ecd379b884ee3a8738fd137642123c313714ae50409b2d4b882ab9d6"
+    },
+    {
+      "name": "HybridDeleGatorImpl",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x28734131bF29Be297C59352C2b23c08932F315A8",
+      "codeHash": "0x26a4df94ab8d735ab409d1c63b518e33b1cce8d31b1cabeb44c43e39a7113ef9"
+    },
+    {
+      "name": "JurisdictionEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x6AfAd65A0cF138f52C4E00b07A96B59e77E0c21E",
+      "codeHash": "0x3c18ad73f732e746093718eea6520b80e311063f7adc6114397c6fb4cd46154c"
+    },
+    {
+      "name": "KillSwitchRegistry",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xA77e5C328A29b29dB6df21d0C479E0B01A53e558",
+      "codeHash": "0xb35b73d46606b2430a7482a13b80e64a35940711ec43f6400f15a16e3d5eec60"
+    },
+    {
+      "name": "LimitedCallsEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x565f3eC5983a67a6d207709F6BCf88105e37257E",
+      "codeHash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a"
+    },
+    {
+      "name": "MandateBindingEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xF86370F739e571a0F4Afb432e1C12bE6A76fC05b",
+      "codeHash": "0x20d077292dac232c197e3b90a67f780ed88cb3db7d55c6fe29897c1603ceec7d"
+    },
+    {
+      "name": "MandateRegistry",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xe9909B519f9F5963422C1650a88A738777d0EAaF",
+      "codeHash": "0xa19baa91fc846b90b32633092ca7e1b911ca5afe38866c57d16a348ae6968805"
+    },
+    {
+      "name": "MultiSigDeleGatorImpl",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xE42990C2308C71ea3c53907Bf312075028Fbb2E0",
+      "codeHash": "0x6dd3b40041951abe02fa205c5b56ff0319bc58e2c3437ae19db5a62712b8c037"
+    },
+    {
+      "name": "NonceEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xDb48F57DEF3B0faeb4D790479EED2D8eb43755E7",
+      "codeHash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf"
+    },
+    {
+      "name": "PayeeBook",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xC313B762639e6492549F55D2fD1B5079fcCD65b6",
+      "codeHash": "0xc89074307612cf3598767fe69e7a76efffd89922e85c6fea51c50f144d6eb1b0"
+    },
+    {
+      "name": "ProductRegistry",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xF0183445DDEE055a2D66b96191295567e90A536d",
+      "codeHash": "0xa7af81b390d4ae4ceb35a7983a42cbd530ec9c545b5151c3ed1b38de7d3ee147"
+    },
+    {
+      "name": "ProtectedPayment",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xB0D100faAe1D583b981f7C6912066339f8A2ee3B",
+      "codeHash": "0x83ec2ad387318d511b554b798210bcbde77a6206f19be8ccf5fa8de649da15dc"
+    },
+    {
+      "name": "RedeemerEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xAfC2bC04bB16DBc42d04c6b4BD99675b163ef2a8",
+      "codeHash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220"
+    },
+    {
+      "name": "ReputationGateEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x4681E89F8f61f0a1c78D9a8a0df2b1dBd29CB07C",
+      "codeHash": "0xeee353be492a0ceda0ac5caa86293b8c7e8b0049d126cafc27c7a7d1072c7466"
+    },
+    {
+      "name": "ReserveFloorEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x3A50F926300c42b8304711Bdc8eb35dF4fB56617",
+      "codeHash": "0x5d7aef15a922b63649f6315524ea063b7f340c5884da95919f37a7224d6c826c"
+    },
+    {
+      "name": "SignedQuoteSettlement",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xebAFBD8F9E3d7CEa4d700637FBbf85222642863f",
+      "codeHash": "0x5f349ae3ea4bf7f5aec3385eb30988da0f32a5c6a4b2f1daa598585cc04f8485"
+    },
+    {
+      "name": "SimpleFactory",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x1ee0B76ed92a5d176B1d5512C36bF4AC192aF21E",
+      "codeHash": "0xbb3c53151553258d46f86670e686c1a263bf0fae6c29a38988c4637cd286cd29"
+    },
+    {
+      "name": "SuitabilityEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8",
+      "codeHash": "0x38732451a588e925d2cda59c0618647586cd0fa41d154f6a357edbde6e9df333"
+    },
+    {
+      "name": "TestGrowthFund",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x3F8f6975e51C638161CA1d88D89d878129d6E080",
+      "codeHash": "0x186478b25bec430d5278614579ed449cf24c34a1f152777de9a4541f4073f098"
+    },
+    {
+      "name": "TestHKD",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xC36ca5CA4Ea8d8662d5e7c38541Ac4A14b712424",
+      "codeHash": "0x77ef8498fa74a7cbb1ea71ab1cb105a5e0d415fb2ddaa75c8fcd90db8d7b541a"
+    },
+    {
+      "name": "TestMoneyMarketFund",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x281f32486d69fe6A5C38906430965C73238F55c6",
+      "codeHash": "0x186478b25bec430d5278614579ed449cf24c34a1f152777de9a4541f4073f098"
+    },
+    {
+      "name": "TestUSD",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x9C3991417507F236E77469B6513Ad45F8Df36549",
+      "codeHash": "0x77ef8498fa74a7cbb1ea71ab1cb105a5e0d415fb2ddaa75c8fcd90db8d7b541a"
+    },
+    {
+      "name": "TimestampEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x8Bd87Eeca3FB1011421a2B8A3445426a23BedC85",
+      "codeHash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324"
+    },
+    {
+      "name": "ValueLteEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x7D1bb83c30816847CD7ef4436c9a2492468A2125",
+      "codeHash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e"
+    },
+    {
+      "name": "VelocityEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x659458ca15dcd1AC7493513a37fD36063642f8E6",
+      "codeHash": "0x57816b708ba6b0414e9f2f2430f40bc241ea2fccf7c449a6be10fe253816a707"
+    },
+    {
+      "name": "VerifiedPayeeEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xaBc4B99D759A06781BAFB096c65c2dB30beb073c",
+      "codeHash": "0x96dcfc1e152bd1ca0e9397ddd9618f573ef9eee83e34ce550a322660c23b004d"
+    },
+    {
+      "name": "VetoTimelockEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xFae68Be7B69B1dF2d09Ec1258dbb6f2A620AB58B",
+      "codeHash": "0xdf2c8aa906f46a6648de08e53fd51da93f7d8318156c5ae3bd6279badec69941"
+    },
+    {
+      "name": "YinglongCreate2Deployer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x5e3145AAda4c375F29Da80856bA4362a921eCa50",
+      "codeHash": "0x091792f1c4eb33338a1e6bf2fefa2e053c3407145b1c979307fa1acf6a4c3cae"
+    },
+    {
+      "name": "YinglongPassportRegistry",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xCD901317f70459f4bCc8FAE0d0d4503bb9D53629",
+      "codeHash": "0x19328c627f7baf92f2a890d76443e09d0d87b7fcddef3724400c84b850932e1c"
+    },
+    {
+      "name": "ZKRelationsLib",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xDb5E9B1835Bb5723b742cbfd2A129D7e61B2b0e2",
+      "codeHash": "0x5e7ee4ffa5fb9abddf04946988ff512733e948622a9abe587a4810eda22f8e4b"
+    },
+    {
+      "name": "ZKTranscriptLib",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xEd66dcb7AE8d24fA8fCD2C6CaD76afcD64ACDe3C",
+      "codeHash": "0x6867d506fb753aae5ff9af20d417624c0a209a8db638f27df17bcbc8328d579f"
+    },
+    {
+      "name": "HonkVerifier",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0xC980F05eb0aF368bFFDD78A865503b311856FF48",
+      "codeHash": "0xc032d02849fe999b038b658512d356661cba55cc90aeb53f00e4a84248dc823b"
+    },
+    {
+      "name": "ZKVerifierRouter",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x154F3583800A4023FfFD955E37B60bf24CFEfC3b",
+      "codeHash": "0x2fdd97fd3156db1895dac164f978144ba67c44277b9e8a3927b2303ba8872a82"
+    },
+    {
+      "name": "ZKMandateEnforcer",
+      "ledger": "fisco",
+      "chainId": 20200,
+      "address": "0x5756806120CEdFC13eB942F5Ec2A6B1A5D79d4C3",
+      "codeHash": "0x6967465c90c35cb3dd6a2b47ee6a6c6e33b19e46dc271f35472b516fc3cc1fe6"
+    }
+  ],
+  "receipts": [
+    {
+      "receiptId": "0xfff425c5c21eaf9262ffdd39f9180100223c1427f76ec29bd7ef5b992bd39c0d",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "ASK",
+      "outcome": "asked",
+      "revertError": {
+        "name": "LineageViolation",
+        "args": [
+          "0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4"
+        ],
+        "message": "LineageViolation(0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)",
+        "raw": "0x4c3e51f200000000000000000000000095834ea392ab77d7e65e5808dcb7c13372b8c1f4"
+      },
+      "mandateHash": "0x568736068bb34f8579c2e7fb9eaf8284127771b677dc9aa7ce6ea026756d7b54",
+      "delegationHash": "0x264e14a9f73d58fd11ecf0673efcc269ccb7f7a8e32980e669461956ad7fc22b",
+      "intentHash": "0x2cc074173bedaebcad108040a9409d879cba22f10a6f4d4246711ad2dbc980ca",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "9500000000",
+        "payee": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6",
+        "method": "transfer",
+        "payeeLabel": "Harbour Homes"
+      },
+      "explanation": {
+        "text": "Not sure, your call. The ledger disagrees with my rule check (LineageViolation(0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "receiptHash": "0x15396ef2ef9b04717b9eb36586b9029eeec64154ed03704657744a08e8c3c76b",
+      "timestamp": "2026-10-15T22:03:48.000Z",
+      "receipt": {
+        "receiptId": "0xfff425c5c21eaf9262ffdd39f9180100223c1427f76ec29bd7ef5b992bd39c0d",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x568736068bb34f8579c2e7fb9eaf8284127771b677dc9aa7ce6ea026756d7b54",
+        "delegationHash": "0x264e14a9f73d58fd11ecf0673efcc269ccb7f7a8e32980e669461956ad7fc22b",
+        "intentHash": "0x2cc074173bedaebcad108040a9409d879cba22f10a6f4d4246711ad2dbc980ca",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0x549aa7131b9ee214060ae26f06f6527b99ee2737cca296539d07c87d4950e203",
+        "stateReadsHash": "0x577f98306159df28de35da6c1074816156b32138dd55d173fe5d347d450a4438",
+        "counterpartyCheckHash": "0x5897784bd5b9568bdd3373bf69bcdb7feb60fe2df2adf681b5b95908014aa038",
+        "simulationHash": "0x28b5b2018e62f28afb688b8f96e47dccbb9479dd803e5ad0f4beb1cdffa7d7af",
+        "tier": "ASK",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "asked",
+        "explanationHash": "0x3eeb8f4498c5b0e78ba55f9a056ae90f53636b34a88c29e02311605b52aac0e3",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "timestamp": "1792101828"
+      }
+    },
+    {
+      "receiptId": "0x4b35ed3899cfff31aa239b59f44c5303df431fe70f884d6dda586cd82fef53b3",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "ASK",
+      "outcome": "asked",
+      "revertError": {
+        "name": "LineageViolation",
+        "args": [
+          "0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4"
+        ],
+        "message": "LineageViolation(0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)",
+        "raw": "0x4c3e51f200000000000000000000000095834ea392ab77d7e65e5808dcb7c13372b8c1f4"
+      },
+      "mandateHash": "0x568736068bb34f8579c2e7fb9eaf8284127771b677dc9aa7ce6ea026756d7b54",
+      "delegationHash": "0x264e14a9f73d58fd11ecf0673efcc269ccb7f7a8e32980e669461956ad7fc22b",
+      "intentHash": "0xc9ce7330600a48fdaa004984b292d3cc2efec583eedc3819204c7972a0da4ad2",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "1200000000",
+        "payee": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc",
+        "method": "transfer",
+        "payeeLabel": "Kowloon Food Mart"
+      },
+      "explanation": {
+        "text": "Not sure, your call. The ledger disagrees with my rule check (LineageViolation(0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0x15396ef2ef9b04717b9eb36586b9029eeec64154ed03704657744a08e8c3c76b",
+      "receiptHash": "0x09ddc158d22eb0ac80022e11916b200eefb2cc1f313fd20c2e002aab3069d26c",
+      "timestamp": "2026-10-15T22:03:52.000Z",
+      "receipt": {
+        "receiptId": "0x4b35ed3899cfff31aa239b59f44c5303df431fe70f884d6dda586cd82fef53b3",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x568736068bb34f8579c2e7fb9eaf8284127771b677dc9aa7ce6ea026756d7b54",
+        "delegationHash": "0x264e14a9f73d58fd11ecf0673efcc269ccb7f7a8e32980e669461956ad7fc22b",
+        "intentHash": "0xc9ce7330600a48fdaa004984b292d3cc2efec583eedc3819204c7972a0da4ad2",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0x549aa7131b9ee214060ae26f06f6527b99ee2737cca296539d07c87d4950e203",
+        "stateReadsHash": "0x04b639d6259b83f2a054555c0441dddaae86c7dec1b13040cab9f8b372b8c8d4",
+        "counterpartyCheckHash": "0x3bbd4508028a4147e4146e66251cc2067e5ab0bcd4bfbfe14b79405dd8f8c356",
+        "simulationHash": "0x28b5b2018e62f28afb688b8f96e47dccbb9479dd803e5ad0f4beb1cdffa7d7af",
+        "tier": "ASK",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "asked",
+        "explanationHash": "0x3eeb8f4498c5b0e78ba55f9a056ae90f53636b34a88c29e02311605b52aac0e3",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x15396ef2ef9b04717b9eb36586b9029eeec64154ed03704657744a08e8c3c76b",
+        "timestamp": "1792101832"
+      }
+    },
+    {
+      "receiptId": "0x0f8e84ac932f0d387174d31b6ad614e5b603f5efd8f754aea819e07ef4c9e7bd",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "rejected_policy",
+      "revertError": {
+        "name": "VelocityExceeded",
+        "args": [
+          "3",
+          "24000000000"
+        ],
+        "message": "VelocityExceeded(3, 24000000000)",
+        "raw": "0x98b549450000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000059682f000"
+      },
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0x2cc074173bedaebcad108040a9409d879cba22f10a6f4d4246711ad2dbc980ca",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "9500000000",
+        "payee": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6",
+        "method": "transfer",
+        "payeeLabel": "Harbour Homes"
+      },
+      "explanation": {
+        "text": "I did not pay 9,500 tHKD to Harbour Homes. The policy check refused it (ReserveFloorBreached): balance after -4000000000 below floor 1500000000.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0x09ddc158d22eb0ac80022e11916b200eefb2cc1f313fd20c2e002aab3069d26c",
+      "receiptHash": "0x6f5165b0f7977798995cdeb5a7256d81ecefdf6ed5967a280cdba16aa05f9985",
+      "timestamp": "2026-10-15T22:08:20.000Z",
+      "receipt": {
+        "receiptId": "0x0f8e84ac932f0d387174d31b6ad614e5b603f5efd8f754aea819e07ef4c9e7bd",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0x2cc074173bedaebcad108040a9409d879cba22f10a6f4d4246711ad2dbc980ca",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0xb1de9fe81f99960683c635796001f7d4aaa7acd5bbdf4baf051841f2b4828e87",
+        "stateReadsHash": "0x85232b1fe77da66c706d5fa908b0cc1e2dc692d9b6bff67e0fb6bc732fac1af8",
+        "counterpartyCheckHash": "0x5897784bd5b9568bdd3373bf69bcdb7feb60fe2df2adf681b5b95908014aa038",
+        "simulationHash": "0xa979038bcb3469d9f7727aedd63140b9ae8a01ddac443518a99a4463028fee0b",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "rejected_policy",
+        "explanationHash": "0x6247a5bbbf2878da70a71f7a19c81cac1bf3f1214b706d7b0d7da3f32c15418e",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x09ddc158d22eb0ac80022e11916b200eefb2cc1f313fd20c2e002aab3069d26c",
+        "timestamp": "1792102100"
+      }
+    },
+    {
+      "receiptId": "0x63e4f280da42671244952dcc25edf54b27b22fa2e85b5ec58788b5ee19d7f36b",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "rejected_policy",
+      "revertError": {
+        "name": "VelocityExceeded",
+        "args": [
+          "3",
+          "15700000000"
+        ],
+        "message": "VelocityExceeded(3, 15700000000)",
+        "raw": "0x98b54945000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000003a7cafd00"
+      },
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0xc9ce7330600a48fdaa004984b292d3cc2efec583eedc3819204c7972a0da4ad2",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "1200000000",
+        "payee": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc",
+        "method": "transfer",
+        "payeeLabel": "Kowloon Food Mart"
+      },
+      "explanation": {
+        "text": "I did not pay 1,200 tHKD to Kowloon Food Mart. The policy check refused it (VelocityExceeded): 3 payments, 15700000000 out in this window.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0x6f5165b0f7977798995cdeb5a7256d81ecefdf6ed5967a280cdba16aa05f9985",
+      "receiptHash": "0xb7e3c7cc75d8ba868eba0dc1d64e0c6dce4d0830cefa8353494e1810656d82f2",
+      "timestamp": "2026-10-15T22:08:24.000Z",
+      "receipt": {
+        "receiptId": "0x63e4f280da42671244952dcc25edf54b27b22fa2e85b5ec58788b5ee19d7f36b",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0xc9ce7330600a48fdaa004984b292d3cc2efec583eedc3819204c7972a0da4ad2",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0xad27886826160afd04af6dd721dc5aa7d1974dfc64450222607cb97c7fea1cd2",
+        "stateReadsHash": "0x9326a6deb2813ba237cba9d1e772d153259f3041842b0832d6f344b73cadba1a",
+        "counterpartyCheckHash": "0x3bbd4508028a4147e4146e66251cc2067e5ab0bcd4bfbfe14b79405dd8f8c356",
+        "simulationHash": "0x4f4541aa9302da8bd1e6dd9ae54ce5947652df3e82ed8d70e77e2805e3a1bce3",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "rejected_policy",
+        "explanationHash": "0xb6c9b194b20f0f8170e42a0d69ec37cfe99b375233cf8a0b00db44772c9f34a9",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x6f5165b0f7977798995cdeb5a7256d81ecefdf6ed5967a280cdba16aa05f9985",
+        "timestamp": "1792102104"
+      }
+    },
+    {
+      "receiptId": "0x4a11e4f019f743e0a1232f46ac888847a8457d0b9bdf0e20500510d5aa914637",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "rejected_policy",
+      "revertError": {
+        "name": "CoSignRequired",
+        "args": [
+          "2500000000",
+          "2000000000"
+        ],
+        "message": "CoSignRequired(2500000000, 2000000000)",
+        "raw": "0xf28c8a80000000000000000000000000000000000000000000000000000000009502f9000000000000000000000000000000000000000000000000000000000077359400"
+      },
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0xb6d6bf055c3323b8d7a862cd01f77e61c9272f5dbe285b7a0744e6653c541520",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "2500000000",
+        "payee": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc",
+        "method": "transfer",
+        "payeeLabel": "Kowloon Food Mart"
+      },
+      "explanation": {
+        "text": "I did not pay 2,500 tHKD to Kowloon Food Mart. The policy check refused it (VelocityExceeded): 3 payments, 17000000000 out in this window.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0xb7e3c7cc75d8ba868eba0dc1d64e0c6dce4d0830cefa8353494e1810656d82f2",
+      "receiptHash": "0x549c6d9538dee503bffef50e8857de82087c0342aec68b0fdd5f1701b0410ab8",
+      "timestamp": "2026-10-15T22:08:27.000Z",
+      "receipt": {
+        "receiptId": "0x4a11e4f019f743e0a1232f46ac888847a8457d0b9bdf0e20500510d5aa914637",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0xb6d6bf055c3323b8d7a862cd01f77e61c9272f5dbe285b7a0744e6653c541520",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0xc48e44d144a6e739466c18e14bce3964801ece69f2fef81e0f496d2d19fe06cf",
+        "stateReadsHash": "0x9326a6deb2813ba237cba9d1e772d153259f3041842b0832d6f344b73cadba1a",
+        "counterpartyCheckHash": "0x3bbd4508028a4147e4146e66251cc2067e5ab0bcd4bfbfe14b79405dd8f8c356",
+        "simulationHash": "0x62774602e50ac31d065a9c599ddb4825fb5e898ad58805480a91c395bf7f6391",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "rejected_policy",
+        "explanationHash": "0x1879ab85a6a73af850be9a5cb152a5b8c308bf3a50212dd10997e88825cb90b0",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xb7e3c7cc75d8ba868eba0dc1d64e0c6dce4d0830cefa8353494e1810656d82f2",
+        "timestamp": "1792102107"
+      }
+    },
+    {
+      "receiptId": "0xae6bc31f2a03436256bc55ddaae9d880c8d036cc42e75672af8a2a53a9fd34d5",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "reverted",
+      "txHash": "0xc4ee0c2c229856279760c4b071e84cdde42c388ea4b5dd96559319309581e4d6",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0xc4ee0c2c229856279760c4b071e84cdde42c388ea4b5dd96559319309581e4d6",
+      "revertError": {
+        "name": "CoSignRequired",
+        "args": [
+          "2500000000",
+          "2000000000"
+        ],
+        "message": "CoSignRequired(2500000000, 2000000000)",
+        "raw": "0xf28c8a80000000000000000000000000000000000000000000000000000000009502f9000000000000000000000000000000000000000000000000000000000077359400"
+      },
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0xb6d6bf055c3323b8d7a862cd01f77e61c9272f5dbe285b7a0744e6653c541520",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "2500000000",
+        "payee": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc",
+        "method": "transfer",
+        "payeeLabel": "Kowloon Food Mart"
+      },
+      "explanation": {
+        "text": "The ledger refused this redemption: CoSignRequired(2500000000, 2000000000).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0x549c6d9538dee503bffef50e8857de82087c0342aec68b0fdd5f1701b0410ab8",
+      "receiptHash": "0xd8cc8acfe32640b30cd907c635c800815c49821c606ae0ea28057f49ce3713d4",
+      "timestamp": "2026-10-15T22:08:28.000Z",
+      "receipt": {
+        "receiptId": "0xae6bc31f2a03436256bc55ddaae9d880c8d036cc42e75672af8a2a53a9fd34d5",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0xb6d6bf055c3323b8d7a862cd01f77e61c9272f5dbe285b7a0744e6653c541520",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0xc48e44d144a6e739466c18e14bce3964801ece69f2fef81e0f496d2d19fe06cf",
+        "stateReadsHash": "0x9326a6deb2813ba237cba9d1e772d153259f3041842b0832d6f344b73cadba1a",
+        "counterpartyCheckHash": "0x3bbd4508028a4147e4146e66251cc2067e5ab0bcd4bfbfe14b79405dd8f8c356",
+        "simulationHash": "0x62774602e50ac31d065a9c599ddb4825fb5e898ad58805480a91c395bf7f6391",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0xc4ee0c2c229856279760c4b071e84cdde42c388ea4b5dd96559319309581e4d6",
+        "outcome": "reverted",
+        "explanationHash": "0x232db78de45f36020c5c5c235a6d577563dbed86f9339b017c268aff7f569218",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x549c6d9538dee503bffef50e8857de82087c0342aec68b0fdd5f1701b0410ab8",
+        "timestamp": "1792102108"
+      }
+    },
+    {
+      "receiptId": "0x5d0fa1a1a11c671fdef393993a660e0024f51deabd58c1230b2f685fea578d83",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "rejected_policy",
+      "revertError": {
+        "name": "CoSignRequired",
+        "args": [
+          "5000000000",
+          "2000000000"
+        ],
+        "message": "CoSignRequired(5000000000, 2000000000)",
+        "raw": "0xf28c8a80000000000000000000000000000000000000000000000000000000012a05f2000000000000000000000000000000000000000000000000000000000077359400"
+      },
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0x75b9526e5eef40602a66e94cacffaca9a4d41479d88b48175cdf2c955635adba",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "5000000000",
+        "payee": "0x81085F62863966c3c21ac5fAe866D36f8766980F",
+        "method": "transferAndCall",
+        "payeeLabel": "HBU Bursar"
+      },
+      "explanation": {
+        "text": "I did not pay 5,000 tHKD to HBU Bursar. The policy check refused it (ReserveFloorBreached): balance after 500000000 below floor 1500000000.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0xd8cc8acfe32640b30cd907c635c800815c49821c606ae0ea28057f49ce3713d4",
+      "receiptHash": "0xbd1453a5cc22ff697833677e00dc2dac9edabe65a945eb237754744a57b2b388",
+      "timestamp": "2026-10-15T22:08:37.000Z",
+      "receipt": {
+        "receiptId": "0x5d0fa1a1a11c671fdef393993a660e0024f51deabd58c1230b2f685fea578d83",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0x75b9526e5eef40602a66e94cacffaca9a4d41479d88b48175cdf2c955635adba",
+        "planHash": "0xfc8bba0db2d0ffdd49d9a01699c8164bdaccca959c5a9fb5bfee30979c131948",
+        "policyDecisionHash": "0x2e959430ee6d65f7e661dda8a26a82a3b9f0003e7fe9499a57851f4a891f163a",
+        "stateReadsHash": "0x10f5528429c6956ab7e39a74f4316e4f26037b7507fb2cfcdfcb234bd2d40c0c",
+        "counterpartyCheckHash": "0x05bf2d9b5f4ec74381706e30c766c8cd836ba997bb82e92831104bdc9ce278b3",
+        "simulationHash": "0x8d71bc70b8cc2803b0e57433641486224c7b8a26f828dd1956d836689e1cafa9",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "rejected_policy",
+        "explanationHash": "0xe4f6ec2c12de7d6d7555bf7687c3593924e8bef689843ade4de59da05541f8fb",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xd8cc8acfe32640b30cd907c635c800815c49821c606ae0ea28057f49ce3713d4",
+        "timestamp": "1792102117"
+      }
+    },
+    {
+      "receiptId": "0x02e9be2c73779cd56bc9afbac958cfeaad2ca6097be74cd9b10be94bf680b3eb",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "ASK",
+      "outcome": "asked",
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0x7dbbb7298f999f88e1f29b1b62db5e09aad767dd17c9b8f5e04b20054d2c0dbd",
+      "agentId": "1",
+      "explanation": {
+        "text": "Not sure, your call. I need you to clarify: missing amount. I also noticed: possible prompt injection; claims payee details changed; contains instructions aimed at the agent; urgency or authority pressure; readers disagree on a financial field.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0xbd1453a5cc22ff697833677e00dc2dac9edabe65a945eb237754744a57b2b388",
+      "receiptHash": "0x179d3bac30507ba458d785346495a33117a5c61abbb400cdd1adb9e84a2fedb3",
+      "timestamp": "2026-10-15T22:09:06.000Z",
+      "receipt": {
+        "receiptId": "0x02e9be2c73779cd56bc9afbac958cfeaad2ca6097be74cd9b10be94bf680b3eb",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0x7dbbb7298f999f88e1f29b1b62db5e09aad767dd17c9b8f5e04b20054d2c0dbd",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "stateReadsHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "tier": "ASK",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "asked",
+        "explanationHash": "0x6536525061fd85c0de14b0b8adb7cc553d8648b28af1dc8121859cb0316e9cfd",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xbd1453a5cc22ff697833677e00dc2dac9edabe65a945eb237754744a57b2b388",
+        "timestamp": "1792102146"
+      }
+    },
+    {
+      "receiptId": "0x37be0b3294b48c781f0a76032f3e2c3baa1b55d9a2b2d2cf11dd4fedf148e343",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "reverted",
+      "txHash": "0xf95e545d34e041df9f568e23749bdc8d52649db52cf989985a3baaa1e9f63546",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0xf95e545d34e041df9f568e23749bdc8d52649db52cf989985a3baaa1e9f63546",
+      "revertError": {
+        "name": "PayeeNotVerified",
+        "args": [
+          "0x3705eee97764b06c20Ce15594214168cA462C977"
+        ],
+        "message": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)",
+        "raw": "0x9c9e74ce0000000000000000000000003705eee97764b06c20ce15594214168ca462c977"
+      },
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0x4d75d63a1a0822f4c17a53763e6088f003c728b72ac048b39b05920339ceb322",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "4800000000",
+        "payee": "0x3705eee97764b06c20Ce15594214168cA462C977",
+        "method": "transfer",
+        "payeeLabel": "attacker (bank-account-change phishing)"
+      },
+      "explanation": {
+        "text": "The ledger refused this redemption: PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "none (attack simulation)",
+        "provider": "local",
+        "contentId": "0xa85105477e283e7a7b0ffc45c529c31f1d1106518f9c210523f3a34bfe78be7e"
+      },
+      "prevReceiptHash": "0x179d3bac30507ba458d785346495a33117a5c61abbb400cdd1adb9e84a2fedb3",
+      "receiptHash": "0xefd831961fd796ceccac75d91ebfc7e2917af38ebcae15eb113c42000d4496cc",
+      "timestamp": "2026-10-15T22:09:06.000Z",
+      "receipt": {
+        "receiptId": "0x37be0b3294b48c781f0a76032f3e2c3baa1b55d9a2b2d2cf11dd4fedf148e343",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0x4d75d63a1a0822f4c17a53763e6088f003c728b72ac048b39b05920339ceb322",
+        "planHash": "0xb746a9966e1c1e0da78e2e7e1c4000ede69be04fb07ac225c5091e6954ec69c3",
+        "policyDecisionHash": "0x11014a466539452f6f1d4cfdf5896c620f4ebc2e05201f3277248f2086f440f7",
+        "stateReadsHash": "0x45a766527d18bd767b2c96840d3ade23db5517932957d8429d205f501f56c5ae",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x6a234494cddb9f9c6e05d60e7648699401d1246fe31800fac8b914622c54e6cf",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0xf95e545d34e041df9f568e23749bdc8d52649db52cf989985a3baaa1e9f63546",
+        "outcome": "reverted",
+        "explanationHash": "0xc282412e98cbb29c9e8a4725fe2b9c97aa4a8811bda2cc2bbfc39c4d2c03f7f4",
+        "aigcHash": "0xa85105477e283e7a7b0ffc45c529c31f1d1106518f9c210523f3a34bfe78be7e",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x179d3bac30507ba458d785346495a33117a5c61abbb400cdd1adb9e84a2fedb3",
+        "timestamp": "1792102146"
+      }
+    },
+    {
+      "receiptId": "0xf7e172eee5b4a249cea44a45e9fb98d0b12b5153db0456527b418dd2676d56ee",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T3",
+      "outcome": "confirmed",
+      "txHash": "0xf8351130e374ac7f05c0c7f17d55ce35b4d906984c5eb838edb3f026e06473cd",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0xf8351130e374ac7f05c0c7f17d55ce35b4d906984c5eb838edb3f026e06473cd",
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "agentId": "1",
+      "explanation": {
+        "text": "Paused every delegation of this account (confirmed in 221 ms, block 294).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "none (user signature)",
+        "provider": "local",
+        "contentId": "0xb06dd7c82a0d5e2b93203e63414ed41797ba22cb7dc6bc8096afd2a3eaecd920"
+      },
+      "prevReceiptHash": "0xefd831961fd796ceccac75d91ebfc7e2917af38ebcae15eb113c42000d4496cc",
+      "receiptHash": "0xf62d5467b367340d8177742068faf07e5e3c2930ff21741629ee138d1e91a07e",
+      "timestamp": "2026-10-15T22:09:07.000Z",
+      "receipt": {
+        "receiptId": "0xf7e172eee5b4a249cea44a45e9fb98d0b12b5153db0456527b418dd2676d56ee",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "planHash": "0x5c54ffeefbc650fff0c348858076ac6fa077b714902c281b88a40e17697707eb",
+        "policyDecisionHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "stateReadsHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "tier": "T3",
+        "approvalSigHash": "0x843e4da01521890e9d01c8ee21fffa282bd11dcf74f2d6531ccaa9b30f9c5853",
+        "txHash": "0xf8351130e374ac7f05c0c7f17d55ce35b4d906984c5eb838edb3f026e06473cd",
+        "outcome": "confirmed",
+        "explanationHash": "0x49ef6d1075e8437d372746f67866099bf03cfb29ac93e0ea7813f4288bead445",
+        "aigcHash": "0xb06dd7c82a0d5e2b93203e63414ed41797ba22cb7dc6bc8096afd2a3eaecd920",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xefd831961fd796ceccac75d91ebfc7e2917af38ebcae15eb113c42000d4496cc",
+        "timestamp": "1792102147"
+      }
+    },
+    {
+      "receiptId": "0x4686439981470b535fad067c65a54434701d12684f1b77bf316710327f57005f",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "rejected_policy",
+      "revertError": {
+        "name": "Paused",
+        "args": [
+          "0x9D60c63B0b5180D295560c71D0E6Ba053Bfadd3A",
+          "0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4"
+        ],
+        "message": "Paused(0x9D60c63B0b5180D295560c71D0E6Ba053Bfadd3A, 0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)",
+        "raw": "0x3dd4f37c0000000000000000000000009d60c63b0b5180d295560c71d0e6ba053bfadd3a00000000000000000000000095834ea392ab77d7e65e5808dcb7c13372b8c1f4"
+      },
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0x5f2b57b10e83155452e5f332c9c9975a821336593cfd91589a90a372aa36e634",
+      "agentId": "1",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "10000000",
+        "payee": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc",
+        "method": "transfer",
+        "payeeLabel": "Kowloon Food Mart"
+      },
+      "explanation": {
+        "text": "I did not pay 10 tHKD to Kowloon Food Mart. The policy check refused it (Paused): the account is paused or the agent is halted.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0xf62d5467b367340d8177742068faf07e5e3c2930ff21741629ee138d1e91a07e",
+      "receiptHash": "0xdfbd33bc4da244cdc3d99032b4f3d90c6ed89532b924bd6213dbb691aefb657e",
+      "timestamp": "2026-10-15T22:09:10.000Z",
+      "receipt": {
+        "receiptId": "0x4686439981470b535fad067c65a54434701d12684f1b77bf316710327f57005f",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0x5f2b57b10e83155452e5f332c9c9975a821336593cfd91589a90a372aa36e634",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0x1e7fe66a16c4bac42a2325a7f30ec9a826f4e99ba171718c9d5cd21e392e2e20",
+        "stateReadsHash": "0x7720c156af1b04c4784b992fb639d3cdacae80fd501041de3951606af1f08ec6",
+        "counterpartyCheckHash": "0x3bbd4508028a4147e4146e66251cc2067e5ab0bcd4bfbfe14b79405dd8f8c356",
+        "simulationHash": "0xf60cb7527295031499e7784c41f6df520df3ba22f7f0de05d999d3b716c23b2c",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "rejected_policy",
+        "explanationHash": "0x7c7bfef37f2d3c4ce74be83fe8bc102989b8ab79f07971422dd1512219a79a4b",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xf62d5467b367340d8177742068faf07e5e3c2930ff21741629ee138d1e91a07e",
+        "timestamp": "1792102150"
+      }
+    },
+    {
+      "receiptId": "0x1fcc1460ceb32e134e94f471aeb3a2134b7bff8e4a6675c66cc7453900449da9",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T3",
+      "outcome": "confirmed",
+      "txHash": "0x5d13e4350d98cd211e19258c3b029df6ab2e9c7691c8b02b029c3c91c47f1b17",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0x5d13e4350d98cd211e19258c3b029df6ab2e9c7691c8b02b029c3c91c47f1b17",
+      "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+      "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+      "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "agentId": "1",
+      "explanation": {
+        "text": "Resumed the agent.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "none (user signature)",
+        "provider": "local",
+        "contentId": "0xb06dd7c82a0d5e2b93203e63414ed41797ba22cb7dc6bc8096afd2a3eaecd920"
+      },
+      "prevReceiptHash": "0xdfbd33bc4da244cdc3d99032b4f3d90c6ed89532b924bd6213dbb691aefb657e",
+      "receiptHash": "0x1c10a138cbd5e10384e7c3298e3d674fc1d09ecc5a0ab5744590d675843ede86",
+      "timestamp": "2026-10-15T22:09:11.000Z",
+      "receipt": {
+        "receiptId": "0x1fcc1460ceb32e134e94f471aeb3a2134b7bff8e4a6675c66cc7453900449da9",
+        "chainId": 20200,
+        "agentId": "1",
+        "mandateHash": "0x4cbb2344c31accffa327c8cc49a19650034ab66144acee29598f31a25b92ca1e",
+        "delegationHash": "0x021bd296059a4f35a41d273236f36f8900475e44ed67ececa8d8b972f596abdb",
+        "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "planHash": "0xa39fa0a1e0dcde258f2be9e0b2a6362ea98aa52aa4ae8a6298bef7e382f26b4c",
+        "policyDecisionHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "stateReadsHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "tier": "T3",
+        "approvalSigHash": "0x745f4aad9a71115099964b4eb3623db93fc7159f53b9e964ccd38b92eb34b932",
+        "txHash": "0x5d13e4350d98cd211e19258c3b029df6ab2e9c7691c8b02b029c3c91c47f1b17",
+        "outcome": "confirmed",
+        "explanationHash": "0x743bb3d7670761d2f2828c32411fe6e3ed5d908213b7ff87220b8ebd4293a4e5",
+        "aigcHash": "0xb06dd7c82a0d5e2b93203e63414ed41797ba22cb7dc6bc8096afd2a3eaecd920",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xdfbd33bc4da244cdc3d99032b4f3d90c6ed89532b924bd6213dbb691aefb657e",
+        "timestamp": "1792102151"
+      }
+    },
+    {
+      "receiptId": "0x15f3b093965889ee28bd21dbf729ece35ee5d37c9987aed41378e92c1f423472",
+      "principal": "lotus-sz",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T2",
+      "outcome": "confirmed",
+      "txHash": "0x4a6d4c185be114a6208ae6048828b2c13e52fd9061189609d7033c46f93bc8d8",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0x4a6d4c185be114a6208ae6048828b2c13e52fd9061189609d7033c46f93bc8d8",
+      "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+      "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+      "intentHash": "0xd9ae6e0ff29f5f645835d64efc85b21157acf50a18bda83407785e129822b882",
+      "agentId": "2",
+      "payment": {
+        "symbol": "CNY",
+        "decimals": 2,
+        "amount": "4200000",
+        "payee": "0x4910d9e2545182d750f166421B5D6d07f8083a20",
+        "method": "instruct",
+        "payeeLabel": "Shenzhen Components"
+      },
+      "explanation": {
+        "text": "Paid 42,000 CNY to Shenzhen Components.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0x1c10a138cbd5e10384e7c3298e3d674fc1d09ecc5a0ab5744590d675843ede86",
+      "receiptHash": "0x1c89d1da6fdb754d6f1bf85fc5e5e8259ce7395e9d591cf35339fe056630db80",
+      "timestamp": "2026-10-15T22:09:19.000Z",
+      "receipt": {
+        "receiptId": "0x15f3b093965889ee28bd21dbf729ece35ee5d37c9987aed41378e92c1f423472",
+        "chainId": 20200,
+        "agentId": "2",
+        "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+        "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+        "intentHash": "0xd9ae6e0ff29f5f645835d64efc85b21157acf50a18bda83407785e129822b882",
+        "planHash": "0x4b69dc2d8248fff897fe15293505597162d40b0bd9d394479d826309fbda6cf8",
+        "policyDecisionHash": "0x1bbb9614baa495420ac748a2e358545fdd54e82b897b6be3a9a216868d7a4ac8",
+        "stateReadsHash": "0xd9cebe12c645ce99e57ea476b2a0f31908b09e0d1933dee52d6ee108a2b8835f",
+        "counterpartyCheckHash": "0xd6cad40fd939a71130b0c01de39689e6af0775eadba4555631bc7607bc88064c",
+        "simulationHash": "0x1452c0a0bf3ea9db464c9ebd38cb31d3a4d9394d3a427529dafb9cf3d6078293",
+        "tier": "T2",
+        "approvalSigHash": "0x16645f7662fa41bc15b604cddbb7e8c3e3f396812807bd78000c10b4ab2d56a8",
+        "txHash": "0x4a6d4c185be114a6208ae6048828b2c13e52fd9061189609d7033c46f93bc8d8",
+        "outcome": "confirmed",
+        "explanationHash": "0x9fb0085db59248c769ef5bf1e0c64700ba8806b37a47f5943748ad9d4fce60d4",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x1c10a138cbd5e10384e7c3298e3d674fc1d09ecc5a0ab5744590d675843ede86",
+        "timestamp": "1792102159"
+      }
+    },
+    {
+      "receiptId": "0xd85b95f1a1e2d3b94462b070bf96d6a2ace790b36837c5a83c2658fbfa4a6ed7",
+      "principal": "lotus-sz",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T3",
+      "outcome": "confirmed",
+      "txHash": "0x50ac49e1c7447286d3214932a9d8b707d1839f63dbfd300be021c845ad910eea",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0x50ac49e1c7447286d3214932a9d8b707d1839f63dbfd300be021c845ad910eea",
+      "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+      "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+      "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "agentId": "2",
+      "payment": {
+        "symbol": "CNY",
+        "decimals": 2,
+        "amount": "0",
+        "payeeLabel": "Resume the treasurer agent (untrip)",
+        "payee": "0xA77e5C328A29b29dB6df21d0C479E0B01A53e558",
+        "method": "userOperation"
+      },
+      "explanation": {
+        "text": "Board resolution executed by 2 of 3 directors: 0 CNY to Resume the treasurer agent (untrip) (Resume the treasurer after the velocity review).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "none (director signatures)",
+        "provider": "local",
+        "contentId": "0x393b9158c6197274ea828b45fa9b99018304a4fec53847ef7a21fb78096c5a4e"
+      },
+      "prevReceiptHash": "0x1c89d1da6fdb754d6f1bf85fc5e5e8259ce7395e9d591cf35339fe056630db80",
+      "receiptHash": "0xe5da8ca6a3197516020d26ae237e56fb5e67ac91652f9d169f4348f2e52ea293",
+      "timestamp": "2026-10-15T22:10:10.000Z",
+      "receipt": {
+        "receiptId": "0xd85b95f1a1e2d3b94462b070bf96d6a2ace790b36837c5a83c2658fbfa4a6ed7",
+        "chainId": 20200,
+        "agentId": "2",
+        "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+        "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+        "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "planHash": "0x9d0df4816e2229173d1c9a2f55921014f19464c590cbbb826be083bbf64abfcf",
+        "policyDecisionHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "stateReadsHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "tier": "T3",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x50ac49e1c7447286d3214932a9d8b707d1839f63dbfd300be021c845ad910eea",
+        "outcome": "confirmed",
+        "explanationHash": "0x9185f50fd3297ed901998e41c51ceba2bb0002c29be3163279de52c4ede601ef",
+        "aigcHash": "0x393b9158c6197274ea828b45fa9b99018304a4fec53847ef7a21fb78096c5a4e",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x1c89d1da6fdb754d6f1bf85fc5e5e8259ce7395e9d591cf35339fe056630db80",
+        "timestamp": "1792102210"
+      }
+    },
+    {
+      "receiptId": "0xd80c7706431444bfc6b5b55142431dcb310d4c753a531f0f93bbcb604ed4ff1a",
+      "principal": "lotus-sz",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "rejected_policy",
+      "revertError": {
+        "name": "AboveTierCeiling",
+        "args": [
+          "30000000",
+          "20000000"
+        ],
+        "message": "AboveTierCeiling(30000000, 20000000)",
+        "raw": "0x459707ed0000000000000000000000000000000000000000000000000000000001c9c3800000000000000000000000000000000000000000000000000000000001312d00"
+      },
+      "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+      "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+      "intentHash": "0x2d66a827a9009188584c7867c535a08311ba5e2eabc48cf980eb8e5c6d61d0cb",
+      "agentId": "2",
+      "payment": {
+        "symbol": "CNY",
+        "decimals": 2,
+        "amount": "30000000",
+        "payee": "0x4910d9e2545182d750f166421B5D6d07f8083a20",
+        "method": "instruct",
+        "payeeLabel": "Shenzhen Components"
+      },
+      "explanation": {
+        "text": "I did not pay 300,000 CNY to Shenzhen Components. The policy check refused it (AboveTierCeiling): amount above the T2 ceiling of 20000000.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0xe5da8ca6a3197516020d26ae237e56fb5e67ac91652f9d169f4348f2e52ea293",
+      "receiptHash": "0x9a812c8ff649d4cdf3fe254cef686a752712c1388aa591020912006cf3566072",
+      "timestamp": "2026-10-15T22:10:13.000Z",
+      "receipt": {
+        "receiptId": "0xd80c7706431444bfc6b5b55142431dcb310d4c753a531f0f93bbcb604ed4ff1a",
+        "chainId": 20200,
+        "agentId": "2",
+        "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+        "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+        "intentHash": "0x2d66a827a9009188584c7867c535a08311ba5e2eabc48cf980eb8e5c6d61d0cb",
+        "planHash": "0xd5f6420a8119eeb8fe073fa396ed99a3adaf5021bd8974e196582043c4f91fef",
+        "policyDecisionHash": "0x2d3b5eea5a7c0d3da910f9685f0bac73754ecf6abc54aec4da6c7b6081e3d420",
+        "stateReadsHash": "0x0b44df4395207669799b2c090b15baf07508df03e7f50638c50d31a3524666a8",
+        "counterpartyCheckHash": "0xd6cad40fd939a71130b0c01de39689e6af0775eadba4555631bc7607bc88064c",
+        "simulationHash": "0xb008914dde09b3c805d6455d700f1174df818d02c617f1fec5402a325991d96c",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "rejected_policy",
+        "explanationHash": "0x0cb4b0b23806c6705b025bee781a53ec7b58c0e86a4616dda439cd875ae87621",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xe5da8ca6a3197516020d26ae237e56fb5e67ac91652f9d169f4348f2e52ea293",
+        "timestamp": "1792102213"
+      }
+    },
+    {
+      "receiptId": "0x4df073fc771e6e8d4af369a0d17cc7627ba7059ada450ba5303148a328957293",
+      "principal": "lotus-sz",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T3",
+      "outcome": "confirmed",
+      "txHash": "0xb77057fed6196dfbf15644987995c7d90bd07b5813e2be6b39e792728f4e6bc6",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0xb77057fed6196dfbf15644987995c7d90bd07b5813e2be6b39e792728f4e6bc6",
+      "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+      "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+      "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "agentId": "2",
+      "payment": {
+        "symbol": "CNY",
+        "decimals": 2,
+        "amount": "30000000",
+        "payeeLabel": "Shenzhen Components",
+        "payee": "0x4910d9e2545182d750f166421B5D6d07f8083a20",
+        "method": "userOperation"
+      },
+      "explanation": {
+        "text": "Board resolution executed by 2 of 3 directors: 300,000 CNY to Shenzhen Components (Equipment purchase: SMT line (board resolution)).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "none (director signatures)",
+        "provider": "local",
+        "contentId": "0x393b9158c6197274ea828b45fa9b99018304a4fec53847ef7a21fb78096c5a4e"
+      },
+      "prevReceiptHash": "0x9a812c8ff649d4cdf3fe254cef686a752712c1388aa591020912006cf3566072",
+      "receiptHash": "0xccbfdddb50f4a17c13ef6a842c2d77de267e043f90a755884c1387cf43e307eb",
+      "timestamp": "2026-10-15T22:10:14.000Z",
+      "receipt": {
+        "receiptId": "0x4df073fc771e6e8d4af369a0d17cc7627ba7059ada450ba5303148a328957293",
+        "chainId": 20200,
+        "agentId": "2",
+        "mandateHash": "0x17cbcb2422f03aa86f83fae9ec9997aa66f0f8e59fd416d427414a9879e56e41",
+        "delegationHash": "0xb643fc7a9bbe32e9c91ac086e4fbeb89b1c937e004d70e2488651556c44a5f3a",
+        "intentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "planHash": "0x458384adc3731a8bdea4382bf846558c5cca4af11db7680178c80c51b8550fcc",
+        "policyDecisionHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "stateReadsHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "tier": "T3",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0xb77057fed6196dfbf15644987995c7d90bd07b5813e2be6b39e792728f4e6bc6",
+        "outcome": "confirmed",
+        "explanationHash": "0x787b00d3cb0775a433b9b2483aa382889bd78dd33f4e17c5cc492e20896aabb1",
+        "aigcHash": "0x393b9158c6197274ea828b45fa9b99018304a4fec53847ef7a21fb78096c5a4e",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x9a812c8ff649d4cdf3fe254cef686a752712c1388aa591020912006cf3566072",
+        "timestamp": "1792102214"
+      }
+    },
+    {
+      "receiptId": "0x9e5e3eb5e2ea2ec941d9cdd283bdd8bbfcf2a4e2a3a1eee9433cf88ba46445e7",
+      "principal": "guest",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "ASK",
+      "outcome": "asked",
+      "revertError": {
+        "name": "LineageViolation",
+        "args": [
+          "0x34d38756f7388193187C1Dda220b0E49C3d713c6"
+        ],
+        "message": "LineageViolation(0x34d38756f7388193187C1Dda220b0E49C3d713c6)",
+        "raw": "0x4c3e51f200000000000000000000000034d38756f7388193187c1dda220b0e49c3d713c6"
+      },
+      "mandateHash": "0x99669d22a502987b5ee84dbf7f7efefc9018a81d92e31cf1cc9b9b8885945dee",
+      "delegationHash": "0x784cf14be123807c450f6287f3682ff37b9ee24fa73031f338434fe55b67cde2",
+      "intentHash": "0x9107752180fbf0bc14aefe11044b9a6ac9cf9dcdfbb48b351e5aba6fdc4c28b7",
+      "agentId": "12",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "4000000",
+        "payee": "0x56f0602926f4d42957fc173fa545d77c8e46c423",
+        "method": "transfer",
+        "payeeLabel": "Arena Cafe"
+      },
+      "explanation": {
+        "text": "Not sure, your call. The ledger disagrees with my rule check (LineageViolation(0x34d38756f7388193187C1Dda220b0E49C3d713c6)).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0xccbfdddb50f4a17c13ef6a842c2d77de267e043f90a755884c1387cf43e307eb",
+      "receiptHash": "0x14efe1d4dd44f937ba415166aae75b25f036c4dc142f40e5a205f093b410cd2e",
+      "timestamp": "2026-10-15T22:10:17.000Z",
+      "receipt": {
+        "receiptId": "0x9e5e3eb5e2ea2ec941d9cdd283bdd8bbfcf2a4e2a3a1eee9433cf88ba46445e7",
+        "chainId": 20200,
+        "agentId": "12",
+        "mandateHash": "0x99669d22a502987b5ee84dbf7f7efefc9018a81d92e31cf1cc9b9b8885945dee",
+        "delegationHash": "0x784cf14be123807c450f6287f3682ff37b9ee24fa73031f338434fe55b67cde2",
+        "intentHash": "0x9107752180fbf0bc14aefe11044b9a6ac9cf9dcdfbb48b351e5aba6fdc4c28b7",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0x2ef7481496d9eb5da8ea59b33113d16f34c40230485a06e8e65dfe4b2da18fb6",
+        "stateReadsHash": "0x6ebdebb233ca15bd65f4547bfd0612d60fc360f72d585265c1c2d5d2baaff153",
+        "counterpartyCheckHash": "0x13432be178ca288bab05d16b735f8fe06665cc511ce59ae42c7e3917b2e68dae",
+        "simulationHash": "0x8cd2f9582c00dc15d4507dff006cf2536d5d4c5a606bd7f3057c48a9460fa7ab",
+        "tier": "ASK",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "asked",
+        "explanationHash": "0xd92f16d38fdca3ecaf12d91d9165c840c9bc9d493d21801478ccf09fd4278b9e",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0xccbfdddb50f4a17c13ef6a842c2d77de267e043f90a755884c1387cf43e307eb",
+        "timestamp": "1792102217"
+      }
+    },
+    {
+      "receiptId": "0xb34221d3edbc38a5e42e669d0a6dc843c49f313e9721afaf6be8b11aff536a9b",
+      "principal": "guest",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T3",
+      "outcome": "rejected_policy",
+      "mandateHash": "0x99669d22a502987b5ee84dbf7f7efefc9018a81d92e31cf1cc9b9b8885945dee",
+      "delegationHash": "0x784cf14be123807c450f6287f3682ff37b9ee24fa73031f338434fe55b67cde2",
+      "intentHash": "0x7ebd1b154064b8b9f6535f2cd6bec2f4125691529fed2875f4b32fb1efc83c68",
+      "agentId": "12",
+      "explanation": {
+        "text": "I did not pay this. A rule refused it (reserved for you): adding payees, changing limits and anything above the T2 ceiling are yours alone. I also noticed: possible prompt injection.",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "openrouter",
+        "contentId": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7"
+      },
+      "prevReceiptHash": "0x14efe1d4dd44f937ba415166aae75b25f036c4dc142f40e5a205f093b410cd2e",
+      "receiptHash": "0x3eb76d5c0fd6c45d7faacddba49b4388bdc1576449265cdc64123c8cc79c998d",
+      "timestamp": "2026-10-15T22:10:25.000Z",
+      "receipt": {
+        "receiptId": "0xb34221d3edbc38a5e42e669d0a6dc843c49f313e9721afaf6be8b11aff536a9b",
+        "chainId": 20200,
+        "agentId": "12",
+        "mandateHash": "0x99669d22a502987b5ee84dbf7f7efefc9018a81d92e31cf1cc9b9b8885945dee",
+        "delegationHash": "0x784cf14be123807c450f6287f3682ff37b9ee24fa73031f338434fe55b67cde2",
+        "intentHash": "0x7ebd1b154064b8b9f6535f2cd6bec2f4125691529fed2875f4b32fb1efc83c68",
+        "planHash": "0xc8c70d5ca3d8ba5445c1c3e6b9545b0048db1770a01ef57f859ab9c9f5a632e4",
+        "policyDecisionHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "stateReadsHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "tier": "T3",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "outcome": "rejected_policy",
+        "explanationHash": "0xf332f0f837b24eb0d225b430edd38039da0ea427127763cba9caa6b52581e594",
+        "aigcHash": "0x97ad66adbb39ca0cc1e695405f4a1386667831c8dde872d346c4f2ad508ca4a7",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x14efe1d4dd44f937ba415166aae75b25f036c4dc142f40e5a205f093b410cd2e",
+        "timestamp": "1792102225"
+      }
+    },
+    {
+      "receiptId": "0x68475f3de0251f5a7d0dd9e50ca0bcdb3d6b2652b3108cdee4932261ebd347a2",
+      "principal": "guest",
+      "ledger": "fisco",
+      "ledgerBadge": "FISCO BCOS (team-run consortium ledger)",
+      "chainId": 20200,
+      "source": "live-fisco",
+      "tier": "T4",
+      "outcome": "reverted",
+      "txHash": "0x7a15f2d44f796d7b1b9a953389e6556364b624ab1149c2cb156d0968d15dfd62",
+      "explorerUrl": "https://app.yinglong-agent.tech/proof/tx/fisco/0x7a15f2d44f796d7b1b9a953389e6556364b624ab1149c2cb156d0968d15dfd62",
+      "revertError": {
+        "name": "LineageViolation",
+        "args": [
+          "0x34d38756f7388193187C1Dda220b0E49C3d713c6"
+        ],
+        "message": "LineageViolation(0x34d38756f7388193187C1Dda220b0E49C3d713c6)",
+        "raw": "0x4c3e51f200000000000000000000000034d38756f7388193187c1dda220b0e49c3d713c6"
+      },
+      "mandateHash": "0x99669d22a502987b5ee84dbf7f7efefc9018a81d92e31cf1cc9b9b8885945dee",
+      "delegationHash": "0x784cf14be123807c450f6287f3682ff37b9ee24fa73031f338434fe55b67cde2",
+      "intentHash": "0x4d75d63a1a0822f4c17a53763e6088f003c728b72ac048b39b05920339ceb322",
+      "agentId": "12",
+      "payment": {
+        "symbol": "tHKD",
+        "decimals": 6,
+        "amount": "100000000",
+        "payee": "0x3705eee97764b06c20Ce15594214168cA462C977",
+        "method": "transfer",
+        "payeeLabel": "attacker (prompt injection)"
+      },
+      "explanation": {
+        "text": "The ledger refused this redemption: LineageViolation(0x34d38756f7388193187C1Dda220b0E49C3d713c6).",
+        "aiGenerated": false
+      },
+      "aigc": {
+        "label": "AI-generated",
+        "model": "none (attack simulation)",
+        "provider": "local",
+        "contentId": "0xa85105477e283e7a7b0ffc45c529c31f1d1106518f9c210523f3a34bfe78be7e"
+      },
+      "prevReceiptHash": "0x3eb76d5c0fd6c45d7faacddba49b4388bdc1576449265cdc64123c8cc79c998d",
+      "receiptHash": "0x632cfe1fb7b8d3501f338bc038434fe0b6b5ce7cf94cedfe2d1ea38d99f58273",
+      "timestamp": "2026-10-15T22:10:25.000Z",
+      "receipt": {
+        "receiptId": "0x68475f3de0251f5a7d0dd9e50ca0bcdb3d6b2652b3108cdee4932261ebd347a2",
+        "chainId": 20200,
+        "agentId": "12",
+        "mandateHash": "0x99669d22a502987b5ee84dbf7f7efefc9018a81d92e31cf1cc9b9b8885945dee",
+        "delegationHash": "0x784cf14be123807c450f6287f3682ff37b9ee24fa73031f338434fe55b67cde2",
+        "intentHash": "0x4d75d63a1a0822f4c17a53763e6088f003c728b72ac048b39b05920339ceb322",
+        "planHash": "0xb746a9966e1c1e0da78e2e7e1c4000ede69be04fb07ac225c5091e6954ec69c3",
+        "policyDecisionHash": "0x0ce5d0be7d15445d35651f6e5320b9cbc271ce9a3a211445b84b88801bd668f3",
+        "stateReadsHash": "0x660e2a51fa154539e8c44bb86f7c1c94ab00cf7176735d0b32f267b5b3d077e1",
+        "counterpartyCheckHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "simulationHash": "0x8cd2f9582c00dc15d4507dff006cf2536d5d4c5a606bd7f3057c48a9460fa7ab",
+        "tier": "T4",
+        "approvalSigHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "txHash": "0x7a15f2d44f796d7b1b9a953389e6556364b624ab1149c2cb156d0968d15dfd62",
+        "outcome": "reverted",
+        "explanationHash": "0x834e8daf3b308186f75bbd329161882380e15ae06e8fcf686b5fedc5ea5024ae",
+        "aigcHash": "0xa85105477e283e7a7b0ffc45c529c31f1d1106518f9c210523f3a34bfe78be7e",
+        "source": "live-fisco",
+        "prevReceiptHash": "0x3eb76d5c0fd6c45d7faacddba49b4388bdc1576449265cdc64123c8cc79c998d",
+        "timestamp": "1792102225"
+      }
+    }
+  ],
+  "e2e": [
+    {
+      "step": "account",
+      "ledger": "anvil",
+      "account": "0x85C28f7e131714Be69C8887515df004dc894a925",
+      "signer": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "passport",
+      "ledger": "anvil",
+      "agentId": "1",
+      "attestTxs": []
+    },
+    {
+      "step": "seal",
+      "ledger": "anvil",
+      "publishTx": "0x336c3e8f4fb2db12e74370ec3ca7012a97318496793f64da9a60bb12f4b21082",
+      "mandateHash": "0xd8ad7ee8cfbb42f2ebd737938216e3735d9f4fac55bf74f9a964e2b1f2b6f2e0",
+      "delegationHash": "0xd7b72deb565e3137227459731a055ec010e22fab954fb44dd225f94e0238afec",
+      "sealedBy": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "T1 rent 9,500 tHKD to Harbour Homes",
+      "ledger": "anvil",
+      "tx": "0x8991109e8f1be0d6587198c50b5fdaea9a87c718d4f85d161100dabd6b2a5aa1",
+      "ok": true
+    },
+    {
+      "step": "T4 simulation",
+      "ledger": "anvil",
+      "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)"
+    },
+    {
+      "step": "T4 raw attack to Mirage reverted on-chain",
+      "ledger": "anvil",
+      "tx": "0x4a2ed6658fc740d712cd964ff45138b1cb0a15cd58563e5073b2a0d00c705e5b",
+      "ok": false,
+      "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)"
+    },
+    {
+      "step": "T2 without approval",
+      "ledger": "anvil",
+      "revert": "CoSignRequired(5000000000, 2000000000)"
+    },
+    {
+      "step": "T2 tuition escrow 5,000 tHKD co-signed by passkey",
+      "ledger": "anvil",
+      "tx": "0xcdd56f0cdeb67bda6a2d3f002a1e377ecbd2bdcb0782e7b16bac6280b39727b5",
+      "ok": true
+    },
+    {
+      "step": "pause (passkey signature relayed)",
+      "ledger": "anvil",
+      "tx": "0x08293ad07d566f8996b56948246d53ea0fce99088c10479033437c4d14b6b8ad",
+      "ok": true,
+      "msToConfirmed": 4030,
+      "block": "23"
+    },
+    {
+      "step": "agent blocked while paused",
+      "ledger": "anvil",
+      "revert": "Paused(0x85C28f7e131714Be69C8887515df004dc894a925, 0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)"
+    },
+    {
+      "step": "resume (passkey)",
+      "ledger": "anvil",
+      "tx": "0x0734a6b0a4de1e1a9894f33d412ca07382f0ff27b61c91e0412a48b19f404435",
+      "ok": true
+    },
+    {
+      "step": "account",
+      "ledger": "fisco",
+      "account": "0x9D60c63B0b5180D295560c71D0E6Ba053Bfadd3A",
+      "signer": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "passport",
+      "ledger": "fisco",
+      "agentId": "1",
+      "registerTx": "0x8e427d9150116af1b73c79012126054fb4f8ac800dd170c0e9d96cd134561ca5",
+      "attestTxs": [
+        "0x997d2285716a93602da86d489f94d687526ae617833977b3df377064545951d2"
+      ]
+    },
+    {
+      "step": "mint",
+      "ledger": "fisco",
+      "tx": "0x147f5984fdd96e09654cbf10eaa48717a13d5b876c2eb9023b802835d9e48cc5",
+      "amount": "20000000000"
+    },
+    {
+      "step": "seal",
+      "ledger": "fisco",
+      "publishTx": "0xc0e294dd54638c004a05d34e17f4df802f22af4e0e1e5ecc34c0dfbf0d2d4bc9",
+      "mandateHash": "0x239e5dfc4cb05c9ec2f5c2a6eb7179b47e003b3240860eb828b48d1654c5f543",
+      "delegationHash": "0x8144fc496393551cda5963049fea5ea764062279beda76cc29e3ae2edabe421a",
+      "sealedBy": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "T1 rent 9,500 tHKD to Harbour Homes",
+      "ledger": "fisco",
+      "tx": "0xd2c56399e5897374b7d468657239ba532d3fce8c00aece3c469ff5b99b36edb7",
+      "ok": true,
+      "explorer": "https://app.yinglong-agent.tech/proof/tx/fisco/0xd2c56399e5897374b7d468657239ba532d3fce8c00aece3c469ff5b99b36edb7"
+    },
+    {
+      "step": "T4 simulation",
+      "ledger": "fisco",
+      "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)"
+    },
+    {
+      "step": "T4 raw attack to Mirage reverted on-chain",
+      "ledger": "fisco",
+      "tx": "0x78a18048db4fcd63f1faa3a9407ce3945d183f73dd40c4bbf2adc993f8833a03",
+      "ok": false,
+      "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)",
+      "explorer": "https://app.yinglong-agent.tech/proof/tx/fisco/0x78a18048db4fcd63f1faa3a9407ce3945d183f73dd40c4bbf2adc993f8833a03"
+    },
+    {
+      "step": "T2 without approval",
+      "ledger": "fisco",
+      "revert": "CoSignRequired(5000000000, 2000000000)"
+    },
+    {
+      "step": "T2 tuition escrow 5,000 tHKD co-signed by passkey",
+      "ledger": "fisco",
+      "tx": "0xf903dcbc4d9e62552d0e7bf248f35b67da86a3993eceef9b0dccdf1b46f180d3",
+      "ok": true,
+      "explorer": "https://app.yinglong-agent.tech/proof/tx/fisco/0xf903dcbc4d9e62552d0e7bf248f35b67da86a3993eceef9b0dccdf1b46f180d3"
+    },
+    {
+      "step": "pause (passkey signature relayed)",
+      "ledger": "fisco",
+      "tx": "0x0a95302cffbd30984e70ee998c83c47dc8279350f0186720e9ce470dce958a9d",
+      "ok": true,
+      "msToConfirmed": 487,
+      "block": "189"
+    },
+    {
+      "step": "agent blocked while paused",
+      "ledger": "fisco",
+      "revert": "Paused(0x9D60c63B0b5180D295560c71D0E6Ba053Bfadd3A, 0x95834Ea392AB77D7E65e5808Dcb7C13372b8c1f4)"
+    },
+    {
+      "step": "resume (passkey)",
+      "ledger": "fisco",
+      "tx": "0xf499c8a10398d12222d2ce2db9792639da5d60ab0be3a7f27716a99abbd0817c",
+      "ok": true
+    }
+  ]
+}

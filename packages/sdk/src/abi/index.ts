@@ -28,4 +28,6 @@ export { GlobalPauseEnforcerAbi } from "./GlobalPauseEnforcer";
 export { ReputationGateEnforcerAbi } from "./ReputationGateEnforcer";
 export { ForbiddenTargetsEnforcerAbi } from "./ForbiddenTargetsEnforcer";
 export { YinglongCreate2DeployerAbi } from "./YinglongCreate2Deployer";
+export { LimitedCallsEnforcerAbi } from "./LimitedCallsEnforcer";
+export { TimestampEnforcerAbi } from "./TimestampEnforcer";
 export { YinglongErrorsAbi } from "./YinglongErrors";

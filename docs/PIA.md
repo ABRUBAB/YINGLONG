@@ -13,7 +13,7 @@
 |---|---|
 | Handler (today) | The YINGLONG team, as operator of a competition demo |
 | Handler (production) | The deploying institution; this document would be redone by it |
-| Assessed release | <!-- gen:meta.release_tag -->TBD<!-- /gen --> at commit <!-- gen:meta.commit -->TBD<!-- /gen --> |
+| Assessed release | <!-- gen:meta.release_tag -->1da0e0e<!-- /gen --> at commit <!-- gen:meta.commit -->1da0e0e<!-- /gen --> |
 | Related | `docs/SECURITY_SELF_ASSESSMENT.md` chapter 6 (controls C-DP-01 to C-DP-10), `docs/COMPLIANCE_MATRIX.md` |
 
 Article summaries below are our reading of the statute [S, secondary source: our summary; verify against the authoritative text before quoting]. This assessment is not legal advice.
@@ -71,7 +71,7 @@ PI class: **S** = sensitive personal information (Art. 28), **P** = personal inf
 | Purpose limitation | Every item in section 2 has one stated purpose; receipts and decision records serve accountability, not marketing or profiling |
 | Necessity on chain | Only what an enforcer must read goes on chain: addresses, categories, limits, hashes. Names, notes, documents and chat never do (C-DP-01) |
 | Quarantine as minimisation | Readers turn documents into a closed schema of numbers, enums and opaque handles; the planner never sees the document text (C-IN-10) |
-| PII scrubber | Removes mainland mobile numbers, 18-digit ID numbers, UnionPay card numbers, private keys and seed phrases before any third-party model call (C-IN-08, C-DP-02); measured recall <!-- gen:pia.scrubber.recall -->TBD<!-- /gen --> |
+| PII scrubber | Removes mainland mobile numbers, 18-digit ID numbers, UnionPay card numbers, private keys and seed phrases before any third-party model call (C-IN-08, C-DP-02); measured recall <!-- gen:pia.scrubber.recall -->not yet measured<!-- /gen --> |
 | No biometric processing | Passkey biometrics stay in the authenticator; we receive a signature only |
 | Remaining gap | The full caveat array is published on Base for round-trip verification. For a real person this discloses spending limits and payee addresses. Production default should be the private mandate (`ZKMandateEnforcer`) or consortium-only publication (DC-08) |
 

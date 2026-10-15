@@ -48,16 +48,16 @@ Related: `docs/THREAT_MODEL.md` section 8 (key table), `docs/SECURITY_SELF_ASSES
 
 ## 2. Playbook 1: agent key leak (SEV1)
 
-Rehearsed in demo beat 11. Last drill: <!-- gen:ir.pb1.drill -->TBD<!-- /gen -->
+Rehearsed in demo beat 11. Last drill: <!-- gen:ir.pb1.drill -->not yet measured<!-- /gen -->
 
 | Step | Action | Who / key | How | Measured time since t0 | Evidence |
 |---|---|---|---|---|---|
-| Detect | Out-of-pattern redemption attempts; reverts recovered by `eth_call` replay; signer or policy refusals; anomaly (M3) escalations; secret-scanning alert | Breaker watcher, R4 | `apps/indexer` watcher; gitleaks | <!-- gen:ir.pb1.detect -->TBD<!-- /gen --> | Alert log hash; revert hashes |
-| Pause | Trip the kill switch for the account (watcher `trip()` or user `tripWithSig`) | Breaker watcher or user passkey | Relayed plain transaction | <!-- gen:ir.pb1.pause -->TBD<!-- /gen --> | Pause tx hash |
-| Revoke | `disableDelegation` of the leaked key's delegation + `Nonce` bump, one user operation | User passkey | Relayer → `EntryPoint.handleOps` | <!-- gen:ir.pb1.revoke -->TBD<!-- /gen --> | User-operation hash |
-| Rotate | New agent key in the vault; `setAgentWallet` (signed by the new key) by the agent NFT owner key; passport and agent-card JWKS updated; mandate re-sealed to the new key; `untripWithSig` | R3, user passkey | Signer, `YinglongPassportRegistry`, `MandateRegistry.supersede` | <!-- gen:ir.pb1.rotate -->TBD<!-- /gen --> | Rotation event; new mandate hash |
-| Notify | User (in-app); counterparties via the rotated agent card; supervisor console status; public advisory if any value moved | R5 | App notice; registry status | <!-- gen:ir.pb1.notify -->TBD<!-- /gen --> | Notice ids |
-| Evidence | Bundle: attempts, reverts, pause, revoke, rotation, and **actual loss vs "max funds at risk"** (sum of in-mandate redemptions between leak and pause vs remaining caps at leak time) | R4 | Drill script; `AccountabilityLedger` | <!-- gen:ir.pb1.evidence -->TBD<!-- /gen --> | Bundle hash, anchor |
+| Detect | Out-of-pattern redemption attempts; reverts recovered by `eth_call` replay; signer or policy refusals; anomaly (M3) escalations; secret-scanning alert | Breaker watcher, R4 | `apps/indexer` watcher; gitleaks | <!-- gen:ir.pb1.detect -->not yet measured<!-- /gen --> | Alert log hash; revert hashes |
+| Pause | Trip the kill switch for the account (watcher `trip()` or user `tripWithSig`) | Breaker watcher or user passkey | Relayed plain transaction | <!-- gen:ir.pb1.pause -->not yet measured<!-- /gen --> | Pause tx hash |
+| Revoke | `disableDelegation` of the leaked key's delegation + `Nonce` bump, one user operation | User passkey | Relayer → `EntryPoint.handleOps` | <!-- gen:ir.pb1.revoke -->not yet measured<!-- /gen --> | User-operation hash |
+| Rotate | New agent key in the vault; `setAgentWallet` (signed by the new key) by the agent NFT owner key; passport and agent-card JWKS updated; mandate re-sealed to the new key; `untripWithSig` | R3, user passkey | Signer, `YinglongPassportRegistry`, `MandateRegistry.supersede` | <!-- gen:ir.pb1.rotate -->not yet measured<!-- /gen --> | Rotation event; new mandate hash |
+| Notify | User (in-app); counterparties via the rotated agent card; supervisor console status; public advisory if any value moved | R5 | App notice; registry status | <!-- gen:ir.pb1.notify -->not yet measured<!-- /gen --> | Notice ids |
+| Evidence | Bundle: attempts, reverts, pause, revoke, rotation, and **actual loss vs "max funds at risk"** (sum of in-mandate redemptions between leak and pause vs remaining caps at leak time) | R4 | Drill script; `AccountabilityLedger` | <!-- gen:ir.pb1.evidence -->not yet measured<!-- /gen --> | Bundle hash, anchor |
 
 Bound: everything the leaked key can do is inside the caveats; loss before pause is at most the remaining period caps (C-RC-05).
 
@@ -65,16 +65,16 @@ Bound: everything the leaked key can do is inside the caveats; loss before pause
 
 ## 3. Playbook 2: device theft or passkey loss (SEV1 if theft, SEV3 if loss)
 
-Last drill: <!-- gen:ir.pb2.drill -->TBD<!-- /gen -->
+Last drill: <!-- gen:ir.pb2.drill -->not yet measured<!-- /gen -->
 
 | Step | Action | Who / key | How | Measured time since t0 | Evidence |
 |---|---|---|---|---|---|
-| Detect | User report; unexpected T2 approvals or seals; sign-in from a new device; synced-passkey provider alert | User, R4 | App; provider notice | <!-- gen:ir.pb2.detect -->TBD<!-- /gen --> | Report record |
-| Pause | `tripWithSig` from the remaining passkey, or guardian `trip()` | User (second passkey) or guardian | Relayed plain transaction | <!-- gen:ir.pb2.pause -->TBD<!-- /gen --> | Pause tx hash |
-| Revoke | `removeKey` for the stolen passkey (HybridDeleGator refuses to remove the last signer when there is no owner [V, framework source]); veto any scheduled items in the veto window | User (remaining passkey) | User operation | <!-- gen:ir.pb2.revoke -->TBD<!-- /gen --> | User-operation hash |
-| Rotate | `addKey` for a new passkey; if both passkeys are lost, guardian-initiated recovery with a delay the owner can cancel (DC-05) | User or guardian | User operation | <!-- gen:ir.pb2.rotate -->TBD<!-- /gen --> | Key events |
-| Notify | User confirmation on the new device; guardian | R5 | App | <!-- gen:ir.pb2.notify -->TBD<!-- /gen --> | Notice ids |
-| Evidence | Signer-set history, pause and key events, any approvals signed by the stolen key | R4 | `AccountabilityLedger` | <!-- gen:ir.pb2.evidence -->TBD<!-- /gen --> | Bundle hash, anchor |
+| Detect | User report; unexpected T2 approvals or seals; sign-in from a new device; synced-passkey provider alert | User, R4 | App; provider notice | <!-- gen:ir.pb2.detect -->not yet measured<!-- /gen --> | Report record |
+| Pause | `tripWithSig` from the remaining passkey, or guardian `trip()` | User (second passkey) or guardian | Relayed plain transaction | <!-- gen:ir.pb2.pause -->not yet measured<!-- /gen --> | Pause tx hash |
+| Revoke | `removeKey` for the stolen passkey (HybridDeleGator refuses to remove the last signer when there is no owner [V, framework source]); veto any scheduled items in the veto window | User (remaining passkey) | User operation | <!-- gen:ir.pb2.revoke -->not yet measured<!-- /gen --> | User-operation hash |
+| Rotate | `addKey` for a new passkey; if both passkeys are lost, guardian-initiated recovery with a delay the owner can cancel (DC-05) | User or guardian | User operation | <!-- gen:ir.pb2.rotate -->not yet measured<!-- /gen --> | Key events |
+| Notify | User confirmation on the new device; guardian | R5 | App | <!-- gen:ir.pb2.notify -->not yet measured<!-- /gen --> | Notice ids |
+| Evidence | Signer-set history, pause and key events, any approvals signed by the stolen key | R4 | `AccountabilityLedger` | <!-- gen:ir.pb2.evidence -->not yet measured<!-- /gen --> | Bundle hash, anchor |
 
 Note: a passkey synced through a cloud account is stolen when that account is; the user should also secure the cloud account. Treasury directors follow the same steps on the 2-of-3 account (one stolen key alone can do nothing).
 
@@ -82,16 +82,16 @@ Note: a passkey synced through a cloud account is stolen when that account is; t
 
 ## 4. Playbook 3: issuer key compromise (SEV2)
 
-Issuers in the demo are fictional (Harbour Digital Bank, Harbour Bay University) and run by the team. Last drill: <!-- gen:ir.pb3.drill -->TBD<!-- /gen -->
+Issuers in the demo are fictional (Harbour Digital Bank, Harbour Bay University) and run by the team. Last drill: <!-- gen:ir.pb3.drill -->not yet measured<!-- /gen -->
 
 | Step | Action | Who / key | How | Measured time since t0 | Evidence |
 |---|---|---|---|---|---|
-| Detect | Attestation events the issuer did not log; attestations for unknown agents; issuer report | Indexer watch, R4 | Compare attestation events with the issuer's own log | <!-- gen:ir.pb3.detect -->TBD<!-- /gen --> | Event list hash |
-| Pause | `supervisorPause` of every agentId attested by the issuer after the suspected compromise time; users who sealed the issuer are told to pause if any payment to such an agent is pending | Supervisor key; users | Plain transactions | <!-- gen:ir.pb3.pause -->TBD<!-- /gen --> | Pause tx hashes |
-| Revoke | Mark the issuer's attestations after the compromise time as revoked in `YinglongPassportRegistry` (needs the issuer-status path, DC-06) | Registry path per DC-06 | Transaction | <!-- gen:ir.pb3.revoke -->TBD<!-- /gen --> | Status events |
-| Rotate | Issuer publishes a new key; affected users re-seal their trusted-issuer set (T3) or the registry-level issuer status takes effect | Issuer; users | Re-seal (`supersede`) | <!-- gen:ir.pb3.rotate -->TBD<!-- /gen --> | New mandate hashes |
-| Notify | Affected users, counterparties, supervisor console | R5 | App; registry status | <!-- gen:ir.pb3.notify -->TBD<!-- /gen --> | Notice ids |
-| Evidence | Forged attestations, payments to agents they vouched for, pauses, re-seals | R4 | `AccountabilityLedger` | <!-- gen:ir.pb3.evidence -->TBD<!-- /gen --> | Bundle hash, anchor |
+| Detect | Attestation events the issuer did not log; attestations for unknown agents; issuer report | Indexer watch, R4 | Compare attestation events with the issuer's own log | <!-- gen:ir.pb3.detect -->not yet measured<!-- /gen --> | Event list hash |
+| Pause | `supervisorPause` of every agentId attested by the issuer after the suspected compromise time; users who sealed the issuer are told to pause if any payment to such an agent is pending | Supervisor key; users | Plain transactions | <!-- gen:ir.pb3.pause -->not yet measured<!-- /gen --> | Pause tx hashes |
+| Revoke | Mark the issuer's attestations after the compromise time as revoked in `YinglongPassportRegistry` (needs the issuer-status path, DC-06) | Registry path per DC-06 | Transaction | <!-- gen:ir.pb3.revoke -->not yet measured<!-- /gen --> | Status events |
+| Rotate | Issuer publishes a new key; affected users re-seal their trusted-issuer set (T3) or the registry-level issuer status takes effect | Issuer; users | Re-seal (`supersede`) | <!-- gen:ir.pb3.rotate -->not yet measured<!-- /gen --> | New mandate hashes |
+| Notify | Affected users, counterparties, supervisor console | R5 | App; registry status | <!-- gen:ir.pb3.notify -->not yet measured<!-- /gen --> | Notice ids |
+| Evidence | Forged attestations, payments to agents they vouched for, pauses, re-seals | R4 | `AccountabilityLedger` | <!-- gen:ir.pb3.evidence -->not yet measured<!-- /gen --> | Bundle hash, anchor |
 
 Exposure: only users who sealed this issuer, only to agents it attested, and still within those users' caps and reputation gate.
 
@@ -99,16 +99,16 @@ Exposure: only users who sealed this issuer, only to agents it attested, and sti
 
 ## 5. Playbook 4: facilitator compromise (SEV2)
 
-Last drill: <!-- gen:ir.pb4.drill -->TBD<!-- /gen -->
+Last drill: <!-- gen:ir.pb4.drill -->not yet measured<!-- /gen -->
 
 | Step | Action | Who / key | How | Measured time since t0 | Evidence |
 |---|---|---|---|---|---|
-| Detect | `settlement_pending` with no on-chain settlement; settlements for children never delivered; facilitator `/supported` signer addresses change; double-settlement reverts | Runtime, R4 | Indexer and x402 client logs | <!-- gen:ir.pb4.detect -->TBD<!-- /gen --> | Log hash; revert hashes |
-| Pause | Stop issuing x402 children (orchestrator flag); switch to the seller-settled fallback; trip the kill switch only if parent caveats look affected | R3 | Config flag | <!-- gen:ir.pb4.pause -->TBD<!-- /gen --> | Config change hash |
-| Revoke | `disableDelegation` on every unexpired x402 child (each expires within 300 s anyway) | Agent or user account | Transactions | <!-- gen:ir.pb4.revoke -->TBD<!-- /gen --> | Tx hashes |
-| Rotate | Pin a new facilitator host and its matching redeemer addresses; mandates that pin the facilitator are re-sealed (T3) | R3; users | Config; `supersede` | <!-- gen:ir.pb4.rotate -->TBD<!-- /gen --> | New mandate hashes |
-| Notify | Users with pending x402 payments; affected sellers | R5 | App | <!-- gen:ir.pb4.notify -->TBD<!-- /gen --> | Notice ids |
-| Evidence | Every child delegation (`keccak(permissionContext)` from receipts), settlements, deliveries | R4 | `AccountabilityLedger` | <!-- gen:ir.pb4.evidence -->TBD<!-- /gen --> | Bundle hash, anchor |
+| Detect | `settlement_pending` with no on-chain settlement; settlements for children never delivered; facilitator `/supported` signer addresses change; double-settlement reverts | Runtime, R4 | Indexer and x402 client logs | <!-- gen:ir.pb4.detect -->not yet measured<!-- /gen --> | Log hash; revert hashes |
+| Pause | Stop issuing x402 children (orchestrator flag); switch to the seller-settled fallback; trip the kill switch only if parent caveats look affected | R3 | Config flag | <!-- gen:ir.pb4.pause -->not yet measured<!-- /gen --> | Config change hash |
+| Revoke | `disableDelegation` on every unexpired x402 child (each expires within 300 s anyway) | Agent or user account | Transactions | <!-- gen:ir.pb4.revoke -->not yet measured<!-- /gen --> | Tx hashes |
+| Rotate | Pin a new facilitator host and its matching redeemer addresses; mandates that pin the facilitator are re-sealed (T3) | R3; users | Config; `supersede` | <!-- gen:ir.pb4.rotate -->not yet measured<!-- /gen --> | New mandate hashes |
+| Notify | Users with pending x402 payments; affected sellers | R5 | App | <!-- gen:ir.pb4.notify -->not yet measured<!-- /gen --> | Notice ids |
+| Evidence | Every child delegation (`keccak(permissionContext)` from receipts), settlements, deliveries | R4 | `AccountabilityLedger` | <!-- gen:ir.pb4.evidence -->not yet measured<!-- /gen --> | Bundle hash, anchor |
 
 Bound: each child is single-use and exact-amount (invariant 10); worst case = the sum of outstanding unexpired children, each a payment the user meant to make.
 
@@ -116,16 +116,16 @@ Bound: each child is single-use and exact-amount (invariant 10); worst case = th
 
 ## 6. Playbook 5: RPC or bundler outage (SEV3)
 
-Last drill: <!-- gen:ir.pb5.drill -->TBD<!-- /gen -->
+Last drill: <!-- gen:ir.pb5.drill -->not yet measured<!-- /gen -->
 
 | Step | Action | Who / key | How | Measured time since t0 | Evidence |
 |---|---|---|---|---|---|
-| Detect | Two-provider quorum disagreement; head stale by block number; bundler errors; user operations not included; anchoring gap | Runtime | Quorum and freshness monitors | <!-- gen:ir.pb5.detect -->TBD<!-- /gen --> | Monitor log hash |
-| Pause | Automatic: the agent enters T? and proposes nothing (fail-closed). If an on-chain pause is needed, `tripWithSig` goes out through any other RPC; no bundler is needed | Runtime; user | Orchestrator; plain transaction | <!-- gen:ir.pb5.pause -->TBD<!-- /gen --> | State change; pause tx hash if used |
-| Revoke | Only if needed: `disableDelegation` through the relayer straight to the EntryPoint (no bundler) | User passkey | Relayer | <!-- gen:ir.pb5.revoke -->TBD<!-- /gen --> | User-operation hash |
-| Rotate | Switch RPC providers and bundler; rotate provider API keys if exposed | R3 | Config | <!-- gen:ir.pb5.rotate -->TBD<!-- /gen --> | Config change hash |
-| Notify | Status banner; recorded-demo mode for judges, labelled as recorded | R5 | Web | <!-- gen:ir.pb5.notify -->TBD<!-- /gen --> | Banner record |
-| Evidence | Quorum logs, freshness by block number, catch-up of anchors after recovery | R4 | Indexer | <!-- gen:ir.pb5.evidence -->TBD<!-- /gen --> | Bundle hash, anchor |
+| Detect | Two-provider quorum disagreement; head stale by block number; bundler errors; user operations not included; anchoring gap | Runtime | Quorum and freshness monitors | <!-- gen:ir.pb5.detect -->not yet measured<!-- /gen --> | Monitor log hash |
+| Pause | Automatic: the agent enters T? and proposes nothing (fail-closed). If an on-chain pause is needed, `tripWithSig` goes out through any other RPC; no bundler is needed | Runtime; user | Orchestrator; plain transaction | <!-- gen:ir.pb5.pause -->not yet measured<!-- /gen --> | State change; pause tx hash if used |
+| Revoke | Only if needed: `disableDelegation` through the relayer straight to the EntryPoint (no bundler) | User passkey | Relayer | <!-- gen:ir.pb5.revoke -->not yet measured<!-- /gen --> | User-operation hash |
+| Rotate | Switch RPC providers and bundler; rotate provider API keys if exposed | R3 | Config | <!-- gen:ir.pb5.rotate -->not yet measured<!-- /gen --> | Config change hash |
+| Notify | Status banner; recorded-demo mode for judges, labelled as recorded | R5 | Web | <!-- gen:ir.pb5.notify -->not yet measured<!-- /gen --> | Banner record |
+| Evidence | Quorum logs, freshness by block number, catch-up of anchors after recovery | R4 | Indexer | <!-- gen:ir.pb5.evidence -->not yet measured<!-- /gen --> | Bundle hash, anchor |
 
 Related third-party halts: the MetaMask-owned Base Sepolia DelegationManager can be paused by its owner (KR-17): redemptions fail safe, the FISCO path continues, and the demo falls back to recorded mode. A FISCO node outage of one node out of four is tolerated by its consensus [S, secondary source]; more is a chain outage handled by this playbook.
 

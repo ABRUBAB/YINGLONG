@@ -131,7 +131,7 @@ Notation: **[OR]** any child achieves the parent; **[AND]** all children are nee
 
 ### 5.1 Bench attack families (authoritative list: `bench/gen/generate_bench.py`)
 
-The bench defines 13 attack families [V, repo: `FAMILIES` in `bench/gen/generate_bench.py`]; the plan targets 300 attacks across them. Item counts per family are generated, never typed. One family is held out of sentinel training (set as `HELDOUT_FAMILY` in the same file); the SHA-256 of its items, <!-- gen:bench.heldout.sha256 -->TBD<!-- /gen -->, is committed before M1 training. **TXT** below is shorthand for the five text-injection families.
+The bench defines 13 attack families [V, repo: `FAMILIES` in `bench/gen/generate_bench.py`]; the plan targets 300 attacks across them. Item counts per family are generated, never typed. One family is held out of sentinel training (set as `HELDOUT_FAMILY` in the same file); the SHA-256 of its items, <!-- gen:bench.heldout.sha256 -->not yet measured<!-- /gen -->, is committed before M1 training. **TXT** below is shorthand for the five text-injection families.
 
 | Family | Channel | What it attacks |
 |---|---|---|
@@ -164,7 +164,7 @@ Threats that are not prompt attacks are tested by contract, unit and end-to-end 
 
 External suites: AgentDojo v0.1.35 banking suite, InjecAgent, CrAIBench [S, licences per plan]. Adaptive tier "Mirage learns": an attacker model that receives the per-scale attribution and typed revert after each attempt (up to 20 rounds per task), reported as its own column.
 
-Per-family results (n, stopping scale, outcome, Wilson 95% intervals): <!-- gen:bench.family_table -->TBD<!-- /gen -->
+Per-family results (n, stopping scale, outcome, Wilson 95% intervals): <!-- gen:bench.family_table -->not yet measured<!-- /gen -->
 
 ---
 
@@ -205,7 +205,7 @@ Risk names as listed in the plan [S, secondary source; check against the OWASP G
 |---|---|
 | Mechanism | Every individual action satisfies the mandate, but the sequence harms the user: the right landlord paid twice, a verified supplier's invoice inflated under the cap, a prepayment made early, a sweep at a bad time |
 | Controls | Idempotency keys (invoice id, period); invoice-payee-amount cross-checks by two readers; anomaly → T?; above the T1 cap → T2; category caps, reserve floor, velocity |
-| Measure | Within-mandate manipulation rate <!-- gen:bench.wmm.rate -->TBD<!-- /gen --> (Wilson 95% interval), static and adaptive columns; maximum funds at risk observed <!-- gen:bench.max_at_risk -->TBD<!-- /gen --> |
+| Measure | Within-mandate manipulation rate <!-- gen:bench.wmm.rate -->not yet measured<!-- /gen --> (Wilson 95% interval), static and adaptive columns; maximum funds at risk observed <!-- gen:bench.max_at_risk -->not yet measured<!-- /gen --> |
 | Residual | Bounded by the remaining caps by construction (KR-07); this is the number we report separately from out-of-mandate movement |
 | Test | `within_mandate` |
 
@@ -225,7 +225,7 @@ Reference: Wang, Yang, Chen, Ji, Payer, *When HTTP 402 Meets the Blockchain: Ris
 
 | Threat | Control | Residual |
 |---|---|---|
-| Gas and quota drain | Signed expiring QR tokens; 20 attacks per QR per day; daily gas budget sized from measured gas per attack (<!-- gen:challenge.gas_budget -->TBD<!-- /gen -->); shadow mode on an Anvil fork, labelled "simulated, not on-chain" in the UI and the receipt, once the budget is spent | Drain up to the daily budget |
+| Gas and quota drain | Signed expiring QR tokens; 20 attacks per QR per day; daily gas budget sized from measured gas per attack (<!-- gen:challenge.gas_budget -->not yet measured<!-- /gen -->); shadow mode on an Anvil fork, labelled "simulated, not on-chain" in the UI and the receipt, once the budget is spent | Drain up to the daily budget |
 | Real value at risk | Guest mandates with tiny caps, funded with team-minted `tHKD` (never USDC) | None of monetary value |
 | Content liability | Moderation of the public board; handles only, no avatars | Offensive text visible until moderated |
 | Personal information in submissions | Consent line; 30-day retention; PII scrubber before any retraining | Text a visitor chooses to type |
@@ -251,7 +251,7 @@ Known risk KR-19. Test: quota and retention tests in `apps/services`.
 | Supervisor key (regulator node) | Played by the team today | `supervisorPause(agentId)`; co-own the FISCO DelegationManager halt (2-of-3) | Spend | Denial of service of agent identities | — (DC-04) |
 | Issuer keys (fictional Harbour Digital Bank, Harbour Bay University) | Issuer services run by the team | Sign passport attestations | Spend | Attest Mirage; the payee gate then accepts Mirage for users who sealed that issuer | PB-3 |
 | Directors (Lotus Lane, 2-of-3) | Directors' keys (DC-02) | Treasury T3 actions | — | One key alone can do nothing; two can act as the board | PB-2 |
-| Deployer | Fresh EOA per chain | Deploy | Keeps no admin role after setup (check: <!-- gen:deploy.deployer_roles -->TBD<!-- /gen -->) | Nothing after setup | — |
+| Deployer | Fresh EOA per chain | Deploy | Keeps no admin role after setup (check: <!-- gen:deploy.deployer_roles -->not yet measured<!-- /gen -->) | Nothing after setup | — |
 | Base Sepolia DelegationManager owner | MetaMask EOA (third party) [V per plan] | Pause and unpause all redemptions on that DelegationManager | Spend | Availability only (KR-17) | PB-5 |
 | FISCO node keys | Team | Consensus on the team-run chain | Forge passkey or agent signatures | Rewrite of FISCO history, detectable by Base anchors (KR-04) | — |
 | SM2 co-signature key (mainland profile) | Team | Co-sign receipts | Spend | Forged co-signatures on receipts; EIP-712 signature still required | — |

@@ -11,9 +11,9 @@
 
 | Field | Value |
 |---|---|
-| Release | <!-- gen:meta.release_tag -->eb5695d<!-- /gen --> |
-| Commit assessed | <!-- gen:meta.commit -->eb5695d<!-- /gen --> |
-| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-15T22:14:24.649Z<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->1da0e0e<!-- /gen --> |
+| Commit assessed | <!-- gen:meta.commit -->1da0e0e<!-- /gen --> |
+| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-15T23:30:00.607Z<!-- /gen --> |
 | Owners | R4 (AI security) and R2 (contracts), per plan section 17 |
 | Companion documents | `docs/THREAT_MODEL.md`, `docs/PIA.md`, `docs/INCIDENT_RESPONSE.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/SECURITY_REVIEW.md`, `docs/CLAIMS.md` |
 
@@ -389,7 +389,7 @@ Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`)
 
 | Evidence | Location |
 |---|---|
-| Automated tests | <!-- gen:tests.total -->100<!-- /gen --> passing, <!-- gen:tests.failed -->not yet measured<!-- /gen --> failing (contracts <!-- gen:tests.contracts -->89<!-- /gen -->, TypeScript <!-- gen:tests.ts -->not yet measured<!-- /gen -->, Python <!-- gen:tests.py -->11<!-- /gen -->, end-to-end <!-- gen:tests.e2e -->not yet measured<!-- /gen -->) |
+| Automated tests | <!-- gen:tests.total -->223<!-- /gen --> passing, <!-- gen:tests.failed -->not yet measured<!-- /gen --> failing (contracts <!-- gen:tests.contracts -->90<!-- /gen -->, TypeScript <!-- gen:tests.ts -->27<!-- /gen -->, Python <!-- gen:tests.py -->106<!-- /gen -->, end-to-end <!-- gen:tests.e2e -->not yet measured<!-- /gen -->) |
 | Bytecode equality table | <!-- gen:bytecode.table -->not yet measured<!-- /gen --> |
 | On-chain execution evidence | `docs/EXECUTION_EVIDENCE.md`, `docs/evidence/bundle.json` |
 | Bench report | `bench/` reports; per-family table in `docs/THREAT_MODEL.md` |

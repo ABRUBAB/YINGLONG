@@ -34,7 +34,7 @@
 | Claim | How to check it | Expected |
 |---|---|---|
 | The mandate on chain is exactly the one the user sealed | `yinglong verify <mandateHash> --chain fisco --rpc https://api.yinglong-agent.tech/rpc/fisco` (mandate hashes are in `PROOF.md` and `docs/EXECUTION_EVIDENCE.md`) | Sentences decoded from the published caveats; delegation hash recomputes; status live; enforcer code hashes match |
-| Same enforcer bytecode on two ledgers | `docs/EXECUTION_EVIDENCE.md`, "Contracts and code hashes" | <!-- gen:chain.bytecode.equal -->not yet measured<!-- /gen --> of <!-- gen:chain.bytecode.total -->not yet measured<!-- /gen --> identical (<!-- gen:chain.bytecode.pair -->not yet measured<!-- /gen -->); differences are framework contracts with deployment-time immutables |
+| Same enforcer bytecode on two ledgers | `docs/EXECUTION_EVIDENCE.md`, "Contracts and code hashes" | <!-- gen:chain.bytecode.equal -->39<!-- /gen --> of <!-- gen:chain.bytecode.total -->46<!-- /gen --> identical (<!-- gen:chain.bytecode.pair -->Anvil vs FISCO BCOS<!-- /gen -->); differences are framework contracts with deployment-time immutables |
 | Attacks revert on chain with a typed reason | `yinglong verify-tx <hash> --chain fisco --rpc https://api.yinglong-agent.tech/rpc/fisco`, or the decoder in step 3 | e.g. `PayeeNotVerified`, `UnsuitableProduct`, `Paused` |
 | Pause works | Pause transaction in `PROOF.md`, then the next attempt | Redemptions revert `Paused` until the principal resumes |
 | The agent cannot widen its own authority | `contracts/test/invariants/MandateInvariants.t.sol` (stateful fuzzing) and `contracts/test/NadiaMandate.t.sol` | Caps, reserve floor, pause, verified payees and signer set hold under fuzzing |
@@ -44,7 +44,7 @@
 | Item | Status |
 |---|---|
 | Transactions on FISCO BCOS 3.17.1 | Real, on a **team-run** consortium chain (4 consensus nodes + 1 observer as the "regulator node", all run by us) |
-| Transactions on Base Sepolia | Public testnet; status: <!-- gen:deploy.base.status -->not yet measured<!-- /gen --> |
+| Transactions on Base Sepolia | Public testnet; status: <!-- gen:deploy.base.status -->rehearsed end to end on a local fork of Base Sepolia; live deployment pending testnet ETH<!-- /gen --> |
 | Local Anvil runs | Development bench only; never presented as live evidence |
 | `tHKD`, `tUSD` | Team-minted test units: "Simulation of a regulated instrument; not issued by any licensee" |
 | Mainland settlement | e-CNY-style **simulator**; no connection to PBoC or operator-bank systems |

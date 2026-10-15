@@ -77,7 +77,7 @@ The golden vectors show the result: `packages/mandate/golden/nadia.json` compile
 | `packages/mandate/test/mandate.test.ts` | vitest | Compiler order, determinism, decompiler sentences, round trip, tamper detection, Hash Ring, and (when an Anvil node is up) parity of the delegation hash with `DelegationManager.getDelegationHash` and `MandateRegistry.computeDelegationHash` |
 | `tools/verify-py/tests/test_golden.py`, `test_ts_vectors.py` | pytest | Byte-for-byte agreement of the Python compiler and decompiler with the TypeScript golden vectors |
 
-Counts of passing tests are generated: Foundry <!-- gen:tests.contracts -->89<!-- /gen --> (of which `NadiaMandateTest` <!-- gen:tests.forge.nadia -->not yet measured<!-- /gen -->), vitest <!-- gen:tests.ts -->not yet measured<!-- /gen -->, pytest <!-- gen:tests.py -->11<!-- /gen -->.
+Counts of passing tests are generated: Foundry <!-- gen:tests.contracts -->90<!-- /gen --> (of which `NadiaMandateTest` <!-- gen:tests.forge.nadia -->not yet measured<!-- /gen -->), vitest <!-- gen:tests.ts -->27<!-- /gen -->, pytest <!-- gen:tests.py -->106<!-- /gen -->.
 
 ---
 

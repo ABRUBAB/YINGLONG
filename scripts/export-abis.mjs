@@ -41,6 +41,8 @@ const CONTRACTS = [
   ["ReputationGateEnforcer.sol", "ReputationGateEnforcer"],
   ["ForbiddenTargetsEnforcer.sol", "ForbiddenTargetsEnforcer"],
   ["YinglongCreate2Deployer.sol", "YinglongCreate2Deployer"],
+  ["LimitedCallsEnforcer.sol", "LimitedCallsEnforcer"],
+  ["TimestampEnforcer.sol", "TimestampEnforcer"],
 ];
 
 const index = [];

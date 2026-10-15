@@ -38,9 +38,9 @@ Status labels: [V] verified in this repository or at the source; [S] secondary s
 
 Versions are pinned in the workspace catalog (plan Appendix A); licences are read from the installed packages at release, never typed.
 
-npm: <!-- gen:thirdparty.npm.table -->TBD<!-- /gen -->
+npm: <!-- gen:thirdparty.npm.table -->not yet measured<!-- /gen -->
 
-Python: <!-- gen:thirdparty.python.table -->TBD<!-- /gen -->
+Python: <!-- gen:thirdparty.python.table -->not yet measured<!-- /gen -->
 
 ## 4. Models
 
@@ -57,7 +57,7 @@ Python: <!-- gen:thirdparty.python.table -->TBD<!-- /gen -->
 | A Bangla/Banglish injection detector and an mmBERT-based v5 guard (both published on HuggingFace) | Evaluation reference only; never in training or the held-out set | Not yet recorded | [U] per plan |
 | Hosted models via OpenRouter, DashScope, DeepSeek | Inference | Providers' terms; free endpoints may log prompts (KR-14) | [S] |
 
-Recorded at download (repo id, revision, SHA-256, licence from the card): <!-- gen:thirdparty.models.table -->TBD<!-- /gen -->
+Recorded at download (repo id, revision, SHA-256, licence from the card): <!-- gen:thirdparty.models.table -->not yet measured<!-- /gen -->
 
 Our own weights are published in GitHub Releases and a HuggingFace mirror, never in Git LFS.
 
@@ -79,13 +79,13 @@ Our own weights are published in GitHub Releases and a HuggingFace mirror, never
 | OFAC SDN list, UN consolidated sanctions list | Local mirror for counterparty screening | Publishers' terms | [U] |
 | Our synthetic data (requests, attacks, ledgers, personas) | Training, bench | Apache-2.0 with this repository | [I] |
 
-Recorded at download: <!-- gen:thirdparty.datasets.table -->TBD<!-- /gen -->
+Recorded at download: <!-- gen:thirdparty.datasets.table -->not yet measured<!-- /gen -->
 
 ### 5.1 Private datasets (Chinese-script data, never in the repository)
 
 Chinese-script data lives only in private HuggingFace datasets. Each is referenced by repository id, revision and SHA-256; the licences of its sources are those in the table above.
 
-<!-- gen:thirdparty.private_datasets.table -->TBD<!-- /gen -->
+<!-- gen:thirdparty.private_datasets.table -->not yet measured<!-- /gen -->
 
 ## 6. Fonts
 

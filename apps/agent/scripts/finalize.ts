@@ -4,19 +4,23 @@
 // Writes docs/EXECUTION_EVIDENCE.md, PROOF.md, docs/evidence/bundle.json and fills <!-- gen:key --> markers.
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import { LEDGERS, type LedgerName } from "@yinglong/sdk";
 import { repoRoot } from "@yinglong/sdk/server";
 
 const root = repoRoot();
 const args = process.argv.slice(2);
 const API = args.includes("--api") ? args[args.indexOf("--api") + 1]! : process.env.AGENT_API ?? "https://api.yinglong-agent.tech";
-const metrics: Record<string, string> = {};
+// Start from the previous bundle so a quick run without --tests keeps the last measured test counts.
+const prevBundle = resolve(repoRoot(), "docs/evidence/bundle.json");
+const metrics: Record<string, string> = existsSync(prevBundle)
+  ? Object.fromEntries(Object.entries((JSON.parse(readFileSync(prevBundle, "utf8")).metrics ?? {}) as Record<string, string>).filter(([k]) => k.startsWith("tests.")))
+  : {};
 const now = new Date().toISOString();
 
 function sh(cmd: string, a: string[], cwd = root): string {
   try {
-    return execFileSync(cmd, a, { cwd, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"] });
+    return execFileSync(cmd, a, { cwd, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"], shell: process.platform === "win32" });
   } catch (e) {
     return String((e as { stdout?: string }).stdout ?? "");
   }
@@ -144,7 +148,7 @@ if (existsSync(zkManifest)) {
   const z = JSON.parse(readFileSync(zkManifest, "utf8"));
   const zkLive = ["fisco", "anvil"].map((l) => resolve(root, "apps/agent/data", `zk-${l}.json`)).filter((f) => existsSync(f));
   metrics["zk.mode"] = zkLive.length
-    ? `live private-mandate payments with real proofs recorded in ${zkLive.map((f) => f.split(/[\/]/).pop()).join(", ")}`
+    ? `live private-mandate payments with real proofs recorded in ${zkLive.map((f) => basename(f)).join(", ")}`
     : deps.fisco && (deps.fisco as Dep).ZKMandateEnforcer
       ? "verifier stack deployed on FISCO BCOS and Anvil; fixture proofs verify through the router (eth_call)"
       : "built and tested";
@@ -206,6 +210,17 @@ const proofItems = [
   ["Company payment on the coin-free rail (FISCO)", pick((r) => r.ledger === "fisco" && r.outcome === "confirmed" && r.principal.startsWith("lotus"))],
 ] as const;
 const proofLines = proofItems.map(([title, r]) => `| ${title} | ${r ? `${LEDGERS[r.ledger].badge}` : "-"} | ${r ? link(r) : "not yet recorded"} |`);
+const zkRows: string[] = [];
+for (const l of ["fisco", "base-sepolia"] as LedgerName[]) {
+  const f = resolve(root, "apps/agent/data", `zk-${l}.json`);
+  if (!existsSync(f)) continue;
+  const z = JSON.parse(readFileSync(f, "utf8"));
+  const ex = (h: string) => LEDGERS[l].explorerTx?.(h as `0x${string}`) ?? "";
+  const pay = (z.payments ?? []).find((x: { ok: boolean }) => x.ok);
+  if (pay) zkRows.push(`| Private mandate: payment verified by a zero-knowledge proof at redemption (hidden cap and payees) | ${LEDGERS[l].badge} | [\`${pay.tx.slice(0, 12)}...\`](${ex(pay.tx)}) |`);
+  if (z.forged?.tx) zkRows.push(`| Private mandate: forged proof reverts ${z.forged.revert ?? "InvalidMandateProof"} | ${LEDGERS[l].badge} | [\`${z.forged.tx.slice(0, 12)}...\`](${ex(z.forged.tx)}) |`);
+  if (z.replayed?.tx) zkRows.push(`| Private mandate: replayed proof reverts ${z.replayed.revert ?? "NonceAlreadyUsed"} | ${LEDGERS[l].badge} | [\`${z.replayed.tx.slice(0, 12)}...\`](${ex(z.replayed.tx)}) |`);
+}
 const sealRows = e2e.filter((r) => r.step === "seal" && r.ledger !== "anvil").map((r) => `| Mandate sealed and published with its full caveat array (${r.ledger}) | ${String(r.ledger)} | \`${String(r.publishTx)}\` |`);
 const pauseRows = e2e.filter((r) => String(r.step).startsWith("pause") && r.ledger !== "anvil").map((r) => `| One-tap pause, passkey signature relayed (${r.ledger}) | ${String(r.ledger)} | \`${String(r.tx)}\` |`);
 writeFileSync(
@@ -219,6 +234,7 @@ writeFileSync(
     "|---|---|---|",
     ...sealRows,
     ...proofLines,
+    ...zkRows,
     ...pauseRows,
     "",
     "Verify any mandate yourself (Python, independent of our TypeScript):",
@@ -232,7 +248,7 @@ writeFileSync(
   ].join("\n"),
 );
 
-metrics["proof.table"] = ["", "| What it proves | Ledger | Transaction |", "|---|---|---|", ...sealRows, ...proofLines, ...pauseRows, ""].join(String.fromCharCode(10));
+metrics["proof.table"] = ["", "| What it proves | Ledger | Transaction |", "|---|---|---|", ...sealRows, ...proofLines, ...zkRows, ...pauseRows, ""].join(String.fromCharCode(10));
 
 // ---------------------------------------------------------------- fill gen markers
 const bundle = { generatedAt: now, metrics, contracts: contractRows, receipts: receipts.slice(-200), e2e };

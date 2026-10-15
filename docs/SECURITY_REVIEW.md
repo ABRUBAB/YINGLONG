@@ -6,17 +6,17 @@
 1. This is a self-review in audit format by the people who wrote the code; it is not independent and it is not an audit.
 2. Scope: YINGLONG's own contracts, the agent signer and signing-domain guard, the policy mirror, the mandate compiler and both verifiers; the MetaMask Delegation Framework is out of scope (its own audit reports ship with it).
 3. Method: manual review against a fixed checklist, static analysis, fuzzing and invariant campaigns, bounded symbolic execution, differential testing of the policy mirror against the contracts, and a threat-model walkthrough.
-4. Findings by severity: <!-- gen:review.count.critical -->TBD<!-- /gen --> critical, <!-- gen:review.count.high -->TBD<!-- /gen --> high, <!-- gen:review.count.medium -->TBD<!-- /gen --> medium, <!-- gen:review.count.low -->TBD<!-- /gen --> low, <!-- gen:review.count.info -->TBD<!-- /gen --> informational; <!-- gen:review.fixed -->TBD<!-- /gen --> fixed, <!-- gen:review.open -->TBD<!-- /gen --> open, <!-- gen:review.wontfix -->TBD<!-- /gen --> accepted.
+4. Findings by severity: <!-- gen:review.count.critical -->not yet measured<!-- /gen --> critical, <!-- gen:review.count.high -->not yet measured<!-- /gen --> high, <!-- gen:review.count.medium -->not yet measured<!-- /gen --> medium, <!-- gen:review.count.low -->not yet measured<!-- /gen --> low, <!-- gen:review.count.info -->not yet measured<!-- /gen --> informational; <!-- gen:review.fixed -->not yet measured<!-- /gen --> fixed, <!-- gen:review.open -->not yet measured<!-- /gen --> open, <!-- gen:review.wontfix -->not yet measured<!-- /gen --> accepted.
 5. Section 7 lists the issues we chose not to fix and why; known risks KR-01 to KR-19 are in `docs/SECURITY_SELF_ASSESSMENT.md`.
 
 
 | Field | Value |
 |---|---|
-| Commit reviewed | <!-- gen:review.commit -->TBD<!-- /gen --> |
-| Review completed | <!-- gen:review.date -->TBD<!-- /gen --> |
-| Release | <!-- gen:meta.release_tag -->TBD<!-- /gen --> |
+| Commit reviewed | <!-- gen:review.commit -->not yet measured<!-- /gen --> |
+| Review completed | <!-- gen:review.date -->not yet measured<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->1da0e0e<!-- /gen --> |
 | Reviewers | YINGLONG team members (roles R2 contracts, R4 AI security; read-only reviewer sessions at the planned review gate) |
-| Tool versions used | <!-- gen:review.tools.versions -->TBD<!-- /gen --> |
+| Tool versions used | <!-- gen:review.tools.versions -->not yet measured<!-- /gen --> |
 
 ---
 
@@ -86,13 +86,13 @@
 
 ## 5. Findings
 
-<!-- gen:review.findings.table -->TBD<!-- /gen -->
+<!-- gen:review.findings.table -->not yet measured<!-- /gen -->
 
 Columns: ID, title, severity, component, status (fixed, acknowledged, open), fix commit.
 
 ## 6. Finding details
 
-<!-- gen:review.findings.details -->TBD<!-- /gen -->
+<!-- gen:review.findings.details -->not yet measured<!-- /gen -->
 
 ## 7. Issues we chose not to fix, and why
 
@@ -111,20 +111,20 @@ Known at design time and carried into the review:
 | Reentrancy is bounded, not absent | Allowlisted targets may call back by design | `nonReentrant` on every YINGLONG target; state updated before execution; tests with a malicious token |
 | Full caveat arrays are public on Base (DC-08) | Round-trip verification needs them public | Fictional personas only; private mandates available |
 
-Found during this review and accepted: <!-- gen:review.wontfix.table -->TBD<!-- /gen -->
+Found during this review and accepted: <!-- gen:review.wontfix.table -->not yet measured<!-- /gen -->
 
 ## 8. Automated results
 
 | Area | Result |
 |---|---|
-| Static analysis | Slither high open: <!-- gen:static.slither.high -->TBD<!-- /gen -->; medium open: <!-- gen:static.slither.medium -->TBD<!-- /gen -->; Aderyn high open: <!-- gen:static.aderyn.high -->TBD<!-- /gen --> |
-| Tests | <!-- gen:tests.total -->TBD<!-- /gen --> passing, <!-- gen:tests.failed -->TBD<!-- /gen --> failing |
-| Contract coverage | <!-- gen:coverage.contracts -->TBD<!-- /gen --> |
-| Invariants | <!-- gen:invariants.table -->TBD<!-- /gen --> |
-| Fuzz volume | <!-- gen:fuzz.calls -->TBD<!-- /gen --> calls |
-| Symbolic execution | <!-- gen:proofs.symbolic.status -->TBD<!-- /gen --> |
-| Differential fuzzing split | <!-- gen:fuzz.differential.split -->TBD<!-- /gen --> |
-| Enforcer gas overhead vs stock | <!-- gen:gas.overhead.median -->TBD<!-- /gen --> |
+| Static analysis | Slither high open: <!-- gen:static.slither.high -->not yet measured<!-- /gen -->; medium open: <!-- gen:static.slither.medium -->not yet measured<!-- /gen -->; Aderyn high open: <!-- gen:static.aderyn.high -->not yet measured<!-- /gen --> |
+| Tests | <!-- gen:tests.total -->223<!-- /gen --> passing, <!-- gen:tests.failed -->not yet measured<!-- /gen --> failing |
+| Contract coverage | <!-- gen:coverage.contracts -->not yet measured<!-- /gen --> |
+| Invariants | <!-- gen:invariants.table -->not yet measured<!-- /gen --> |
+| Fuzz volume | <!-- gen:fuzz.calls -->not yet measured<!-- /gen --> calls |
+| Symbolic execution | <!-- gen:proofs.symbolic.status -->not yet measured<!-- /gen --> |
+| Differential fuzzing split | <!-- gen:fuzz.differential.split -->not yet measured<!-- /gen --> |
+| Enforcer gas overhead vs stock | <!-- gen:gas.overhead.median -->not yet measured<!-- /gen --> |
 
 ## 9. Reproduction
 
