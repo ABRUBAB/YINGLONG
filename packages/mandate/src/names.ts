@@ -28,6 +28,7 @@ export function namesFor(d: Deployment, m?: Mandate): Names {
     for (const p of m.payees) label.set(p.address.toLowerCase(), p.label);
     for (const i of m.trustedIssuers) label.set(i.address.toLowerCase(), i.label);
     for (const i of m.intermediaries) label.set(i.address.toLowerCase(), i.label);
+    if (m.facilitator) label.set(m.facilitator.toLowerCase(), label.get(m.facilitator.toLowerCase()) ?? "the x402 seller (Pearl River FX Desk)");
   }
   return { label, decimals };
 }
