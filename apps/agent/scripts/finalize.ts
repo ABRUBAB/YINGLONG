@@ -117,15 +117,19 @@ if (args.includes("--tests")) {
     metrics["tests.contracts"] = String(passed);
     metrics["tests.contracts.failed"] = String(failed);
   }
-  const vt = sh("npx", ["vitest", "run", "--reporter=json"], resolve(root, "packages/mandate"));
-  try {
-    const j = JSON.parse(vt.slice(vt.indexOf("{")));
-    metrics["tests.ts"] = String(j.numPassedTests);
-  } catch {
-    /* unmeasured */
+  let tsPassed = 0;
+  for (const pkg of ["packages/mandate", "apps/services", "apps/indexer", "apps/ecny-sim"]) {
+    const outFile = resolve(process.env.TEMP ?? "/tmp", `vitest-${pkg.replace(/\//g, "-")}.json`);
+    sh("npx", ["vitest", "run", "--reporter=json", `--outputFile=${outFile}`], resolve(root, pkg));
+    try {
+      tsPassed += Number(JSON.parse(readFileSync(outFile, "utf8")).numPassedTests ?? 0);
+    } catch {
+      /* unmeasured */
+    }
   }
-  const py = sh("uv", ["run", "pytest", "-q"], resolve(root, "tools/verify-py"));
-  const pm = py.match(/(\d+) passed/);
+  if (tsPassed) metrics["tests.ts"] = String(tsPassed);
+  const py = sh("uv", ["run", "pytest", "-q", "-p", "no:cacheprovider"], resolve(root, "tools/verify-py"));
+  const pm = py.match(/(\d+) passed/g)?.pop()?.match(/(\d+)/);
   if (pm) metrics["tests.py"] = pm[1]!;
   const total = ["tests.contracts", "tests.ts", "tests.py"].map((k) => Number(metrics[k] ?? 0)).reduce((a, b) => a + b, 0);
   if (total) metrics["tests.total"] = String(total);
@@ -188,12 +192,14 @@ const proofItems = [
   ["Allowed payment inside the mandate (T1)", pick((r) => r.outcome === "confirmed" && r.tier === "T1")],
   ["Payment approved on the user's passkey (T2)", pick((r) => r.outcome === "confirmed" && r.tier === "T2")],
   ["Attack reverted on-chain: PayeeNotVerified", pick((r) => r.revertError?.name === "PayeeNotVerified")],
-  ["Board resolution executed by 2 of 3 directors (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed")],
+  ["Board resolution executed by 2 of 3 directors (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed" && r.explanation.text.startsWith("Board resolution"))],
+  ["One-tap pause signed by the principal and relayed (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed" && r.explanation.text.startsWith("Paused"))],
+  ["Velocity breach trips the circuit breaker", pick((r) => r.revertError?.name === "VelocityExceeded")],
   ["Company payment on the coin-free rail (FISCO)", pick((r) => r.ledger === "fisco" && r.outcome === "confirmed" && r.principal.startsWith("lotus"))],
 ] as const;
 const proofLines = proofItems.map(([title, r]) => `| ${title} | ${r ? `${LEDGERS[r.ledger].badge}` : "-"} | ${r ? link(r) : "not yet recorded"} |`);
-const sealRows = e2e.filter((r) => r.step === "seal").map((r) => `| Mandate sealed and published with its full caveat array (${r.ledger}) | ${String(r.ledger)} | \`${String(r.publishTx)}\` |`);
-const pauseRows = e2e.filter((r) => String(r.step).startsWith("pause")).map((r) => `| One-tap pause, passkey signature relayed (${r.ledger}) | ${String(r.ledger)} | \`${String(r.tx)}\` |`);
+const sealRows = e2e.filter((r) => r.step === "seal" && r.ledger !== "anvil").map((r) => `| Mandate sealed and published with its full caveat array (${r.ledger}) | ${String(r.ledger)} | \`${String(r.publishTx)}\` |`);
+const pauseRows = e2e.filter((r) => String(r.step).startsWith("pause") && r.ledger !== "anvil").map((r) => `| One-tap pause, passkey signature relayed (${r.ledger}) | ${String(r.ledger)} | \`${String(r.tx)}\` |`);
 writeFileSync(
   resolve(root, "PROOF.md"),
   [
@@ -217,6 +223,8 @@ writeFileSync(
     "",
   ].join("\n"),
 );
+
+metrics["proof.table"] = ["", "| What it proves | Ledger | Transaction |", "|---|---|---|", ...sealRows, ...proofLines, ...pauseRows, ""].join(String.fromCharCode(10));
 
 // ---------------------------------------------------------------- fill gen markers
 const bundle = { generatedAt: now, metrics, contracts: contractRows, receipts: receipts.slice(-200), e2e };
