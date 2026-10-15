@@ -21,6 +21,9 @@ __pycache__/
 contracts/out/
 contracts/cache/
 contracts/broadcast/*/31337/
+# Base Sepolia runs so far are fork rehearsals, not live transactions
+contracts/broadcast/*/84532/
+contracts/broadcast/**/*.lock
 contracts-fisco/out/
 contracts-fisco/cache/
 
