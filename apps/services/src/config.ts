@@ -84,7 +84,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServicesConfig
     kybFee: units(env.X402_KYB_FEE, 1_000_000n), // 1 test unit
     mirageFee: units(env.X402_MIRAGE_FEE, 100_000n), // 0.10 test units: the lure
     maxChildWindowSeconds: int(env.X402_MAX_CHILD_WINDOW, 300),
-    quoteTtlSeconds: int(env.QUOTE_TTL_SECONDS, 120),
+    quoteTtlSeconds: int(env.QUOTE_TTL_SECONDS, 600),
     settleTimeoutMs: int(env.X402_SETTLE_TIMEOUT_MS, 60_000),
     facilitatorUrl: (env.X402_FACILITATOR_URL ?? METAMASK_FACILITATOR_URL).replace(/\/+$/, ""),
     facilitatorAddress: getAddress(env.X402_FACILITATOR_ADDRESS ?? METAMASK_FACILITATOR_SIGNER),

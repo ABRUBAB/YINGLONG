@@ -9,7 +9,8 @@ async function main(): Promise<void> {
   const deps = makeDeps();
   const app = await createApp(deps);
   const { config, ledger } = deps;
-  serve({ fetch: app.fetch, hostname: config.host, port: config.port }, (info) => {
+  // x402 PAYMENT-SIGNATURE headers carry a full ERC-7710 permission context (the sealed mandate): allow 256 KB.
+  serve({ fetch: app.fetch, hostname: config.host, port: config.port, serverOptions: { maxHeaderSize: 256 * 1024 } }, (info) => {
     process.stdout.write(`yinglong-agent-city on http://${config.host}:${info.port} (ledger ${ledger.name}, ${ledger.network}, settlement ${config.settlement})\n`);
     process.stdout.write("Test units only. All agents and institutions are fictional (hackathon demonstration).\n");
   });

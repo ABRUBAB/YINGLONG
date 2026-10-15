@@ -1,8 +1,10 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { z } from "zod";
-import { createPublicClient, createWalletClient, defineChain, http, type Address, type Hex } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+import { concat, createPublicClient, createWalletClient, defineChain, encodePacked, getAddress, http, keccak256, toHex, type Address, type Hex } from "viem";
+import { privateKeyToAccount, sign as signHash } from "viem/accounts";
+import { abi } from "@yinglong/sdk";
+import { delegationHash, type Delegation } from "@yinglong/mandate";
 import { decodeRevert, ledger as ledgerProfile, revertDataOf, type LedgerName } from "@yinglong/sdk";
 import { loadDeployment, rolePrivateKey } from "@yinglong/sdk/server";
 import { guardRedemption } from "./guard";
@@ -97,6 +99,53 @@ app.post("/v1/redeem", async (c) => {
   });
   log.push({ at: new Date().toISOString(), ledger: r.ledger, role: r.agentRole, ok: true, txHash, mode: r.mode });
   return c.json({ ok: true, txHash, childDelegations: children });
+});
+
+/**
+ * x402 payment child (seller-settled ERC-7710): agent -> seller, exactly ERC20TransferAmount(asset, amount),
+ * LimitedCalls(1) and Timestamp(0, now + window <= 300 s). The parent is the user's sealed root delegation, whose
+ * caveats still bound the payment. Fees above X402_MAX_FEE (base units) are refused.
+ */
+const ChildReq = z.object({
+  ledger: z.enum(["anvil", "base-sepolia", "fisco"]),
+  agentRole: z.enum(AGENT_ROLES),
+  parentHash: z.string().regex(/^0x[0-9a-fA-F]{64}$/),
+  seller: z.string().regex(/^0x[0-9a-fA-F]{40}$/),
+  asset: z.string().regex(/^0x[0-9a-fA-F]{40}$/),
+  amount: z.string().regex(/^[0-9]+$/),
+  windowSeconds: z.number().int().positive().max(300),
+});
+app.post("/v1/sign-x402-child", async (c) => {
+  const parsed = ChildReq.safeParse(await c.req.json());
+  if (!parsed.success) return c.json({ ok: false, reason: "bad request" }, 400);
+  const r = parsed.data;
+  const { p, account, pub } = clients(r.ledger, r.agentRole);
+  const deployment = loadDeployment(r.ledger);
+  const maxFee = BigInt(process.env.X402_MAX_FEE ?? "50000000");
+  const amount = BigInt(r.amount);
+  if (amount === 0n || amount > maxFee) return c.json({ ok: false, reason: `fee ${amount} above the signer cap ${maxFee}` }, 403);
+  const assets = [deployment.contracts.TestUSD.address, deployment.contracts.TestHKD.address, ...(process.env.SIGNER_EXTRA_ASSETS ?? "").split(",").filter(Boolean)].map((a) => a.toLowerCase());
+  if (!assets.includes(r.asset.toLowerCase())) return c.json({ ok: false, reason: "fee asset is not a YINGLONG asset" }, 403);
+  const block = await pub.getBlock();
+  const unit = p.timeUnit === "ms" ? 1000n : 1n;
+  const before = block.timestamp + BigInt(r.windowSeconds) * unit;
+  const child: Delegation = {
+    delegate: getAddress(r.seller),
+    delegator: account.address,
+    authority: r.parentHash as Hex,
+    caveats: [
+      { enforcer: deployment.contracts.ERC20TransferAmountEnforcer.address, terms: encodePacked(["address", "uint256"], [getAddress(r.asset), amount]), args: "0x" },
+      { enforcer: deployment.contracts.LimitedCallsEnforcer.address, terms: encodePacked(["uint256"], [1n]), args: "0x" },
+      { enforcer: deployment.contracts.TimestampEnforcer.address, terms: encodePacked(["uint128", "uint128"], [0n, before]), args: "0x" },
+    ],
+    salt: BigInt(keccak256(toHex(`${Date.now()}:${Math.random()}`))),
+    signature: "0x",
+  };
+  const domainHash = (await pub.readContract({ address: deployment.contracts.DelegationManager.address, abi: abi.DelegationManagerAbi, functionName: "getDomainHash" })) as Hex;
+  const digest = keccak256(concat(["0x1901", domainHash, delegationHash(child)]));
+  child.signature = (await signHash({ hash: digest, privateKey: rolePrivateKey(r.agentRole), to: "hex" })) as Hex;
+  log.push({ at: new Date().toISOString(), ledger: r.ledger, role: r.agentRole, ok: true, mode: `x402-child ${amount}` });
+  return c.json({ ok: true, child: { ...child, salt: child.salt.toString() }, childHash: delegationHash(child) });
 });
 
 const port = Number(process.env.SIGNER_PORT ?? 8788);

@@ -13,6 +13,8 @@ export interface NadiaParties {
   foodMart: Address;
   issuerHbu: Address;
   issuerBank: Address;
+  /** Seller-settled x402: the FX desk that redeems single-use fee children (pinned facilitator). */
+  facilitator?: Address;
 }
 
 /**
@@ -96,7 +98,7 @@ export function nadiaMandate(d: Deployment, p: NadiaParties, opts: { now: number
     velocity: { asset: "tHKD", window: 86400, maxCount: 8, maxOutflow: U(15_000) },
     suitability: { maxRiskClass: 2 },
     reputation: null,
-    facilitator: null,
+    facilitator: p.facilitator ?? null,
     sentences: [
       "Pay my rent, 9,500, to Harbour Homes on the 1st.",
       "Keep food under 3,000 a month.",

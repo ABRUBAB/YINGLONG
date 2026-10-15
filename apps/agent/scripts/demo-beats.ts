@@ -42,6 +42,10 @@ const rbrief = (r: Record<string, unknown> | undefined) =>
   r ? { outcome: r.outcome, tier: r.tier, txHash: r.txHash, revert: (r.revertError as { message?: string } | undefined)?.message, ledger: r.ledger } : undefined;
 
 async function nadia() {
+  const fx = await call("POST", "/v1/principals/nadia/ask", { text: "Convert 1,000 USD of my stipend to HKD" });
+  rec("3 FX quote bought over x402 (ERC-7710), conversion at the signed price", brief(fx));
+  if (fx.decision === "execute") rec("3 conversion executed", rbrief((await call("POST", `/v1/proposals/${fx.id}/execute`)).receipt as Record<string, unknown>)!);
+  else if (fx.approvalId) rec("3 conversion approved", rbrief((await call("POST", `/v1/approvals/${fx.approvalId}/demo-sign`)).receipt as Record<string, unknown>)!);
   const rent = await call("POST", "/v1/principals/nadia/ask", { text: "Pay my rent, 9,500 HKD, to Harbour Homes" });
   rec("4 rent (T1)", brief(rent));
   if (rent.decision === "execute") rec("4 rent executed", rbrief((await call("POST", `/v1/proposals/${rent.id}/execute`)).receipt as Record<string, unknown>)!);

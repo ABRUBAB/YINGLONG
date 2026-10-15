@@ -11,6 +11,7 @@ import { checkCounterparty, type CounterpartyResult } from "./scales/counterpart
 import { normalise } from "./scales/normalise";
 import { evaluatePolicy, type Payment, type PolicyDecision } from "./scales/policy";
 import { readDocument, readImage, type QuarantinedRead } from "./scales/quarantine";
+import { payOverX402 } from "./x402";
 import { sentinel, type SentinelResult } from "./scales/sentinel";
 import { DATA_DIR, DocStore } from "./store";
 import { understand, type Intent, type UnderstandResult } from "./understand/intent";
@@ -201,8 +202,9 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   intent = { ...intent, ambiguities: intent.ambiguities.filter((a) => a !== "missing_date" || intent.when.recurrence !== "none") };
   if (intent.ambiguities.length) asked = `I need you to clarify: ${intent.ambiguities.map((a) => a.replace(/_/g, " ")).join(", ")}.`;
   if (intent.kind === "add_payee" || intent.payee === "NEW_PAYEE_REQUEST" || intent.kind === "change_mandate") tier = "T3";
-  if (!["pay", "escrow", "sweep"].includes(intent.kind) && tier !== "T3") asked = asked ?? `I can only pay, escrow or sweep inside your mandate; "${intent.kind}" needs you.`;
-  const payee = payees.find((p) => p.id === intent.payee);
+  if (!["pay", "escrow", "sweep", "convert"].includes(intent.kind) && tier !== "T3") asked = asked ?? `I can only pay, escrow, sweep or convert inside your mandate; "${intent.kind}" needs you.`;
+  const FX_DESK = { id: "pearl_river_fx", label: "Pearl River FX Desk", category: "services", address: ctx.roleAddress("svc-pearl-river-fx") };
+  const payee = intent.kind === "convert" ? FX_DESK : payees.find((p) => p.id === intent.payee);
   const unit = intent.amount?.unit ?? cfg.defaultUnit;
   const contract = SYMBOL_TO_CONTRACT[unit];
   const asset = contract ? ctx.addr(contract) : undefined;
@@ -231,12 +233,32 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   });
   if (groundIssues.length && tier !== "T3") asked = asked ?? `I could not ground this request: ${groundIssues.join("; ")}.`;
 
+  // Conversion: buy a signed quote over x402 (seller-settled ERC-7710), then settle it through the mandate.
+  let fx: { transferAndCallData: Hex; quoteNonce?: string; settlementTx?: Hex; fee?: string } | undefined;
+  if (intent.kind === "convert" && amount !== undefined && asset && assetDoc && !groundIssues.length) {
+    const outSymbol = assetDoc.symbol === "tUSD" ? "tHKD" : "tUSD";
+    const r = await payOverX402(st, `/fx/pearl-river/quote?payer=${st.account}&inToken=${assetDoc.symbol}&outToken=${outSymbol}&amountIn=${amount}`, { label: "Pearl River FX quote" });
+    if (!r.ok || !r.body?.transferAndCallData) {
+      groundIssues.push(`could not buy a signed FX quote: ${r.refusal ?? r.status}`);
+    } else {
+      fx = { transferAndCallData: r.body.transferAndCallData as Hex, settlementTx: r.settlementTx, fee: r.fee?.amount.toString() };
+      if (r.receiptId) base.receiptIds.push(r.receiptId);
+    }
+  }
+
   // Build the execution.
   let payment: Payment | undefined;
   let execution: Hex | undefined;
   let method = "transfer";
   if (payee && asset && amount !== undefined && assetDoc) {
-    if (intent.kind === "escrow" && unit !== "CNY") {
+    if (intent.kind === "convert") {
+      if (fx) {
+        method = "transferAndCall";
+        const settlement = ctx.addr("SignedQuoteSettlement");
+        payment = { asset, recipient: settlement, beneficiary: payee.address, amount, method: "transferAndCall" };
+        execution = singleExecution({ to: asset, data: encodeFunctionData({ abi: abi.TestUnitsAbi, functionName: "transferAndCall", args: [settlement, amount, fx.transferAndCallData] }) });
+      }
+    } else if (intent.kind === "escrow" && unit !== "CNY") {
       method = "transferAndCall";
       const attester = ctx.roleAddress(id === "nadia" ? "issuer-hbu" : "issuer-harbour-digital-bank");
       const now = Number((await ctx.pub.getBlock()).timestamp);
@@ -325,7 +347,13 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   if (payment) {
     const past = receiptLog
       .all()
-      .filter((r) => r.principal === id && r.receipt.outcome === "confirmed" && r.payment?.payee.toLowerCase() === payment!.beneficiary.toLowerCase())
+      .filter(
+        (r) =>
+          r.principal === id &&
+          r.receipt.outcome === "confirmed" &&
+          r.payment?.payee.toLowerCase() === payment!.beneficiary.toLowerCase() &&
+          r.payment?.method === payment!.method,
+      )
       .map((r) => BigInt(r.payment!.amount));
     const max = past.reduce((a, b) => (b > a ? b : a), 0n);
     if (past.length >= 2 && payment.amount > max * 3n) {
