@@ -23,15 +23,6 @@ app.use("*", cors({ origin: (o) => o ?? "*", allowMethods: ["GET", "POST"], allo
 app.onError((err, c) => c.json({ ok: false, error: err.message }, 400));
 
 // Per-client rate limit (in memory) and an admin token for state-changing calls on the demo principals.
-const hits = new Map<string, { n: number; at: number }>();
-app.use("/v1/*", async (c, next) => {
-  const ip = c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
-  const now = Date.now();
-  const h = hits.get(ip);
-  if (!h || now - h.at > 60_000) hits.set(ip, { n: 1, at: now });
-  else if (++h.n > Number(process.env.RATE_LIMIT_PER_MIN ?? 60)) return c.json({ ok: false, error: "rate limit" }, 429);
-  await next();
-});
 const ADMIN = process.env.AGENT_ADMIN_TOKEN ?? readSecret(process.env.AGENT_ADMIN_TOKEN_FILE);
 function readSecret(path?: string): string | undefined {
   try {
@@ -40,6 +31,17 @@ function readSecret(path?: string): string | undefined {
     return undefined;
   }
 }
+const hits = new Map<string, { n: number; at: number }>();
+app.use("/v1/*", async (c, next) => {
+  // The operator's own drills and demo driver are not throttled; everyone else is.
+  if (ADMIN && c.req.header("x-admin-token") === ADMIN) return next();
+  const ip = c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  const now = Date.now();
+  const h = hits.get(ip);
+  if (!h || now - h.at > 60_000) hits.set(ip, { n: 1, at: now });
+  else if (++h.n > Number(process.env.RATE_LIMIT_PER_MIN ?? 60)) return c.json({ ok: false, error: "rate limit" }, 429);
+  await next();
+});
 const PROTECTED = [/\/halt$/, /\/board-proposals$/, /\/sign$/, /\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
 app.use("/v1/*", async (c, next) => {
   if (ADMIN && c.req.method === "POST" && PROTECTED.some((re) => re.test(c.req.path)) && c.req.header("x-admin-token") !== ADMIN) {

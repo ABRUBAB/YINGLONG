@@ -651,7 +651,10 @@ async function submitPauseApproval(a: ApprovalRequest, signature: Hex): Promise<
     txHash: res.hash,
     approvalSig: signature,
     documents: { plan: { action: a.kind, msToConfirmed: ms, block: res.receipt.blockNumber.toString() } },
-    explanation: { text: a.kind === "pause" ? `Paused every delegation of this account (confirmed in ${ms} ms, block ${res.receipt.blockNumber}).` : "Resumed the agent.", aiGenerated: false },
+    explanation: {
+      text: a.kind === "pause" ? `Paused every delegation of this account (confirmed in ${ms} ms, block ${res.receipt.blockNumber}).` : `Resumed the agent (confirmed in ${ms} ms, block ${res.receipt.blockNumber}).`,
+      aiGenerated: false,
+    },
     aigc: { model: "none (user signature)", provider: "local" },
   });
 }

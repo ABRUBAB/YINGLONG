@@ -46,11 +46,18 @@ async function head(ledger: string): Promise<number> {
   return Number(h.ledgers.find((l) => l.name === ledger)?.block ?? 0);
 }
 
+const ledgerOf = new Map<string, string>();
+async function principalLedger(pid: string): Promise<string> {
+  if (!ledgerOf.has(pid)) {
+    const all = (await call("GET", "/v1/principals")) as unknown as { id: string; ledger: string }[];
+    for (const p of all) ledgerOf.set(p.id, p.ledger);
+  }
+  return ledgerOf.get(pid) ?? "fisco";
+}
+
 async function signed(pid: string, action: "pause" | "resume" | "revoke"): Promise<Row> {
   const { approvalId } = (await call("POST", `/v1/principals/${pid}/${action}`)) as { approvalId: string };
-  const st = (await call("GET", `/v1/principals/${pid}/state`)) as { ledger?: string; principal?: { ledger: string } };
-  const ledger = st.ledger ?? st.principal?.ledger ?? "fisco";
-  const h0 = await head(ledger);
+  const h0 = await head(await principalLedger(pid));
   const t0 = Date.now();
   const { receipt } = (await call("POST", `/v1/approvals/${approvalId}/demo-sign`)) as { receipt: Record<string, unknown> };
   const clientMs = Date.now() - t0;
