@@ -51,7 +51,8 @@ export const LEDGERS: Record<LedgerName, LedgerProfile> = {
     timeUnit: (env("FISCO_TIME_UNIT") as "s" | "ms" | undefined) ?? "s",
     legacyTx: true,
     gasPrice: 0n,
-    explorerTx: (h) => `https://api.yinglong-agent.tech/v1/tx/fisco/${h}`,
+    // FISCO has no public explorer: the web app decodes the transaction (JSON at /v1/tx/fisco/<hash> on the API).
+    explorerTx: (h) => `https://app.yinglong-agent.tech/proof/tx/fisco/${h}`,
     badge: "FISCO BCOS (team-run consortium ledger)",
   },
 };

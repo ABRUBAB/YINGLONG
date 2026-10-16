@@ -86,7 +86,7 @@ interface RView {
   explorerUrl?: string;
   revertError?: { name: string; message: string };
   explanation: { text: string };
-  payment?: { symbol: string; amount: string; decimals: number; payeeLabel: string };
+  payment?: { symbol: string; amount: string; decimals: number; payeeLabel: string; method?: string };
   aigc?: { model: string };
   timestamp: string;
 }
@@ -246,8 +246,12 @@ metrics["evidence.tx_count"] = String(liveTx.size);
 
 // ---------------------------------------------------------------- write EXECUTION_EVIDENCE.md
 const fmt = (r: RView) => (r.payment ? `${(Number(BigInt(r.payment.amount)) / 10 ** r.payment.decimals).toLocaleString("en-US")} ${r.payment.symbol} to ${r.payment.payeeLabel}` : "");
-const link = (r: { ledger: string; txHash?: string; explorerUrl?: string }) =>
-  r.txHash ? (r.explorerUrl ? `[\`${r.txHash.slice(0, 12)}...\`](${r.explorerUrl})` : `\`${r.txHash}\``) : "none (refused before signing)";
+// Links are rebuilt from the ledger profile (one human-readable page per ledger), not taken from stored receipts.
+const link = (r: { ledger: string; txHash?: string; explorerUrl?: string }) => {
+  if (!r.txHash) return "none (refused before signing)";
+  const url = LEDGERS[r.ledger as LedgerName]?.explorerTx?.(r.txHash as `0x${string}`) ?? r.explorerUrl;
+  return url ? `[\`${r.txHash.slice(0, 12)}...\`](${url})` : `\`${r.txHash}\``;
+};
 const rows = receipts
   .filter((r) => r.ledger !== "anvil")
   .map((r) => `| ${r.timestamp.slice(0, 19)}Z | ${r.principal} | ${LEDGERS[r.ledger]?.badge ?? r.ledger} | ${r.tier} | ${r.outcome}${r.revertError ? ` (${r.revertError.name})` : ""} | ${fmt(r)} | ${link(r)} | ${r.aigc?.model ?? ""} |`);
@@ -288,17 +292,28 @@ writeFileSync(
 );
 
 // ---------------------------------------------------------------- PROOF.md (one page, ten hashes)
-const pick = (pred: (r: RView) => boolean) => receipts.find((r) => r.ledger !== "anvil" && r.txHash && pred(r));
+// The most recent matching receipt (older ones may predate fixes in the same code path).
+const pick = (pred: (r: RView) => boolean) => [...receipts].reverse().find((r) => r.ledger !== "anvil" && r.txHash && pred(r));
+const isCompany = (r: RView) => r.principal.startsWith("lotus");
+const ok = (r: RView) => r.outcome === "confirmed";
 const proofItems = [
-  ["Allowed payment inside the mandate (T1)", pick((r) => r.outcome === "confirmed" && r.tier === "T1")],
-  ["Payment approved on the user's passkey (T2)", pick((r) => r.outcome === "confirmed" && r.tier === "T2")],
+  ["Allowed payment inside the mandate (T1)", pick((r) => ok(r) && r.tier === "T1" && !!r.payment && r.payment.method !== "x402/erc7710" && !isCompany(r))],
+  ["Payment approved on the user's passkey (T2; the signature is checked on-chain through ERC-1271)", pick((r) => ok(r) && r.tier === "T2" && !isCompany(r))],
+  ["Company payment approved by 2 of 3 directors (T2)", pick((r) => ok(r) && r.tier === "T2" && isCompany(r))],
+  ["Service fee paid over x402: single-use, exact-amount ERC-7710 child delegation, settled by the seller", pick((r) => ok(r) && r.payment?.method === "x402/erc7710")],
   ["Attack reverted on-chain: PayeeNotVerified", pick((r) => r.revertError?.name === "PayeeNotVerified")],
-  ["Board resolution executed by 2 of 3 directors (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed" && r.explanation.text.startsWith("Board resolution") && !/Resume/.test(r.explanation.text))],
-  ["One-tap pause signed by the principal and relayed (T3)", pick((r) => r.tier === "T3" && r.outcome === "confirmed" && r.explanation.text.startsWith("Paused"))],
-  ["Velocity breach trips the circuit breaker", pick((r) => r.revertError?.name === "VelocityExceeded")],
-  ["Company payment on the coin-free rail (FISCO)", pick((r) => r.ledger === "fisco" && r.outcome === "confirmed" && r.principal.startsWith("lotus"))],
+  ["Budget enforced on-chain: CategoryBudgetExceeded", pick((r) => r.revertError?.name === "CategoryBudgetExceeded")],
+  ["Unsuitable product refused on-chain: UnsuitableProduct", pick((r) => r.revertError?.name === "UnsuitableProduct")],
+  ["Velocity breach trips the circuit breaker", pick((r) => ok(r) && r.explanation.text.startsWith("Circuit breaker tripped"))],
+  ["Board resolution executed by 2 of 3 directors (T3)", pick((r) => r.tier === "T3" && ok(r) && r.explanation.text.startsWith("Board resolution") && !/Resume/.test(r.explanation.text))],
+  ["One-tap pause signed by the principal and relayed (T3)", pick((r) => r.tier === "T3" && ok(r) && r.explanation.text.startsWith("Paused"))],
+  ["Mandate revoked and delegation disabled in one user operation (T3)", pick((r) => ok(r) && r.explanation.text.startsWith("Revoked the mandate"))],
+  ["Mandate sealed by a visitor's own passkey (WebAuthn) on a fresh account", pick((r) => ok(r) && r.explanation.text.startsWith("Mandate sealed (passkey (WebAuthn))"))],
+  ["Company payment on the coin-free rail (FISCO)", pick((r) => r.ledger === "fisco" && ok(r) && r.principal === "lotus-sz" && r.tier === "T1")],
+  ["Same treasurer agent re-sealed for Hong Kong: payment on the HK rail", pick((r) => ok(r) && r.principal === "lotus-hk" && r.tier === "T1" && !!r.payment)],
 ] as const;
 const proofLines = proofItems.map(([title, r]) => `| ${title} | ${r ? `${LEDGERS[r.ledger].badge}` : "-"} | ${r ? link(r) : "not yet recorded"} |`);
+if (anchorTxs[0]) proofLines.push(`| Receipts anchored on-chain as one Merkle root (indexer) | ${LEDGERS.fisco.badge} | ${link({ ledger: "fisco", txHash: anchorTxs[0] })} |`);
 const zkRows: string[] = [];
 for (const l of ["fisco", "base-sepolia"] as LedgerName[]) {
   const f = resolve(root, "apps/agent/data", `zk-${l}.json`);

@@ -443,6 +443,22 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   const boardMatter = policy?.refusals.some((r) => r.typedError === "AboveTierCeiling");
   if (tier === "T4" && tripRule && !boardMatter && config(id).kind === "company" && policy?.stateReads.paused !== "true") {
     p.breaker = await tripBreaker(ctx, st.account, `${tripRule.typedError}: ${tripRule.detail}`);
+    if (p.breaker.txHash) {
+      recordReceipt({
+        principal: id,
+        ledger: st.ledger,
+        proposalId: p.id,
+        agentId: st.agentId,
+        mandateHash: st.mandateHash!,
+        delegationHash: st.delegationHash!,
+        tier: "T4",
+        outcome: "confirmed",
+        txHash: p.breaker.txHash,
+        documents: { plan: { action: "circuit-breaker trip", rule: tripRule.typedError }, policy: { refusals: policy?.refusals } },
+        explanation: { text: `Circuit breaker tripped (${tripRule.typedError}): the breaker watcher paused every delegation of this account; only the principal can resume it.`, aiGenerated: false },
+        aigc: { model: "none (deterministic breaker rule)", provider: "local" },
+      });
+    }
   }
   proposals.update((d) => {
     d.proposals[p.id] = p;
@@ -469,8 +485,9 @@ async function tripBreaker(ctx: LedgerContext, account: Address, reason: string)
   if (url) {
     try {
       const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ account, reason, ledger: ctx.name, by: "policy" }) });
-      const j = (await r.json()) as { txHash?: Hex };
-      return { tripped: r.ok, txHash: j.txHash, reason };
+      const j = (await r.json()) as { results?: { ledger: string; txHash?: Hex; tripped: boolean }[] };
+      const mine = j.results?.find((x) => x.ledger === ctx.name) ?? j.results?.[0];
+      return { tripped: r.ok, txHash: mine?.txHash, reason };
     } catch {
       /* fall through to the local watcher key */
     }
