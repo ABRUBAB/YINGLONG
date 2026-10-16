@@ -3,6 +3,7 @@ import { docHash, receiptDomain, receiptHash, ZERO32, type Outcome, type Receipt
 import type { DecodedRevert, LedgerName } from "@yinglong/sdk";
 import { ledgerContext } from "./chain/ledger";
 import { DATA_DIR, JsonlLog } from "./store";
+import { statSync } from "node:fs";
 import { resolve } from "node:path";
 
 export interface ReceiptRecord {
@@ -24,9 +25,19 @@ export const receiptLog = new JsonlLog<ReceiptRecord>(resolve(DATA_DIR, "receipt
 
 const SOURCE: Record<LedgerName, ReceiptSource> = { "base-sepolia": "live-base", fisco: "live-fisco", anvil: "anvil-bench" };
 
+// The chain's predecessor is the last receipt in the file. It is cached, but re-read whenever the file changed
+// size since this process last wrote (another process, such as a script on the same data directory, appended).
 let lastHash: Hex | undefined;
+let knownSize = -1;
+function fileSize(): number {
+  try {
+    return statSync(receiptLog.file).size;
+  } catch {
+    return 0;
+  }
+}
 function prevHash(): Hex {
-  if (lastHash) return lastHash;
+  if (lastHash && fileSize() === knownSize) return lastHash;
   const all = receiptLog.all();
   lastHash = all.length ? all[all.length - 1]!.receiptHash : ZERO32;
   return lastHash;
@@ -104,5 +115,6 @@ export function recordReceipt(args: {
   };
   receiptLog.append(rec);
   lastHash = rh;
+  knownSize = fileSize();
   return rec;
 }

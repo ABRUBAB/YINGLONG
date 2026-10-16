@@ -75,7 +75,8 @@ def _dec(types: list[str], t: bytes) -> tuple:
 
 def decode_caveat(c: Caveat, d: Deployment) -> dict[str, Any]:
     """Return a rule dict with the same shape as the TypeScript DecodedRule (bigints as Python ints)."""
-    name = d.name_by_address().get(c.enforcer.lower())
+    # Extra contracts (e.g. the ZK private-mandate stack) are looked up too, as the TypeScript nameByAddress does.
+    name = d.all_names_by_address().get(c.enforcer.lower())
     t = hex_to_bytes(c.terms)
     if name == "AllowedTargetsEnforcer":
         return {"kind": "allowedTargets", "targets": _packed_addresses(t)}
@@ -150,6 +151,9 @@ def decode_caveat(c: Caveat, d: Deployment) -> dict[str, Any]:
     if name == "SuitabilityEnforcer":
         reg, rc = _dec(["address", "uint8"], t)
         return {"kind": "suitability", "registry": _cs(reg), "maxRiskClass": rc}
+    if name == "ZKMandateEnforcer":
+        router, commitment = _dec(["address", "bytes32"], t)
+        return {"kind": "zkMandate", "router": _cs(router), "commitment": "0x" + commitment.hex()}
     return {"kind": "unknown", "enforcer": c.enforcer, "terms": c.terms}
 
 
@@ -232,6 +236,11 @@ def sentence(r: dict[str, Any], names: Names, time_unit: str = "s") -> str:
         return f"At most {r['maxCount']} payments and {amt(r['asset'], r['maxOutflow'])} per {duration(r['window'], time_unit)}."
     if k == "suitability":
         return f"Idle cash goes only into products of risk class {r['maxRiskClass']} or lower."
+    if k == "zkMandate":
+        return (
+            "Private mandate: every payment must carry a zero-knowledge proof that it stays within the hidden cap, "
+            f"payee list and expiry committed as {r['commitment'][:10]}..."
+        )
     return f"Unknown rule at {r['enforcer']}; refuse to seal."
 
 

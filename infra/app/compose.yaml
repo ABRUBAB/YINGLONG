@@ -71,8 +71,12 @@ services:
       AGENT_API_URL: http://127.0.0.1:8787
       INDEXER_DATA_DIR: /data
       FISCO_PROXY_UPSTREAM: http://127.0.0.1:8549
+      # Native RPC of the observer (regulator) node, for exact revert data of failed transactions (read only).
+      FISCO_NATIVE_RPC_URL: https://127.0.0.1:20204
+      FISCO_SDK_DIR: /run/secrets/fisco-sdk
     volumes:
       - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
+      - /opt/yinglong/fisco/nodes/127.0.0.1/sdk:/run/secrets/fisco-sdk:ro
       - /opt/yinglong/data/indexer:/data
     depends_on: [agent]
   web:

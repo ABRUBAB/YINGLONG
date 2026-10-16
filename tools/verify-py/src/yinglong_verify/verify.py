@@ -331,6 +331,7 @@ def run_verify(
     deployment_path: str | None = None,
     offline: bool = False,
     from_block: int | None = None,
+    require_live: bool = False,
 ) -> Result:
     lg = ledger(chain_name, rpc_url)
     d = load_deployment(chain_name, deployment_path)
@@ -509,15 +510,23 @@ def run_verify(
 
     if pub is not None:
         reg = pub.registry
+        # Integrity (what was sealed is what is enforced) and current status are separate questions: a revoked or
+        # superseded mandate still verifies, and its status is reported. --require-live makes "not live" a failure.
         if "isLive" in reg:
-            rep.ok(
-                "registry isLive(mandateHash)",
-                bool(reg["isLive"]),
-                f"status {reg.get('status')}, valid {reg.get('validFrom')} to {reg.get('validUntil')}",
-                f"not live: status {reg.get('status')}, valid {reg.get('validFrom')} to {reg.get('validUntil')}",
-            )
+            if reg["isLive"] or require_live:
+                rep.ok(
+                    "registry isLive(mandateHash)",
+                    bool(reg["isLive"]),
+                    f"status {reg.get('status')}, valid {reg.get('validFrom')} to {reg.get('validUntil')}",
+                    f"not live: status {reg.get('status')}, valid {reg.get('validFrom')} to {reg.get('validUntil')}",
+                )
+            else:
+                rep.add("registry isLive(mandateHash)", INFO, f"NOT LIVE: status {reg.get('status')}; the agent has no authority under this mandate (use --require-live to fail on this)")
         if pub.disabled is not None:
-            rep.ok("DelegationManager has not disabled the delegation (disabledDelegations)", not pub.disabled, "enabled", "DISABLED: the DelegationManager refuses every redemption")
+            if not pub.disabled or require_live:
+                rep.ok("DelegationManager has not disabled the delegation (disabledDelegations)", not pub.disabled, "enabled", "DISABLED: the DelegationManager refuses every redemption")
+            else:
+                rep.add("DelegationManager has not disabled the delegation (disabledDelegations)", INFO, "DISABLED: the DelegationManager refuses every redemption")
 
     if pub is not None and rpc is not None:
         targets: dict[str, str] = {}

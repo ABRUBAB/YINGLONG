@@ -38,7 +38,7 @@ export class DocStore<T extends object> {
 }
 
 export class JsonlLog<T> {
-  constructor(private readonly file: string) {
+  constructor(readonly file: string) {
     mkdirSync(dirname(file), { recursive: true });
   }
   append(row: T): void {

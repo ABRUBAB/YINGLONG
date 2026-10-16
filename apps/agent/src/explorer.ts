@@ -1,7 +1,7 @@
 import { decodeEventLog, decodeFunctionData, type Abi, type Hex } from "viem";
 import { abi, nameByAddress, type LedgerName } from "@yinglong/sdk";
 import { ledgerContext } from "./chain/ledger";
-import { replayRevert } from "./chain/mandates";
+import { nativeRevert, replayRevert } from "./chain/mandates";
 
 /**
  * A minimal transaction explorer for ledgers without a public one (FISCO BCOS is a team-run consortium
@@ -36,7 +36,8 @@ export async function explainTx(ledger: LedgerName, hash: Hex) {
       /* try next */
     }
   }
-  const revert = rcpt.status === "success" ? undefined : await replayRevert(ctx, hash);
+  const exact = rcpt.status === "success" ? undefined : await nativeRevert(ctx, hash);
+  const revert = rcpt.status === "success" ? undefined : (exact ?? (await replayRevert(ctx, hash)));
   return {
     ledger,
     ledgerBadge: ctx.profile.badge,
@@ -51,6 +52,10 @@ export async function explainTx(ledger: LedgerName, hash: Hex) {
     call,
     events: rcpt.logs.map((l) => ({ address: l.address, addressName: names.get(l.address.toLowerCase()), ...decodeLog(l as never) })),
     revert,
-    note: ledger === "fisco" ? "FISCO BCOS: reverted transactions carry no revert data; the reason is recovered by replaying the call against the latest state." : undefined,
+    revertSource: revert ? (exact ? "native receipt (exact revert data as executed)" : "eth_call replay") : undefined,
+    note:
+      ledger === "fisco" && revert && !exact
+        ? "FISCO BCOS: the Web3 receipt carries no revert data and the native receipt was not reachable, so the reason was recovered by replaying the call against the latest state (it can differ if state changed since)."
+        : undefined,
   };
 }

@@ -56,6 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     v.add_argument("--from-block", type=int, help="first block to search for MandatePublished (default: deployment block)")
     v.add_argument("--save-snapshot", metavar="PATH", help="write what was read on-chain, for later --offline verification")
     v.add_argument("--verbose", "-v", action="store_true", help="also print per-enforcer and per-contract tables")
+    v.add_argument("--require-live", action="store_true", help="fail if the mandate is no longer live (revoked or superseded) or its delegation is disabled")
 
     t = sub.add_parser("verify-tx", help="decode a transaction's YINGLONG events and recover its revert reason")
     t.add_argument("txhash")
@@ -84,7 +85,7 @@ def cmd_verify(a: argparse.Namespace) -> int:
 
     try:
         inp = load_input(a.input)
-        res = run_verify(inp, a.chain, a.rpc, a.deployment, a.offline, a.from_block)
+        res = run_verify(inp, a.chain, a.rpc, a.deployment, a.offline, a.from_block, require_live=a.require_live)
     except (InputError, FileNotFoundError, ValueError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
@@ -128,6 +129,9 @@ def cmd_verify(a: argparse.Namespace) -> int:
     if res.published and res.published.tx_hash:
         link = lg.explorer_tx.format(res.published.tx_hash) if lg.explorer_tx else res.published.tx_hash
         _out(f"Published in:         {link}")
+    if res.published is not None:
+        status = res.published.registry.get("status")
+        _out(f"Status:               {status}" + ("" if not res.revoked else " (no longer in force: the agent has no authority under this mandate)"))
 
     said = (res.mandate or {}).get("sentences") or []
     if said:

@@ -115,7 +115,36 @@ export async function simulateRedemption(ctx: LedgerContext, agent: Address, cal
 }
 
 /** Replay a mined transaction with eth_call at its parent block to recover the typed revert reason. */
+/**
+ * Exact revert data of a FISCO transaction as executed, from the native receipt (served read-only by the indexer's
+ * FISCO proxy as yinglong_getRevertData). Undefined when unavailable (other ledgers, local development).
+ */
+export async function nativeRevert(ctx: LedgerContext, txHash: Hex): Promise<DecodedRevert | undefined> {
+  if (ctx.name !== "fisco") return undefined;
+  const url = process.env.FISCO_REVERT_RPC ?? "http://127.0.0.1:8791/rpc/fisco";
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "yinglong_getRevertData", params: [txHash] }),
+      signal: AbortSignal.timeout(8_000),
+    });
+    const j = (await r.json()) as { result?: { status: number; output: string } };
+    if (!j.result || j.result.status === 0 || !j.result.output || j.result.output === "0x") return undefined;
+    return decodeRevert(j.result.output as Hex);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * The typed revert reason of a mined transaction: on FISCO from the native receipt (exact, as executed); otherwise
+ * by replaying it with eth_call at its parent block (FISCO ignores block tags, so a replay there would run against
+ * the latest state and could report a different reason once state has changed).
+ */
 export async function replayRevert(ctx: LedgerContext, txHash: Hex): Promise<DecodedRevert | undefined> {
+  const exact = await nativeRevert(ctx, txHash);
+  if (exact) return exact;
   const tx = await ctx.pub.getTransaction({ hash: txHash });
   try {
     await ctx.pub.call({ account: tx.from, to: tx.to!, data: tx.input, blockNumber: (tx.blockNumber ?? 1n) - 1n });

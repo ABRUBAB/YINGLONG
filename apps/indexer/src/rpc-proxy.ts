@@ -31,7 +31,15 @@ export interface ProxyConfig {
   ratePerMin: number;
   maxBlockRange: number;
   fetchImpl?: typeof fetch;
+  /** Reads the exact revert data of a transaction from the FISCO native receipt (see fisco-native.ts). */
+  nativeRevert?: (txHash: string) => Promise<{ status: number; output: string; message: string; blockNumber?: number } | undefined>;
 }
+
+/**
+ * Extra read method answered by this proxy itself: `yinglong_getRevertData(txHash)` returns
+ * {status, output, message} from the FISCO native receipt (status 0 = success; output = the revert data as executed).
+ */
+export const LOCAL_METHODS = new Set<string>(["yinglong_getRevertData"]);
 
 export const RPC_ERRORS = {
   parse: { code: -32700, message: "parse error" },
@@ -85,6 +93,11 @@ export class FiscoRpcProxy {
   /** Validate a single JSON-RPC request against the allowlist and eth_getLogs bounds. */
   validate(req: RpcRequest): { ok: true } | { ok: false; error: { code: number; message: string } } {
     if (!req || typeof req.method !== "string") return { ok: false, error: RPC_ERRORS.invalid };
+    if (LOCAL_METHODS.has(req.method)) {
+      const h = Array.isArray(req.params) ? req.params[0] : undefined;
+      if (!this.config.nativeRevert || typeof h !== "string" || !/^0x[0-9a-fA-F]{64}$/.test(h)) return { ok: false, error: RPC_ERRORS.methodNotAllowed };
+      return { ok: true };
+    }
     if (!ALLOWED_METHODS.has(req.method)) return { ok: false, error: RPC_ERRORS.methodNotAllowed };
     if (req.method === "eth_getLogs") {
       const filter = Array.isArray(req.params) ? (req.params[0] as Record<string, unknown> | undefined) : undefined;
@@ -113,6 +126,18 @@ export class FiscoRpcProxy {
     for (const r of reqs) {
       const v = this.validate(r);
       if (!v.ok) return { status: 200, body: isBatch ? reqs.map((x) => jsonError(x.id, v.error)) : jsonError(reqs[0]!.id, v.error) };
+    }
+
+    // Local methods are answered here (each one alone: no mixing with forwarded requests).
+    if (reqs.some((r) => LOCAL_METHODS.has(r.method as string))) {
+      const out = await Promise.all(
+        reqs.map(async (r) => {
+          if (!LOCAL_METHODS.has(r.method as string)) return jsonError(r.id, RPC_ERRORS.invalid);
+          const v = await this.config.nativeRevert!(String((r.params as unknown[])[0]));
+          return v ? { jsonrpc: "2.0", id: r.id ?? null, result: v } : jsonError(r.id, RPC_ERRORS.upstream);
+        }),
+      );
+      return { status: 200, body: isBatch ? out : out[0] };
     }
 
     // Forward only the sanitised, allowed fields upstream.

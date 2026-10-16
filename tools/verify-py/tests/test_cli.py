@@ -124,8 +124,11 @@ def test_snapshot_offline(capsys, tmp_path, anvil_deployment):
     bad = copy.deepcopy(s)
     bad["delegationManager"]["disabled"] = True
     p.write_text(json.dumps(bad), encoding="utf-8")
+    # A disabled delegation is reported (integrity still verifies); --require-live makes it a failure.
     code, out = run(capsys, "verify", str(p), "--chain", "anvil")
-    assert code == 1 and "DISABLED" in out and "REVOKED" in out
+    assert code == 0 and "DISABLED" in out and "REVOKED" in out
+    code, out = run(capsys, "verify", str(p), "--chain", "anvil", "--require-live")
+    assert code == 1 and "DISABLED" in out
 
     bad = copy.deepcopy(s)
     bad["published"]["caveats"] = bad["published"]["caveats"][:-1]

@@ -268,16 +268,23 @@ def test_fork_disabled_then_revoked(capsys, fork, published):
     delegation = (m["agent"]["wallet"], m["principal"]["account"], hex_to_bytes(ROOT_AUTHORITY), caveats_abi_value(published["caveats"]), int(m["salt"]), b"")
     rc = send(rpc, m["principal"]["account"], d.addr("DelegationManager"), ch.calldata("DelegationManager", "disableDelegation", [delegation]))
     assert int(rc["status"], 16) == 1
+    # Integrity still verifies; the status is reported, and --require-live turns it into a failure.
     code, out = run(capsys, "verify", "nadia", "--chain", "anvil", "--rpc", fork)
-    assert code == 1
+    assert code == 0
     assert "DISABLED" in out and "REVOKED" in out
+    code, out = run(capsys, "verify", "nadia", "--chain", "anvil", "--rpc", fork, "--require-live")
+    assert code == 1
     rc = send(rpc, m["principal"]["account"], d.addr("MandateRegistry"), ch.calldata("MandateRegistry", "revoke", [hex_to_bytes(g["mandateHash"])]))
     assert int(rc["status"], 16) == 1
     code, out = run(capsys, "verify", "nadia", "--chain", "anvil", "--rpc", fork, "--json")
     res = json.loads(out)
+    assert code == 0 and res["revoked"] is True
+    status = {c["name"]: c for c in res["checks"]}["registry isLive(mandateHash)"]
+    assert status["status"] == "INFO" and "NOT LIVE" in status["detail"]
+    code, out = run(capsys, "verify", "nadia", "--chain", "anvil", "--rpc", fork, "--json", "--require-live")
+    res = json.loads(out)
     failed = {c["name"] for c in res["checks"] if c["status"] == "FAIL"}
-    assert "registry isLive(mandateHash)" in failed
-    assert res["revoked"] is True
+    assert code == 1 and "registry isLive(mandateHash)" in failed
 
 
 # ---------------------------------------------------------------- FISCO BCOS (read-only)

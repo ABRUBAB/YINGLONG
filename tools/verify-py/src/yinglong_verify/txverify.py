@@ -148,11 +148,22 @@ def run_verify_tx(tx_hash: str, chain_name: str, rpc_url: str | None = None, dep
 
     if status == 0:
         parent = max(block - 1, 0)
-        data, how = _replay(rpc, tx, parent)
+        data, how = None, ""
         if lg.name == "fisco":
-            how += " (FISCO BCOS eth_call ignores block tags: replayed against the latest state)"
-        else:
-            how += f" at the parent block {parent}"
+            # Exact revert data as executed, from the FISCO native receipt (served read-only by our RPC proxy as
+            # yinglong_getRevertData). A plain FISCO node does not offer this method; then we replay.
+            try:
+                nr = rpc.call("yinglong_getRevertData", [tx_hash])
+                if isinstance(nr, dict) and int(nr.get("status", 0)) != 0 and nr.get("output") not in (None, "", "0x"):
+                    data, how = nr["output"], "native receipt output (exact revert data as executed)"
+            except Exception:
+                pass
+        if data is None:
+            data, how = _replay(rpc, tx, parent)
+            if lg.name == "fisco":
+                how += " (FISCO BCOS eth_call ignores block tags: replayed against the latest state, so the reason can differ if state changed since)"
+            else:
+                how += f" at the parent block {parent}"
         if data is None:
             rep.add("revert reason recovered", FAIL, f"{how}: state changed since; the reason cannot be reproduced")
         else:

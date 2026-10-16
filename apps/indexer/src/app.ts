@@ -4,7 +4,8 @@ import type { LedgerName } from "@yinglong/sdk";
 import { Anchorer } from "./anchoring";
 import { BreakerWatcher } from "./breaker";
 import { loadConfig, type IndexerConfig } from "./config";
-import { ALLOWED_METHODS, FiscoRpcProxy } from "./rpc-proxy";
+import { ALLOWED_METHODS, FiscoRpcProxy, LOCAL_METHODS } from "./rpc-proxy";
+import { makeNativeRevertReader, nativeConfigFromEnv } from "./fisco-native";
 
 export interface IndexerDeps {
   config: IndexerConfig;
@@ -19,7 +20,15 @@ export function makeIndexer(env: NodeJS.ProcessEnv = process.env): IndexerDeps {
     config,
     anchorer: new Anchorer(config),
     breaker: new BreakerWatcher(config),
-    proxy: new FiscoRpcProxy({ upstreamUrl: config.fiscoRpcUrl, ratePerMin: config.proxyRateLimitPerMin, maxBlockRange: config.proxyMaxBlockRange }),
+    proxy: new FiscoRpcProxy({
+      upstreamUrl: config.fiscoRpcUrl,
+      ratePerMin: config.proxyRateLimitPerMin,
+      maxBlockRange: config.proxyMaxBlockRange,
+      nativeRevert: (() => {
+        const n = nativeConfigFromEnv(process.env);
+        return n ? makeNativeRevertReader(n) : undefined;
+      })(),
+    }),
   };
 }
 
@@ -134,7 +143,7 @@ export function createApp(deps: IndexerDeps): Hono {
     const res = await proxy.handle(body, clientIp(c));
     return c.json(res.body as never, res.status as never);
   });
-  app.get("/rpc/fisco", (c) => c.json({ note: "POST only; read-only FISCO JSON-RPC proxy", allowed: [...ALLOWED_METHODS] }));
+  app.get("/rpc/fisco", (c) => c.json({ note: "POST only; read-only FISCO JSON-RPC proxy", allowed: [...ALLOWED_METHODS, ...LOCAL_METHODS], local: { yinglong_getRevertData: "params [txHash]: exact revert data of a FISCO transaction from the native receipt {status, output, message}" } }));
 
   return app;
 }
