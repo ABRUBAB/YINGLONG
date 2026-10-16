@@ -402,18 +402,33 @@ app.post("/v1/board-proposals/:id/sign", async (c) => {
 });
 
 app.get("/v1/registry/agents", async (c) => {
-  const out = [];
-  for (const st of Object.values(world.get().principals)) {
-    if (!st) continue;
-    const ctx = ledgerContext(st.ledger);
-    const p = await ctx.read<{ status: number; identityCode: string; ownerDidHash: Hex; agentWallet: Address }>({
-      address: ctx.addr("YinglongPassportRegistry"),
-      abi: abi.YinglongPassportRegistryAbi,
-      functionName: "passportOf",
-      args: [st.agentId],
-    });
-    out.push({ agentId: st.agentId, ledger: st.ledger, wallet: p.agentWallet, label: config(st.id).agentLabel, principal: st.id, identityCode: p.identityCode, ownerDidHash: p.ownerDidHash, status: ["none", "active", "halted", "revoked"][Number(p.status)] });
-  }
+  // Demo agents, then the most recent visitors' agents (default 20; ?visitors=<n>, at most 200).
+  const nVisitors = Math.min(Number(c.req.query("visitors") ?? 20), 200);
+  const all = Object.values(world.get().principals).filter((st): st is PrincipalState => !!st);
+  const demo = all.filter((st) => !isVisitorId(st.id));
+  const visitors = all.filter((st) => isVisitorId(st.id)).sort((a, b) => (b.sealedAt ?? "").localeCompare(a.sealedAt ?? "")).slice(0, nVisitors);
+  const out = await Promise.all(
+    [...demo, ...visitors].map(async (st) => {
+      const ctx = ledgerContext(st.ledger);
+      const p = await ctx.read<{ status: number; identityCode: string; ownerDidHash: Hex; agentWallet: Address }>({
+        address: ctx.addr("YinglongPassportRegistry"),
+        abi: abi.YinglongPassportRegistryAbi,
+        functionName: "passportOf",
+        args: [st.agentId],
+      });
+      return {
+        agentId: st.agentId,
+        ledger: st.ledger,
+        wallet: p.agentWallet,
+        label: config(st.id).agentLabel,
+        principal: st.id,
+        kind: isVisitorId(st.id) ? "visitor" : "demo",
+        identityCode: p.identityCode,
+        ownerDidHash: p.ownerDidHash,
+        status: ["none", "active", "halted", "revoked"][Number(p.status)],
+      };
+    }),
+  );
   return c.json(apiJson(out));
 });
 
