@@ -9,7 +9,7 @@ import { abi, LEDGERS, type LedgerName } from "@yinglong/sdk";
 import { compileMandate, decompile, hashRingGeometry, namesFor, verifyRoundTrip, type Mandate } from "@yinglong/mandate";
 import { ledgerContext } from "./chain/ledger";
 import { providerStatus } from "./llm/provider";
-import { ask, bypass, createPauseApproval, declineApproval, demoApprove, execute, hijack, proposals, submitApproval } from "./pipeline";
+import { ask, bypass, createPauseApproval, createRevokeApproval, declineApproval, demoApprove, execute, hijack, proposals, submitApproval } from "./pipeline";
 import { receiptLog, type ReceiptRecord } from "./receipts";
 import { attempt, challenge, session } from "./challenge";
 import { board, createBoardProposal, directorSign } from "./board";
@@ -279,6 +279,12 @@ app.post("/v1/principals/:id/resume", async (c) => {
   const id = c.req.param("id");
   if (!isPid(id)) return c.json({ ok: false, error: "unknown principal" }, 404);
   const a = await createPauseApproval(id, "resume");
+  return c.json(apiJson({ approvalId: a.id, approval: a }));
+});
+app.post("/v1/principals/:id/revoke", async (c) => {
+  const id = c.req.param("id");
+  if (!isPid(id)) return c.json({ ok: false, error: "unknown principal" }, 404);
+  const a = await createRevokeApproval(id);
   return c.json(apiJson({ approvalId: a.id, approval: a }));
 });
 app.post("/v1/approvals/:id/decline", (c) => c.json(apiJson(declineApproval(c.req.param("id")))));

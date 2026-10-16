@@ -1,5 +1,6 @@
 // Demo driver (API level): plays the scenario beats against a running agent API and records every result.
-// Usage: npx tsx apps/agent/scripts/demo-beats.ts [--api https://api.yinglong-agent.tech] [--only nadia|lotus|guest]
+// Usage: npx tsx apps/agent/scripts/demo-beats.ts [--api https://api.yinglong-agent.tech] [--only nadia,nadia-tuition,lotus-ops,lotus-board,lotus-hk,guest]
+// Amounts are chosen so one day of beats stays inside every daily rule (Nadia: 8 payments and 15,000 tHKD per day).
 // The operator token is read from ../.secrets/agent-admin-token.txt (never printed).
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -7,7 +8,8 @@ import { repoRoot } from "@yinglong/sdk/server";
 
 const args = process.argv.slice(2);
 const API = args.includes("--api") ? args[args.indexOf("--api") + 1]! : "https://api.yinglong-agent.tech";
-const only = args.includes("--only") ? args[args.indexOf("--only") + 1] : undefined;
+const only = args.includes("--only") ? args[args.indexOf("--only") + 1]!.split(",") : undefined;
+const want = (k: string) => !only || only.includes(k);
 const tokenFile = resolve(repoRoot(), "..", ".secrets", "agent-admin-token.txt");
 const TOKEN = existsSync(tokenFile) ? readFileSync(tokenFile, "utf8").trim() : "";
 const out: Record<string, unknown>[] = [];
@@ -41,6 +43,12 @@ const brief = (p: Record<string, unknown>) => ({
 const rbrief = (r: Record<string, unknown> | undefined) =>
   r ? { outcome: r.outcome, tier: r.tier, txHash: r.txHash, revert: (r.revertError as { message?: string } | undefined)?.message, ledger: r.ledger } : undefined;
 
+async function nadiaTuition() {
+  const tuition = await call("POST", "/v1/principals/nadia/ask", { text: "Pay the HBU tuition deposit of 2,500 HKD into escrow" });
+  rec("5 tuition escrow (T2)", brief(tuition));
+  if (tuition.approvalId) rec("5 approved on the passkey", rbrief((await call("POST", `/v1/approvals/${tuition.approvalId}/demo-sign`)).receipt as Record<string, unknown>)!);
+}
+
 async function nadia() {
   const fx = await call("POST", "/v1/principals/nadia/ask", { text: "Convert 1,000 USD of my stipend to HKD" });
   rec("3 FX quote bought over x402 (ERC-7710), conversion at the signed price", brief(fx));
@@ -59,9 +67,7 @@ async function nadia() {
   rec("2 food above budget (refused off-chain)", brief(over));
   if (over.tier === "T4") rec("2 bypass: budget enforced on-chain", rbrief((await call("POST", `/v1/proposals/${over.id}/bypass`)).receipt as Record<string, unknown>)!);
 
-  const tuition = await call("POST", "/v1/principals/nadia/ask", { text: "Pay the HBU tuition deposit of 5,000 HKD into escrow" });
-  rec("5 tuition escrow (T2)", brief(tuition));
-  if (tuition.approvalId) rec("5 approved on the passkey", rbrief((await call("POST", `/v1/approvals/${tuition.approvalId}/demo-sign`)).receipt as Record<string, unknown>)!);
+  if (want("nadia-tuition")) await nadiaTuition();
 
   const phish = await call("POST", "/v1/principals/nadia/ask", {
     text: "Please handle this email from the university",
@@ -85,7 +91,7 @@ async function nadia() {
   rec("11 resume (passkey)", rbrief((await call("POST", `/v1/approvals/${resume.approvalId}/demo-sign`)).receipt as Record<string, unknown>)!);
 }
 
-async function lotus() {
+async function lotusOps() {
   const inv = await call("POST", "/v1/principals/lotus-sz/ask", {
     text: "Pay this supplier invoice",
     attachments: [
@@ -106,7 +112,9 @@ async function lotus() {
   const resume = await call("POST", "/v1/principals/lotus-sz/board-proposals", { kind: "resume", title: "Resume the treasurer after the velocity review" });
   await call("POST", `/v1/board-proposals/${resume.id}/sign`, { director: "director-1" });
   rec("8 board resumes the agent (2 of 3)", await call("POST", `/v1/board-proposals/${resume.id}/sign`, { director: "director-3" }));
+}
 
+async function lotusBoard() {
   const eq = await call("POST", "/v1/principals/lotus-sz/ask", { text: "Buy the SMT equipment line from Shenzhen Components for 300,000 CNY" });
   rec("9 equipment purchase above the ceiling (T3)", brief(eq));
   const bp = await call("POST", "/v1/principals/lotus-sz/board-proposals", { payeeId: "shenzhen_components", amount: "30000000", title: "Equipment purchase: SMT line (board resolution)" });
@@ -138,14 +146,18 @@ async function guest() {
 
 async function main() {
   for (const id of ["nadia", "lotus-sz", "lotus-hk", "guest"]) await call("POST", `/v1/principals/${id}/onboard`, {});
-  if (!only || only === "nadia") await nadia();
-  if (!only || only === "lotus") await lotus();
-  if (!only || only === "lotus-hk") await lotusHk();
-  if (!only || only === "guest") await guest();
+  if (want("nadia")) await nadia();
+  else if (only?.includes("nadia-tuition")) await nadiaTuition();
+  if (want("lotus-ops")) await lotusOps();
+  if (want("lotus-board")) await lotusBoard();
+  if (want("lotus-hk")) await lotusHk();
+  if (want("guest")) await guest();
   const dir = resolve(repoRoot(), "apps/agent/data");
   mkdirSync(dir, { recursive: true });
   const f = resolve(dir, `beats-${API.includes("127.0.0.1") ? "local" : "live"}.json`);
-  writeFileSync(f, `${JSON.stringify(out, null, 2)}\n`);
+  // Append: the file is the log of every live run, not only the last one.
+  const prev = existsSync(f) ? (JSON.parse(readFileSync(f, "utf8")) as Record<string, unknown>[]) : [];
+  writeFileSync(f, `${JSON.stringify([...prev, ...out], null, 2)}\n`);
   console.log(`wrote ${f}`);
 }
 

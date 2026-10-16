@@ -3,6 +3,7 @@ import { encodeAbiParameters, encodeFunctionData, keccak256, stringToBytes, type
 import { abi, docHash, type DecodedRevert, type Tier } from "@yinglong/sdk";
 import { formatUnits, type Delegation, type Mandate } from "@yinglong/mandate";
 import { HandleStore } from "@yinglong/provenance";
+import { buildUserOp, executeCallData, submitUserOp, userOpDigest, type PackedUserOp } from "@yinglong/sdk/account";
 import { ledgerContext, type LedgerContext } from "./chain/ledger";
 import { redeemCallData, replayRevert, simulateRedemption, singleExecution } from "./chain/mandates";
 import { explain } from "./explain";
@@ -60,7 +61,7 @@ export interface ApprovalRequest {
   id: string;
   principal: PrincipalId;
   proposalId: string;
-  kind: "cosign" | "pause" | "resume";
+  kind: "cosign" | "pause" | "resume" | "revoke";
   decoded: { target: Address; targetLabel: string; method: string; payeeLabel: string; payeeAddress: Address; symbol: string; decimals: number; amount: string };
   typedData: { domain: Record<string, unknown>; types: Record<string, unknown>; primaryType: string; message: Record<string, unknown> };
   digest: Hex;
@@ -73,6 +74,8 @@ export interface ApprovalRequest {
   explanation: { text: string; aiGenerated: boolean; model?: string };
   threshold?: number;
   signatures?: { signer: string; signedAt: string }[];
+  /** Revoke only: the unsigned user operation whose EIP-712 digest the principal signs. */
+  userOp?: PackedUserOp;
 }
 
 interface Proposals {
@@ -528,6 +531,7 @@ export async function submitApproval(approvalId: string, signature: Hex): Promis
   if (!a) throw new Error("unknown approval");
   if (a.status !== "pending") throw new Error(`approval is ${a.status}`);
   if (a.kind === "pause" || a.kind === "resume") return submitPauseApproval(a, signature);
+  if (a.kind === "revoke") return submitRevokeApproval(a, signature);
   const p = proposals.get().proposals[a.proposalId]!;
   const st = stateOf(a.principal);
   const ctx = ledgerContext(st.ledger);
@@ -616,6 +620,117 @@ async function submitPauseApproval(a: ApprovalRequest, signature: Hex): Promise<
     approvalSig: signature,
     documents: { plan: { action: a.kind, msToConfirmed: ms, block: res.receipt.blockNumber.toString() } },
     explanation: { text: a.kind === "pause" ? `Paused every delegation of this account (confirmed in ${ms} ms, block ${res.receipt.blockNumber}).` : "Resumed the agent.", aiGenerated: false },
+    aigc: { model: "none (user signature)", provider: "local" },
+  });
+}
+
+/**
+ * Revoke: one user operation from the principal's own account retires the live mandate in the registry and
+ * disables its root delegation in the DelegationManager. The principal signs the operation's EIP-712 digest
+ * (DeleGatorCore domain); our relayer submits it straight to the EntryPoint. Re-sealing is a separate step.
+ */
+export async function createRevokeApproval(id: PrincipalId): Promise<ApprovalRequest> {
+  const st = stateOf(id);
+  if (!st.mandateHash || !st.delegation) throw new Error("no sealed mandate to revoke");
+  const ctx = ledgerContext(st.ledger);
+  const live = await ctx.read<boolean>({ address: ctx.addr("MandateRegistry"), abi: abi.MandateRegistryAbi, functionName: "isLive", args: [st.mandateHash] });
+  if (!live) throw new Error("the mandate is not live");
+  const d = st.delegation;
+  const calls = [
+    { to: ctx.addr("MandateRegistry"), data: encodeFunctionData({ abi: abi.MandateRegistryAbi, functionName: "revoke", args: [st.mandateHash] }) },
+    {
+      to: ctx.addr("DelegationManager"),
+      data: encodeFunctionData({ abi: abi.DelegationManagerAbi, functionName: "disableDelegation", args: [{ ...d, caveats: [...d.caveats], salt: BigInt(d.salt) }] }),
+    },
+  ];
+  const op = await buildUserOp({
+    publicClient: ctx.pub,
+    account: st.account,
+    callData: executeCallData(calls),
+    ...(ctx.profile.legacyTx ? { maxFeePerGas: 0n, maxPriorityFeePerGas: 0n } : {}),
+  });
+  const digest = await userOpDigest(ctx.pub, op);
+  const a: ApprovalRequest = {
+    id: randomUUID(),
+    principal: id,
+    proposalId: "",
+    kind: "revoke",
+    decoded: { target: ctx.addr("DelegationManager"), targetLabel: "MandateRegistry + DelegationManager", method: "revoke + disableDelegation", payeeLabel: "", payeeAddress: st.account, symbol: "", decimals: 0, amount: "0" },
+    typedData: {
+      domain: { name: config(id).kind === "company" ? "MultiSigDeleGator" : "HybridDeleGator", version: "1", chainId: ctx.profile.chainId, verifyingContract: st.account },
+      types: {
+        PackedUserOperation: [
+          { name: "sender", type: "address" },
+          { name: "nonce", type: "uint256" },
+          { name: "initCode", type: "bytes" },
+          { name: "callData", type: "bytes" },
+          { name: "accountGasLimits", type: "bytes32" },
+          { name: "preVerificationGas", type: "uint256" },
+          { name: "gasFees", type: "bytes32" },
+          { name: "paymasterAndData", type: "bytes" },
+          { name: "entryPoint", type: "address" },
+        ],
+      },
+      primaryType: "PackedUserOperation",
+      message: {
+        sender: op.sender,
+        nonce: op.nonce.toString(),
+        initCode: op.initCode,
+        callData: op.callData,
+        accountGasLimits: op.accountGasLimits,
+        preVerificationGas: op.preVerificationGas.toString(),
+        gasFees: op.gasFees,
+        paymasterAndData: op.paymasterAndData,
+        entryPoint: ctx.addr("EntryPoint"),
+      },
+    },
+    digest,
+    nonce: op.nonce,
+    expiry: 0n,
+    expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
+    status: "pending",
+    execution: { target: ctx.addr("EntryPoint"), value: "0", callData: op.callData },
+    reason: "Revoke this mandate: the agent loses all authority until you seal a new one.",
+    explanation: { text: "Sign to revoke the mandate and disable its delegation in one operation. Sealing a new mandate is a separate step.", aiGenerated: false },
+    threshold: config(id).kind === "company" ? 2 : 1,
+    signatures: [],
+    userOp: op,
+  };
+  proposals.update((x) => {
+    x.approvals[a.id] = a;
+  });
+  return a;
+}
+
+async function submitRevokeApproval(a: ApprovalRequest, signature: Hex): Promise<ReceiptRecord> {
+  const st = stateOf(a.principal);
+  const ctx = ledgerContext(st.ledger);
+  const op: PackedUserOp = { ...a.userOp!, signature };
+  await ctx.ensureGas(st.account, 5_000_000_000_000_000n);
+  const t0 = Date.now();
+  const res = await submitUserOp({ publicClient: ctx.pub, relayer: ctx.wallet("relayer"), entryPoint: ctx.addr("EntryPoint"), op, ...ctx.txOpts() });
+  const ms = Date.now() - t0;
+  const rcpt = await ctx.pub.getTransactionReceipt({ hash: res.txHash });
+  const live = await ctx.read<boolean>({ address: ctx.addr("MandateRegistry"), abi: abi.MandateRegistryAbi, functionName: "isLive", args: [st.mandateHash!] });
+  const ok = res.success && !live;
+  proposals.update((d) => {
+    d.approvals[a.id]!.status = "signed";
+  });
+  return recordReceipt({
+    principal: a.principal,
+    ledger: st.ledger,
+    agentId: st.agentId,
+    mandateHash: st.mandateHash!,
+    delegationHash: st.delegationHash!,
+    tier: "T3",
+    outcome: ok ? "confirmed" : "reverted",
+    txHash: res.txHash,
+    approvalSig: signature,
+    documents: { plan: { action: "revoke", msToConfirmed: ms, block: rcpt.blockNumber.toString(), mandateLive: live } },
+    explanation: {
+      text: ok ? `Revoked the mandate and disabled its delegation (confirmed in ${ms} ms, block ${rcpt.blockNumber}).` : "The revoke operation did not take effect.",
+      aiGenerated: false,
+    },
     aigc: { model: "none (user signature)", provider: "local" },
   });
 }
@@ -778,7 +893,8 @@ function writeReceipt(p: Proposal, st: PrincipalState, outcome: ReceiptRecord["r
           : p.explanation,
     aigc: { model: p.understanding.model, provider: p.understanding.provider },
     payment: p.payment ? { ...p.payment, payeeLabel: p.payment.payee.label, payee: p.payment.payee.address } : undefined,
-    revertError: revert ?? p.simulation?.revert,
+    // A confirmed transaction has no revert; the pre-approval simulation (e.g. CoSignRequired) is not carried over.
+    revertError: outcome === "confirmed" ? undefined : (revert ?? p.simulation?.revert),
   });
 }
 
