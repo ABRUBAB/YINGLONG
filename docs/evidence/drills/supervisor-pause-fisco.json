@@ -1,0 +1,49 @@
+{
+  "schema": "yinglong.supervisor-pause/1",
+  "generatedBy": "apps/agent/scripts/supervisor-pause.ts",
+  "api": "https://api.yinglong-agent.tech",
+  "ledger": "fisco",
+  "at": "2026-10-16T01:02:57.131Z",
+  "principal": {
+    "visitorId": "v-44e774203e",
+    "account": "0x781b8a247a23Cb62EA9043b0E15af21FEa9Eb838",
+    "agentId": "16",
+    "agentWallet": "0x7a70255dE8Ff080596Fd9F63327Bc1b1286B8d81",
+    "sealTx": "0x1d31fe37aa108db88728741c3fcfca1817be0999ddf987e4f682729b41e39280",
+    "sealedBy": "scripted passkey (software P-256 key)"
+  },
+  "method": "Operator route POST /v1/supervisor/agents/:agentId/halt (YinglongPassportRegistry.supervisorSetStatus) on a fresh visitor's agent; status read from GET /v1/registry/agents (passportOf) and GET /v1/principals/:id/state before and after; transaction receipts read through the public read-only RPC. The supervisor role is played by the team.",
+  "halt": {
+    "txHash": "0x7cac0cf62dadf0f4cc721c2d9e6076bf1c7d9e77de1124932d915192fe071703",
+    "ok": true,
+    "clientMs": 444,
+    "onChainStatus": "0x1",
+    "block": 435,
+    "note": "Supervisory halt: pause only. The supervisor cannot spend, rotate keys or change mandates."
+  },
+  "before": {
+    "registryStatus": "active",
+    "passportStatus": "active",
+    "accountPausedFlag": false
+  },
+  "duringHalt": {
+    "registryStatus": "halted",
+    "passportStatus": "halted",
+    "accountPausedFlag": false
+  },
+  "paymentWhileHalted": {
+    "tier": "ASK",
+    "decision": "ask",
+    "stoppedBy": "Simulate: Paused"
+  },
+  "lift": {
+    "txHash": "0x1ed93321b970106160b9300042174031f474199e43200d0c11e6542fc82dd1cc",
+    "ms": 1038,
+    "status": "0x1"
+  },
+  "after": {
+    "registryStatus": "active",
+    "passportStatus": "active",
+    "accountPausedFlag": false
+  }
+}

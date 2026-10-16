@@ -14,9 +14,9 @@
 |---|---|
 | Commit reviewed | <!-- gen:review.commit -->not yet measured<!-- /gen --> |
 | Review completed | <!-- gen:review.date -->not yet measured<!-- /gen --> |
-| Release | <!-- gen:meta.release_tag -->1da0e0e<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->99e8147<!-- /gen --> |
 | Reviewers | YINGLONG team members (roles R2 contracts, R4 AI security; read-only reviewer sessions at the planned review gate) |
-| Tool versions used | <!-- gen:review.tools.versions -->not yet measured<!-- /gen --> |
+| Tool versions used | <!-- gen:review.tools.versions -->Slither: 0.11.6; forge: forge 1.8.5; Halmos: halmos 0.3.3<!-- /gen --> |
 
 ---
 
@@ -117,14 +117,28 @@ Found during this review and accepted: <!-- gen:review.wontfix.table -->not yet 
 
 | Area | Result |
 |---|---|
-| Static analysis | Slither high open: <!-- gen:static.slither.high -->not yet measured<!-- /gen -->; medium open: <!-- gen:static.slither.medium -->not yet measured<!-- /gen -->; Aderyn high open: <!-- gen:static.aderyn.high -->not yet measured<!-- /gen --> |
-| Tests | <!-- gen:tests.total -->223<!-- /gen --> passing, <!-- gen:tests.failed -->not yet measured<!-- /gen --> failing |
-| Contract coverage | <!-- gen:coverage.contracts -->not yet measured<!-- /gen --> |
-| Invariants | <!-- gen:invariants.table -->not yet measured<!-- /gen --> |
-| Fuzz volume | <!-- gen:fuzz.calls -->not yet measured<!-- /gen --> calls |
-| Symbolic execution | <!-- gen:proofs.symbolic.status -->not yet measured<!-- /gen --> |
+| Static analysis | Slither high open: <!-- gen:static.slither.high -->0 (raw high 0; Slither 0.11.6, 102 detectors over contracts/src)<!-- /gen -->; medium open: <!-- gen:static.slither.medium -->0 (raw medium 14, of which 14 triaged as false positives with reasons in contracts/reports/slither.json)<!-- /gen -->; Aderyn high open: <!-- gen:static.aderyn.high -->0 (Aderyn aderyn 0.6.8 (built from the v0.6.8 source release with the local Windows portability patch reports/aderyn-windows.patch))<!-- /gen --> |
+| Tests | <!-- gen:tests.total -->332<!-- /gen --> passing, <!-- gen:tests.failed -->3 (pytest tools/verify-py: 3)<!-- /gen --> failing |
+| Contract coverage | <!-- gen:coverage.contracts -->lines 63.79% (546/856), statements 63.45% (665/1048), branches 36.36% (72/198), functions 49.18% (90/183) of contracts/src (forge 1.8.5 coverage)<!-- /gen --> |
+| Invariants | <!-- gen:invariants.table -->Foundry campaign 128 runs x 64 calls; symbolic results from contracts/reports/symbolic.json:
+
+| # | Foundry invariant fuzzing | Halmos (bounded) | Medusa | Echidna | Kontrol |
+|---|---|---|---|---|---|
+| 1 | held (`invariant_categoryCapsHold`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 2 | held (`invariant_reserveFloorHolds`) | 2 of 2 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 3 | held (`invariant_noMovementWhilePaused`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 4 | held (`invariant_onlyVerifiedPayees`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 5 | held (`invariant_authorityUnchanged`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 6 | no campaign | not run | not run | not run | not run |
+| 7 | no campaign | not run | not run | not run | not run |
+| 8 | no campaign; 3 unit tests `*invariant8*` pass | not run | not run | not run | not run |
+| 9 | no campaign | not run | not run | not run | not run |
+| 10 | no campaign | not run | not run | not run | not run |
+<!-- /gen --> |
+| Fuzz volume | <!-- gen:fuzz.calls -->8,208 (8,192 invariant handler calls in 128 runs, plus 16 fuzz-test runs; contracts/reports/fuzz.json)<!-- /gen --> calls |
+| Symbolic execution | <!-- gen:proofs.symbolic.status -->6 of 6 properties proved within bounds for invariants 1, 2, 3, 4, 5 (halmos 0.3.3, loops unrolled to 4, solver timeout 300 s; enforcer hooks executed symbolically, the DelegationManager and the account are not; Kontrol not run)<!-- /gen --> |
 | Differential fuzzing split | <!-- gen:fuzz.differential.split -->not yet measured<!-- /gen --> |
-| Enforcer gas overhead vs stock | <!-- gen:gas.overhead.median -->not yet measured<!-- /gen --> |
+| Enforcer gas overhead vs stock | <!-- gen:gas.overhead.median -->433,180 gas per payment (p95 437,289, n = 20): the sealed 15-caveat mandate vs 4 stock caveats for the same 1 tHKD transfer, paired samples a day apart (contracts/reports/gas.json)<!-- /gen --> |
 
 ## 9. Reproduction
 

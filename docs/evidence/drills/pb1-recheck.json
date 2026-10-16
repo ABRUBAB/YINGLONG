@@ -1,0 +1,9 @@
+{
+  "drillId": "pb1-2026-10-16T01-03-20-656Z",
+  "generatedBy": "apps/agent/scripts/ir-drill.ts",
+  "what": "T1 payment under the re-sealed mandate after resume",
+  "atMs": 7319,
+  "tier": "T1",
+  "outcome": "confirmed",
+  "txHash": "0x035484d144bb449bde6ec03eb1a9861050ae00d7d078ac8b8f1fe6cabb993b2a"
+}

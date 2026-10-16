@@ -59,6 +59,10 @@ Thumbs.db
 *.log
 .claude/worktrees/
 
+# demo video: rendered outputs and intermediate files (narration, clips, segments)
+video/out/
+video/work/
+
 # agent runtime state (evidence is exported by scripts/finalize)
 apps/agent/data/world.json
 apps/agent/data/proposals.json

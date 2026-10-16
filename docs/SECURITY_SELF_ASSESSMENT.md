@@ -11,9 +11,9 @@
 
 | Field | Value |
 |---|---|
-| Release | <!-- gen:meta.release_tag -->1da0e0e<!-- /gen --> |
-| Commit assessed | <!-- gen:meta.commit -->1da0e0e<!-- /gen --> |
-| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-15T23:30:00.607Z<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->99e8147<!-- /gen --> |
+| Commit assessed | <!-- gen:meta.commit -->99e8147edb8cfcd4467597907d46e586a34048ad (working tree had uncommitted changes)<!-- /gen --> |
+| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-16T01:41:10.888Z<!-- /gen --> |
 | Owners | R4 (AI security) and R2 (contracts), per plan section 17 |
 | Companion documents | `docs/THREAT_MODEL.md`, `docs/PIA.md`, `docs/INCIDENT_RESPONSE.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/SECURITY_REVIEW.md`, `docs/CLAIMS.md` |
 
@@ -77,7 +77,7 @@ Item 6 of the *Implementation Opinions on the Standardized Application and Innov
 
 | Where it holds | How |
 |---|---|
-| `apps/agent` tier function | The AI signal type is an enum `{none, confirm, ask}`; final tier = maximum of `det(a)` and the AI tier in the order T1 < T2 < T?; T3 and T4 are outside the AI type by construction. Property test: <!-- gen:tests.monotonic.status -->not yet measured<!-- /gen --> |
+| `apps/agent` tier function | The AI signal type is an enum `{none, confirm, ask}`; final tier = maximum of `det(a)` and the AI tier in the order T1 < T2 < T?; T3 and T4 are outside the AI type by construction. Property test: <!-- gen:tests.monotonic.status -->passing: 2 property tests, exhaustive 72 cases and 5,000 random escalation chains (apps/agent/test/tiers.test.ts)<!-- /gen --> |
 | `apps/signer` | Re-runs the deterministic policy check; AI signals can only stop it from signing, never cause it to sign |
 | On-chain | Enforcers never read AI output; they read signed `terms`, calldata and chain state only |
 
@@ -125,7 +125,7 @@ Trust rule for every custom enforcer [I]: `terms` are signed by the user (truste
 | Agent signer vault (`apps/signer`) | Agent EOA | `redeemDelegations` calldata, child delegations (narrowing only), receipts; only after re-running the policy check and re-simulating if the head moved more than 2 blocks past the simulated block | Everything else |
 | Approval page (`/approve/[id]`), the only code path that creates a WebAuthn challenge for the user's passkey | User passkeys | (1) DelegationManager `Delegation`, (2) `CoSignEnforcer` approval, (3) `AccountabilityLedger` receipt, (4) `KillSwitchRegistry` trip and untrip, (5) `VetoTimelockEnforcer` veto, (6) ERC-4337 `userOpHash` (EntryPoint v0.7 domain) with calldata decoded field by field | EIP-3009 transfers, ERC-2612 Permit, Permit2, raw `personal_sign`, unknown EIP-712 domains (typed error) |
 
-Message kinds allowed at the assessed commit: <!-- gen:guard.allowlist.count -->not yet measured<!-- /gen --> (printed from the allowlist, never typed).
+Message kinds allowed at the assessed commit: <!-- gen:guard.allowlist.count -->7<!-- /gen --> (printed from the allowlist, never typed).
 
 **The nine scales** (plan section 12.2), in order. Only deterministic scales can refuse.
 
@@ -150,19 +150,19 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | ID | Control | Implemented by | Verified by | Bench family or suite |
 |---|---|---|---|---|
 | C-IN-01 | Fail-closed startup: models, prompts, schemas, policy and the enforcer table are SHA-256 pinned; any mismatch stops the runtime; the hashes go into the passport and every `planHash` | `apps/agent` provenance registry, `packages/provenance` | Tampered-prompt startup test | CI |
-| C-IN-02 | Deterministic deployment: own CREATE2 factory from a fresh deployer at nonce 0; solc 0.8.23, `evm_version = london`, `bytecode_hash = "none"`, `cbor_metadata = false` [V, `contracts/foundry.toml`]; deployer keeps no admin role (result: <!-- gen:deploy.deployer_roles -->not yet measured<!-- /gen -->) | Deployment scripts, `deployments/*/v2.json` | Post-deploy role scan | CI |
-| C-IN-03 | Signed enforcer table (addresses + code hashes); its hash sits in the passport; `yinglong verify` compares `extcodehash` on both ledgers | `packages/mandate`, `tools/verify-py`, `YinglongPassportRegistry` | Bytecode equality: <!-- gen:bytecode.equal -->not yet measured<!-- /gen --> of <!-- gen:bytecode.total -->not yet measured<!-- /gen --> enforcers | CI |
+| C-IN-02 | Deterministic deployment: own CREATE2 factory from a fresh deployer at nonce 0; solc 0.8.23, `evm_version = london`, `bytecode_hash = "none"`, `cbor_metadata = false` [V, `contracts/foundry.toml`]; deployer keeps no admin role (result: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 467); Base Sepolia not deployed<!-- /gen -->) | Deployment scripts, `deployments/*/v2.json` | Post-deploy role scan | CI |
+| C-IN-03 | Signed enforcer table (addresses + code hashes); its hash sits in the passport; `yinglong verify` compares `extcodehash` on both ledgers | `packages/mandate`, `tools/verify-py`, `YinglongPassportRegistry` | Bytecode equality: <!-- gen:bytecode.equal -->13<!-- /gen --> of <!-- gen:bytecode.total -->13<!-- /gen --> enforcers | CI |
 | C-IN-04 | Account initialisation: HybridDeleGator with owner `address(0)` and two passkeys (phone + laptop), deployed in the first sponsored user operation; passkey RP ID fixed to `yinglong-agent.tech` | `apps/web` onboarding, framework HybridDeleGator | Onboarding e2e test | — |
 | C-IN-05 | FISCO initialisation: standard (non-SM) build only (an SM build replaces KECCAK256 with SM3 and breaks every EIP-712 check [S, secondary source]); chain ID 0 ledger profile; YINGLONG domains add a salt; feature flags verified on the chain | `contracts-fisco/`, `infra/` | Ledger-profile golden tests | — |
 | C-IN-06 | Mandate compilation: `AllowedTargets` + `AllowedMethods` first; allowlist and forbidden set asserted disjoint; `ValueLte(0)`, `GlobalPauseEnforcer` and `MandateBindingEnforcer` always present; the root delegate is never `ANY_DELEGATE` | `packages/mandate` compiler | Compiler property tests | S-PRIV |
-| C-IN-07 | Round-trip verification: caveat array published in `MandateRegistry`; delegation hash recomputed; enforcer code hashes checked; terms decoded back to sentences; two independent implementations (TypeScript, Python) agree on <!-- gen:verify.golden.n -->not yet measured<!-- /gen --> golden files and <!-- gen:verify.property.n -->not yet measured<!-- /gen --> property cases | `packages/mandate`, `tools/verify-py` | Golden and property tests | — |
-| C-IN-08 | Input normaliser: homoglyphs, bidi controls, invisible characters; PII scrubber (mainland mobile numbers, 18-digit ID numbers, UnionPay card numbers, private keys, seed phrases) | `apps/agent` normaliser | Scrubber recall on a labelled set: <!-- gen:pia.scrubber.recall -->not yet measured<!-- /gen --> | `direct_injection` |
-| C-IN-09 | Injection sentinel M1; escalates only | ML serving | Bench per family; FNR <!-- gen:sentinel.fnr -->not yet measured<!-- /gen --> | `direct_injection`, `multilingual`, TXT, `memory_implant` |
+| C-IN-07 | Round-trip verification: caveat array published in `MandateRegistry`; delegation hash recomputed; enforcer code hashes checked; terms decoded back to sentences; two independent implementations (TypeScript, Python) agree on <!-- gen:verify.golden.n -->2<!-- /gen --> golden files and <!-- gen:verify.property.n -->67<!-- /gen --> property cases | `packages/mandate`, `tools/verify-py` | Golden and property tests | — |
+| C-IN-08 | Input normaliser: homoglyphs, bidi controls, invisible characters; PII scrubber (mainland mobile numbers, 18-digit ID numbers, UnionPay card numbers, private keys, seed phrases) | `apps/agent` normaliser | Scrubber recall on a labelled set: <!-- gen:pia.scrubber.recall -->57/75 = 76.0% (Wilson 95% interval 65.2% to 84.2%, n = 75) on a labelled synthetic set; by kind: mainland-mobile 12/20, mainland-id 12/12, unionpay-card 16/16, private-key 8/12, seed-phrase 9/15; formats missed: mainland-mobile 3-4-4 with spaces; mainland-mobile 3-4-4 with dashes; private-key 64 hex without 0x; seed-phrase 12 words, no keyword; seed-phrase 12 numbered words; false positives on 3 of 10 benign strings (transaction hash (0x + 64 hex); ordinary sentence starting with 'recovery') (apps/agent/test/scrubber.test.ts)<!-- /gen --> | `direct_injection` |
+| C-IN-09 | Injection sentinel M1; escalates only | ML serving | Bench per family; FNR <!-- gen:sentinel.fnr -->3/36 = 8.3% (Wilson 95% interval 2.9% to 21.8%) on the held-out bench family, offline evaluation of `ABRUBAB/yl-sentinel-mmbert-base@1062546` at its validation-selected threshold 0.2 (ml/results/m1_sentinel_mmbert.json); not deployed: the live agent reports no sentinel URL configured<!-- /gen --> | `direct_injection`, `multilingual`, TXT, `memory_implant` |
 | C-IN-10 | Quarantine: readers return a closed schema of enums, numbers, verified IDs and opaque handles, each a `Tagged<T>` with source, reader model hash and taint; a snapshot test proves no quarantined bytes reach any planner prompt | `apps/agent`, `packages/provenance` | Snapshot test | TXT, `visual_injection` |
 | C-IN-11 | `PayeeBook` enum: the intent's recipient is a `PayeeBook` id or `NEW_PAYEE_REQUEST`; the model cannot emit an address; a new payee is always a T3 request | `packages/mandate` intent schema | Schema tests | TXT, `lookalike_address` |
 | C-IN-12 | Two-reader agreement on tainted financial fields (amount, payee), including the vision reader; readers of different model families; disagreement → T? | `apps/agent` readers | Bench | `visual_injection` |
 | C-IN-13 | Untrusted protocol input: x402 `description`, A2A card fields, token names, invoice memos are untrusted; A2A cards canonicalised (RFC 8785) and JWS ES256-signed; `kid` and JWKS hash in the passport | `apps/agent`, `apps/services`, `YinglongPassportRegistry` | Card-verification tests | TXT, S-ID, S-X402 |
-| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->not yet measured<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
+| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->`d6d821e342553d4759bdc989f3d9e645fa04dc28ace2ae0b57090feb0b88fddd` (docs/evidence/sbom.cdx.json, 332 components; pnpm 12.11.2 sbom (CycloneDX 1.6) + uv 0.12.19 (bea138450 2026-09-24 x86_64-pc-windows-msvc) export (CycloneDX 1.5))<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
 | C-IN-15 | Device capture: the quarantined readers never use screen or microphone capture; they read only files the user supplies (BFIA device-capture requirement [S, secondary source]) | `apps/agent` readers | Code review | — |
 
 ---
@@ -180,7 +180,7 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | C-MD-03 | Grounding: every amount, address, date and counterparty traces to the user's words, the mandate, the `PayeeBook` or verified chain state; missing grounding → T? | `apps/agent` | Bench | TXT, `memory_implant`, `within_mandate` |
 | C-MD-04 | Deterministic policy mirror with shared vectors; differential fuzzing against the Solidity enforcers with time and block warps | `apps/agent`, `contracts/test` | Differential fuzz split (policy-rejected / reverted attack / reverted divergence): <!-- gen:fuzz.differential.split -->not yet measured<!-- /gen --> | `split_payment`, S-PRIV |
 | C-MD-05 | Simulation conformance: `eth_simulateV1` via viem `simulateCalls` with asset tracing (answers on `sepolia.base.org` [V, live call per plan]); the asset diff must equal the intent; FISCO path uses `eth_call` | `apps/agent` simulator | Bench | S-PRIV, S-X402 |
-| C-MD-06 | Monotonic-safety rule (section 2.2) | `apps/agent` tier function | <!-- gen:tests.monotonic.status -->not yet measured<!-- /gen --> | All |
+| C-MD-06 | Monotonic-safety rule (section 2.2) | `apps/agent` tier function | <!-- gen:tests.monotonic.status -->passing: 2 property tests, exhaustive 72 cases and 5,000 random escalation chains (apps/agent/test/tiers.test.ts)<!-- /gen --> | All |
 | C-MD-07 | Anomaly model M3 (IsolationForest + LightGBM + Mondrian conformal); escalates only | ML | Held-out anomaly family | `urgency_authority`, `split_payment` |
 | C-MD-08 | Anti-hallucination: the explainer writes prose with placeholders from reason codes; code fills every number, date, address, hash and name; a validator checks every numeral, hex string and entity against the record; any miss → template fallback | `apps/agent` explainer | Ungrounded-claim rate <!-- gen:bench.ungrounded.rate -->not yet measured<!-- /gen --> | — |
 | C-MD-09 | AI-content labelling: "AI-generated" chip on explanations; `aigc` block (label, model, provider, contentId) in every receipt | `apps/web`, receipt schema in `packages/mandate` | Receipt schema test | — |
@@ -212,8 +212,8 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | C-ID-12 | Mandate binding: `MandateBindingEnforcer`; at most one live delegation per mandate lineage; atomic `supersede` | Enforcer, `MandateRegistry` | Invariant 7 | S-PRIV |
 | C-ID-13 | Payment decoding from calldata only (`PaymentDecoder`) | `contracts/src/libraries/PaymentDecoder.sol` [V, repo] | Decoder tests | S-PRIV |
 | C-ID-14 | Enforcer trust rule (terms trusted, args untrusted, mode and length checks) | All custom enforcers | Review checklist | S-PRIV |
-| C-ID-15 | Invariants 1 to 10 under fuzzing; invariants 1 to 5 under bounded symbolic execution | `contracts/test`, proof directory | <!-- gen:invariants.passing -->not yet measured<!-- /gen --> invariants pass; symbolic: <!-- gen:proofs.symbolic.status -->not yet measured<!-- /gen --> | All |
-| C-ID-16 | Reentrancy bounded, not absent: allowlisted targets, `nonReentrant` on every YINGLONG-authored target, stateful enforcers update before execution, Slither detectors, a malicious ERC-777-style token test | Contracts, CI | Static analysis: <!-- gen:static.slither.high -->not yet measured<!-- /gen --> high open | S-PRIV |
+| C-ID-15 | Invariants 1 to 10 under fuzzing; invariants 1 to 5 under bounded symbolic execution | `contracts/test`, proof directory | <!-- gen:invariants.passing -->5/10 (invariants 1, 2, 3, 4, 5 held in one Foundry stateful-fuzz campaign of 128 runs x 64 calls; 5 of the 10 have no fuzz campaign; source: forge test in this finalize run)<!-- /gen --> invariants pass; symbolic: <!-- gen:proofs.symbolic.status -->6 of 6 properties proved within bounds for invariants 1, 2, 3, 4, 5 (halmos 0.3.3, loops unrolled to 4, solver timeout 300 s; enforcer hooks executed symbolically, the DelegationManager and the account are not; Kontrol not run)<!-- /gen --> | All |
+| C-ID-16 | Reentrancy bounded, not absent: allowlisted targets, `nonReentrant` on every YINGLONG-authored target, stateful enforcers update before execution, Slither detectors, a malicious ERC-777-style token test | Contracts, CI | Static analysis: <!-- gen:static.slither.high -->0 (raw high 0; Slither 0.11.6, 102 detectors over contracts/src)<!-- /gen --> high open | S-PRIV |
 | C-ID-17 | Re-delegation narrows only; sub-agent chains decrement the root user's counters exactly once; re-sealing never widens aggregate counters | Framework + custom enforcers | Invariants 6 and 7 | S-PRIV |
 
 ### 5.2 Institution authorisation ("dual authorisation")
@@ -242,7 +242,21 @@ The BFIA standard is reported to require that a third-party agent may not operat
 | 9 | A 65-byte ECDSA signature never satisfies `CoSignEnforcer` on a passkey-only account | Yes | — |
 | 10 | The facilitator cannot redeem an x402 child twice or above the price | Yes | — |
 
-The "Fuzz" and "Symbolic" columns are the plan; per-invariant results are generated: <!-- gen:invariants.table -->not yet measured<!-- /gen -->
+The "Fuzz" and "Symbolic" columns are the plan; per-invariant results are generated: <!-- gen:invariants.table -->Foundry campaign 128 runs x 64 calls; symbolic results from contracts/reports/symbolic.json:
+
+| # | Foundry invariant fuzzing | Halmos (bounded) | Medusa | Echidna | Kontrol |
+|---|---|---|---|---|---|
+| 1 | held (`invariant_categoryCapsHold`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 2 | held (`invariant_reserveFloorHolds`) | 2 of 2 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 3 | held (`invariant_noMovementWhilePaused`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 4 | held (`invariant_onlyVerifiedPayees`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 5 | held (`invariant_authorityUnchanged`) | 1 of 1 properties proved within bounds (halmos 0.3.3, loop 4) | not run | not run | not run |
+| 6 | no campaign | not run | not run | not run | not run |
+| 7 | no campaign | not run | not run | not run | not run |
+| 8 | no campaign; 3 unit tests `*invariant8*` pass | not run | not run | not run | not run |
+| 9 | no campaign | not run | not run | not run | not run |
+| 10 | no campaign | not run | not run | not run | not run |
+<!-- /gen -->
 
 ---
 
@@ -253,7 +267,7 @@ Full analysis: `docs/PIA.md`.
 | ID | Control | Implemented by | Verified by |
 |---|---|---|---|
 | C-DP-01 | On-chain minimisation: only addresses, hashes, Merkle roots and caveat terms go on chain; no names, no free text, no document content | Schemas in `packages/mandate`, contracts | Schema review |
-| C-DP-02 | PII scrubber before any third-party model API call (KR-14) | `apps/agent` normaliser | Recall <!-- gen:pia.scrubber.recall -->not yet measured<!-- /gen --> |
+| C-DP-02 | PII scrubber before any third-party model API call (KR-14) | `apps/agent` normaliser | Recall <!-- gen:pia.scrubber.recall -->57/75 = 76.0% (Wilson 95% interval 65.2% to 84.2%, n = 75) on a labelled synthetic set; by kind: mainland-mobile 12/20, mainland-id 12/12, unionpay-card 16/16, private-key 8/12, seed-phrase 9/15; formats missed: mainland-mobile 3-4-4 with spaces; mainland-mobile 3-4-4 with dashes; private-key 64 hex without 0x; seed-phrase 12 words, no keyword; seed-phrase 12 numbered words; false positives on 3 of 10 benign strings (transaction hash (0x + 64 hex); ordinary sentence starting with 'recovery') (apps/agent/test/scrubber.test.ts)<!-- /gen --> |
 | C-DP-03 | Mainland profile: domestic model endpoints or the on-device intent model, no free API models, a locally mirrored sanctions list (no address export to screening services) | Provider config in `apps/agent` | Config test (but see DC-07) |
 | C-DP-04 | Training and bench data are synthetic or public with no real identifiers; Chinese-script data only in private HuggingFace datasets referenced by revision and SHA-256; every licence recorded | `ml/`, `bench/`, `docs/third_party.md` | Licence register |
 | C-DP-05 | Secrets outside the tree: runtime loaders read from a directory outside the repository [V, `ml/common/keys.py`]; `.gitignore` patterns for keys and tokens [V]; secret patterns in the rules gate [V]; gitleaks over history in CI | Repo tooling | CI |
@@ -269,10 +283,10 @@ Full analysis: `docs/PIA.md`.
 
 | ID | Control | Implemented by | Verified by |
 |---|---|---|---|
-| C-RC-01 | Kill switch: `trip()` (guardian, breaker watcher); `tripWithSig(account, nonce, deadline, sig)` verified through the account's ERC-1271 and relayable by anyone (no bundler); `untripWithSig` owner only; `supervisorPause(agentId)` pause only; dead-man timer; `GlobalPauseEnforcer` in every delegation | `KillSwitchRegistry`, `GlobalPauseEnforcer` | Time-to-pause p50 <!-- gen:time.pause.p50 -->not yet measured<!-- /gen --> (n = <!-- gen:time.pause.n -->not yet measured<!-- /gen -->) |
+| C-RC-01 | Kill switch: `trip()` (guardian, breaker watcher); `tripWithSig(account, nonce, deadline, sig)` verified through the account's ERC-1271 and relayable by anyone (no bundler); `untripWithSig` owner only; `supervisorPause(agentId)` pause only; dead-man timer; `GlobalPauseEnforcer` in every delegation | `KillSwitchRegistry`, `GlobalPauseEnforcer` | Time-to-pause p50 <!-- gen:time.pause.p50 -->0.222<!-- /gen --> s (n = <!-- gen:time.pause.n -->7<!-- /gen -->, <!-- gen:time.ledger -->FISCO BCOS (team-run consortium ledger)<!-- /gen -->) |
 | C-RC-02 | Breaker: a reverted transaction writes nothing, so the breaker trips off-chain: policy and signer refusals call `trip()`; on-chain reverts are recovered by `eth_call` replay at the parent block | `apps/indexer` breaker watcher | Beat 8 evidence |
-| C-RC-03 | Revocation: `MandateRegistry.revoke`/`supersede` plus `disableDelegation` in one user operation sent by our relayer straight to `EntryPoint.handleOps`; atomic `supersede` | `MandateRegistry`, relayer | Time-to-revoke p50 <!-- gen:time.revoke.p50 -->not yet measured<!-- /gen --> |
-| C-RC-04 | Rotation: new agent key, `setAgentWallet` signed by the new key, mandate re-sealed | Signer, `YinglongPassportRegistry` | Time-to-rotate p50 <!-- gen:time.rotate.p50 -->not yet measured<!-- /gen --> |
+| C-RC-03 | Revocation: `MandateRegistry.revoke`/`supersede` plus `disableDelegation` in one user operation sent by our relayer straight to `EntryPoint.handleOps`; atomic `supersede` | `MandateRegistry`, relayer | Time-to-revoke p50 <!-- gen:time.revoke.p50 -->0.213<!-- /gen --> s |
+| C-RC-04 | Rotation: new agent key, `setAgentWallet` signed by the new key, mandate re-sealed | Signer, `YinglongPassportRegistry` | Time-to-rotate p50 <!-- gen:time.rotate.p50 -->0.747 s to re-seal the mandate with the same agent key (n = 5, measured at the drill client; no agent-key rotation is drilled)<!-- /gen --> |
 | C-RC-05 | Exposure bound: "max funds at risk now" = remaining period caps, read on-chain and shown in the key-compromise drill | `apps/web`, enforcers | Bench max at risk <!-- gen:bench.max_at_risk -->not yet measured<!-- /gen --> |
 | C-RC-06 | Budgets, reserve and velocity enforcers | Enforcers | Invariants 1, 2 |
 | C-RC-07 | Suitability as code; first sweep into any product at T2 | `SuitabilityEnforcer`, policy | `UnsuitableProduct` revert (beat 10) |
@@ -282,9 +296,9 @@ Full analysis: `docs/PIA.md`.
 | C-RC-11 | Supervisory halt: FISCO DelegationManager owner is a 2-of-3 (KR-18) | FISCO deployment | Ownership read |
 | C-RC-12 | Honest labels: test units, simulator and testnet labels on every surface; receipt `source` field (`live-base`, `live-fisco`, `anvil-bench`); vocabulary rules | `apps/web`, receipt schema | Review checklist |
 | C-RC-13 | Incident response: five playbooks; playbook 1 rehearsed in beat 11 | `docs/INCIDENT_RESPONSE.md` | Drill record |
-| C-RC-14 | Public attack endpoint controls (Judge's Challenge): guest mandates with tiny caps in team-minted `tHKD`, signed expiring QR tokens, per-QR daily quota, daily gas budget (<!-- gen:challenge.gas_budget -->not yet measured<!-- /gen -->), moderation, shadow mode on an Anvil fork labelled "simulated, not on-chain" | `apps/services` | Quota tests |
+| C-RC-14 | Public attack endpoint controls (Judge's Challenge): guest mandates with tiny caps in team-minted `tHKD`, signed expiring QR tokens, per-QR daily quota, daily gas budget (<!-- gen:challenge.gas_budget -->118,393,600 gas per day on FISCO BCOS = 200 on-chain attack submissions per day (CHALLENGE_BYPASS_PER_DAY default in apps/agent/src/challenge.ts) x 591,968 gas, the largest measured guest attack (median 528,012, n = 2); gas price on the team-run chain is 0; plus 20 attempts per client IP per day<!-- /gen -->), moderation, shadow mode on an Anvil fork labelled "simulated, not on-chain" | `apps/services` | Quota tests |
 | C-RC-15 | Non-custodial primary path; any agent-held fallback account is labelled custodial | Architecture | Review |
-| C-RC-16 | Evidence integrity: numbers only from code; held-out family hash committed before training (<!-- gen:bench.heldout.sha256 -->not yet measured<!-- /gen -->); nightly re-verification of every evidence hash (21 to 31 Oct); `MANIFEST.sha256` | `scripts/finalize`, CI | Manifest |
+| C-RC-16 | Evidence integrity: numbers only from code; held-out family hash committed before training (<!-- gen:bench.heldout.sha256 -->`e23a3fcd99fc68f889884bc7cf2748ff665e9c3597a7ce2fc30b64586de0deea` (memory_implant, 36 items, bench/attacks/heldout.jsonl; recomputed at generation: matches)<!-- /gen -->); nightly re-verification of every evidence hash (21 to 31 Oct); `MANIFEST.sha256` | `scripts/finalize`, CI | Manifest |
 
 Compliance mapping per rule: `docs/COMPLIANCE_MATRIX.md`.
 
@@ -323,7 +337,7 @@ What a receipt proves and does not prove:
 | KR-03 | Mainland settlement is an e-CNY-style simulator | 5 | Labelled "e-CNY-style simulator. Not the PBoC sandbox; no connection to PBoC or operator-bank systems." | Nothing about real mainland settlement is demonstrated |
 | KR-04 | FISCO BCOS chain is run by the team (four nodes plus the regulator node) | 5 | Two-way anchoring to Base makes later rewrites detectable | Anchoring proves consistency, not independent consensus |
 | KR-05 | ERC-8004 reputation is Sybil-prone | 3 | Trusted issuers and trusted clients (10 at most) sealed in the mandate; `PayeeBook` is primary | A compromised trusted client can inflate reputation |
-| KR-06 | Sentinel false negatives | 1 | Layered scales; the chain is the backstop; measured FNR <!-- gen:sentinel.fnr -->not yet measured<!-- /gen --> | Undetected injections can still cause within-mandate manipulation (KR-07) |
+| KR-06 | Sentinel false negatives | 1 | Layered scales; the chain is the backstop; measured FNR <!-- gen:sentinel.fnr -->3/36 = 8.3% (Wilson 95% interval 2.9% to 21.8%) on the held-out bench family, offline evaluation of `ABRUBAB/yl-sentinel-mmbert-base@1062546` at its validation-selected threshold 0.2 (ml/results/m1_sentinel_mmbert.json); not deployed: the live agent reports no sentinel URL configured<!-- /gen --> | Undetected injections can still cause within-mandate manipulation (KR-07) |
 | KR-07 | Within-mandate manipulation up to the caps | 5 | Idempotency keys, invoice-payee-amount cross-checks, anomaly → T?, T2 for new counterparties | Measured rate <!-- gen:bench.wmm.rate -->not yet measured<!-- /gen -->; max funds at risk = remaining cap (<!-- gen:bench.max_at_risk -->not yet measured<!-- /gen -->) |
 | KR-08 | LLM availability in mainland China | 2 | Domestic endpoints, on-device intent model, template explanations, recorded-demo mode; no model → T? | Degraded understanding, never wider authority |
 | KR-09 | Passkey loss | 3 | Two passkeys; guardian-initiated recovery with a delay the owner can cancel (see DC-05) | Both passkeys lost and guardian unavailable = locked account |
@@ -379,9 +393,85 @@ What a receipt proves and does not prove:
 
 ## 11. Control status at the assessed commit (generated)
 
-Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`), test or evidence path. Implemented <!-- gen:controls.implemented -->not yet measured<!-- /gen --> of <!-- gen:controls.total -->not yet measured<!-- /gen --> controls.
+Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`), test or evidence path. Implemented <!-- gen:controls.implemented -->66 (29 of them tested)<!-- /gen --> of <!-- gen:controls.total -->72<!-- /gen --> controls.
 
-<!-- gen:controls.status_table -->not yet measured<!-- /gen -->
+<!-- gen:controls.status_table -->Status derived at generation from docs/evidence/controls.json (paths checked for existence, tests against the most recent test run at 2026-10-16T01:31:28.020Z): tested 29, implemented 37, designed 6, not started 0.
+
+| Control | Status | Evidence path | Tests | Note |
+|---|---|---|---|---|
+| C-IN-01 | implemented | `ml/serving/app.py`, `ml/serving/models.lock.json` | - | partial: the ML server refuses to start on a model-file hash mismatch; the agent runtime does not pin prompts, schemas, policy or the enforcer table |
+| C-IN-02 | implemented | `contracts/foundry.toml`, `contracts/script/DeployYinglong.s.sol`, `contracts/src/utils/YinglongCreate2Deployer.sol` | - | deployer roles after setup: see deploy.deployer_roles |
+| C-IN-03 | tested | `tools/verify-py/src/yinglong_verify`, `packages/mandate/src/roundtrip.ts`, `apps/agent/src/chain/passport.ts`, `contracts/deployments/fisco.json` | `tools/verify-py/tests/test_golden.py`: pass | the passport carries keccak256 of the deployment's contract table (apps/agent/src/chain/passport.ts); the table itself is not separately signed |
+| C-IN-04 | tested | `packages/sdk/src/account.ts`, `apps/agent/src/visitors.ts`, `apps/web/lib/passkey/webauthn.ts` | `contracts/test/NadiaMandate.t.sol` /test_T2_ecdsaSignatureNeverSatisfiesPasskeyAccount/: pass; `apps/web/lib/passkey/passkey.test.ts`: pass | one passkey per account in this build; the account is deployed by the relayer, not in a sponsored user operation |
+| C-IN-05 | tested | `infra/fisco/build-chain.sh`, `infra/fisco/chain-facts.json`, `contracts-fisco/reports/probe-2026-10-16.json`, `packages/sdk/src/ledgers.ts` | `tools/verify-py/tests/test_ts_vectors.py`: pass | the FISCO profile uses chain id 20200 |
+| C-IN-06 | tested | `packages/mandate/src/compile.ts` | `packages/mandate/test/mandate.test.ts` /allowlists first/: pass |  |
+| C-IN-07 | tested | `packages/mandate/src/roundtrip.ts`, `packages/mandate/src/decompile.ts`, `tools/verify-py/src/yinglong_verify/decompile.py`, `contracts/src/registries/MandateRegistry.sol` | `packages/mandate/test/mandate.test.ts` /round-trips/: pass; `tools/verify-py/tests/test_golden.py`: pass; `tools/verify-py/tests/test_ts_vectors.py`: pass; `contracts/test/NadiaMandate.t.sol` /test_publishedCaveatsRoundTrip/: pass |  |
+| C-IN-08 | tested | `apps/agent/src/scales/normalise.ts` | `apps/agent/test/scrubber.test.ts`: pass | recall: pia.scrubber.recall |
+| C-IN-09 | implemented | `apps/agent/src/scales/sentinel.ts`, `ml/sentinel/evaluate.py`, `ml/serving/app.py` | - | evaluated offline (ml/results); the live agent reports no sentinel URL configured |
+| C-IN-10 | implemented | `packages/provenance/src/index.ts`, `apps/agent/src/scales/quarantine.ts` | - | the snapshot test named in the control does not exist |
+| C-IN-11 | implemented | `apps/agent/src/understand/intent.ts`, `contracts/src/registries/PayeeBook.sol` | - |  |
+| C-IN-12 | implemented | `apps/agent/src/scales/quarantine.ts` | - |  |
+| C-IN-13 | tested | `apps/services/src/cards.ts`, `apps/services/src/jose.ts`, `apps/agent/src/scales/counterparty.ts` | `apps/services/test/x402.test.ts` /signed card/: pass |  |
+| C-IN-14 | implemented | `pnpm-lock.yaml`, `scripts/check-rules.mjs`, `.github/workflows/ci.yml`, `docs/evidence/sbom.cdx.json` | - | pnpm runs only allow-listed build scripts (allowBuilds in pnpm-workspace.yaml) |
+| C-IN-15 | implemented | `apps/agent/src/scales/quarantine.ts` | - | code review only |
+| C-MD-01 | implemented | `apps/agent/src/understand/intent.ts`, `apps/agent/src/explain.ts` | - |  |
+| C-MD-02 | implemented | `apps/agent/src/llm/provider.ts` | - |  |
+| C-MD-03 | implemented | `apps/agent/src/pipeline.ts` | - | bench not run in this release |
+| C-MD-04 | implemented | `apps/agent/src/scales/policy.ts` | - | differential fuzzing against the Solidity enforcers is not in the repository |
+| C-MD-05 | implemented | `apps/agent/src/pipeline.ts` | - | partial: eth_call simulation of the redemption; no eth_simulateV1 asset diff |
+| C-MD-06 | tested | `apps/agent/src/tiers.ts` | `apps/agent/test/tiers.test.ts`: pass |  |
+| C-MD-07 | implemented | `ml/anomaly`, `ml/results/m3_anomaly.json`, `apps/agent/src/tiers.ts` | - |  |
+| C-MD-08 | implemented | `apps/agent/src/explain.ts` | - |  |
+| C-MD-09 | implemented | `apps/agent/src/receipts.ts`, `apps/web/components/data/receipt-certificate.tsx` | - |  |
+| C-MD-10 | implemented | `apps/agent/src/receipts.ts`, `apps/agent/src/chain/passport.ts` | - |  |
+| C-MD-11 | designed | - | - | no content-safety model in this build |
+| C-MD-12 | designed | - | - | the agent keeps no memory in this build |
+| C-MD-13 | implemented | `apps/agent/src` | - | by absence: no eval, interpreter or shell in apps/agent; no MCP server in this build |
+| C-MD-14 | designed | - | - | plans are linear step lists, not a typed DAG with preconditions |
+| C-ID-01 | tested | `contracts/src/registries/YinglongPassportRegistry.sol`, `apps/agent/src/chain/passport.ts` | `contracts/test/NadiaMandate.t.sol` /test_T4_lineageViolation_unregisteredRedeemer/: pass |  |
+| C-ID-02 | implemented | `contracts/src/registries/YinglongPassportRegistry.sol`, `apps/agent/data/e2e-fisco.json` | - |  |
+| C-ID-03 | tested | `contracts/src/enforcers/VerifiedPayeeEnforcer.sol`, `contracts/src/enforcers/ReputationGateEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_T4_payeeNotVerified_mirage/: pass | ReputationGateEnforcer has no test |
+| C-ID-04 | tested | `contracts/src/enforcers/AgentLineageEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_T4_lineageViolation_unregisteredRedeemer/: pass |  |
+| C-ID-05 | tested | `packages/sdk/src/account.ts`, `apps/web/lib/passkey/webauthn.ts` | `apps/web/lib/passkey/passkey.test.ts`: pass; `contracts/test/NadiaMandate.t.sol` /test_T2_ecdsaSignatureNeverSatisfiesPasskeyAccount/: pass |  |
+| C-ID-06 | tested | `contracts/src/enforcers/CoSignEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_T2_coSign/: pass |  |
+| C-ID-07 | tested | `apps/web/app/approve/[id]/page.tsx`, `apps/web/components/approve/approve-card.tsx`, `apps/web/lib/chain.ts` | `apps/web/lib/api/contract.test.ts` /own decoding/: pass; `apps/web/tests/flows.spec.ts` /approve/: pass | no e2e test with a lying runtime |
+| C-ID-08 | tested | `apps/web/lib/signing-guard.ts`, `apps/signer/src/guard.ts` | `apps/web/lib/api/contract.test.ts` /signing-domain guard/: pass |  |
+| C-ID-09 | implemented | `apps/signer/src/guard.ts`, `apps/signer/src/child.ts`, `apps/signer/src/server.ts` | - | apps/signer has no tests |
+| C-ID-10 | tested | `contracts/src/enforcers/ForbiddenTargetsEnforcer.sol`, `packages/mandate/src/compile.ts` | `contracts/test/NadiaMandate.t.sol` /test_T4_selfCallToAccountIsForbidden/: pass; `contracts/test/invariants/MandateInvariants.t.sol`: pass |  |
+| C-ID-11 | implemented | `contracts/src/enforcers/VetoTimelockEnforcer.sol` | - | VetoTimelockEnforcer has no test |
+| C-ID-12 | tested | `contracts/src/enforcers/MandateBindingEnforcer.sol`, `contracts/src/registries/MandateRegistry.sol` | `contracts/test/NadiaMandate.t.sol` /test_T4_mandateNotPublishedIsUnbound\|test_revokedMandateMovesNothing\|test_resealNeverResetsBudgets/: pass |  |
+| C-ID-13 | implemented | `contracts/src/libraries/PaymentDecoder.sol` | - | exercised through the enforcer tests; no dedicated decoder test |
+| C-ID-14 | implemented | `contracts/src/enforcers/YinglongEnforcer.sol` | - | review checklist |
+| C-ID-15 | tested | `contracts/test/invariants/MandateInvariants.t.sol`, `contracts/reports/symbolic.json` | `contracts/test/invariants/MandateInvariants.t.sol`: pass | invariants 1 to 5 under fuzzing and bounded symbolic execution; 6 to 10 not in a fuzz campaign |
+| C-ID-16 | implemented | `contracts/src/rails/ProtectedPayment.sol`, `contracts/reports/slither.json` | - | no malicious ERC-777-style token test |
+| C-ID-17 | tested | `contracts/src/enforcers/CategoryBudgetEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_resealNeverResetsBudgets/: pass | partial: sub-agent chains are not compiled in this build (invariant 6 untested) |
+| C-DP-01 | implemented | `packages/mandate/src/schema.ts`, `contracts/src/registries/AccountabilityLedger.sol` | - |  |
+| C-DP-02 | tested | `apps/agent/src/scales/normalise.ts`, `apps/agent/src/pipeline.ts` | `apps/agent/test/scrubber.test.ts`: pass |  |
+| C-DP-03 | implemented | `apps/agent/src/llm/provider.ts` | - | provider configuration only; no config test |
+| C-DP-04 | implemented | `ml/THIRD_PARTY.md`, `bench/MANIFEST.json`, `docs/third_party.md` | - |  |
+| C-DP-05 | implemented | `ml/common/keys.py`, `packages/sdk/src/server.ts`, `.gitignore`, `scripts/check-rules.mjs`, `.github/workflows/ci.yml` | - |  |
+| C-DP-06 | tested | `apps/web/next.config.ts` | `apps/web/tests/network.spec.ts`: pass | no DOMPurify in this build |
+| C-DP-07 | designed | - | - | the challenge exists (apps/agent/src/challenge.ts); no retention job or consent record |
+| C-DP-08 | designed | - | - | no study tool in this build |
+| C-DP-09 | implemented | `apps/agent/src/receipts.ts`, `apps/indexer/src/receipts.ts`, `infra/fisco/backup.sh` | - | full records are JSON files, not Postgres; no restore test |
+| C-DP-10 | implemented | `docs/PIA.md`, `apps/web/components/console/console.tsx` | - |  |
+| C-RC-01 | tested | `contracts/src/registries/KillSwitchRegistry.sol`, `contracts/src/enforcers/GlobalPauseEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_pause_\|test_supervisorHaltsAgentIdentity/: pass; `contracts/test/invariants/MandateInvariants.t.sol`: pass |  |
+| C-RC-02 | implemented | `apps/indexer/src/breaker.ts`, `apps/agent/src/pipeline.ts` | - |  |
+| C-RC-03 | tested | `contracts/src/registries/MandateRegistry.sol`, `apps/agent/src/pipeline.ts`, `docs/evidence/drills/timing-fisco.json` | `contracts/test/NadiaMandate.t.sol` /test_revokedMandateMovesNothing/: pass |  |
+| C-RC-04 | tested | `contracts/src/registries/YinglongPassportRegistry.sol` | `contracts/test/NadiaMandate.t.sol` /test_drill_leakedAgentKeyIsBoundedByCaveats/: pass | rotation (setAgentWallet) is exercised in the Foundry drill; no route rotates the agent key on the live system |
+| C-RC-05 | tested | `apps/web/components/console/authority-panel.tsx`, `docs/evidence/drills/pb1.json` | `contracts/test/NadiaMandate.t.sol` /test_drill_leakedAgentKeyIsBoundedByCaveats/: pass |  |
+| C-RC-06 | tested | `contracts/src/enforcers/CategoryBudgetEnforcer.sol`, `contracts/src/enforcers/ReserveFloorEnforcer.sol`, `contracts/src/enforcers/VelocityEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_T4_categoryBudgetExceeded_food\|test_T4_reserveFloorBreached\|test_T4_velocityExceeded_splitPayments/: pass; `contracts/test/invariants/MandateInvariants.t.sol`: pass |  |
+| C-RC-07 | tested | `contracts/src/enforcers/SuitabilityEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_T4_unsuitableProduct/: pass |  |
+| C-RC-08 | tested | `contracts/src/enforcers/JurisdictionEnforcer.sol` | `contracts/test/NadiaMandate.t.sol` /test_T4_railNotPermitted/: pass |  |
+| C-RC-09 | implemented | `apps/agent/src/scales/counterparty.ts` | - |  |
+| C-RC-10 | tested | `contracts/src/registries/AccountabilityLedger.sol`, `apps/indexer/src/anchoring.ts` | `apps/indexer/test/indexer.test.ts` /anchor/: pass | anchored on FISCO BCOS only until Base Sepolia is deployed; no SM2/SM3 co-signature |
+| C-RC-11 | designed | - | - | the 2-of-3 owner is not implemented; see deploy.deployer_roles for the DelegationManager owner |
+| C-RC-12 | implemented | `apps/agent/src/receipts.ts` | - |  |
+| C-RC-13 | implemented | `docs/INCIDENT_RESPONSE.md`, `apps/agent/scripts/ir-drill.ts`, `docs/evidence/drills/pb1.json` | - | playbook 1 drilled on the live ledger; playbooks 2 to 5 not drilled |
+| C-RC-14 | implemented | `apps/agent/src/challenge.ts` | - | partial: per-IP daily quota and a daily bypass budget in code; no signed QR tokens, moderation or quota tests |
+| C-RC-15 | implemented | `packages/sdk/src/account.ts` | - |  |
+| C-RC-16 | implemented | `apps/agent/scripts/finalize.ts`, `bench/HELDOUT_SHA256.txt`, `docs/evidence/bundle.json` | - | no nightly re-verification job or MANIFEST.sha256 in this build |
+<!-- /gen -->
 
 ---
 
@@ -389,8 +479,25 @@ Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`)
 
 | Evidence | Location |
 |---|---|
-| Automated tests | <!-- gen:tests.total -->223<!-- /gen --> passing, <!-- gen:tests.failed -->not yet measured<!-- /gen --> failing (contracts <!-- gen:tests.contracts -->90<!-- /gen -->, TypeScript <!-- gen:tests.ts -->27<!-- /gen -->, Python <!-- gen:tests.py -->106<!-- /gen -->, end-to-end <!-- gen:tests.e2e -->not yet measured<!-- /gen -->) |
-| Bytecode equality table | <!-- gen:bytecode.table -->not yet measured<!-- /gen --> |
+| Automated tests | <!-- gen:tests.total -->332<!-- /gen --> passing, <!-- gen:tests.failed -->3 (pytest tools/verify-py: 3)<!-- /gen --> failing (contracts <!-- gen:tests.contracts -->93<!-- /gen -->, TypeScript <!-- gen:tests.ts -->75<!-- /gen -->, Python <!-- gen:tests.py -->105<!-- /gen -->, end-to-end <!-- gen:tests.e2e -->47<!-- /gen -->) |
+| Bytecode equality table | <!-- gen:bytecode.table -->Local Anvil (bench) vs FISCO BCOS 3.17.1 (consortium ledger); Anvil hashes as recorded at deployment; FISCO BCOS hashes re-read live (keccak256 of eth_getCode) at generation and equal to the deployment file:
+
+| Enforcer | Local Anvil (bench) address | FISCO BCOS 3.17.1 (consortium ledger) address | Code hash | Equal |
+|---|---|---|---|---|
+| `AgentLineageEnforcer` | `0x7D1bb83c30816847CD7ef4436c9a2492468A2125` | `0x2ee94183aD4cE72aee14F83bD15033A698AdBF0C` | `0xd3807e7a283bf4bdb905f47da33c382a590ca158a9d1807cba34d577d879303e` | yes |
+| `CategoryBudgetEnforcer` | `0x8Bd87Eeca3FB1011421a2B8A3445426a23BedC85` | `0x0FBA56325B5c59F0E5cF589D25bFe6818850ae97` | `0xe2b29ed37b400d5763f4a06b45a77fd1f356dfa56a0fa0c1b7c606b8eb1e1072` | yes |
+| `CoSignEnforcer` | `0xCD901317f70459f4bCc8FAE0d0d4503bb9D53629` | `0x8b143D8a816F309C7426E620E4540F686b12A853` | `0xcac545a2bef4f4427b42e53eee1718c36d9688233a0d4870663c43aaddf7ab85` | yes |
+| `ForbiddenTargetsEnforcer` | `0xf936387f3aA038fEd260a0F701A7209961a47b68` | `0x7ac856d4257CC0a9A3be8606912e9853b84a97c8` | `0x9011c8455ef546ba751012ceea833382cd55958125c921824d8e1c12fd7157e0` | yes |
+| `GlobalPauseEnforcer` | `0xC313B762639e6492549F55D2fD1B5079fcCD65b6` | `0x66E0dF12E1F2bFC6ed96903c4383973F5386A784` | `0x146eab35ecd379b884ee3a8738fd137642123c313714ae50409b2d4b882ab9d6` | yes |
+| `JurisdictionEnforcer` | `0xA77e5C328A29b29dB6df21d0C479E0B01A53e558` | `0x6AfAd65A0cF138f52C4E00b07A96B59e77E0c21E` | `0x3c18ad73f732e746093718eea6520b80e311063f7adc6114397c6fb4cd46154c` | yes |
+| `MandateBindingEnforcer` | `0xCe848804Adb705b3B4709e048a3Ab101770fa642` | `0xF86370F739e571a0F4Afb432e1C12bE6A76fC05b` | `0x20d077292dac232c197e3b90a67f780ed88cb3db7d55c6fe29897c1603ceec7d` | yes |
+| `ReputationGateEnforcer` | `0xe9909B519f9F5963422C1650a88A738777d0EAaF` | `0x4681E89F8f61f0a1c78D9a8a0df2b1dBd29CB07C` | `0xeee353be492a0ceda0ac5caa86293b8c7e8b0049d126cafc27c7a7d1072c7466` | yes |
+| `ReserveFloorEnforcer` | `0xDb48F57DEF3B0faeb4D790479EED2D8eb43755E7` | `0x3A50F926300c42b8304711Bdc8eb35dF4fB56617` | `0x5d7aef15a922b63649f6315524ea063b7f340c5884da95919f37a7224d6c826c` | yes |
+| `SuitabilityEnforcer` | `0x2226D5508f5c6D3A24cD15Be35d4F5Df43583846` | `0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8` | `0x38732451a588e925d2cda59c0618647586cd0fa41d154f6a357edbde6e9df333` | yes |
+| `VelocityEnforcer` | `0xAfC2bC04bB16DBc42d04c6b4BD99675b163ef2a8` | `0x659458ca15dcd1AC7493513a37fD36063642f8E6` | `0x57816b708ba6b0414e9f2f2430f40bc241ea2fccf7c449a6be10fe253816a707` | yes |
+| `VerifiedPayeeEnforcer` | `0x565f3eC5983a67a6d207709F6BCf88105e37257E` | `0xaBc4B99D759A06781BAFB096c65c2dB30beb073c` | `0x96dcfc1e152bd1ca0e9397ddd9618f573ef9eee83e34ce550a322660c23b004d` | yes |
+| `VetoTimelockEnforcer` | `0xf3792671423A1ef50a45c7d68F86768F0AA040F3` | `0xFae68Be7B69B1dF2d09Ec1258dbb6f2A620AB58B` | `0xdf2c8aa906f46a6648de08e53fd51da93f7d8318156c5ae3bd6279badec69941` | yes |
+<!-- /gen --> |
 | On-chain execution evidence | `docs/EXECUTION_EVIDENCE.md`, `docs/evidence/bundle.json` |
 | Bench report | `bench/` reports; per-family table in `docs/THREAT_MODEL.md` |
 | Security review | `docs/SECURITY_REVIEW.md` |

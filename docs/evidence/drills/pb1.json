@@ -1,0 +1,104 @@
+{
+  "schema": "yinglong.ir-drill/1",
+  "playbook": 1,
+  "name": "agent key leak",
+  "drillId": "pb1-2026-10-16T01-03-20-656Z",
+  "generatedBy": "apps/agent/scripts/ir-drill.ts",
+  "api": "https://api.yinglong-agent.tech",
+  "ledger": "fisco",
+  "t0": "2026-10-16T01:03:20.656Z",
+  "principal": {
+    "visitorId": "v-6637a6444a",
+    "account": "0x2D02f02939cFeb5E60FFd7B698117B924cCe1959",
+    "agentId": "17",
+    "agentWallet": "0x76Da0Ae4d0f472eC37c56718576412c041d20499",
+    "sealedBy": "scripted passkey (software P-256 key)",
+    "sealTx": "0x3338cb6a8b63d9430700f50479613f2ec2ce7fa0e2e10bab3636c4950439ee2a",
+    "mandateHash": "0x61cef71f187604e173a053408b4ed0b9b786615b6cf1498e61a6a062a5fd5077"
+  },
+  "method": "Times are milliseconds from t0 on the drill client's clock (each step ends when the API response arrives; pause, revoke and resume responses arrive after the transaction receipt). serverMs is measured by the agent API next to the ledger from submitting the signed message to its receipt. The passkey is a software P-256 key (scripted); the web app uses a WebAuthn passkey that the account verifies the same way. Detection is a client watcher polling the public receipts route every 500 ms.",
+  "timesMs": {
+    "detect": 712,
+    "pause": 1581,
+    "revoke": 2847,
+    "rotate": 4150,
+    "notify": null
+  },
+  "notify": "not automated: there is no notification channel; the app shows the paused state and the receipts",
+  "rotate": "re-seal with the same passkey plus resume; the agent key is not rotated in this drill (no route rotates the server-derived agent wallet)",
+  "transactions": {
+    "attackRevert": "0x4610e089843cf8072e5c11bac17266c794c9549b46fefb23b200a0e764ab25d2",
+    "pause": "0x98ffc2c3a3bd8cdb4aa414a95231e3ae717ace8950af4ed4ec7d430d64dd0658",
+    "revoke": "0xd511294e6bde301f1cc45b61054ae29314111dc6f3d5a40f7eda51b81c7b185c",
+    "reseal": "0x2fc40410ded1695d9eb9af79a4696b455df0dd3437432152c3d1cf84a1846984",
+    "resume": "0x64711ac39e50dc8bf3f5206688b3f54abc3cee762b5c4bc9d277965addddd530"
+  },
+  "exposure": {
+    "asset": "tHKD",
+    "attacker": "0x7BDA82FEc82760cC1b60f0B8D202aED36d275859",
+    "attemptedAmount": "100000000",
+    "remainingCapsAtT0": {
+      "tHKD": "402000000"
+    },
+    "accountBalanceBefore": "1000000000",
+    "accountBalanceAfterPause": "1000000000",
+    "attackerBalanceBefore": "0",
+    "attackerBalanceAfterPause": "0",
+    "actualLoss": "0",
+    "note": "actual loss = account balance before the attack minus balance after the pause (no in-mandate redemption ran in between); max at risk = remaining period caps at t0"
+  },
+  "steps": [
+    {
+      "step": "attack",
+      "atMs": 489,
+      "tier": "T4",
+      "outcome": "reverted",
+      "txHash": "0x4610e089843cf8072e5c11bac17266c794c9549b46fefb23b200a0e764ab25d2",
+      "revert": "PayeeNotVerified(0x7BDA82FEc82760cC1b60f0B8D202aED36d275859)"
+    },
+    {
+      "step": "detect",
+      "atMs": 712,
+      "polls": 1,
+      "receiptId": "0xf0166ca80f2aa051528e512bd4105b29c727cb8004012873bb61b67875182af3",
+      "txHash": "0x4610e089843cf8072e5c11bac17266c794c9549b46fefb23b200a0e764ab25d2",
+      "revert": "PayeeNotVerified(0x7BDA82FEc82760cC1b60f0B8D202aED36d275859)",
+      "onChainStatus": "0x0",
+      "block": 442
+    },
+    {
+      "step": "pause",
+      "atMs": 1581,
+      "txHash": "0x98ffc2c3a3bd8cdb4aa414a95231e3ae717ace8950af4ed4ec7d430d64dd0658",
+      "serverMs": 218,
+      "block": 443,
+      "signed": "Trip",
+      "pausedAfter": true
+    },
+    {
+      "step": "revoke",
+      "atMs": 2847,
+      "txHash": "0xd511294e6bde301f1cc45b61054ae29314111dc6f3d5a40f7eda51b81c7b185c",
+      "serverMs": 212,
+      "block": 444,
+      "signed": "PackedUserOperation",
+      "revokedMandate": "0x61cef71f187604e173a053408b4ed0b9b786615b6cf1498e61a6a062a5fd5077"
+    },
+    {
+      "step": "reseal",
+      "atMs": 3501,
+      "publishTx": "0x2fc40410ded1695d9eb9af79a4696b455df0dd3437432152c3d1cf84a1846984",
+      "newMandateHash": "0x1247306c47a3aa1f8826f885265b7c8cc9508316d6c010b5e076a9a7eb8a8ac2",
+      "sameAgentWallet": true,
+      "agentWallet": "0x76Da0Ae4d0f472eC37c56718576412c041d20499"
+    },
+    {
+      "step": "resume",
+      "atMs": 4150,
+      "txHash": "0x64711ac39e50dc8bf3f5206688b3f54abc3cee762b5c4bc9d277965addddd530",
+      "serverMs": 222,
+      "block": 446,
+      "signed": "Untrip"
+    }
+  ]
+}

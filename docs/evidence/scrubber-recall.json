@@ -1,0 +1,49 @@
+{
+  "generatedBy": "apps/agent/test/scrubber.test.ts",
+  "scrubber": "apps/agent/src/scales/normalise.ts",
+  "n": 75,
+  "detected": 57,
+  "perKind": {
+    "mainland-mobile": {
+      "n": 20,
+      "detected": 12,
+      "missedFormats": [
+        "3-4-4 with spaces",
+        "3-4-4 with dashes"
+      ]
+    },
+    "mainland-id": {
+      "n": 12,
+      "detected": 12,
+      "missedFormats": []
+    },
+    "unionpay-card": {
+      "n": 16,
+      "detected": 16,
+      "missedFormats": []
+    },
+    "private-key": {
+      "n": 12,
+      "detected": 8,
+      "missedFormats": [
+        "64 hex without 0x"
+      ]
+    },
+    "seed-phrase": {
+      "n": 15,
+      "detected": 9,
+      "missedFormats": [
+        "12 words, no keyword",
+        "12 numbered words"
+      ]
+    }
+  },
+  "negatives": {
+    "n": 10,
+    "falsePositives": [
+      "transaction hash (0x + 64 hex)",
+      "transaction hash (0x + 64 hex)",
+      "ordinary sentence starting with 'recovery'"
+    ]
+  }
+}

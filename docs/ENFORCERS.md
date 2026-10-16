@@ -77,7 +77,7 @@ The golden vectors show the result: `packages/mandate/golden/nadia.json` compile
 | `packages/mandate/test/mandate.test.ts` | vitest | Compiler order, determinism, decompiler sentences, round trip, tamper detection, Hash Ring, and (when an Anvil node is up) parity of the delegation hash with `DelegationManager.getDelegationHash` and `MandateRegistry.computeDelegationHash` |
 | `tools/verify-py/tests/test_golden.py`, `test_ts_vectors.py` | pytest | Byte-for-byte agreement of the Python compiler and decompiler with the TypeScript golden vectors |
 
-Counts of passing tests are generated: Foundry <!-- gen:tests.contracts -->90<!-- /gen --> (of which `NadiaMandateTest` <!-- gen:tests.forge.nadia -->not yet measured<!-- /gen -->), vitest <!-- gen:tests.ts -->27<!-- /gen -->, pytest <!-- gen:tests.py -->106<!-- /gen -->.
+Counts of passing tests are generated: Foundry <!-- gen:tests.contracts -->93<!-- /gen --> (of which `NadiaMandateTest` <!-- gen:tests.forge.nadia -->30<!-- /gen -->), vitest <!-- gen:tests.ts -->75<!-- /gen -->, pytest <!-- gen:tests.py -->105<!-- /gen -->.
 
 ---
 
@@ -458,7 +458,7 @@ The TypeScript side decodes all of them with `decodeRevert` in `packages/sdk/src
 | Item | Detail |
 |---|---|
 | Not emitted by the compiler | `ReputationGateEnforcer` (compiler throws), `VetoTimelockEnforcer`, `ZKMandateEnforcer`, and the stock `LimitedCalls`, `Timestamp`, `Nonce`, `Redeemer`, `ERC20TransferAmount`, `AllowedCalldata`; apart from `ZKMandateEnforcer` (TypeScript only), none has a decompiler sentence, so a delegation that carried one would fail the round-trip check "every rule decodes" |
-| No tests | `ReputationGateEnforcer`, `VetoTimelockEnforcer`; no Foundry invariant or fuzz campaign over the custom enforcers yet (`invariants.passing`: <!-- gen:invariants.passing -->not yet measured<!-- /gen -->) |
+| No tests | `ReputationGateEnforcer`, `VetoTimelockEnforcer`; Foundry invariant campaign over the custom enforcers: `invariants.passing`: <!-- gen:invariants.passing -->5/10 (invariants 1, 2, 3, 4, 5 held in one Foundry stateful-fuzz campaign of 128 runs x 64 calls; 5 of the 10 have no fuzz campaign; source: forge test in this finalize run)<!-- /gen --> |
 | `VetoTimelockEnforcer.schedule` | open to any caller with a key that omits the scheduler (section 3.13) |
 | `CoSignEnforcer` | an invalid approval signature reverts `CoSignRequired`, not `InvalidSignature` |
 | Assets without a tier entry | `CoSignEnforcer` and `CategoryBudgetEnforcer` skip payments in assets they do not name; a mandate must carry one tier entry and one budget entry per allowed asset (both scenario mandates in `packages/mandate/src/scenarios.ts` do) |
