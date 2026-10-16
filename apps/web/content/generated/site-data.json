@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-16T12:16:08.754Z",
+  "generatedAt": "2026-10-16T19:34:14.451Z",
   "timeline": {
-    "head": "9bcd8ee",
-    "count": 81,
+    "head": "4d402b6",
+    "count": 87,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-16T18:08:11+06:00",
+    "last": "2026-10-17T01:22:34+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -573,6 +573,48 @@
         "subject": "Deploy accepts a rewritten main (forced fetch of the bundle)",
         "track": "infra",
         "milestone": false
+      },
+      {
+        "hash": "acaf6b6",
+        "at": "2026-10-16T18:22:01+06:00",
+        "subject": "Evidence regenerated for the current history: every suite run (795 passing, 0 failing), documents cite 9bcd8ee",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "8917668",
+        "at": "2026-10-17T01:06:25+06:00",
+        "subject": "Proof API: real per-check timings, GET /v1/proof and a downloadable audit file per receipt",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "dfb141e",
+        "at": "2026-10-17T01:10:44+06:00",
+        "subject": "Sentinel score and threshold in the decision trace; WORK_SPLIT.md with ownership, API contract and git workflow",
+        "track": "contracts",
+        "milestone": false
+      },
+      {
+        "hash": "d95ddc2",
+        "at": "2026-10-17T01:17:33+06:00",
+        "subject": "Evidence: bench results (0 of 300 out-of-mandate, within-mandate rate with interval, families) fill the generated documents",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "0d3ee94",
+        "at": "2026-10-17T01:19:25+06:00",
+        "subject": "Real training curves for the sentinel and intent models (trainer_state.json from their model repos) in the proof data",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "4d402b6",
+        "at": "2026-10-17T01:22:34+06:00",
+        "subject": "Visitor security: a sign-up started with an existing account's public key no longer resets it; login is bound to the issued challenge",
+        "track": "infra",
+        "milestone": false
       }
     ]
   },
@@ -830,16 +872,16 @@
     }
   ],
   "metrics": {
-    "generatedAt": "2026-10-16T01:41:10.888Z",
+    "generatedAt": "2026-10-16T19:16:29.874Z",
     "values": {
-      "tests.total": "332",
-      "tests.contracts": "93",
-      "tests.failed": "3 (pytest tools/verify-py: 3)",
-      "evidence.receipts": "134",
+      "tests.total": "795",
+      "tests.contracts": "390",
+      "tests.failed": "0",
+      "evidence.receipts": "152",
       "evidence.anchored_receipts": "134",
-      "evidence.reverts": "10",
-      "evidence.refused_offchain": "34",
-      "evidence.tx_count": "116",
+      "evidence.reverts": "11",
+      "evidence.refused_offchain": "37",
+      "evidence.tx_count": "140",
       "bytecode.equal": "13",
       "bytecode.total": "13",
       "time.pause.p50": "0.222",
@@ -848,7 +890,7 @@
       "time.ledger": "FISCO BCOS (team-run consortium ledger)",
       "controls.total": "72",
       "fisco.nodes": "4 consensus nodes (PBFT) + 1 observer node, FISCO BCOS 3.17.1 standard (non-SM) build (infra/fisco/chain-facts.json)",
-      "chain.ledgers": "FISCO BCOS 3.17.1 (consortium ledger)"
+      "chain.ledgers": "Base Sepolia (public testnet), FISCO BCOS 3.17.1 (consortium ledger)"
     }
   },
   "stack": [

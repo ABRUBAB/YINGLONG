@@ -1,46 +1,59 @@
 "use client";
 
-import { useMemo, useState } from "react";
+/**
+ * /proof, "Check it yourself": one public response (GET /v1/proof) plus GET /v1/health, drawn so a
+ * judge can confirm in a minute that the service, the two ledgers, the transactions and the ML
+ * results are real. Every value on the page comes from the API; the page computes nothing but
+ * equality of code hashes and the live round trip it measures itself.
+ */
+import { useState } from "react";
 import { LabelChip, StateRing } from "@yinglong/ui";
-import type { EvidenceSummary } from "@/lib/api/view";
+import { ApiRequestError } from "@/lib/api";
 import { useAgent } from "@/lib/api/hooks";
-import { isSample } from "@/lib/api";
+import type { EvidenceSummary, ProofBundle } from "@/lib/api/view";
 import { formatTime } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { ErrorLine, LedgerChip, Loading, SampleBadge, TxLink } from "@/components/data/parts";
+import { ErrorLine, Loading, SampleBadge } from "@/components/data/parts";
 import { ReceiptCertificate } from "@/components/data/receipt-certificate";
-import { HealthLine } from "@/components/data/health-line";
+import { LiveStatusCard } from "./live-status";
+import { ChainSection } from "./chain-section";
+import { TransactionsSection } from "./transactions-section";
+import { MlSection } from "./ml-section";
+import { BenchSection } from "./bench-section";
+import { EvidenceContracts, EvidenceTransactions } from "./evidence-fallback";
+import { ExtLink, MonoChip, Note, ProofSection, shortRev } from "./parts";
 
-const SOURCE: Record<string, string> = {
-  "anvil-fork": "Anvil fork",
-  "live-base": "Base Sepolia",
-  "live-fisco": "FISCO BCOS",
-  kaggle: "Kaggle run",
-  "user-study": "User study",
-  ci: "CI",
-};
+type Sec = { id: string; title: string };
 
-const SECTIONS = [
-  "What a receipt proves, and what it does not",
-  "Transactions, each on its ledger",
-  "Generated numbers",
-  "Same bytecode on two ledgers",
-  "One receipt, as a certificate",
-  "Verify it yourself",
-  "Honest labels",
-] as const;
+const FULL: Sec[] = [
+  { id: "chain", title: "Same code on both blockchains" },
+  { id: "transactions", title: "Every transaction, checkable" },
+  { id: "ml", title: "How good is the AI safety model?" },
+  { id: "bench", title: "Did any attack move money?" },
+];
+const FALLBACK: Sec[] = [
+  { id: "transactions", title: "Every transaction, checkable" },
+  { id: "chain", title: "Same code on both blockchains" },
+];
+const ALWAYS: Sec[] = [
+  { id: "certificate", title: "One receipt, as a certificate" },
+  { id: "verify", title: "Verify it yourself" },
+  { id: "labels", title: "Honest labels" },
+];
+
+const DEFAULT_VERIFY = "yinglong verify samples/nadia.delegation.json --chain base-sepolia";
 
 /** On this page: a plain anchor list beside the document on wide screens (never printed, never animated). */
-function Contents() {
+function Contents({ sections }: { sections: Sec[] }) {
   return (
     <nav aria-label="On this page" className="no-print sticky top-[calc(var(--nav-h)+40px)] hidden self-start xl:block">
       <p className="eyebrow m-0 text-fg-muted">On this page</p>
       <ol className="m-0 mt-3 grid list-none gap-0.5 border-l border-line-1 p-0">
-        {SECTIONS.map((t, i) => (
-          <li key={t}>
-            <a href={`#s${i + 1}`} className="-ml-px flex gap-2 border-l border-transparent py-1.5 pl-3 text-12 text-fg-2 hover:border-fg-1 hover:text-fg-0">
-              <span className="font-mono text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
-              {t}
+        {sections.map((s, i) => (
+          <li key={s.id}>
+            <a href={`#${s.id}`} className="-ml-px flex gap-2 border-l border-transparent py-1.5 pl-3 text-12 text-fg-2 hover:border-fg-1 hover:text-fg-0">
+              <span className="font-mono text-fg-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              {s.title}
             </a>
           </li>
         ))}
@@ -49,305 +62,214 @@ function Contents() {
   );
 }
 
-function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+function BuildLine({ p }: { p: ProofBundle | undefined }) {
   return (
-    <section id={`s${n}`.replace("s", "sec")} aria-labelledby={`s${n}`} className="grid min-w-0 scroll-mt-[calc(var(--nav-h)+24px)] grid-cols-[minmax(0,1fr)] gap-4 border-t border-line-2 pt-8 print:break-inside-avoid">
-      <h2 id={`s${n}`} className="m-0 flex scroll-mt-[calc(var(--nav-h)+24px)] items-baseline gap-4 text-18 font-semibold text-fg-0">
-        <span className="font-mono text-13 text-fg-muted">{String(n).padStart(2, "0")}</span>
-        {title}
-      </h2>
-      {children}
-    </section>
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
+      {p?.build.repo ? (
+        <span className="inline-flex items-center gap-1.5">
+          Code <ExtLink href={p.build.repo}>{p.build.repo.replace(/^https?:\/\//, "")}</ExtLink>
+        </span>
+      ) : null}
+      {p?.build.commit ? (
+        <span className="inline-flex items-center gap-1.5">
+          This server runs commit{" "}
+          <MonoChip href={p.build.commitUrl} title={p.build.commit}>
+            {shortRev(p.build.commit)}
+          </MonoChip>
+        </span>
+      ) : null}
+      {p?.generatedAt ? <span>Generated {formatTime(p.generatedAt, { seconds: true })} HKT</span> : null}
+      <SampleBadge />
+      <Button size="sm" variant="secondary" className="no-print" onClick={() => window.print()}>
+        Print or save as PDF
+      </Button>
+    </div>
   );
 }
 
-function codeHashGroups(e: EvidenceSummary) {
-  const byName = new Map<string, EvidenceSummary["contracts"]>();
-  for (const c of e.contracts) byName.set(c.name, [...(byName.get(c.name) ?? []), c]);
-  return [...byName.entries()].map(([name, list]) => ({
-    name,
-    list,
-    identical: list.length > 1 && list.every((c) => c.codeHash.toLowerCase() === list[0]!.codeHash.toLowerCase()),
-  }));
+function ProofSkeleton() {
+  return (
+    <div aria-busy="true" className="grid gap-10">
+      {FULL.map((s, i) => (
+        <div key={s.id} className="grid gap-4 border-t border-line-2 pt-8">
+          <div className="flex items-baseline gap-4">
+            <span className="font-mono text-13 text-fg-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+            <span className="text-18 font-semibold text-fg-muted">{s.title}</span>
+          </div>
+          <Loading rows={i === 2 ? 6 : 3} label={`Loading: ${s.title}`} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FailedState({ error, retry }: { error: Error; retry: () => void }) {
+  return (
+    <div role="alert" className="yl-card grid gap-3 p-5">
+      <p className="m-0 flex items-center gap-2 text-15 font-semibold text-fg-0">
+        <StateRing state="unknown" size={20} glyphOnly label="Unavailable" />
+        The proof bundle could not be loaded.
+      </p>
+      <p className="m-0 font-mono text-12 text-fg-2">{error.message}</p>
+      <p className="m-0 max-w-[60ch] text-13 text-fg-2">Nothing below is live until the service answers. The status card above keeps checking every 30 seconds.</p>
+      <div>
+        <Button variant="secondary" size="md" onClick={retry}>
+          Try again
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function NotYet({ e, error, loading }: { e: EvidenceSummary | undefined; error: Error | undefined; loading: boolean }) {
+  const body = (render: (e: EvidenceSummary) => React.ReactNode) => (e ? render(e) : error ? <ErrorLine error={error} /> : loading ? <Loading rows={4} /> : <Note>Nothing published yet.</Note>);
+  return (
+    <>
+      <p className="m-0 flex items-start gap-2 rounded-control border border-line-2 bg-bg-2 px-3 py-2 text-13 text-fg-1">
+        <StateRing state="pending" size={16} glyphOnly label="Pending" className="mt-0.5" />
+        <span>
+          This server does not publish the full proof bundle yet (GET /v1/proof answered 404). It arrives with the next server update. Until then, here is the evidence the service already publishes.
+        </span>
+      </p>
+      <ProofSection n={1} id="transactions" title="Every transaction, checkable" lead="The transactions of the demo script, each on its ledger, with the typed error where the chain refused.">
+        {body((ev) => (
+          <EvidenceTransactions e={ev} />
+        ))}
+      </ProofSection>
+      <ProofSection n={2} id="chain" title="Same code on both blockchains" lead="The same contracts, deployed on both ledgers, compared by the hash of their runtime bytecode.">
+        {body((ev) => (
+          <EvidenceContracts e={ev} />
+        ))}
+      </ProofSection>
+    </>
+  );
 }
 
 export function ProofDocument() {
-  const q = useAgent("evidence", (api) => api.evidence(), ["evidence"]);
+  const proof = useAgent("proof", (api) => api.proof(), ["proof"]);
+  const evidence = useAgent("evidence", (api) => api.evidence(), ["evidence"]);
   const receipts = useAgent("receipts", (api) => api.receipts({ limit: 30 }), ["receipts"]);
   const [copied, setCopied] = useState(false);
-  const [allContracts, setAllContracts] = useState(false);
-  const e = q.data;
+
+  const p = proof.data;
+  const e = evidence.data;
+  const notYet = !p && proof.error instanceof ApiRequestError && proof.error.status === 404;
+  const failed = !p && !!proof.error && !notYet;
   const cert = e?.receipt ?? receipts.data?.items.find((r) => r.outcome === "confirmed" && r.anchor) ?? receipts.data?.items.find((r) => r.outcome === "confirmed") ?? null;
-  const groups = useMemo(() => (e ? codeHashGroups(e) : []), [e]);
-  const paired = groups.filter((g) => g.list.length > 1);
-  const enforcers = paired.filter((g) => /Enforcer$/.test(g.name));
-  const CONTRACTS_SHOWN = 6;
-  const shownGroups = allContracts ? groups : groups.slice(0, CONTRACTS_SHOWN);
+  const verify = e?.verifyCommand ?? DEFAULT_VERIFY;
+  const sections: Sec[] = [...(p ? FULL : notYet ? FALLBACK : []), ...ALWAYS];
+  const num = (id: string) => sections.findIndex((s) => s.id === id) + 1;
 
   return (
-    <div className="mx-auto grid w-full max-w-[1200px] gap-12 px-4 pt-10 pb-20 sm:px-6 xl:grid-cols-[220px_minmax(0,880px)] xl:px-8">
-    <Contents />
-    <article className="min-w-0">
-      <header className="grid gap-4">
-        <p className="eyebrow m-0 text-fg-muted">Proof</p>
-        <h1 className="type-display m-0 text-32 leading-tight text-fg-0 sm:text-[2.6rem]">Real blockchain records you can check yourself</h1>
-        <p className="measure m-0 text-15 text-fg-2">
-          Every claim we make is listed here with a link to the blockchain record behind it. Click any link to open the record. Nothing here
-          is typed by hand: it is all generated from our code and the blockchains.
-        </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <LabelChip>Test units</LabelChip>
-          <LabelChip>Base Sepolia (testnet)</LabelChip>
-          <LabelChip>FISCO BCOS (team-run consortium ledger)</LabelChip>
-          <LabelChip dotted>Anvil bench (simulated)</LabelChip>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
-          {e ? <span>Generated {formatTime(e.generatedAt, { seconds: true })} HKT</span> : null}
-          {e ? <span className="font-mono">commit {e.commit}</span> : null}
-          {e ? <span>{e.generator}</span> : null}
-          <SampleBadge />
-          <Button size="sm" variant="secondary" className="no-print" onClick={() => window.print()}>
-            Print or save as PDF
-          </Button>
-        </div>
-      </header>
-
-      <ErrorLine error={q.error} className="mt-6" />
-      {q.loading ? (
-        <div className="mt-8">
-          <Loading rows={6} />
-        </div>
-      ) : null}
-
-      <div className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-12">
-        <Section n={1} title="What a receipt proves, and what it does not">
-          <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Table (scrolls sideways on small screens)">
-            <table className="yl-table min-w-[560px]">
-              <thead>
-                <tr>
-                  <th scope="col">It proves</th>
-                  <th scope="col">It does not prove</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["The user's passkey sealed mandate M", "That the user wanted this specific action, only that it was inside M"],
-                  ["Agent A (passport P) executed X through delegation D bound to M", "That the model's reasoning was correct"],
-                  ["The enforcers allowed X or reverted it with a typed error", "That off-chain components were uncompromised; it commits to what they reported"],
-                  ["The decision record existed before submission", "That counterparties are honest beyond their attestations"],
-                  ["The receipt is in a Merkle root anchored on the ledgers its proof lists", "Legal validity of the underlying contract"],
-                ].map(([a, b]) => (
-                  <tr key={a}>
-                    <td className="text-fg-1">{a}</td>
-                    <td className="text-fg-2">{b}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <div className="mx-auto grid w-full max-w-[1200px] gap-12 px-4 pt-10 pb-20 sm:px-6 xl:grid-cols-[220px_minmax(0,900px)] xl:px-8 print:grid-cols-1">
+      <Contents sections={sections} />
+      <article className="min-w-0">
+        <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)] lg:items-start print:grid-cols-1">
+          <div className="grid min-w-0 gap-4">
+            <p className="eyebrow m-0 text-fg-muted">Proof</p>
+            <h1 className="type-display m-0 text-32 leading-tight text-fg-0 sm:text-[2.6rem]">Real blockchain records you can check yourself</h1>
+            <p className="m-0 max-w-[60ch] text-15 text-fg-2">
+              Everything here comes from the running service and the two blockchains, through one public address. Nothing is typed by hand. Open any link to check it.
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <LabelChip>Test units</LabelChip>
+              <LabelChip>Base Sepolia (testnet)</LabelChip>
+              <LabelChip>FISCO BCOS (team-run consortium ledger)</LabelChip>
+              <LabelChip dotted>Anvil bench (simulated)</LabelChip>
+            </div>
+            <BuildLine p={p} />
           </div>
-        </Section>
+          <LiveStatusCard service={p?.service ?? null} />
+        </header>
 
-        <Section n={2} title="Transactions, each on its ledger">
-          {e && e.hashes.length ? (
-            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Table (scrolls sideways on small screens)">
-              <table className="yl-table min-w-[640px]">
-                <thead>
-                  <tr>
-                    <th scope="col" className="w-8">
-                      #
-                    </th>
-                    <th scope="col">What happened</th>
-                    <th scope="col">Ledger</th>
-                    <th scope="col">Transaction</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {e.hashes.map((h, i) => (
-                    <tr key={h.id}>
-                      <td className="font-mono text-12 text-fg-muted">{i + 1}</td>
-                      <td className="text-fg-1">
-                        {h.label}
-                        {h.typedError ? (
-                          <span className="mt-1 block">
-                            <StateRing state="refused" label="Reverted" error={h.typedError} />
-                          </span>
-                        ) : null}
-                      </td>
-                      <td>
-                        <LedgerChip ledger={h.tx.ledger} badge={h.tx.badge} compact />
-                      </td>
-                      <td>
-                        <TxLink ledger={h.tx.ledger} hash={h.tx.txHash} href={h.tx.explorerUrl} badge={h.tx.badge} label="Open" />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="m-0 text-13 text-fg-muted">No transactions reported yet.</p>
-          )}
-        </Section>
+        <div className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-12">
+          {proof.loading && !p ? <ProofSkeleton /> : null}
+          {failed ? <FailedState error={proof.error!} retry={proof.refetch} /> : null}
+          {notYet ? <NotYet e={e} error={evidence.error} loading={evidence.loading} /> : null}
 
-        <Section n={3} title="Generated numbers">
-          {e && e.metrics.length ? (
-            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Table (scrolls sideways on small screens)">
-              <table className="yl-table min-w-[640px]">
-                <thead>
-                  <tr>
-                    <th scope="col">Metric</th>
-                    <th scope="col" className="text-right">
-                      Value
-                    </th>
-                    <th scope="col" className="text-right">
-                      n
-                    </th>
-                    <th scope="col">95% interval</th>
-                    <th scope="col">Source</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {e.metrics.map((m) => (
-                    <tr key={m.id}>
-                      <td className="text-fg-1">
-                        {m.label}
-                        {m.note ? <span className="block text-11 text-fg-muted">{m.note}</span> : null}
-                      </td>
-                      <td className="num text-fg-0">{m.value}</td>
-                      <td className="num text-fg-2">{m.n ?? "—"}</td>
-                      <td className="font-mono text-12 text-fg-2">{m.interval ? `${m.interval[0]} to ${m.interval[1]}` : "—"}</td>
-                      <td>
-                        <LabelChip dotted={m.source === "anvil-fork"}>{SOURCE[m.source] ?? m.source}</LabelChip>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="m-0 flex items-center gap-2 text-13 text-fg-2">
-              <StateRing state="pending" size={16} label="No generated numbers yet" />
-              Numbers appear here only after the generator publishes them.
-            </p>
-          )}
-          {isSample ? <p className="m-0 text-12 text-fg-muted">Sample values for layout only. The real table is written by the evidence generator.</p> : null}
-        </Section>
-
-        <Section n={4} title="Same bytecode on two ledgers">
-          {paired.length ? (
-            <p className="m-0 text-15 text-fg-1">
-              <span className="font-mono">{paired.filter((g) => g.identical).length}</span> of <span className="font-mono">{paired.length}</span> contracts deployed on both
-              ledgers have identical code hashes
-              {enforcers.length ? (
-                <>
-                  {"; "}
-                  <span className="font-mono">{enforcers.filter((g) => g.identical).length}</span> of <span className="font-mono">{enforcers.length}</span> caveat enforcers
-                </>
-              ) : null}
-              .
-            </p>
+          {p ? (
+            <>
+              <ProofSection n={num("chain")} id="chain" title="Same code on both blockchains" lead="The rule contracts that decide what the agent may do are deployed on a public testnet and on a consortium ledger. Their runtime bytecode is compared by hash.">
+                <ChainSection chain={p.chain} />
+              </ProofSection>
+              <ProofSection n={num("transactions")} id="transactions" title="Every transaction, checkable" lead="The newest records the service wrote, each with its transaction on the blockchain and a downloadable audit file of the decision behind it.">
+                <TransactionsSection tx={p.transactions} />
+              </ProofSection>
+              <ProofSection n={num("ml")} id="ml" title="How good is the AI safety model?" lead="Test results copied from the files the training runs produced, with 95% intervals. The models explain and flag; the rules decide.">
+                <MlSection ml={p.ml} sources={p.sources} />
+              </ProofSection>
+              <ProofSection n={num("bench")} id="bench" title="Did any attack move money?" lead="A bench of scripted attacks ran against the full service on a simulated ledger. These are its numbers, as the bench wrote them.">
+                <BenchSection bench={p.bench} />
+              </ProofSection>
+            </>
           ) : null}
-          {groups.length ? (
-            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Table (scrolls sideways on small screens)">
-              <table className="yl-table min-w-[640px]">
-                <thead>
-                  <tr>
-                    <th scope="col">Contract</th>
-                    <th scope="col">Ledger</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Code hash</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {shownGroups.flatMap((g) =>
-                    g.list.map((c, i) => (
-                      <tr key={`${g.name}-${c.ledger}`}>
-                        <td className="text-fg-1">
-                          {i === 0 ? g.name : ""}
-                          {i === 0 && g.list.length > 1 ? (
-                            <span className="mt-1 block">
-                              <StateRing state={g.identical ? "verified" : "refused"} label={g.identical ? "Identical code hash" : "Code hashes differ"} />
-                            </span>
-                          ) : null}
-                        </td>
-                        <td>
-                          <LedgerChip ledger={c.ledger} />
-                        </td>
-                        <td className="font-mono text-12 break-all text-fg-2">{c.address}</td>
-                        <td className="font-mono text-12 break-all text-fg-2">{c.codeHash}</td>
-                      </tr>
-                    )),
-                  )}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="m-0 text-13 text-fg-muted">The code-hash table has not been published yet.</p>
-          )}
-          {groups.length > CONTRACTS_SHOWN ? (
-            <div className="print:hidden">
-              <Button variant="secondary" size="sm" aria-expanded={allContracts} onClick={() => setAllContracts((v) => !v)}>
-                {allContracts ? `Show the first ${CONTRACTS_SHOWN} contracts` : `Show all ${groups.length} contracts`}
+
+          <ProofSection n={num("certificate")} id="certificate" title="One receipt, as a certificate">
+            {cert ? <ReceiptCertificate r={cert} /> : receipts.loading || evidence.loading ? <Loading rows={4} /> : <Note>No confirmed receipt yet.</Note>}
+          </ProofSection>
+
+          <ProofSection n={num("verify")} id="verify" title="Verify it yourself" lead="One command prints the mandate as English sentences, recomputes the delegation hash, checks its status and the enforcer code hashes on both ledgers, and draws the Hash Ring. It runs offline with a bundled snapshot.">
+            <div className="relative rounded-card border border-line-2 bg-bg-2">
+              <pre tabIndex={0} aria-label="Verify command" className="m-0 overflow-x-auto px-4 py-4 pr-24 font-mono text-12 leading-relaxed text-fg-1">
+                <code>{verify}</code>
+              </pre>
+              <Button
+                size="sm"
+                variant="secondary"
+                className="no-print absolute top-3 right-3"
+                onClick={() => {
+                  navigator.clipboard?.writeText(verify).then(
+                    () => setCopied(true),
+                    () => setCopied(false),
+                  );
+                }}
+              >
+                {copied ? "Copied" : "Copy"}
               </Button>
             </div>
-          ) : null}
-          <p className="m-0 text-12 text-fg-muted">Equality is computed on this page from the published code hashes, not asserted.</p>
-        </Section>
+          </ProofSection>
 
-        <Section n={5} title="One receipt, as a certificate">
-          {cert ? <ReceiptCertificate r={cert} /> : <p className="m-0 text-13 text-fg-muted">No confirmed receipt yet.</p>}
-        </Section>
-
-        <Section n={6} title="Verify it yourself">
-          <p className="measure m-0 text-15 text-fg-2">
-            One command prints the mandate as English sentences, recomputes the delegation hash, checks its status and the enforcer code hashes on both
-            ledgers, and draws the Hash Ring. It runs offline with a bundled snapshot.
-          </p>
-          <div className="relative rounded-card border border-line-2 bg-bg-2">
-            <pre tabIndex={0} aria-label="Verify command" className="m-0 overflow-x-auto px-4 py-4 pr-24 font-mono text-12 leading-relaxed text-fg-1">
-              <code>{e?.verifyCommand ?? "yinglong verify samples/nadia.delegation.json --chain base-sepolia"}</code>
-            </pre>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="no-print absolute top-3 right-3"
-              onClick={() => {
-                navigator.clipboard?.writeText(e?.verifyCommand ?? "").then(
-                  () => setCopied(true),
-                  () => setCopied(false),
-                );
-              }}
-            >
-              {copied ? "Copied" : "Copy"}
-            </Button>
-          </div>
-        </Section>
-
-        <Section n={7} title="Honest labels">
-          <ul className="m-0 grid list-none gap-2 p-0 text-13 text-fg-1">
-            {[
-              "Test units only: tHKD is a simulation of a regulated instrument, not issued by any licensee.",
-              "The mainland rail is coin-free. Settlement is played by an e-CNY-style simulator; it is not the PBoC sandbox and has no connection to any bank.",
-              "Base Sepolia is a public testnet. The FISCO BCOS chain is run by the team; anchoring proves consistency, not consensus.",
-              "Explanations are AI-generated and labelled. They never decide; the facts come from code and the chain.",
-              "No bank partnership, no licence, no issued identity code, no third-party audit, no production readiness.",
-            ].map((s) => (
-              <li key={s} className="flex items-start gap-2.5">
-                <StateRing state="unknown" size={16} glyphOnly label="Label" className="mt-0.5" />
-                {s}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <section className="grid gap-3 border-t border-line-2 pt-8">
-          <HealthLine />
-          <p className="m-0 text-12 text-fg-muted">
-            All third-party marks are the property of their respective owners. No partnership, sponsorship or endorsement is implied.
-          </p>
-        </section>
-      </div>
-    </article>
+          <ProofSection n={num("labels")} id="labels" title="Honest labels">
+            <ul className="m-0 grid list-none gap-2 p-0 text-13 text-fg-1">
+              {[
+                "Test units only: tHKD is a simulation of a regulated instrument, not issued by any licensee.",
+                "The mainland rail is coin-free. Settlement is played by an e-CNY-style simulator; it is not the PBoC sandbox and has no connection to any bank.",
+                "Base Sepolia is a public testnet. The FISCO BCOS chain is run by the team; anchoring proves consistency, not consensus.",
+                "Explanations are AI-generated and labelled. They never decide; the facts come from code and the chain.",
+                "No bank partnership, no licence, no issued identity code, no third-party audit, no production readiness.",
+              ].map((s) => (
+                <li key={s} className="flex items-start gap-2.5">
+                  <StateRing state="unknown" size={16} glyphOnly label="Label" className="mt-0.5" />
+                  {s}
+                </li>
+              ))}
+            </ul>
+            <div className="grid gap-3 border-t border-line-1 pt-4 sm:grid-cols-2">
+              <div className="grid content-start gap-1.5">
+                <p className="m-0 text-12 font-medium text-fg-muted">A receipt proves</p>
+                <ul className="m-0 grid list-none gap-1 p-0 text-13 text-fg-1">
+                  <li>The owner&apos;s passkey sealed the mandate.</li>
+                  <li>The agent acted through a delegation bound to that mandate.</li>
+                  <li>The rule contracts allowed the action or reverted it with a typed error.</li>
+                  <li>The decision record existed before the transaction was sent.</li>
+                  <li>The receipt sits in a Merkle root anchored on the ledgers its proof lists.</li>
+                </ul>
+              </div>
+              <div className="grid content-start gap-1.5">
+                <p className="m-0 text-12 font-medium text-fg-muted">It does not prove</p>
+                <ul className="m-0 grid list-none gap-1 p-0 text-13 text-fg-2">
+                  <li>That the owner wanted this exact action, only that it was inside the rules.</li>
+                  <li>That the model&apos;s reasoning was correct.</li>
+                  <li>That off-chain parts were uncompromised; it commits to what they reported.</li>
+                  <li>That counterparties are honest beyond their attestations.</li>
+                  <li>Legal validity of the underlying contract.</li>
+                </ul>
+              </div>
+            </div>
+            <Note>All third-party marks are the property of their respective owners. No partnership, sponsorship or endorsement is implied.</Note>
+          </ProofSection>
+        </div>
+      </article>
     </div>
   );
 }

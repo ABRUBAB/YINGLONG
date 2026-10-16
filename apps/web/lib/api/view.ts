@@ -1032,3 +1032,160 @@ export const PayrollRequest = z.object({
   memo: z.string().max(60).regex(/^[A-Za-z ._-]*$/).optional(),
 });
 export type PayrollRequest = z.infer<typeof PayrollRequest>;
+
+/* ------------------------------------------------------------------ proof bundle (GET /v1/proof) and the live ping */
+
+/** A rate on [0, 1] with its 95% interval when the result file carries one. */
+export const ProofRate = z.object({ value: z.number().nullable(), interval: z.tuple([z.number(), z.number()]).nullable() });
+export type ProofRate = z.infer<typeof ProofRate>;
+
+/** Held-out test-set results of one classifier (the sentinel and its comparison arms). */
+export const ProofClassifierTest = z.object({
+  n: z.number().nullable(),
+  positives: z.number().nullable(),
+  negatives: z.number().nullable(),
+  macroF1: ProofRate,
+  recall: ProofRate,
+  specificity: ProofRate,
+});
+export type ProofClassifierTest = z.infer<typeof ProofClassifierTest>;
+
+/** One line of a model's real training log (trainer_state.json): a training step or an evaluation. */
+export const ProofCurvePoint = z.object({
+  step: z.number(),
+  epoch: z.number().nullable(),
+  loss: z.number().nullable(),
+  evalLoss: z.number().nullable(),
+  evalMacroF1: z.number().nullable(),
+});
+export type ProofCurvePoint = z.infer<typeof ProofCurvePoint>;
+
+export const ProofCurves = z.object({ repo: z.string().nullable(), revision: z.string().nullable(), file: z.string().nullable(), points: z.array(ProofCurvePoint) });
+export type ProofCurves = z.infer<typeof ProofCurves>;
+
+export const ProofContract = z.object({ name: z.string(), address: z.string(), codeHash: z.string(), explorerUrl: z.string().nullable(), enforcer: z.boolean() });
+export type ProofContract = z.infer<typeof ProofContract>;
+
+export const ProofLedger = z.object({ ledger: Ledger, label: z.string(), chainId: z.number().nullable(), deployed: z.boolean(), contracts: z.array(ProofContract) });
+export type ProofLedger = z.infer<typeof ProofLedger>;
+
+/** One contract name across the ledgers; `identical` is computed on the client from the code hashes (null when on one ledger only). */
+export const ProofContractPair = z.object({
+  name: z.string(),
+  enforcer: z.boolean(),
+  identical: z.boolean().nullable(),
+  on: z.array(z.object({ ledger: Ledger, address: z.string(), codeHash: z.string(), explorerUrl: z.string().nullable() })),
+});
+export type ProofContractPair = z.infer<typeof ProofContractPair>;
+
+export const ProofTransaction = z.object({
+  receiptId: z.string().nullable(),
+  ledger: Ledger,
+  outcome: z.string(),
+  tier: Tier.nullable(),
+  title: z.string(),
+  txHash: z.string().nullable(),
+  explorerUrl: z.string().nullable(),
+  revertError: z.string().nullable(),
+  at: IsoTime.nullable(),
+  /** Absolute link to GET /v1/receipts/:id/audit on the API origin (null in sample mode). */
+  auditUrl: z.string().nullable(),
+});
+export type ProofTransaction = z.infer<typeof ProofTransaction>;
+
+export const ProofSentinel = z.object({
+  model: z.string().nullable(),
+  revision: z.string().nullable(),
+  arm: z.string().nullable(),
+  threshold: z.number().nullable(),
+  test: ProofClassifierTest.nullable(),
+  perLanguage: z.array(ProofClassifierTest.extend({ language: z.string() })),
+  confusion: z.object({ tp: z.number(), fn: z.number(), tn: z.number(), fp: z.number(), derivedFrom: z.string().nullable() }).nullable(),
+  training: z
+    .object({ base: z.string().nullable(), epochs: z.number().nullable(), trainRows: z.number().nullable(), trainSeconds: z.number().nullable(), bestMetric: z.number().nullable() })
+    .nullable(),
+  served: z
+    .object({ quantization: z.string().nullable(), int8Sha256: z.string().nullable(), int8Mb: z.number().nullable(), fp32Sha256: z.string().nullable(), fp32Mb: z.number().nullable() })
+    .nullable(),
+  arms: z.array(z.object({ arm: z.string(), test: ProofClassifierTest.nullable(), curves: ProofCurves.nullable() })),
+  curves: ProofCurves.nullable(),
+});
+export type ProofSentinel = z.infer<typeof ProofSentinel>;
+
+export const ProofIntentModel = z.object({
+  model: z.string(),
+  base: z.string().nullable(),
+  hfRepo: z.string().nullable(),
+  revision: z.string().nullable(),
+  epochs: z.number().nullable(),
+  finalTrainLoss: z.number().nullable(),
+  trainRows: z.number().nullable(),
+  trainSeconds: z.number().nullable(),
+  test: z
+    .object({ n: z.number().nullable(), jsonValidity: ProofRate, exactMatch: ProofRate, slotF1: z.number().nullable(), slotPrecision: z.number().nullable(), slotRecall: z.number().nullable() })
+    .nullable(),
+  curves: ProofCurves.nullable(),
+});
+export type ProofIntentModel = z.infer<typeof ProofIntentModel>;
+
+export const ProofAnomaly = z.object({
+  model: z.string().nullable(),
+  escalatesOnly: z.boolean().nullable(),
+  heldoutFamily: z.string().nullable(),
+  test: z
+    .object({
+      aurocCombined: z.number().nullable(),
+      aurocIsoforest: z.number().nullable(),
+      aurocLightgbm: z.number().nullable(),
+      auprcCombined: z.number().nullable(),
+      falseEscalation: ProofRate,
+      normalActions: z.number().nullable(),
+    })
+    .nullable(),
+  perFamily: z.array(z.object({ family: z.string(), n: z.number().nullable(), escalationRecall: ProofRate, aurocCombined: z.number().nullable(), heldout: z.boolean() })),
+});
+export type ProofAnomaly = z.infer<typeof ProofAnomaly>;
+
+export const ProofForecast = z.object({
+  model: z.string().nullable(),
+  horizonDays: z.number().nullable(),
+  breachWindowDays: z.number().nullable(),
+  methods: z.array(z.object({ method: z.string(), metrics: z.array(z.object({ key: z.string(), value: z.number().nullable() })) })),
+  brierClimatology: z.number().nullable(),
+});
+export type ProofForecast = z.infer<typeof ProofForecast>;
+
+export const ProofBench = z.object({
+  generatedAt: IsoTime.nullable(),
+  commit: z.string().nullable(),
+  ledger: z.string().nullable(),
+  understanding: z.string().nullable(),
+  /** Human-readable strings, in the order the bench wrote them (bench.family_table is parsed into familyTable). */
+  metrics: z.array(z.object({ key: z.string(), value: z.string() })),
+  familyTable: z.object({ head: z.array(z.string()), rows: z.array(z.array(z.string())) }).nullable(),
+});
+export type ProofBench = z.infer<typeof ProofBench>;
+
+export const ProofBundle = z.object({
+  generatedAt: IsoTime.nullable(),
+  build: z.object({ repo: z.string().nullable(), commit: z.string().nullable(), commitUrl: z.string().nullable() }),
+  service: z.object({ startedAt: IsoTime.nullable(), uptimeSeconds: z.number().nullable() }),
+  chain: z.object({
+    ledgers: z.array(ProofLedger),
+    bytecode: z.object({ compared: z.number(), identical: z.number(), differ: z.array(z.string()) }).nullable(),
+    /** Enforcers first, then the framework and test contracts, each alphabetical. */
+    pairs: z.array(ProofContractPair),
+  }),
+  transactions: z.object({
+    counts: z.array(z.object({ ledger: Ledger, total: z.number(), outcomes: z.array(z.object({ outcome: z.string(), n: z.number() })) })),
+    latest: z.array(ProofTransaction),
+  }),
+  ml: z.object({ sentinel: ProofSentinel.nullable(), intent: z.array(ProofIntentModel), anomaly: ProofAnomaly.nullable(), forecast: ProofForecast.nullable() }).nullable(),
+  bench: ProofBench.nullable(),
+  sources: z.object({ results: z.array(z.string()), resultsGeneratedAt: IsoTime.nullable() }),
+});
+export type ProofBundle = z.infer<typeof ProofBundle>;
+
+/** One GET /v1/health measured on the client: status, round trip in ms and the raw body, for a judge to read. */
+export const Ping = z.object({ ok: z.boolean(), status: z.number().int(), ms: z.number(), at: IsoTime, url: z.string(), body: z.unknown() });
+export type Ping = z.infer<typeof Ping>;

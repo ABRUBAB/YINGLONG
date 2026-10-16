@@ -56,7 +56,7 @@ export function Trace({
         const expanded = s.status === "stopped" || s.status === "escalated";
         const tone =
           s.status === "stopped"
-            ? "text-fg-0"
+            ? "text-seal"
             : s.status === "escalated"
               ? "text-brass"
               : s.status === "skipped"
@@ -77,7 +77,7 @@ export function Trace({
                 )}
               />
             ) : null}
-            <span className={cn("relative z-[1] mt-px flex size-5 items-center justify-center", s.status === "stopped" ? "text-fg-0" : tone)}>
+            <span className={cn("relative z-[1] mt-px flex size-5 items-center justify-center", s.status === "stopped" ? "text-seal" : tone)}>
               <span className="bg-[inherit]">
                 <RingGlyph state={GLYPH[s.status]} size={16} />
               </span>

@@ -22,10 +22,13 @@ const subscribe = (cb: () => void) => {
   const mo = new MutationObserver(cb);
   mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-motion"] });
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const cs = window.matchMedia("(prefers-color-scheme: light)");
   mq.addEventListener("change", cb);
+  cs.addEventListener("change", cb);
   return () => {
     mo.disconnect();
     mq.removeEventListener("change", cb);
+    cs.removeEventListener("change", cb);
   };
 };
 
@@ -41,7 +44,12 @@ export function useMotionOff(): boolean {
 export function useTheme(): "dark" | "light" {
   return useSyncExternalStore(
     subscribe,
-    () => (document.documentElement.dataset.theme === "light" ? "light" : "dark"),
+    () => {
+      // A chosen theme wins; otherwise the device setting (the same rule as tokens.css).
+      const t = document.documentElement.dataset.theme;
+      if (t === "light" || t === "dark") return t;
+      return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    },
     () => "dark",
   );
 }
@@ -67,7 +75,7 @@ export function ThemeToggle({ className, compact }: { className?: string; compac
         <circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
         <path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor" />
       </svg>
-      {compact ? null : theme === "dark" ? "Paper" : "Obsidian"}
+      {compact ? null : theme === "dark" ? "Light" : "Dark"}
     </button>
   );
 }

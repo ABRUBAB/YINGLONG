@@ -131,7 +131,7 @@ export function AgentCity() {
   const stats = model ? summary(model) : null;
 
   return (
-    <div data-surface="obsidian" className="bg-bg-0 text-fg-1">
+    <div className="bg-bg-0 text-fg-1">
       <div className="yl-container pt-10 pb-6">
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
           <div className="min-w-0">

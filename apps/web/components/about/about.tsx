@@ -103,7 +103,7 @@ export function AboutPage() {
     <ViewTransition>
       <main id="main">
         {/* Header */}
-        <section data-surface="obsidian" aria-labelledby="about-title" className="relative overflow-hidden border-b border-line-1 bg-bg-0 text-fg-1">
+        <section aria-labelledby="about-title" className="relative overflow-hidden border-b border-line-1 bg-bg-0 text-fg-1">
           <div className="yl-container grid gap-12 pt-16 pb-16 sm:pt-24 lg:grid-cols-12 lg:gap-8 lg:pt-28 lg:pb-24">
             <div className="lg:col-span-7">
               <p className="yl-hero-in eyebrow m-0 flex items-center gap-3 text-fg-muted">

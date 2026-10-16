@@ -76,7 +76,7 @@ export function LabelChip({
   title,
 }: {
   children: ReactNode;
-  tone?: "neutral" | "steel" | "brass";
+  tone?: "neutral" | "steel" | "brass" | "jade" | "seal";
   dotted?: boolean;
   className?: string;
   title?: string;
@@ -88,6 +88,8 @@ export function LabelChip({
         "inline-flex h-5 items-center gap-1 rounded-pill border px-2 text-11 font-medium leading-none whitespace-nowrap",
         tone === "steel" && "border-steel/50 bg-steel-tint text-steel",
         tone === "brass" && "border-brass/50 bg-brass-tint text-brass",
+        tone === "jade" && "border-jade/50 bg-jade-tint text-jade",
+        tone === "seal" && "border-seal/50 bg-seal-tint text-seal",
         tone === "neutral" && "border-line-3 text-fg-2",
         dotted && "border-dashed",
         className,

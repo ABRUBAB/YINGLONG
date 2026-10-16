@@ -21,7 +21,7 @@ export function Mark({
   return (
     <svg viewBox={BRAND.glyph.viewBox} width={size} height={size} className={cn("shrink-0", className)} {...a11y}>
       <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2.25" />
-      <circle cx="20.7" cy="7" r="2.4" fill="currentColor" />
+      <circle cx="20.7" cy="7" r="2.4" fill="var(--seal, currentColor)" />
       <path d={BRAND.glyph.spine} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
     </svg>
   );
@@ -57,7 +57,7 @@ export function Wordmark({ height = 14, className, live }: { height?: number; cl
         />
       ) : null}
       <g className={state === "acting" ? "yl-orbit" : undefined} style={{ transformOrigin: `${ring.cx}px ${ring.cy}px` }}>
-        <circle cx={pearlPos.cx} cy={pearlPos.cy} r={pearl.r} fill={state === "waiting" || state === "asking" ? "var(--brass)" : "currentColor"} />
+        <circle cx={pearlPos.cx} cy={pearlPos.cy} r={pearl.r} fill={state === "waiting" || state === "asking" ? "var(--brass)" : "var(--seal, currentColor)"} />
       </g>
     </svg>
   );

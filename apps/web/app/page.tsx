@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const sp = await searchParams;
   if (sp.poster === "1") {
     return (
-      <main id="main" data-poster data-surface="obsidian" className="min-h-dvh bg-bg-0">
+      <main id="main" data-poster className="min-h-dvh bg-bg-0">
         <h1 className="sr-only">Always with you. Never beyond your rules.</h1>
         <Hero poster />
       </main>

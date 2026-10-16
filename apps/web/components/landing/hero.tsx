@@ -11,7 +11,7 @@ import { orbitLayout, orbitSummary, type OrbitSlot } from "@/lib/orbit-layout";
 import type { Receipt } from "@/lib/api/view";
 import { ArrowIcon, ButtonLink } from "@/components/ui/button";
 import { PasskeyIcon } from "@/components/shell/site-nav";
-import { MotionToggle, useMotionOff } from "@/components/preferences";
+import { MotionToggle, useMotionOff, useTheme } from "@/components/preferences";
 import { HERO_RECEIPTS, remainingShare, sampleBench } from "./hero-data";
 import { OrbitSvg } from "./orbit-svg";
 
@@ -87,6 +87,8 @@ export function Hero({ poster = false }: { poster?: boolean }) {
   const tooltip = useRef<HoverApi | null>(null);
   const [posterFailed, setPosterFailed] = useState(false);
   const posterImg = useRef<HTMLImageElement>(null);
+  // The poster frame matches the theme (scripts/posters.mjs renders a dark and a light set).
+  const posterSuffix = useTheme() === "light" ? "-light" : "";
   // The image may fail before hydration attaches onError: check it once on mount.
   useEffect(() => {
     const img = posterImg.current;
@@ -146,12 +148,12 @@ export function Hero({ poster = false }: { poster?: boolean }) {
       {/* Poster first: the WebP is the LCP-safe frame; the canvas fades in over it. */}
       {!poster && !posterFailed ? (
         <picture>
-          <source media="(min-width: 1024px)" srcSet="/posters/orbit-1440.webp" />
-          <source media="(min-width: 640px)" srcSet="/posters/orbit-768.webp" />
+          <source media="(min-width: 1024px)" srcSet={`/posters/orbit-1440${posterSuffix}.webp`} />
+          <source media="(min-width: 640px)" srcSet={`/posters/orbit-768${posterSuffix}.webp`} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             ref={posterImg}
-            src="/posters/orbit-375.webp"
+            src={`/posters/orbit-375${posterSuffix}.webp`}
             alt=""
             aria-hidden="true"
             width={1600}
@@ -199,7 +201,7 @@ export function Hero({ poster = false }: { poster?: boolean }) {
   }
 
   return (
-    <section ref={section} data-surface="obsidian" aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-bg-0 text-fg-1">
+    <section ref={section} aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-bg-0 text-fg-1">
       {afterLoad && webglOk ? (
         <div className="absolute inset-0 -z-10 opacity-90 [mask-image:radial-gradient(120%_90%_at_70%_45%,#000_30%,transparent_80%)]">
           <Atmosphere moving={!motionOff && onScreen} />
@@ -251,8 +253,8 @@ export function Hero({ poster = false }: { poster?: boolean }) {
           <div className="grid content-start gap-5 lg:col-span-6">
             <p className="eyebrow m-0 text-fg-muted">What the ring shows (live)</p>
             <dl className="m-0 grid grid-cols-3 gap-x-6">
-              <HeroStat label="Payments made inside the rules" value={summary.inside + summary.asked + summary.waiting} />
-              <HeroStat label="Attempts blocked" value={summary.refused} />
+              <HeroStat label="Requests inside the rules" value={summary.inside + summary.asked + summary.waiting} tone="text-jade" />
+              <HeroStat label="Attempts blocked" value={summary.refused} tone="text-seal" />
               <HeroStat label="Budget left today" value={Math.round(remaining * 100)} suffix="%" />
             </dl>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
@@ -302,11 +304,11 @@ export function Hero({ poster = false }: { poster?: boolean }) {
   );
 }
 
-function HeroStat({ label, value, suffix }: { label: string; value: number; suffix?: string }) {
+function HeroStat({ label, value, suffix, tone = "text-fg-0" }: { label: string; value: number; suffix?: string; tone?: string }) {
   return (
     <div className="grid content-start gap-1.5">
       <dt className="order-2 text-12 leading-snug text-fg-muted">{label}</dt>
-      <dd className="order-1 m-0 font-mono text-26 leading-none text-fg-0 sm:text-32">
+      <dd className={`order-1 m-0 font-mono text-26 leading-none sm:text-32 ${tone}`}>
         <NumberFlow value={value} suffix={suffix} />
       </dd>
     </div>

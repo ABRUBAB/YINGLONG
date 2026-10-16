@@ -7,6 +7,7 @@
 import { z } from "zod";
 import { ApiRequestError, CONSOLE_PRINCIPAL, type AgentApi } from "./client";
 import * as W from "./types";
+import { mapProof } from "./proof";
 import { activePrincipalId, activeVisitor } from "./session";
 import { DIRECTORY_NAMES, type ContractDirectory } from "../account-ops";
 import type {
@@ -1458,6 +1459,22 @@ export function createLiveApi(baseUrl: string): AgentApi {
       return p.receipt ? { ...d, outcome: "executed", receipt: mapReceipt(p.receipt), receiptId: p.receipt.receiptId } : d;
     },
     askAs: async (principalId, req) => mapDecision(await call(W.WireProposal, "POST", `/v1/principals/${enc(principalId)}/ask`, { text: req.text })),
+    proof: async () => mapProof(await call(W.WireProofBundle, "GET", "/v1/proof"), root),
+    // Not through fetchJson: the judge's "Try it live" must never answer from the GET cache.
+    ping: async () => {
+      const url = `${root}/v1/health`;
+      const at = new Date().toISOString();
+      const t0 = performance.now();
+      try {
+        const res = await fetch(url, { method: "GET", credentials: "omit", headers: { accept: "application/json" }, cache: "no-store" });
+        const body: unknown = await res.json().catch(() => null);
+        const ms = Math.round(performance.now() - t0);
+        const parsed = W.WireHealth.safeParse(body);
+        return { ok: res.ok && (parsed.success ? parsed.data.ok : true), status: res.status, ms, at, url, body };
+      } catch {
+        return { ok: false, status: 0, ms: Math.round(performance.now() - t0), at, url, body: null };
+      }
+    },
     evidence: async () => {
       const e = await call(W.WireEvidence, "GET", "/v1/evidence");
       const kindOf = (o: string, err: unknown): "payment" | "revert" | "refusal" | "seal" | "pause" | "anchor" | "other" => {

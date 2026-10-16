@@ -36,6 +36,7 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
 import type { OrbitSlot } from "@/lib/orbit-layout";
 import { TRACKS } from "@/lib/orbit-layout";
+import { useTheme } from "@/components/preferences";
 
 export interface MandateOrbitProps {
   slots: OrbitSlot[];
@@ -55,11 +56,42 @@ export interface MandateOrbitProps {
   onHover?: (slot: OrbitSlot | null, x: number, y: number) => void;
 }
 
-const COLORS = {
-  inside: new THREE.Color("#B9C1CB"),
-  waiting: new THREE.Color("#D3B46B"),
-  asked: new THREE.Color("#C9A95E"),
-  refused: new THREE.Color("#69717D"),
+/**
+ * Scene colours per theme, matching the CSS tokens (scripts/tokens.mjs): jade = inside the rules, brass = waiting on
+ * a person, seal = the pearl (the agent's on-chain identity), ash = refused. WebGL cannot read the OKLCH custom
+ * properties, so the hex values are mirrored here; light uses ink on paper with less metal so nothing washes out.
+ */
+const PALETTES = {
+  dark: {
+    inside: new THREE.Color("#6CC39A"),
+    waiting: new THREE.Color("#D3B46B"),
+    asked: new THREE.Color("#C9A95E"),
+    refused: new THREE.Color("#69717D"),
+    ringOn: new THREE.Color("#F2F4F7"),
+    ringOff: new THREE.Color("#3A4049"),
+    track: "#3A414B",
+    tick: "#AEB6C1",
+    pearl: "#F0634B",
+    agent: "#DDE2E8",
+    metal: 1,
+    rough: 0.16,
+    coinMetal: 0.35,
+  },
+  light: {
+    inside: new THREE.Color("#1F7A55"),
+    waiting: new THREE.Color("#7A5A10"),
+    asked: new THREE.Color("#8A6A1E"),
+    refused: new THREE.Color("#A3A199"),
+    ringOn: new THREE.Color("#1D1C1A"),
+    ringOff: new THREE.Color("#C3C1B9"),
+    track: "#C3C1B9",
+    tick: "#46453F",
+    pearl: "#A62E1C",
+    agent: "#2B2A27",
+    metal: 0.55,
+    rough: 0.35,
+    coinMetal: 0.05,
+  },
 };
 
 const TAU = Math.PI * 2;
@@ -161,6 +193,7 @@ interface Shard {
 }
 
 function Orbit({ slots, remaining, ticks, motion, playKey, pointer, poster, onHover }: Omit<MandateOrbitProps, "active" | "onFirstFrame">) {
+  const pal = PALETTES[useTheme()];
   const invalidate = useThree((s) => s.invalidate);
   const disc = useRef<THREE.Group>(null);
   const tilt = useRef<THREE.Group>(null);
@@ -211,8 +244,8 @@ function Orbit({ slots, remaining, ticks, motion, playKey, pointer, poster, onHo
   const ringGeo = useMemo(() => {
     const g = new THREE.TorusGeometry(1, 0.0125, 12, 480);
     const pos = g.getAttribute("position");
-    const bright = new THREE.Color("#F2F4F7");
-    const ash = new THREE.Color("#3A4049");
+    const bright = pal.ringOn;
+    const ash = pal.ringOff;
     const colors = new Float32Array(pos.count * 3);
     for (let i = 0; i < pos.count; i++) {
       const a = Math.atan2(pos.getY(i), pos.getX(i));
@@ -225,7 +258,7 @@ function Orbit({ slots, remaining, ticks, motion, playKey, pointer, poster, onHo
     }
     g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     return g;
-  }, [remaining]);
+  }, [remaining, pal]);
   const trackGeo = useMemo(() => {
     const pts: number[] = [];
     for (const t of ["t1", "t2", "t3"] as const) {
@@ -274,15 +307,15 @@ function Orbit({ slots, remaining, ticks, motion, playKey, pointer, poster, onHo
   useEffect(() => {
     const m = coins.current;
     if (!m) return;
-    inside.forEach((s, i) => m.setColorAt(i, COLORS[s.kind]));
+    inside.forEach((s, i) => m.setColorAt(i, pal[s.kind]));
     if (m.instanceColor) m.instanceColor.needsUpdate = true;
     const sh = shards.current;
     if (sh) {
-      outside.forEach((_, i) => sh.setColorAt(i, COLORS.refused));
+      outside.forEach((_, i) => sh.setColorAt(i, pal.refused));
       if (sh.instanceColor) sh.instanceColor.needsUpdate = true;
     }
     invalidate();
-  }, [inside, outside, invalidate]);
+  }, [inside, outside, invalidate, pal]);
 
   // Arrival replay
   useEffect(() => {
@@ -382,25 +415,25 @@ function Orbit({ slots, remaining, ticks, motion, playKey, pointer, poster, onHo
         <group ref={disc}>
           {/* the mandate */}
           <mesh geometry={ringGeo} rotation={[-Math.PI / 2, 0, 0]}>
-            <meshPhysicalMaterial vertexColors metalness={1} roughness={0.2} clearcoat={0.6} clearcoatRoughness={0.2} />
+            <meshPhysicalMaterial vertexColors metalness={pal.metal} roughness={pal.rough + 0.04} clearcoat={0.6} clearcoatRoughness={0.2} />
           </mesh>
           {/* authority tracks (T1, T2, T3) */}
           <lineSegments geometry={trackGeo}>
-            <lineBasicMaterial color="#3A414B" transparent opacity={0.55} />
+            <lineBasicMaterial color={pal.track} transparent opacity={0.55} />
           </lineSegments>
           {/* Hash Ring ticks of the live delegation hash */}
           <instancedMesh ref={tickMesh} args={[tickGeo, undefined, 64]} frustumCulled={false}>
-            <meshStandardMaterial color="#AEB6C1" metalness={1} roughness={0.3} />
+            <meshStandardMaterial color={pal.tick} metalness={pal.metal} roughness={0.3} />
           </instancedMesh>
           {/* the pearl: the agent's on-chain identity (2 o'clock) */}
           <mesh ref={pearl} position={pearlPos}>
             <sphereGeometry args={[0.046, 32, 16]} />
-            <meshPhysicalMaterial color="#8FB4E0" metalness={0.5} roughness={0.18} clearcoat={1} />
+            <meshStandardMaterial color={pal.pearl} emissive={pal.pearl} emissiveIntensity={0.35} metalness={0} roughness={0.38} />
           </mesh>
           {/* the agent at the centre */}
           <mesh position={[0, 0.03, 0]}>
             <sphereGeometry args={[0.05, 32, 16]} />
-            <meshPhysicalMaterial color="#DDE2E8" metalness={1} roughness={0.16} clearcoat={0.8} />
+            <meshPhysicalMaterial color={pal.agent} metalness={pal.metal} roughness={pal.rough} clearcoat={0.8} />
           </mesh>
           {/* receipts the mandate allowed, waiting on a person, or asked */}
           <instancedMesh
@@ -410,7 +443,7 @@ function Orbit({ slots, remaining, ticks, motion, playKey, pointer, poster, onHo
             onPointerMove={hover(inside)}
             onPointerOut={() => onHover?.(null, 0, 0)}
           >
-            <meshStandardMaterial metalness={1} roughness={0.34} />
+            <meshStandardMaterial metalness={pal.coinMetal} roughness={0.42} />
           </instancedMesh>
           {/* refused attempts, outside the boundary */}
           <instancedMesh

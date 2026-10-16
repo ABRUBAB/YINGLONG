@@ -26,8 +26,10 @@ import type {
   Passport,
   PauseStatus,
   PayrollRequest,
+  Ping,
   Principal,
   PrivateMandate,
+  ProofBundle,
   Receipt,
   RegistryAgent,
   SignatureSubmission,
@@ -163,6 +165,10 @@ export interface AgentApi {
   /** The polled part of the city: recent receipts across every principal and the anchoring batches. */
   cityFeed(): MaybePromise<CityFeed>;
   evidence(): MaybePromise<EvidenceSummary>;
+  /** GET /v1/proof: the build, both ledgers and their bytecode, the newest transactions, the ML and bench results. */
+  proof(): MaybePromise<ProofBundle>;
+  /** One uncached GET /v1/health with the round trip measured on the client and the raw body, for a judge to read. */
+  ping(): Promise<Ping>;
 }
 
 export class ApiRequestError extends Error {

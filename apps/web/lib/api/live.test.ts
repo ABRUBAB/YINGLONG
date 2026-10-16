@@ -270,6 +270,112 @@ const routes: Record<string, unknown> = {
     revertSource: "native receipt (exact revert data as executed)",
   },
   "GET /v1/evidence": { generatedAt: "2026-10-16T01:00:00Z", items: [{ beat: 6, title: "Forged payee reverted", ledger: "base-sepolia", txHash: H("ev"), explorerUrl: null, outcome: "reverted", revertError: { name: "PayeeNotVerified" } }] },
+  "GET /v1/proof": {
+    schema: "yinglong.proof/1",
+    generatedAt: "2026-10-16T19:20:00Z",
+    build: { repo: "https://github.com/ABRUBAB/YINGLONG", commit: "8812f4ef7d4de50ab73e039eb2b473ba0fedae6e", commitUrl: "https://github.com/ABRUBAB/YINGLONG/commit/8812f4ef7d4de50ab73e039eb2b473ba0fedae6e" },
+    service: { startedAt: "2026-10-16T18:00:00Z", uptimeSeconds: 4800, health: "/v1/health", evidence: "/v1/evidence" },
+    chain: {
+      ledgers: [
+        {
+          ledger: "fisco",
+          label: "FISCO BCOS 3.17.1 (consortium ledger)",
+          chainId: 20200,
+          contractCount: 3,
+          contracts: [
+            { name: "EntryPoint", address: A("ep-f"), codeHash: H("ep-fisco"), explorerUrl: null },
+            { name: "VerifiedPayeeEnforcer", address: A("vp-f"), codeHash: H("vp"), explorerUrl: null },
+            { name: "CategoryBudgetEnforcer", address: A("cb-f"), codeHash: H("cb"), explorerUrl: null },
+          ],
+        },
+        {
+          ledger: "base-sepolia",
+          label: "Base Sepolia (public testnet)",
+          chainId: 84532,
+          contractCount: 3,
+          contracts: [
+            { name: "EntryPoint", address: A("ep-b"), codeHash: H("ep-base"), explorerUrl: `https://sepolia.basescan.org/address/${A("ep-b")}` },
+            // Same bytecode, different hex case: equality must not depend on case.
+            { name: "VerifiedPayeeEnforcer", address: A("vp-b"), codeHash: `0x${H("vp").slice(2).toUpperCase()}`, explorerUrl: null },
+            { name: "CategoryBudgetEnforcer", address: A("cb-b"), codeHash: H("cb"), explorerUrl: null },
+          ],
+        },
+        { ledger: "anvil", label: "Local Anvil (bench)", deployed: false },
+      ],
+      bytecode: { compared: 3, identical: 2, differ: ["EntryPoint"] },
+    },
+    transactions: {
+      counts: { fisco: { confirmed: 4, reverted: 1 }, "base-sepolia": { confirmed: 2 } },
+      latest: [
+        { receiptId: H("r1"), ledger: "base-sepolia", outcome: "reverted", tier: "T4", title: "Forged payee reverted", txHash: H("tx1"), explorerUrl: null, revertError: "PayeeNotVerified", at: "2026-10-16T19:00:00Z", auditUrl: `/v1/receipts/${H("r1")}/audit` },
+        { receiptId: H("r2"), ledger: "fisco", outcome: "confirmed", tier: "T1", title: "Rent paid", txHash: H("tx2"), explorerUrl: null, revertError: null, at: "2026-10-16T18:30:00Z", auditUrl: `/v1/receipts/${H("r2")}/audit` },
+      ],
+    },
+    ml: {
+      sentinel: {
+        model: "ABRUBAB/yl-sentinel-mmbert-base",
+        revision: "1062546bb103606fd85df8ea348d5d803304de26",
+        arm: "mmbert",
+        threshold: 0.2,
+        test: { n: 2099, positives: 1169, negatives: 930, macro_f1: 0.9672, macro_f1_ci95_bootstrap: [0.9599, 0.9745], recall: 0.9624, recall_ci95: [0.9498, 0.9718], specificity: 0.9742, specificity_ci95: [0.9619, 0.9826] },
+        perLanguage: {
+          bn: { n: 310, positives: 164, negatives: 146, macro_f1: 0.9838, macro_f1_ci95_bootstrap: [0.9677, 0.9968], recall: 0.9817, recall_ci95: [0.9476, 0.9938], specificity: 0.9863, specificity_ci95: [0.9514, 0.9962] },
+          en: { n: 1480, positives: 822, negatives: 658, macro_f1: 0.9591, macro_f1_ci95_bootstrap: [0.9485, 0.9689], recall: 0.9526, recall_ci95: [0.9358, 0.9651], specificity: 0.9681, specificity_ci95: [0.9517, 0.979] },
+        },
+        confusion: { tp: 1125, fn: 44, tn: 906, fp: 24, derivedFrom: "recall x positives and specificity x negatives, rounded" },
+        training: { base: "jhu-clsp/mmBERT-base", epochs: 3, train_rows: 19371, train_secs: 1394, best_metric: 0.9723 },
+        served: { int8_sha256: "8775f388fc9eea0c", int8_onnx_mb: 869.7, quantization: "weight-only int8" },
+        arms: [{ file: "m1_sentinel_protectai_v2.json", arm: "protectai_v2", test: { n: 2099, positives: 1169, negatives: 930, macro_f1: 0.7453, macro_f1_ci95_bootstrap: [0.73, 0.76], recall: 0.7203, recall_ci95: [0.7, 0.74], specificity: 0.7785, specificity_ci95: [0.75, 0.8] }, curves: null }],
+        curves: {
+          repo: "ABRUBAB/yl-sentinel-mmbert-base",
+          revision: "1062546bb103606fd85df8ea348d5d803304de26",
+          file: "checkpoints/last/trainer_state.json",
+          // Out of order on purpose: the mapper sorts by step.
+          points: [
+            { step: 606, epoch: 1, eval_loss: 0.0844, eval_macro_f1: 0.9723 },
+            { step: 50, epoch: 0.08, loss: 0.467, learning_rate: 0.00002, grad_norm: 10.1 },
+            { step: 100, epoch: 0.17, loss: 0.176 },
+          ],
+        },
+      },
+      intent: [
+        {
+          model: "qwen3-4b",
+          base: "Qwen/Qwen3-4B",
+          hfRepo: "ABRUBAB/yl-intent-qwen3-4b",
+          revision: "3bd7578d4d39918adf8376c2ed2322b94139b58e",
+          trainRows: null,
+          trainSeconds: null,
+          finalTrainLoss: 0.0035,
+          epochs: 2,
+          test: { n: 1255, json_validity: 0.9992, json_validity_ci95: [0.9955, 0.9999], exact_match: 0.8876, exact_match_ci95: [0.869, 0.904], slot_precision: 0.9816, slot_recall: 0.9807, slot_f1: 0.9812 },
+          curves: { repo: "ABRUBAB/yl-intent-qwen3-4b", revision: "3bd7578d", file: "trainer_state.json", points: [{ step: 20, epoch: 0.03, loss: 0.343 }, { step: 40, epoch: 0.06, loss: 0.12 }] },
+        },
+      ],
+      anomaly: {
+        model: "M3 behaviour anomaly",
+        escalatesOnly: true,
+        heldoutFamily: "address_swap",
+        test: { auroc_combined: 0.9944, auroc_isoforest: 0.9794, auroc_lightgbm: 0.9943, auprc_combined: 0.9864, false_escalation_rate: 0.0212, false_escalation_ci95: [0.0198, 0.0227], normal_actions: 38907 },
+        perFamily: { address_swap: { n: 67, escalation_recall: 0.8657, recall_ci95: [0.764, 0.9277], auroc_combined: 0.9939, heldout: true } },
+      },
+      forecast: { model: "M5 cash-flow forecaster", horizonDays: 28, breachWindowDays: 14, quantiles: [0.05, 0.5, 0.95], methods: { lgbm_quantile: { pinball_loss_cny: 111483.2, coverage90_cqr: 0.8672 } }, brierClimatology: 0.1152 },
+    },
+    bench: {
+      generatedAt: "2026-10-16T08:40:30.898Z",
+      commit: "8812f4ef7d4de50ab73e039eb2b473ba0fedae6e",
+      ledger: "Anvil bench (simulated)",
+      understanding: "deterministic rule parser",
+      metrics: {
+        "bench.attacks.n": "300",
+        "bench.oom.count": "0",
+        "bench.oom.upper95": "1.0% (rule of three: 3/300)",
+        "bench.family_table": "\n\n| Family | n | Out of mandate |\n|---|---|---|\n| `direct_injection` | 22 | 0 |\n| `within_mandate` | 22 | 0 |",
+      },
+      detail: { runs: 300 },
+    },
+    sources: { results: ["ml/results/m1_sentinel_mmbert.json", "bench/reports/summary.json"], resultsGeneratedAt: "2026-10-16T19:18:58.032Z" },
+  },
 };
 
 function mockFetch() {
@@ -356,10 +462,79 @@ describe("live adapter maps the agent service wire format into the view model", 
     expect(ev.hashes[0]).toMatchObject({ kind: "revert", typedError: "PayeeNotVerified" });
   });
 
+  it("proof bundle: enforcers first, equality from the hashes, absolute audit links, the bench table parsed", async () => {
+    vi.stubGlobal("fetch", mockFetch());
+    const api = createLiveApi("https://api.test");
+    const p = V.ProofBundle.parse(await api.proof());
+    expect(p.build).toMatchObject({ commit: expect.stringMatching(/^8812f4ef/), commitUrl: expect.stringContaining("/commit/8812f4ef") });
+    expect(p.service.uptimeSeconds).toBe(4800);
+    expect(p.chain.ledgers.map((l) => [l.ledger, l.deployed])).toEqual([
+      ["fisco", true],
+      ["base-sepolia", true],
+      ["anvil-bench", false],
+    ]);
+    expect(p.chain.pairs.map((x) => x.name)).toEqual(["CategoryBudgetEnforcer", "VerifiedPayeeEnforcer", "EntryPoint"]);
+    expect(p.chain.pairs.map((x) => x.identical)).toEqual([true, true, false]);
+    expect(p.chain.bytecode).toEqual({ compared: 3, identical: 2, differ: ["EntryPoint"] });
+    expect(p.transactions.counts.find((c) => c.ledger === "fisco")).toEqual({
+      ledger: "fisco",
+      total: 5,
+      outcomes: [
+        { outcome: "confirmed", n: 4 },
+        { outcome: "reverted", n: 1 },
+      ],
+    });
+    expect(p.transactions.latest[0]).toMatchObject({ ledger: "base-sepolia", outcome: "reverted", tier: "T4", revertError: "PayeeNotVerified", auditUrl: `https://api.test/v1/receipts/${H("r1")}/audit` });
+    const s = p.ml?.sentinel;
+    expect(s?.test?.macroF1).toEqual({ value: 0.9672, interval: [0.9599, 0.9745] });
+    expect(s?.perLanguage.map((l) => l.language)).toEqual(["en", "bn"]);
+    expect(s?.confusion).toMatchObject({ tp: 1125, fn: 44, tn: 906, fp: 24 });
+    expect(s?.training).toMatchObject({ base: "jhu-clsp/mmBERT-base", trainRows: 19371 });
+    expect(s?.curves?.points.map((x) => x.step)).toEqual([50, 100, 606]);
+    expect(s?.curves?.points[2]).toMatchObject({ evalMacroF1: 0.9723, loss: null, epoch: 1 });
+    expect(s?.arms[0]).toMatchObject({ arm: "protectai_v2", curves: null });
+    expect(p.ml?.intent[0]).toMatchObject({ model: "qwen3-4b", test: { exactMatch: { value: 0.8876 }, slotF1: 0.9812 } });
+    expect(p.ml?.anomaly?.test?.falseEscalation).toEqual({ value: 0.0212, interval: [0.0198, 0.0227] });
+    expect(p.ml?.anomaly?.perFamily[0]).toMatchObject({ family: "address_swap", heldout: true });
+    expect(p.ml?.forecast?.methods[0]).toEqual({
+      method: "lgbm_quantile",
+      metrics: [
+        { key: "pinball_loss_cny", value: 111483.2 },
+        { key: "coverage90_cqr", value: 0.8672 },
+      ],
+    });
+    expect(p.bench?.familyTable).toEqual({
+      head: ["Family", "n", "Out of mandate"],
+      rows: [
+        ["direct_injection", "22", "0"],
+        ["within_mandate", "22", "0"],
+      ],
+    });
+    expect(p.bench?.metrics.map((m) => m.key)).toEqual(["bench.attacks.n", "bench.oom.count", "bench.oom.upper95"]);
+    expect(p.sources.results).toHaveLength(2);
+  });
+
+  it("ping measures one uncached GET /v1/health and keeps the raw body", async () => {
+    const f = vi.fn(async () => new Response(JSON.stringify({ ok: true, version: "1.2.3", ledgers: [], models: {} }), { status: 200, headers: { "content-type": "application/json" } }));
+    vi.stubGlobal("fetch", f);
+    const api = createLiveApi("https://api.test");
+    const a = await api.ping();
+    const b = await api.ping();
+    expect(a).toMatchObject({ ok: true, status: 200, url: "https://api.test/v1/health", body: { version: "1.2.3" } });
+    expect(typeof a.ms).toBe("number");
+    expect(f).toHaveBeenCalledTimes(2);
+    expect(b.ok).toBe(true);
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("network down"); }));
+    expect(await createLiveApi("https://api.test").ping()).toMatchObject({ ok: false, status: 0, body: null });
+  });
+
   it("reports a missing endpoint honestly", async () => {
     vi.stubGlobal("fetch", mockFetch());
     const api = createLiveApi("https://api.test");
     await expect(api.privateMandate("4127")).rejects.toThrow(/no route|does not provide/);
+    // An older deployment without /v1/proof: the page shows the evidence it already has.
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ ok: false, error: "not found" }), { status: 404 })));
+    await expect(createLiveApi("https://api.test").proof()).rejects.toMatchObject({ status: 404 });
   });
 
   it("shares identical GETs inside the cache window and clears the cache on a POST", async () => {

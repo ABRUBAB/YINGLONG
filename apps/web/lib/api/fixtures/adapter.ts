@@ -26,6 +26,7 @@ import { typedDataDigest } from "../../signing-guard";
 import { activeVisitor } from "../session";
 import * as D from "./data";
 import { citySnapshot } from "./city";
+import { SAMPLE_HEALTH_BODY, sampleProof } from "./proof";
 import * as C from "./capabilities";
 import { sampleVisitorDraft } from "./draft";
 import { formatUnits } from "../../format";
@@ -487,6 +488,14 @@ export function createFixtureApi(): AgentApi {
     city: () => citySnapshot,
     cityFeed: () => citySnapshot.feed,
     evidence: () => D.evidence,
+    proof: () => sampleProof(),
+    ping: async () => {
+      // No service is contacted in sample mode; the round trip measured here is the page's own work.
+      const at = new Date().toISOString();
+      const t0 = performance.now();
+      const body = structuredClone(SAMPLE_HEALTH_BODY);
+      return { ok: true, status: 200, ms: Math.max(0, Math.round(performance.now() - t0)), at, url: "sample:/v1/health", body };
+    },
 
     insights: () => {
       if (visitor()) throw notFound("Spending insights for this visitor");

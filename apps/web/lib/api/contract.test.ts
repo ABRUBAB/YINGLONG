@@ -31,6 +31,13 @@ describe("fixture data satisfies the view-model contract", () => {
     T.CitySnapshot.parse(sync(api.city()));
     T.CityFeed.parse(sync(api.cityFeed()));
     T.EvidenceSummary.parse(sync(api.evidence()));
+    const proof = T.ProofBundle.parse(sync(api.proof()));
+    // Sample data never links to a live audit file, and the rule enforcers lead the contract list.
+    expect(proof.transactions.latest.length).toBeGreaterThan(0);
+    expect(proof.transactions.latest.every((t) => t.auditUrl === null)).toBe(true);
+    expect(proof.chain.pairs[0]?.enforcer).toBe(true);
+    expect(proof.ml?.sentinel?.curves?.points.length).toBeGreaterThan(10);
+    expect(proof.bench?.familyTable?.rows.length).toBeGreaterThan(5);
   });
 
   it("writes: compile, seal through the guard, ask, execute, pause, challenge", async () => {

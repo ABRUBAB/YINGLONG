@@ -83,6 +83,12 @@
   --color-steel-tint: var(--steel-tint);
   --color-brass: var(--brass);
   --color-brass-tint: var(--brass-tint);
+  --color-jade: var(--jade);
+  --color-jade-tint: var(--jade-tint);
+  --color-seal: var(--seal);
+  --color-seal-tint: var(--seal-tint);
+  --color-canvas: var(--canvas);
+  --color-grid: var(--grid);
   --color-refused-bg: var(--refused-bg);
   --color-refused-fg: var(--refused-fg);
   --color-focus: var(--focus);
@@ -545,6 +551,19 @@ body:has([data-poster]) .yl-sitefooter {
   @page {
     size: A4;
     margin: 16mm 14mm;
+  }
+  /* Everything that reveals on scroll or on arrival is simply there on paper and in PDFs. */
+  .yl-reveal,
+  .yl-verb,
+  .yl-arrive,
+  .yl-ring-in,
+  .yl-verbs-ring-progress {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .yl-defer {
+    content-visibility: visible;
   }
   html,
   body {

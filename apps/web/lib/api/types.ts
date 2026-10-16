@@ -722,3 +722,170 @@ export const WireLogin = z.object({
   owner: z.string().nullish(),
   publicKey: z.object({ x: z.string(), y: z.string() }).nullish(),
 });
+
+/* ------------------------------------------------------------------ GET /v1/proof (apps/agent/src/proof.ts) */
+
+/**
+ * The proof bundle. Every field is optional on the wire: the ML and bench parts are copied from result
+ * files the server may lack, a ledger may be undeployed, and an older build may omit whole sections.
+ * The mapper (./proof.ts) turns whatever arrived into the view model with honest empty states.
+ */
+const N = z.number().nullish();
+const S = z.string().nullish();
+const Interval95 = z.tuple([z.number(), z.number()]).nullish();
+
+export const WireCurvePoint = z.object({ step: N, epoch: N, loss: N, eval_loss: N, eval_macro_f1: N, learning_rate: N, grad_norm: N });
+export const WireCurves = z.object({ repo: S, revision: S, file: S, points: z.array(WireCurvePoint).nullish() }).nullish();
+
+/** Test-set metrics of a classifier arm, with bootstrap 95% intervals (ml/results/m1_*.json). */
+export const WireSentinelTest = z.object({
+  n: N,
+  positives: N,
+  negatives: N,
+  macro_f1: N,
+  macro_f1_ci95_bootstrap: Interval95,
+  recall: N,
+  recall_ci95: Interval95,
+  specificity: N,
+  specificity_ci95: Interval95,
+});
+export type WireSentinelTest = z.infer<typeof WireSentinelTest>;
+
+export const WireProofBundle = z.object({
+  schema: S,
+  generatedAt: S,
+  build: z.object({ repo: S, commit: S, commitUrl: S }).nullish(),
+  service: z.object({ startedAt: S, uptimeSeconds: N, health: S, evidence: S }).nullish(),
+  chain: z
+    .object({
+      ledgers: z
+        .array(
+          z.object({
+            ledger: S,
+            label: S,
+            chainId: N,
+            contractCount: N,
+            deployed: z.boolean().nullish(),
+            contracts: z.array(z.object({ name: S, address: S, codeHash: S, explorerUrl: S })).nullish(),
+          }),
+        )
+        .nullish(),
+      bytecode: z.object({ compared: N, identical: N, differ: z.array(z.string()).nullish() }).nullish(),
+    })
+    .nullish(),
+  transactions: z
+    .object({
+      counts: z.record(z.string(), z.record(z.string(), z.number()).nullish()).nullish(),
+      latest: z
+        .array(
+          z.object({
+            receiptId: S,
+            ledger: S,
+            outcome: S,
+            tier: S,
+            title: S,
+            txHash: S,
+            explorerUrl: S,
+            revertError: S,
+            at: S,
+            auditUrl: S,
+          }),
+        )
+        .nullish(),
+    })
+    .nullish(),
+  ml: z
+    .object({
+      sentinel: z
+        .object({
+          model: S,
+          revision: S,
+          arm: S,
+          threshold: N,
+          test: WireSentinelTest.nullish(),
+          perLanguage: z.record(z.string(), WireSentinelTest.nullish()).nullish(),
+          confusion: z.object({ tp: N, fn: N, tn: N, fp: N, derivedFrom: S }).nullish(),
+          training: z.record(z.string(), z.unknown()).nullish(),
+          served: z.record(z.string(), z.unknown()).nullish(),
+          arms: z.array(z.object({ file: S, arm: S, test: WireSentinelTest.nullish(), curves: WireCurves })).nullish(),
+          curves: WireCurves,
+        })
+        .nullish(),
+      intent: z
+        .array(
+          z.object({
+            model: S,
+            base: S,
+            hfRepo: S,
+            revision: S,
+            trainRows: N,
+            trainSeconds: N,
+            finalTrainLoss: N,
+            epochs: N,
+            test: z
+              .object({
+                n: N,
+                json_validity: N,
+                json_validity_ci95: Interval95,
+                exact_match: N,
+                exact_match_ci95: Interval95,
+                slot_precision: N,
+                slot_recall: N,
+                slot_f1: N,
+              })
+              .nullish(),
+            curves: WireCurves,
+          }),
+        )
+        .nullish(),
+      anomaly: z
+        .object({
+          model: S,
+          escalatesOnly: z.boolean().nullish(),
+          heldoutFamily: S,
+          test: z
+            .object({
+              auroc_isoforest: N,
+              auroc_lightgbm: N,
+              auroc_combined: N,
+              auprc_isoforest: N,
+              auprc_lightgbm: N,
+              auprc_combined: N,
+              false_escalation_rate: N,
+              false_escalation_ci95: Interval95,
+              normal_actions: N,
+            })
+            .nullish(),
+          perFamily: z
+            .record(
+              z.string(),
+              z.object({ n: N, escalation_recall: N, recall_ci95: Interval95, auroc_combined: N, auroc_isoforest: N, auroc_lightgbm: N, heldout: z.boolean().nullish() }).nullish(),
+            )
+            .nullish(),
+        })
+        .nullish(),
+      forecast: z
+        .object({
+          model: S,
+          horizonDays: N,
+          breachWindowDays: N,
+          quantiles: z.array(z.number()).nullish(),
+          methods: z.record(z.string(), z.record(z.string(), N).nullish()).nullish(),
+          brierClimatology: N,
+        })
+        .nullish(),
+    })
+    .nullish(),
+  bench: z
+    .object({
+      generatedAt: S,
+      commit: S,
+      ledger: S,
+      understanding: S,
+      metrics: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]).nullish()).nullish(),
+      detail: z.unknown().nullish(),
+    })
+    .nullish(),
+  sources: z.object({ results: z.array(z.string()).nullish(), resultsGeneratedAt: S }).nullish(),
+});
+export type WireProofBundle = z.infer<typeof WireProofBundle>;

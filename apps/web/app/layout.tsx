@@ -20,18 +20,22 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B0C0F",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F3F2EE" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0C0F" },
+  ],
   colorScheme: "dark light",
   width: "device-width",
   initialScale: 1,
 };
 
-// Applies the saved theme and motion preference before first paint (wrapped: storage may be blocked).
+// Applies the saved theme and motion preference before first paint (wrapped: storage may be blocked). Without a
+// saved theme the device setting decides (tokens.css, prefers-color-scheme).
 const PREFS = `try{var d=document.documentElement,t=localStorage.getItem("yl-theme"),m=localStorage.getItem("yl-motion");if(t==="light"||t==="dark")d.dataset.theme=t;if(m==="off")d.dataset.motion="off";}catch(e){}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREFS }} />
         <link rel="preload" href="/fonts/Geist-Latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />

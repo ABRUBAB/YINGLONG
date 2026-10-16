@@ -13,8 +13,6 @@ import { useVisitorSession } from "@/components/session";
 import { clearVisitorSession } from "@/lib/api/session";
 import "./site.css";
 
-/** Routes whose first screen is an always-obsidian surface: the nav joins that surface there. */
-const OBSIDIAN = new Set(["/", "/city"]);
 const WORKSPACE = ["/app", "/treasury", "/supervisor"];
 
 function MenuIcon() {
@@ -39,12 +37,10 @@ export function SiteNav() {
   const session = useVisitorSession();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const obsidian = OBSIDIAN.has(pathname);
   // Workspace routes (the in-app rail spans the full width) get a full-width bar to match.
   const workspace = WORKSPACE.some((w) => pageActive(pathname, w));
   return (
     <header
-      data-surface={obsidian ? "obsidian" : undefined}
       className="yl-sitenav no-print sticky top-0 z-40 border-b border-line-1 bg-bg-0 text-fg-1"
     >
       <div className={cn("yl-container flex h-[var(--nav-h)] items-center justify-between gap-3", workspace && "max-w-none")}>

@@ -35,12 +35,12 @@ export const RING_WORD: Record<RingState, string> = {
 };
 
 const TONE: Record<RingState, string> = {
-  verified: "text-fg-1",
+  verified: "text-jade",
   waiting: "text-brass",
   asking: "text-brass",
   refused: "text-refused-fg",
   onchain: "text-steel",
-  sealed: "text-chrome-1",
+  sealed: "text-seal",
   pending: "text-fg-muted",
   expired: "text-fg-muted",
   unknown: "text-fg-muted",
