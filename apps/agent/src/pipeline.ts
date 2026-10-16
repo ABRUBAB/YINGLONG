@@ -429,7 +429,10 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   // breaker trips off-chain from the policy decision.
   const breakerRules = (process.env.BREAKER_RULES ?? "VelocityExceeded").split(",");
   const tripRule = policy?.refusals.find((r) => breakerRules.includes(r.typedError));
-  if (tier === "T4" && tripRule && config(id).kind === "company" && policy?.stateReads.paused !== "true") {
+  // A request above the tier ceiling is the board's decision, never the agent's: it is routed to the directors,
+  // so its size is not a velocity breach by the agent and must not pause the treasurer.
+  const boardMatter = policy?.refusals.some((r) => r.typedError === "AboveTierCeiling");
+  if (tier === "T4" && tripRule && !boardMatter && config(id).kind === "company" && policy?.stateReads.paused !== "true") {
     p.breaker = await tripBreaker(ctx, st.account, `${tripRule.typedError}: ${tripRule.detail}`);
   }
   proposals.update((d) => {
@@ -470,7 +473,7 @@ async function tripBreaker(ctx: LedgerContext, account: Address, reason: string)
 // ---------------------------------------------------------------- approvals (T2)
 
 async function createCosignApproval(ctx: LedgerContext, st: PrincipalState, p: Proposal, execution: Hex): Promise<string> {
-  const now = (await ctx.pub.getBlock()).timestamp;
+  const now = await ctx.now();
   const expiry = now + (ctx.profile.timeUnit === "ms" ? 540_000n : 540n);
   const nonce = nextCosignNonce(st.id);
   const digest = await ctx.read<Hex>({
@@ -561,7 +564,7 @@ export async function createPauseApproval(id: PrincipalId, kind: "pause" | "resu
   const ctx = ledgerContext(st.ledger);
   const ks = ctx.addr("KillSwitchRegistry");
   const nonce = await ctx.read<bigint>({ address: ks, abi: abi.KillSwitchRegistryAbi, functionName: "nonces", args: [st.account] });
-  const now = (await ctx.pub.getBlock()).timestamp;
+  const now = await ctx.now();
   const deadline = now + (ctx.profile.timeUnit === "ms" ? 3_600_000n : 3600n);
   const digest = await ctx.read<Hex>({ address: ks, abi: abi.KillSwitchRegistryAbi, functionName: kind === "pause" ? "tripDigest" : "untripDigest", args: [st.account, nonce, deadline] });
   const primaryType = kind === "pause" ? "Trip" : "Untrip";

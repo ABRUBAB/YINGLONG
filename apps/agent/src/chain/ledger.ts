@@ -41,6 +41,17 @@ export class LedgerContext {
     this.pub = createPublicClient({ chain: this.chain, cacheTime: 0, transport: http(this.profile.rpcUrl, { timeout: 30_000 }) }) as PublicClient;
   }
 
+  /**
+   * "Now" in the ledger's time unit for validity windows: the later of the head block's timestamp and the wall
+   * clock. FISCO BCOS seals blocks only when there are transactions, so after an idle spell the head block can be
+   * minutes old; an expiry computed from it alone could already be in the past when the transaction is mined.
+   */
+  async now(): Promise<bigint> {
+    const head = (await this.pub.getBlock()).timestamp;
+    const wall = this.profile.timeUnit === "ms" ? BigInt(Date.now()) : BigInt(Math.floor(Date.now() / 1000));
+    return head > wall ? head : wall;
+  }
+
   addr(name: keyof Deployment["contracts"]): Address {
     return this.deployment.contracts[name].address;
   }

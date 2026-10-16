@@ -8,7 +8,7 @@ import { delegationHash, type Delegation } from "@yinglong/mandate";
 import { decodeRevert, ledger as ledgerProfile, revertDataOf, type LedgerName } from "@yinglong/sdk";
 import { loadDeployment, rolePrivateKey } from "@yinglong/sdk/server";
 import { guardRedemption } from "./guard";
-import { wrapWithChild } from "./child";
+import { windowNow, wrapWithChild } from "./child";
 
 /**
  * apps/signer: the only process that holds agent keys. Listens on 127.0.0.1 only. It signs a redemption only
@@ -126,9 +126,8 @@ app.post("/v1/sign-x402-child", async (c) => {
   if (amount === 0n || amount > maxFee) return c.json({ ok: false, reason: `fee ${amount} above the signer cap ${maxFee}` }, 403);
   const assets = [deployment.contracts.TestUSD.address, deployment.contracts.TestHKD.address, ...(process.env.SIGNER_EXTRA_ASSETS ?? "").split(",").filter(Boolean)].map((a) => a.toLowerCase());
   if (!assets.includes(r.asset.toLowerCase())) return c.json({ ok: false, reason: "fee asset is not a YINGLONG asset" }, 403);
-  const block = await pub.getBlock();
   const unit = p.timeUnit === "ms" ? 1000n : 1n;
-  const before = block.timestamp + BigInt(r.windowSeconds) * unit;
+  const before = (await windowNow(pub, p.timeUnit)).now + BigInt(r.windowSeconds) * unit;
   const child: Delegation = {
     delegate: getAddress(r.seller),
     delegator: account.address,

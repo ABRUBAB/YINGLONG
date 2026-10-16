@@ -24,6 +24,18 @@ const DELEGATION_TUPLE = {
 
 export const CHILD_WINDOW_SECONDS = 120n;
 
+/**
+ * "Now" for a validity window: the later of the head block's timestamp and the wall clock. FISCO BCOS seals a
+ * block only when there are transactions, so after an idle spell the head block can be minutes old and a window
+ * computed from it alone would already be closed when the redemption is mined. The lower bound stays at the head
+ * block (the next block can never be older).
+ */
+export async function windowNow(pub: PublicClient, timeUnit: "s" | "ms"): Promise<{ head: bigint; now: bigint }> {
+  const head = (await pub.getBlock()).timestamp;
+  const wall = timeUnit === "ms" ? BigInt(Date.now()) : BigInt(Math.floor(Date.now() / 1000));
+  return { head, now: head > wall ? head : wall };
+}
+
 export async function wrapWithChild(args: {
   calldata: Hex;
   deployment: Deployment;
@@ -35,10 +47,10 @@ export async function wrapWithChild(args: {
   const d = decodeFunctionData({ abi: abi.DelegationManagerAbi, data: args.calldata });
   if (d.functionName !== "redeemDelegations") throw new Error("not a redemption");
   const [contexts, modes, executions] = d.args as readonly [readonly Hex[], readonly Hex[], readonly Hex[]];
-  const block = await args.pub.getBlock();
   const unit = args.timeUnit === "ms" ? 1000n : 1n;
-  const after = block.timestamp - 1n * unit;
-  const before = block.timestamp + CHILD_WINDOW_SECONDS * unit;
+  const t = await windowNow(args.pub, args.timeUnit);
+  const after = t.head - 1n * unit;
+  const before = t.now + CHILD_WINDOW_SECONDS * unit;
   const timestampTerms = concat([pad(toHex(after), { size: 16 }), pad(toHex(before), { size: 16 })]);
   const limitedTerms = pad(toHex(1n), { size: 32 });
   const domainHash = (await args.pub.readContract({
