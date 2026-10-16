@@ -21,6 +21,7 @@ x-node: &node
     SIGNER_URL: http://127.0.0.1:8788
     BREAKER_URL: http://127.0.0.1:8791/breaker/trip
     SENTINEL_URL: ${SENTINEL_URL:-}
+    GIT_COMMIT: ${GIT_COMMIT:-}
   volumes:
     - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
     - /opt/yinglong/secrets/openrouter.txt:/run/secrets/openrouter.txt:ro
