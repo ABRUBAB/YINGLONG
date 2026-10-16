@@ -1,0 +1,149 @@
+{
+ "attacks": {
+  "direct_injection": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 0,
+   "attacker_address_present": 16,
+   "lang_en": 13,
+   "lang_mixed": 4,
+   "lang_bn": 5
+  },
+  "email_injection": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 2,
+   "attacker_address_present": 14,
+   "lang_en": 16,
+   "lang_bn": 3,
+   "lang_mixed": 3
+  },
+  "heldout": {
+   "items": 36,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 1,
+   "attacker_address_present": 27,
+   "lang_en": 28,
+   "lang_mixed": 4,
+   "lang_bn": 4
+  },
+  "invoice_memo_injection": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 1,
+   "attacker_address_present": 13,
+   "lang_mixed": 3,
+   "lang_en": 17,
+   "lang_bn": 2
+  },
+  "lookalike_address": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 2,
+   "attacker_address_present": 22,
+   "lang_en": 17,
+   "lang_mixed": 2,
+   "lang_bn": 3
+  },
+  "multilingual": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 4,
+   "attacker_address_present": 20,
+   "lang_mixed": 12,
+   "lang_bn": 10
+  },
+  "payee_note_injection": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 3,
+   "attacker_address_present": 15,
+   "lang_en": 17,
+   "lang_bn": 3,
+   "lang_mixed": 2
+  },
+  "split_payment": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 2,
+   "attacker_address_present": 13,
+   "lang_en": 17,
+   "lang_bn": 2,
+   "lang_mixed": 3
+  },
+  "token_name_injection": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 2,
+   "attacker_address_present": 21,
+   "lang_en": 15,
+   "lang_bn": 2,
+   "lang_mixed": 5
+  },
+  "urgency_authority": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 2,
+   "attacker_address_present": 12,
+   "lang_en": 17,
+   "lang_bn": 3,
+   "lang_mixed": 2
+  },
+  "visual_injection": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 0,
+   "attacker_address_present": 16,
+   "lang_bn": 6,
+   "lang_mixed": 1,
+   "lang_en": 15
+  },
+  "within_mandate": {
+   "items": 22,
+   "scenario_brief_echo": 0,
+   "devanagari_glitch": 4,
+   "attacker_address_present": 0,
+   "lang_en": 14,
+   "lang_bn": 6,
+   "lang_mixed": 2
+  },
+  "x402_description_injection": {
+   "items": 22,
+   "scenario_brief_echo": 14,
+   "devanagari_glitch": 4,
+   "attacker_address_present": 19,
+   "lang_en": 14,
+   "lang_bn": 7,
+   "lang_mixed": 1
+  }
+ },
+ "legit": {
+  "items": 239,
+  "label_check": {
+   "auto_verified": 214,
+   "unverified_wording": 25
+  },
+  "languages": {
+   "en": 201,
+   "bn": 16,
+   "mixed": 22
+  },
+  "tier_hints": {
+   "T?": 60,
+   "T0": 38,
+   "T1": 78,
+   "T2": 63
+  },
+  "with_context_document": 58,
+  "devanagari_glitch": 0
+ },
+ "attacks_total": {
+  "items": 300,
+  "scenario_brief_echo": 14,
+  "devanagari_glitch": 27,
+  "attacker_address_present": 208,
+  "lang_en": 200,
+  "lang_mixed": 44,
+  "lang_bn": 56
+ }
+}

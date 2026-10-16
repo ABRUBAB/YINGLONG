@@ -1,0 +1,225 @@
+{
+ "model": "qwen3.5-2b",
+ "base": "Qwen/Qwen3.5-2B",
+ "adapter_step": 1332,
+ "train_runtime_secs": null,
+ "final_train_loss": 0.003440626710653305,
+ "eval_context": 2048,
+ "lora": {
+  "r": 16,
+  "alpha": 16,
+  "dropout": 0
+ },
+ "epochs": 2,
+ "lr": 0.0002,
+ "effective_batch": 16,
+ "train_rows": null,
+ "test": {
+  "overall": {
+   "n": 1255,
+   "json_validity": 0.9992,
+   "json_validity_ci95": [
+    0.9955,
+    0.9999
+   ],
+   "exact_match": 0.8869,
+   "exact_match_ci95": [
+    0.8681,
+    0.9032
+   ],
+   "slot_precision": 0.9794,
+   "slot_recall": 0.9791,
+   "slot_f1": 0.9793
+  },
+  "task=intent": {
+   "n": 917,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9958,
+    1.0
+   ],
+   "exact_match": 0.867,
+   "exact_match_ci95": [
+    0.8434,
+    0.8874
+   ],
+   "slot_precision": 0.9731,
+   "slot_recall": 0.9719,
+   "slot_f1": 0.9725
+  },
+  "task=mandate": {
+   "n": 338,
+   "json_validity": 0.997,
+   "json_validity_ci95": [
+    0.9834,
+    0.9995
+   ],
+   "exact_match": 0.9408,
+   "exact_match_ci95": [
+    0.9104,
+    0.9614
+   ],
+   "slot_precision": 0.9881,
+   "slot_recall": 0.989,
+   "slot_f1": 0.9885
+  },
+  "language=bn": {
+   "n": 318,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9881,
+    1.0
+   ],
+   "exact_match": 0.8082,
+   "exact_match_ci95": [
+    0.7613,
+    0.8477
+   ],
+   "slot_precision": 0.9612,
+   "slot_recall": 0.9617,
+   "slot_f1": 0.9614
+  },
+  "language=en": {
+   "n": 468,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9919,
+    1.0
+   ],
+   "exact_match": 0.9509,
+   "exact_match_ci95": [
+    0.9273,
+    0.967
+   ],
+   "slot_precision": 0.9902,
+   "slot_recall": 0.9895,
+   "slot_f1": 0.9899
+  },
+  "language=mixed": {
+   "n": 283,
+   "json_validity": 0.9965,
+   "json_validity_ci95": [
+    0.9803,
+    0.9994
+   ],
+   "exact_match": 0.8233,
+   "exact_match_ci95": [
+    0.7746,
+    0.8633
+   ],
+   "slot_precision": 0.9699,
+   "slot_recall": 0.9704,
+   "slot_f1": 0.9701
+  },
+  "language=zh": {
+   "n": 186,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9798,
+    1.0
+   ],
+   "exact_match": 0.957,
+   "exact_match_ci95": [
+    0.9174,
+    0.978
+   ],
+   "slot_precision": 0.9958,
+   "slot_recall": 0.9933,
+   "slot_f1": 0.9945
+  },
+  "gen_secs": 1279.9
+ },
+ "bench_legit": {
+  "overall": {
+   "n": 239,
+   "json_validity": 0.9958,
+   "json_validity_ci95": [
+    0.9767,
+    0.9993
+   ],
+   "exact_match": 0.7992,
+   "exact_match_ci95": [
+    0.7438,
+    0.845
+   ],
+   "slot_precision": 0.9632,
+   "slot_recall": 0.958,
+   "slot_f1": 0.9606
+  },
+  "task=intent": {
+   "n": 239,
+   "json_validity": 0.9958,
+   "json_validity_ci95": [
+    0.9767,
+    0.9993
+   ],
+   "exact_match": 0.7992,
+   "exact_match_ci95": [
+    0.7438,
+    0.845
+   ],
+   "slot_precision": 0.9632,
+   "slot_recall": 0.958,
+   "slot_f1": 0.9606
+  },
+  "language=bn": {
+   "n": 16,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.8064,
+    1.0
+   ],
+   "exact_match": 0.6875,
+   "exact_match_ci95": [
+    0.444,
+    0.8584
+   ],
+   "slot_precision": 0.9359,
+   "slot_recall": 0.9125,
+   "slot_f1": 0.9241
+  },
+  "language=en": {
+   "n": 201,
+   "json_validity": 0.995,
+   "json_validity_ci95": [
+    0.9724,
+    0.9991
+   ],
+   "exact_match": 0.8507,
+   "exact_match_ci95": [
+    0.7949,
+    0.8934
+   ],
+   "slot_precision": 0.9758,
+   "slot_recall": 0.9713,
+   "slot_f1": 0.9735
+  },
+  "language=mixed": {
+   "n": 22,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.8513,
+    1.0
+   ],
+   "exact_match": 0.4091,
+   "exact_match_ci95": [
+    0.2326,
+    0.6127
+   ],
+   "slot_precision": 0.872,
+   "slot_recall": 0.872,
+   "slot_f1": 0.872
+  },
+  "gen_secs": 114.3
+ },
+ "eval_secs": 1447,
+ "gguf_path": "unsloth",
+ "gguf": {
+  "file": "yl-intent-qwen3.5-2b-Q4_K_M.gguf",
+  "bytes": 1274396320,
+  "sha256": "a685d7066c4d7898820ebdd523330022450cc737475a3669b02ccdfb2b6299de",
+  "path": "PEFT merge on CPU + llama.cpp"
+ },
+ "hf_repo": "ABRUBAB/yl-intent-qwen3.5-2b",
+ "hf_revision": "1b6b1313b8fa11e721c94d9c119ee47a6e30c4ae"
+}

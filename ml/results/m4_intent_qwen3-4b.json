@@ -1,0 +1,225 @@
+{
+ "model": "qwen3-4b",
+ "base": "Qwen/Qwen3-4B",
+ "adapter_step": 1332,
+ "train_runtime_secs": null,
+ "final_train_loss": 0.003544336184859276,
+ "eval_context": 2048,
+ "lora": {
+  "r": 16,
+  "alpha": 16,
+  "dropout": 0
+ },
+ "epochs": 2,
+ "lr": 0.0002,
+ "effective_batch": 16,
+ "train_rows": null,
+ "test": {
+  "overall": {
+   "n": 1255,
+   "json_validity": 0.9992,
+   "json_validity_ci95": [
+    0.9955,
+    0.9999
+   ],
+   "exact_match": 0.8876,
+   "exact_match_ci95": [
+    0.869,
+    0.904
+   ],
+   "slot_precision": 0.9816,
+   "slot_recall": 0.9807,
+   "slot_f1": 0.9812
+  },
+  "task=intent": {
+   "n": 917,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9958,
+    1.0
+   ],
+   "exact_match": 0.867,
+   "exact_match_ci95": [
+    0.8434,
+    0.8874
+   ],
+   "slot_precision": 0.974,
+   "slot_recall": 0.9736,
+   "slot_f1": 0.9738
+  },
+  "task=mandate": {
+   "n": 338,
+   "json_validity": 0.997,
+   "json_validity_ci95": [
+    0.9834,
+    0.9995
+   ],
+   "exact_match": 0.9438,
+   "exact_match_ci95": [
+    0.9139,
+    0.9637
+   ],
+   "slot_precision": 0.9921,
+   "slot_recall": 0.9904,
+   "slot_f1": 0.9913
+  },
+  "language=bn": {
+   "n": 318,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9881,
+    1.0
+   ],
+   "exact_match": 0.8585,
+   "exact_match_ci95": [
+    0.8159,
+    0.8925
+   ],
+   "slot_precision": 0.9741,
+   "slot_recall": 0.9695,
+   "slot_f1": 0.9718
+  },
+  "language=en": {
+   "n": 468,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9919,
+    1.0
+   ],
+   "exact_match": 0.9338,
+   "exact_match_ci95": [
+    0.9075,
+    0.9529
+   ],
+   "slot_precision": 0.9911,
+   "slot_recall": 0.9905,
+   "slot_f1": 0.9908
+  },
+  "language=mixed": {
+   "n": 283,
+   "json_validity": 0.9965,
+   "json_validity_ci95": [
+    0.9803,
+    0.9994
+   ],
+   "exact_match": 0.7951,
+   "exact_match_ci95": [
+    0.7442,
+    0.838
+   ],
+   "slot_precision": 0.9663,
+   "slot_recall": 0.9688,
+   "slot_f1": 0.9676
+  },
+  "language=zh": {
+   "n": 186,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9798,
+    1.0
+   ],
+   "exact_match": 0.9624,
+   "exact_match_ci95": [
+    0.9244,
+    0.9817
+   ],
+   "slot_precision": 0.9933,
+   "slot_recall": 0.9916,
+   "slot_f1": 0.9924
+  },
+  "gen_secs": 3658.2
+ },
+ "bench_legit": {
+  "overall": {
+   "n": 239,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9842,
+    1.0
+   ],
+   "exact_match": 0.8243,
+   "exact_match_ci95": [
+    0.771,
+    0.8673
+   ],
+   "slot_precision": 0.9693,
+   "slot_recall": 0.9588,
+   "slot_f1": 0.964
+  },
+  "task=intent": {
+   "n": 239,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9842,
+    1.0
+   ],
+   "exact_match": 0.8243,
+   "exact_match_ci95": [
+    0.771,
+    0.8673
+   ],
+   "slot_precision": 0.9693,
+   "slot_recall": 0.9588,
+   "slot_f1": 0.964
+  },
+  "language=bn": {
+   "n": 16,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.8064,
+    1.0
+   ],
+   "exact_match": 0.625,
+   "exact_match_ci95": [
+    0.3864,
+    0.8152
+   ],
+   "slot_precision": 0.9178,
+   "slot_recall": 0.8375,
+   "slot_f1": 0.8758
+  },
+  "language=en": {
+   "n": 201,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.9812,
+    1.0
+   ],
+   "exact_match": 0.8756,
+   "exact_match_ci95": [
+    0.8228,
+    0.9143
+   ],
+   "slot_precision": 0.9823,
+   "slot_recall": 0.975,
+   "slot_f1": 0.9786
+  },
+  "language=mixed": {
+   "n": 22,
+   "json_validity": 1.0,
+   "json_validity_ci95": [
+    0.8513,
+    1.0
+   ],
+   "exact_match": 0.5,
+   "exact_match_ci95": [
+    0.3072,
+    0.6928
+   ],
+   "slot_precision": 0.8889,
+   "slot_recall": 0.896,
+   "slot_f1": 0.8924
+  },
+  "gen_secs": 293.0
+ },
+ "eval_secs": 4009,
+ "gguf_path": "unsloth",
+ "gguf": {
+  "file": "yl-intent-qwen3-4b-Q4_K_M.gguf",
+  "bytes": 2497280960,
+  "sha256": "98bd75006c66e0d2548ec3a0b022601dd40d6eff38218427e7f83b23d99e08a9",
+  "path": "PEFT merge on CPU + llama.cpp"
+ },
+ "hf_repo": "ABRUBAB/yl-intent-qwen3-4b",
+ "hf_revision": "3bd7578d4d39918adf8376c2ed2322b94139b58e"
+}

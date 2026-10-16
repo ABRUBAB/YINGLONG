@@ -1,0 +1,92 @@
+{
+ "model": "M5 cash-flow forecaster",
+ "horizon_days": 28,
+ "breach_window_days": 14,
+ "context_days": 512,
+ "quantiles": [
+  0.05,
+  0.1,
+  0.2,
+  0.3,
+  0.4,
+  0.5,
+  0.6,
+  0.7,
+  0.8,
+  0.9,
+  0.95
+ ],
+ "series": [
+  "lotus_lane",
+  "sibling_1",
+  "sibling_2",
+  "sibling_3",
+  "sibling_4",
+  "sibling_5",
+  "sibling_6",
+  "sibling_7"
+ ],
+ "origins": {
+  "calib": 208,
+  "test": 312
+ },
+ "label": "synthetic ledgers (fictional SMEs, CNY on a simulator rail)",
+ "methods": {
+  "chronos2": {
+   "pinball_loss_cny": 135215.5,
+   "scaled_pinball": 0.09337,
+   "pinball_h1_7_cny": 78052.9,
+   "pinball_h8_28_cny": 154269.7,
+   "coverage90_raw": 0.897,
+   "coverage90_cqr": 0.8866,
+   "brier_breach14_raw": 0.0843,
+   "brier_breach14_isotonic": 0.0837
+  },
+  "lgbm_quantile": {
+   "pinball_loss_cny": 111483.2,
+   "scaled_pinball": 0.07698,
+   "pinball_h1_7_cny": 52239.3,
+   "pinball_h8_28_cny": 131231.2,
+   "coverage90_raw": 0.7428,
+   "coverage90_cqr": 0.8672,
+   "brier_breach14_raw": 0.0636,
+   "brier_breach14_isotonic": 0.0608
+  },
+  "seasonal_naive": {
+   "pinball_loss_cny": 210350.6,
+   "scaled_pinball": 0.14525,
+   "pinball_h1_7_cny": 114427.5,
+   "pinball_h8_28_cny": 242325.0,
+   "coverage90_raw": 0.8869,
+   "coverage90_cqr": 0.8926,
+   "brier_breach14_raw": 0.1345,
+   "brier_breach14_isotonic": 0.1013
+  }
+ },
+ "breach_base_rate_test": 0.1314,
+ "breach_base_rate_calib": 0.1635,
+ "brier_climatology": 0.1152,
+ "runtime_secs": {
+  "lgbm_train": 19.9,
+  "chronos2_inference_cpu": 396.1,
+  "total": 450.7
+ },
+ "versions": {
+  "lightgbm": "4.7.0",
+  "chronos_model": "amazon/chronos-2",
+  "chronos_forecasting": "2.3.2"
+ },
+ "artifacts_sha256": {
+  "m5_lgbm_q0.05.txt": "be1f6e4de1f685a8ee5ffa62d4c05152224c657fa732337160bd6726bdaa8a08",
+  "m5_lgbm_q0.1.txt": "60444a43248e2630094a1f0c478d6a71a1cbd306b5e69b52c7a9ad6d61c5deb9",
+  "m5_lgbm_q0.2.txt": "c6df9ea4398f5bd682fc1d370e4fceed830ae2a5e1a5f5beab27289d79a95041",
+  "m5_lgbm_q0.3.txt": "8d0dcc600cec09e979811437f50b978b23a15c30f1129ae991ce6dedb5485181",
+  "m5_lgbm_q0.4.txt": "86ac9b0cb25ee3e1e64949c786e8956b22cff8c88342907dbbcaa7c06a95fa7a",
+  "m5_lgbm_q0.5.txt": "0940abba1f8503caebb25b9a54fe88f4fbead998b81a6d7c81526cffd61157a6",
+  "m5_lgbm_q0.6.txt": "534c0e634d02b0212411ebe5841dbf77d87a7eaba431b0d2154ccf4e09a13b52",
+  "m5_lgbm_q0.7.txt": "79a9463fcfc0a50c5020df50a5c026559f4d5658cde542eba6f1d1152d089bae",
+  "m5_lgbm_q0.8.txt": "f1f9026781293ee0fff1503bf792d20ea1029eb73acc39367745037973fbb8c9",
+  "m5_lgbm_q0.9.txt": "3bec617d40c964615c448edf839d19db86b12bb98768c06ab33f776190401f9d",
+  "m5_lgbm_q0.95.txt": "e312618863067b834e9c991bbb91a879f84f23488498f7e44c648753e33b8afc"
+ }
+}

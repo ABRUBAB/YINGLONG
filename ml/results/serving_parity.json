@@ -1,0 +1,9 @@
+{
+ "rows": 500,
+ "threshold": 0.2,
+ "label_agreement": 0.998,
+ "mean_abs_score_diff": 0.00071,
+ "mean_ms_per_call": 380.4,
+ "model": "ABRUBAB/yl-sentinel-mmbert-base@1062546bb103606fd85df8ea348d5d803304de26",
+ "model_sha": "8775f388fc9eea0c0c310395668812fc2d5e4954959aa006e27ef7ebd5c95176"
+}

@@ -1,0 +1,203 @@
+{
+ "model": "M3 behaviour anomaly (IsolationForest + LightGBM + Mondrian conformal by archetype)",
+ "escalates_only": true,
+ "heldout_family": "address_swap",
+ "families": [
+  "duplicate_payment",
+  "split_payment",
+  "lookalike_address",
+  "velocity_burst",
+  "inflated_invoice",
+  "x402_drain",
+  "new_payee_large",
+  "dormant_reactivation",
+  "address_swap"
+ ],
+ "data": {
+  "actions": 177209,
+  "wallets": 90,
+  "anomalous_actions": 11043,
+  "by_split": {
+   "train": {
+    "actions": 93947,
+    "anomalous": 5718
+   },
+   "calib": {
+    "actions": 41695,
+    "anomalous": 2665
+   },
+   "test": {
+    "actions": 41567,
+    "anomalous": 2660
+   }
+  }
+ },
+ "features": [
+  "f_log_amount",
+  "f_amount_rz",
+  "f_amount_ratio_med",
+  "f_amount_over_thr",
+  "f_hour",
+  "f_weekday",
+  "f_night",
+  "f_log_since_same_payee",
+  "f_n_same_payee_24h",
+  "f_dup_amount_24h",
+  "f_n_1h",
+  "f_n_24h",
+  "f_x402",
+  "f_x402_1h",
+  "f_sub_thr",
+  "f_sub_thr_24h",
+  "f_new_payee",
+  "f_addr_changed",
+  "f_log_addr_age",
+  "f_untrusted",
+  "f_scheduled",
+  "f_payee_hist_n",
+  "f_lookalike"
+ ],
+ "alpha": 0.02213233719831758,
+ "target_false_escalation_rate": 0.02,
+ "test_overall": {
+  "auroc_isoforest": 0.9794,
+  "auroc_lightgbm": 0.9943,
+  "auroc_combined": 0.9944,
+  "auprc_isoforest": 0.8743,
+  "auprc_lightgbm": 0.9866,
+  "auprc_combined": 0.9864,
+  "false_escalation_rate": 0.0212,
+  "false_escalation_ci95": [
+   0.0198,
+   0.0227
+  ],
+  "normal_actions": 38907
+ },
+ "test_per_family": {
+  "duplicate_payment": {
+   "n": 60,
+   "escalation_recall": 0.45,
+   "recall_ci95": [
+    0.3309,
+    0.5751
+   ],
+   "auroc_combined": 0.7609,
+   "auroc_isoforest": 0.6584,
+   "auroc_lightgbm": 0.7867,
+   "heldout": false
+  },
+  "split_payment": {
+   "n": 261,
+   "escalation_recall": 1.0,
+   "recall_ci95": [
+    0.9855,
+    1.0
+   ],
+   "auroc_combined": 0.9999,
+   "auroc_isoforest": 0.9998,
+   "auroc_lightgbm": 1.0,
+   "heldout": false
+  },
+  "lookalike_address": {
+   "n": 66,
+   "escalation_recall": 1.0,
+   "recall_ci95": [
+    0.945,
+    1.0
+   ],
+   "auroc_combined": 0.9999,
+   "auroc_isoforest": 0.9991,
+   "auroc_lightgbm": 1.0,
+   "heldout": false
+  },
+  "velocity_burst": {
+   "n": 664,
+   "escalation_recall": 1.0,
+   "recall_ci95": [
+    0.9942,
+    1.0
+   ],
+   "auroc_combined": 0.9999,
+   "auroc_isoforest": 0.9606,
+   "auroc_lightgbm": 1.0,
+   "heldout": false
+  },
+  "inflated_invoice": {
+   "n": 67,
+   "escalation_recall": 0.9851,
+   "recall_ci95": [
+    0.9202,
+    0.9974
+   ],
+   "auroc_combined": 0.999,
+   "auroc_isoforest": 0.9432,
+   "auroc_lightgbm": 0.9995,
+   "heldout": false
+  },
+  "x402_drain": {
+   "n": 1358,
+   "escalation_recall": 1.0,
+   "recall_ci95": [
+    0.9972,
+    1.0
+   ],
+   "auroc_combined": 0.9999,
+   "auroc_isoforest": 0.9976,
+   "auroc_lightgbm": 1.0,
+   "heldout": false
+  },
+  "new_payee_large": {
+   "n": 55,
+   "escalation_recall": 1.0,
+   "recall_ci95": [
+    0.9347,
+    1.0
+   ],
+   "auroc_combined": 0.9999,
+   "auroc_isoforest": 0.9991,
+   "auroc_lightgbm": 1.0,
+   "heldout": false
+  },
+  "dormant_reactivation": {
+   "n": 62,
+   "escalation_recall": 1.0,
+   "recall_ci95": [
+    0.9417,
+    1.0
+   ],
+   "auroc_combined": 0.9997,
+   "auroc_isoforest": 0.995,
+   "auroc_lightgbm": 0.9999,
+   "heldout": false
+  },
+  "address_swap": {
+   "n": 67,
+   "escalation_recall": 0.8657,
+   "recall_ci95": [
+    0.764,
+    0.9277
+   ],
+   "auroc_combined": 0.9939,
+   "auroc_isoforest": 0.99,
+   "auroc_lightgbm": 0.9636,
+   "heldout": true
+  }
+ },
+ "lightgbm_top_features": [
+  "f_n_1h",
+  "f_night",
+  "f_untrusted",
+  "f_new_payee",
+  "f_log_since_same_payee",
+  "f_payee_hist_n",
+  "f_hour",
+  "f_log_addr_age",
+  "f_log_amount",
+  "f_amount_rz"
+ ],
+ "runtime_secs": 38.4,
+ "artifacts_sha256": {
+  "m3_lightgbm.txt": "1ed97c2a723ac4f848f0130cef4d1759535419f41c1c2af1f4aa7255b2de4fc0",
+  "m3_models.pkl": "7b8af61b9c7f4412bf84794a855f3d9eaa96a8f4877eca395d6fdbd0427483a6"
+ }
+}

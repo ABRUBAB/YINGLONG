@@ -1,0 +1,42 @@
+{
+ "attack_counts": {
+  "direct_injection": 22,
+  "invoice_memo_injection": 22,
+  "email_injection": 22,
+  "payee_note_injection": 22,
+  "token_name_injection": 22,
+  "x402_description_injection": 22,
+  "lookalike_address": 22,
+  "urgency_authority": 22,
+  "split_payment": 22,
+  "within_mandate": 22,
+  "memory_implant": 36,
+  "visual_injection": 22,
+  "multilingual": 22
+ },
+ "attacks_total": 300,
+ "legit_total": 239,
+ "heldout_family": "memory_implant",
+ "heldout_sha256": "e23a3fcd99fc68f889884bc7cf2748ff665e9c3597a7ce2fc30b64586de0deea",
+ "scenario_sha256": {
+  "lotus_lane.json": "8d924b272f833cb70c73e2a93974e0c03546d861fd6607ec7d992208c7005f68",
+  "nadia.json": "f873e15c90b4cc330fa3f102c2da4bee7b420e57a9b3bb480d91942b65d9cc3d"
+ },
+ "writer_model": "nvidia/nemotron-3-super-120b-a12b:free",
+ "files_sha256": {
+  "attacks/direct_injection.jsonl": "f5ccb00bf54b208bdf143a9492215faa373cdf73da19a24b13a74e6112af368b",
+  "attacks/email_injection.jsonl": "e58c3b9a8e1b0ab82a71f10f90b683c3b786beb05f1af6b02340c75d6c2967e5",
+  "attacks/heldout.jsonl": "e23a3fcd99fc68f889884bc7cf2748ff665e9c3597a7ce2fc30b64586de0deea",
+  "attacks/invoice_memo_injection.jsonl": "107d380a260bb41c219d72ea8c6009a4e4c7b2c92015ef6c2937ed767d3bbdeb",
+  "attacks/lookalike_address.jsonl": "25ef8b4364a1deaba1ce4634bba38a2826ca6183f8e848136783432f817bf917",
+  "attacks/multilingual.jsonl": "4e7256da5a0fdfcde759f7a63220e6c8f17f251ec1a7d66b290bddc9069b06fb",
+  "attacks/payee_note_injection.jsonl": "d1158e47e73754c9562aa50c767784800638afc474618258409bed5cde26d701",
+  "attacks/split_payment.jsonl": "480503a711cfeef933e3febe781f4ce901631a3e350314d75bf59f36027ad371",
+  "attacks/token_name_injection.jsonl": "ec6f1acf1881e8bc6fd9a4ed7ddffb6e715edf16a2141bb5014d02ad545c6f10",
+  "attacks/urgency_authority.jsonl": "9a07eeef8a5413aa7f24268bd5597f54bc13c3628bba94dc7fcdcb85dd8cfe93",
+  "attacks/visual_injection.jsonl": "43800e6db6cd636aadfe132ac79b31fd174c770ce283d3651b6b631ab6644e2c",
+  "attacks/within_mandate.jsonl": "d1788268a22ce00d760c7d81d258ccea2ab149bd8454a26ff69fd38c40329d07",
+  "attacks/x402_description_injection.jsonl": "5057420d20dd1a2c4eefb43c0bc7cb70e45e037d6bb3bb8bb0d78ceec1a82465",
+  "tasks/legit.jsonl": "014a7b9262cd1d0d52aee302c1978ce0c49758908bd69b22f783dd997103ae0f"
+ }
+}

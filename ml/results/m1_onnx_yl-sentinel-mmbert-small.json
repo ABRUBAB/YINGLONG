@@ -1,0 +1,51 @@
+{
+ "repo": "ABRUBAB/yl-sentinel-mmbert-small",
+ "source_revision": "778035345e1356816850ad96e5cf60b0827aff8a",
+ "onnx_upload_commit": "b3288a4b782b28f547a03ab8178d619bfb2f5090",
+ "fp32_onnx_mb": 537.0,
+ "int8_onnx_mb": 421.0,
+ "int8_sha256": "9078e8c69df7b9c0f30e2bd6e05478e03388e79d7caaf59a4df6c9171bbe7cb7",
+ "fp32_sha256": "78ed6dc478f3f050981496d96ff264469c69ae4164d1b99194821ab094045c29",
+ "check_rows": 300,
+ "int8_variants": {
+  "weightonly": {
+   "label_agreement_vs_fp32": 1.0,
+   "mean_abs_prob_diff": 0.00045,
+   "accuracy_at_0.5": 0.9633
+  }
+ },
+ "shipped_variant": "weightonly",
+ "quantization": "weight-only int8 (ONNX Runtime MatMulNBits, 8 bits, block 32, symmetric, int8 compute)",
+ "int8_vs_torch_label_agreement": 1.0,
+ "accuracy_at_0.5_torch_fp32": 0.9633,
+ "cpu": "AMD Ryzen 5 5600H with Radeon Graphics",
+ "onnxruntime": "1.31.0",
+ "latency_batch1": {
+  "threads2_seq64": {
+   "p50_ms": 132.74,
+   "p95_ms": 143.81
+  },
+  "threads2_seq256": {
+   "p50_ms": 552.01,
+   "p95_ms": 597.72
+  },
+  "threads12_seq64": {
+   "p50_ms": 141.45,
+   "p95_ms": 273.84
+  },
+  "threads12_seq256": {
+   "p50_ms": 694.59,
+   "p95_ms": 1333.76
+  }
+ },
+ "fp32_latency_batch1": {
+  "threads2_seq64": {
+   "p50_ms": 106.42,
+   "p95_ms": 196.2
+  },
+  "threads2_seq256": {
+   "p50_ms": 338.66,
+   "p95_ms": 445.33
+  }
+ }
+}

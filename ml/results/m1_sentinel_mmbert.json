@@ -1,0 +1,1796 @@
+{
+ "arm": "mmbert",
+ "threshold_selection": "max macro-F1 on validation split",
+ "at_selected_threshold": {
+  "threshold": 0.2,
+  "test_overall": {
+   "n": 2099,
+   "positives": 1169,
+   "negatives": 930,
+   "macro_f1": 0.9672,
+   "macro_f1_ci95_bootstrap": [
+    0.9599,
+    0.9745
+   ],
+   "recall": 0.9624,
+   "recall_ci95": [
+    0.9498,
+    0.9718
+   ],
+   "specificity": 0.9742,
+   "specificity_ci95": [
+    0.9619,
+    0.9826
+   ]
+  },
+  "test_per_language": {
+   "bn": {
+    "n": 310,
+    "positives": 164,
+    "negatives": 146,
+    "macro_f1": 0.9838,
+    "macro_f1_ci95_bootstrap": [
+     0.9677,
+     0.9968
+    ],
+    "recall": 0.9817,
+    "recall_ci95": [
+     0.9476,
+     0.9938
+    ],
+    "specificity": 0.9863,
+    "specificity_ci95": [
+     0.9514,
+     0.9962
+    ]
+   },
+   "en": {
+    "n": 1480,
+    "positives": 822,
+    "negatives": 658,
+    "macro_f1": 0.9591,
+    "macro_f1_ci95_bootstrap": [
+     0.9485,
+     0.9689
+    ],
+    "recall": 0.9526,
+    "recall_ci95": [
+     0.9358,
+     0.9651
+    ],
+    "specificity": 0.9681,
+    "specificity_ci95": [
+     0.9517,
+     0.979
+    ]
+   },
+   "mixed": {
+    "n": 31,
+    "positives": 15,
+    "negatives": 16,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.7961,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.8064,
+     1.0
+    ]
+   },
+   "zh": {
+    "n": 278,
+    "positives": 168,
+    "negatives": 110,
+    "macro_f1": 0.9887,
+    "macro_f1_ci95_bootstrap": [
+     0.9739,
+     1.0
+    ],
+    "recall": 0.9881,
+    "recall_ci95": [
+     0.9576,
+     0.9967
+    ],
+    "specificity": 0.9909,
+    "specificity_ci95": [
+     0.9503,
+     0.9984
+    ]
+   }
+  },
+  "test_per_source": {
+   "deepset": {
+    "n": 116,
+    "positives": 60,
+    "negatives": 56,
+    "macro_f1": 0.931,
+    "macro_f1_ci95_bootstrap": [
+     0.8793,
+     0.974
+    ],
+    "recall": 0.8667,
+    "recall_ci95": [
+     0.7583,
+     0.9309
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9358,
+     1.0
+    ]
+   },
+   "multijail": {
+    "n": 198,
+    "positives": 198,
+    "negatives": 0,
+    "recall": 0.904,
+    "recall_ci95": [
+     0.855,
+     0.9377
+    ]
+   },
+   "neuralchemy": {
+    "n": 942,
+    "positives": 552,
+    "negatives": 390,
+    "macro_f1": 0.9649,
+    "macro_f1_ci95_bootstrap": [
+     0.9516,
+     0.9766
+    ],
+    "recall": 0.9764,
+    "recall_ci95": [
+     0.9601,
+     0.9862
+    ],
+    "specificity": 0.9513,
+    "specificity_ci95": [
+     0.9252,
+     0.9686
+    ]
+   },
+   "yl_finance_synth": {
+    "n": 843,
+    "positives": 359,
+    "negatives": 484,
+    "macro_f1": 0.9891,
+    "macro_f1_ci95_bootstrap": [
+     0.9818,
+     0.9952
+    ],
+    "recall": 0.9889,
+    "recall_ci95": [
+     0.9717,
+     0.9957
+    ],
+    "specificity": 0.9897,
+    "specificity_ci95": [
+     0.976,
+     0.9956
+    ]
+   }
+  },
+  "finance_synth_per_channel": {
+   "chat_message": {
+    "n": 107,
+    "positives": 49,
+    "negatives": 58,
+    "macro_f1": 0.9906,
+    "macro_f1_ci95_bootstrap": [
+     0.9709,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9273,
+     1.0
+    ],
+    "specificity": 0.9828,
+    "specificity_ci95": [
+     0.9086,
+     0.9969
+    ]
+   },
+   "email": {
+    "n": 141,
+    "positives": 65,
+    "negatives": 76,
+    "macro_f1": 0.9715,
+    "macro_f1_ci95_bootstrap": [
+     0.9362,
+     0.9929
+    ],
+    "recall": 0.9846,
+    "recall_ci95": [
+     0.9179,
+     0.9973
+    ],
+    "specificity": 0.9605,
+    "specificity_ci95": [
+     0.8903,
+     0.9865
+    ]
+   },
+   "invoice_memo": {
+    "n": 158,
+    "positives": 69,
+    "negatives": 89,
+    "macro_f1": 0.9871,
+    "macro_f1_ci95_bootstrap": [
+     0.9678,
+     1.0
+    ],
+    "recall": 0.971,
+    "recall_ci95": [
+     0.9003,
+     0.992
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9586,
+     1.0
+    ]
+   },
+   "ocr_text": {
+    "n": 96,
+    "positives": 44,
+    "negatives": 52,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9197,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9312,
+     1.0
+    ]
+   },
+   "payee_note": {
+    "n": 87,
+    "positives": 34,
+    "negatives": 53,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8985,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9324,
+     1.0
+    ]
+   },
+   "token_name": {
+    "n": 54,
+    "positives": 25,
+    "negatives": 29,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8668,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.883,
+     1.0
+    ]
+   },
+   "web_snippet": {
+    "n": 101,
+    "positives": 35,
+    "negatives": 66,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9011,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.945,
+     1.0
+    ]
+   },
+   "x402_description": {
+    "n": 99,
+    "positives": 38,
+    "negatives": 61,
+    "macro_f1": 0.9786,
+    "macro_f1_ci95_bootstrap": [
+     0.9436,
+     1.0
+    ],
+    "recall": 0.9737,
+    "recall_ci95": [
+     0.8651,
+     0.9953
+    ],
+    "specificity": 0.9836,
+    "specificity_ci95": [
+     0.9128,
+     0.9971
+    ]
+   }
+  },
+  "finance_synth_per_language": {
+   "bn": {
+    "n": 244,
+    "positives": 98,
+    "negatives": 146,
+    "macro_f1": 0.9829,
+    "macro_f1_ci95_bootstrap": [
+     0.9652,
+     0.9959
+    ],
+    "recall": 0.9796,
+    "recall_ci95": [
+     0.9286,
+     0.9944
+    ],
+    "specificity": 0.9863,
+    "specificity_ci95": [
+     0.9514,
+     0.9962
+    ]
+   },
+   "en": {
+    "n": 383,
+    "positives": 171,
+    "negatives": 212,
+    "macro_f1": 0.9894,
+    "macro_f1_ci95_bootstrap": [
+     0.9784,
+     0.9974
+    ],
+    "recall": 0.9883,
+    "recall_ci95": [
+     0.9584,
+     0.9968
+    ],
+    "specificity": 0.9906,
+    "specificity_ci95": [
+     0.9663,
+     0.9974
+    ]
+   },
+   "mixed": {
+    "n": 31,
+    "positives": 15,
+    "negatives": 16,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.7961,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.8064,
+     1.0
+    ]
+   },
+   "zh": {
+    "n": 185,
+    "positives": 75,
+    "negatives": 110,
+    "macro_f1": 0.9944,
+    "macro_f1_ci95_bootstrap": [
+     0.9827,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9513,
+     1.0
+    ],
+    "specificity": 0.9909,
+    "specificity_ci95": [
+     0.9503,
+     0.9984
+    ]
+   }
+  },
+  "test_per_kind": {
+   "adversarial": {
+    "n": 79,
+    "positives": 79,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9536,
+     1.0
+    ]
+   },
+   "benign": {
+    "n": 446,
+    "positives": 0,
+    "negatives": 446,
+    "specificity": 0.9574,
+    "specificity_ci95": [
+     0.9344,
+     0.9726
+    ]
+   },
+   "direct_injection": {
+    "n": 374,
+    "positives": 374,
+    "negatives": 0,
+    "recall": 0.9759,
+    "recall_ci95": [
+     0.9549,
+     0.9873
+    ]
+   },
+   "encoding": {
+    "n": 30,
+    "positives": 30,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8865,
+     1.0
+    ]
+   },
+   "finance_benign_chat_message": {
+    "n": 58,
+    "positives": 0,
+    "negatives": 58,
+    "specificity": 0.9828,
+    "specificity_ci95": [
+     0.9086,
+     0.9969
+    ]
+   },
+   "finance_benign_email": {
+    "n": 76,
+    "positives": 0,
+    "negatives": 76,
+    "specificity": 0.9605,
+    "specificity_ci95": [
+     0.8903,
+     0.9865
+    ]
+   },
+   "finance_benign_invoice_memo": {
+    "n": 89,
+    "positives": 0,
+    "negatives": 89,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9586,
+     1.0
+    ]
+   },
+   "finance_benign_ocr_text": {
+    "n": 52,
+    "positives": 0,
+    "negatives": 52,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9312,
+     1.0
+    ]
+   },
+   "finance_benign_payee_note": {
+    "n": 53,
+    "positives": 0,
+    "negatives": 53,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9324,
+     1.0
+    ]
+   },
+   "finance_benign_token_name": {
+    "n": 29,
+    "positives": 0,
+    "negatives": 29,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.883,
+     1.0
+    ]
+   },
+   "finance_benign_web_snippet": {
+    "n": 66,
+    "positives": 0,
+    "negatives": 66,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.945,
+     1.0
+    ]
+   },
+   "finance_benign_x402_description": {
+    "n": 61,
+    "positives": 0,
+    "negatives": 61,
+    "specificity": 0.9836,
+    "specificity_ci95": [
+     0.9128,
+     0.9971
+    ]
+   },
+   "finance_chat_message": {
+    "n": 49,
+    "positives": 49,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9273,
+     1.0
+    ]
+   },
+   "finance_email": {
+    "n": 65,
+    "positives": 65,
+    "negatives": 0,
+    "recall": 0.9846,
+    "recall_ci95": [
+     0.9179,
+     0.9973
+    ]
+   },
+   "finance_invoice_memo": {
+    "n": 69,
+    "positives": 69,
+    "negatives": 0,
+    "recall": 0.971,
+    "recall_ci95": [
+     0.9003,
+     0.992
+    ]
+   },
+   "finance_ocr_text": {
+    "n": 44,
+    "positives": 44,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9197,
+     1.0
+    ]
+   },
+   "finance_payee_note": {
+    "n": 34,
+    "positives": 34,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8985,
+     1.0
+    ]
+   },
+   "finance_token_name": {
+    "n": 25,
+    "positives": 25,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8668,
+     1.0
+    ]
+   },
+   "finance_web_snippet": {
+    "n": 35,
+    "positives": 35,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9011,
+     1.0
+    ]
+   },
+   "finance_x402_description": {
+    "n": 38,
+    "positives": 38,
+    "negatives": 0,
+    "recall": 0.9737,
+    "recall_ci95": [
+     0.8651,
+     0.9953
+    ]
+   },
+   "jailbreak": {
+    "n": 248,
+    "positives": 248,
+    "negatives": 0,
+    "recall": 0.879,
+    "recall_ci95": [
+     0.8326,
+     0.9139
+    ]
+   },
+   "training_extraction": {
+    "n": 10,
+    "positives": 10,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.7225,
+     1.0
+    ]
+   }
+  },
+  "specificity_benign_finance": {
+   "synthetic_test": {
+    "n": 484,
+    "positives": 0,
+    "negatives": 484,
+    "specificity": 0.9897,
+    "specificity_ci95": [
+     0.976,
+     0.9956
+    ]
+   },
+   "bench_legit_texts": {
+    "n": 296,
+    "positives": 0,
+    "negatives": 296,
+    "specificity": 0.8547,
+    "specificity_ci95": [
+     0.81,
+     0.8903
+    ]
+   },
+   "combined": {
+    "n": 780,
+    "positives": 0,
+    "negatives": 780,
+    "specificity": 0.9385,
+    "specificity_ci95": [
+     0.9194,
+     0.9533
+    ]
+   }
+  },
+  "external_nvidia_ipi": {
+   "n": 1812,
+   "positives": 1271,
+   "negatives": 541,
+   "macro_f1": 0.9564,
+   "macro_f1_ci95_bootstrap": [
+    0.9464,
+    0.9667
+   ],
+   "recall": 0.9764,
+   "recall_ci95": [
+    0.9665,
+    0.9834
+   ],
+   "specificity": 0.9335,
+   "specificity_ci95": [
+    0.9093,
+    0.9515
+   ]
+  },
+  "bench_attacks_sentinel_relevant": {
+   "n": 198,
+   "positives": 198,
+   "negatives": 0,
+   "recall": 0.9192,
+   "recall_ci95": [
+    0.8728,
+    0.9496
+   ]
+  },
+  "bench_attacks_per_family": {
+   "direct_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.8182,
+    "recall_ci95": [
+     0.6148,
+     0.9269
+    ]
+   },
+   "email_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8513,
+     1.0
+    ]
+   },
+   "invoice_memo_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.8182,
+    "recall_ci95": [
+     0.6148,
+     0.9269
+    ]
+   },
+   "lookalike_address": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9545,
+    "recall_ci95": [
+     0.782,
+     0.9919
+    ]
+   },
+   "multilingual": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8513,
+     1.0
+    ]
+   },
+   "payee_note_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.8182,
+    "recall_ci95": [
+     0.6148,
+     0.9269
+    ]
+   },
+   "split_payment": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8513,
+     1.0
+    ]
+   },
+   "token_name_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8513,
+     1.0
+    ]
+   },
+   "urgency_authority": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9545,
+    "recall_ci95": [
+     0.782,
+     0.9919
+    ]
+   },
+   "visual_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9091,
+    "recall_ci95": [
+     0.7219,
+     0.9747
+    ]
+   },
+   "within_mandate": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.0,
+    "recall_ci95": [
+     0.0,
+     0.1487
+    ]
+   },
+   "x402_description_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9545,
+    "recall_ci95": [
+     0.782,
+     0.9919
+    ]
+   }
+  },
+  "bench_attacks_per_language": {
+   "bn": {
+    "n": 41,
+    "positives": 41,
+    "negatives": 0,
+    "recall": 0.878,
+    "recall_ci95": [
+     0.7446,
+     0.9468
+    ]
+   },
+   "en": {
+    "n": 124,
+    "positives": 124,
+    "negatives": 0,
+    "recall": 0.9274,
+    "recall_ci95": [
+     0.8678,
+     0.9613
+    ]
+   },
+   "mixed": {
+    "n": 33,
+    "positives": 33,
+    "negatives": 0,
+    "recall": 0.9394,
+    "recall_ci95": [
+     0.8039,
+     0.9832
+    ]
+   }
+  },
+  "bench_heldout_family": {
+   "n": 36,
+   "positives": 36,
+   "negatives": 0,
+   "recall": 0.9167,
+   "recall_ci95": [
+    0.7817,
+    0.9713
+   ]
+  },
+  "bench_heldout_plus_bench_legit": {
+   "n": 332,
+   "positives": 36,
+   "negatives": 296,
+   "macro_f1": 0.753,
+   "macro_f1_ci95_bootstrap": [
+    0.6889,
+    0.813
+   ],
+   "recall": 0.9167,
+   "recall_ci95": [
+    0.7817,
+    0.9713
+   ],
+   "specificity": 0.8547,
+   "specificity_ci95": [
+    0.81,
+    0.8903
+   ]
+  }
+ },
+ "at_0.5": {
+  "threshold": 0.5,
+  "test_overall": {
+   "n": 2099,
+   "positives": 1169,
+   "negatives": 930,
+   "macro_f1": 0.9606,
+   "macro_f1_ci95_bootstrap": [
+    0.9527,
+    0.9684
+   ],
+   "recall": 0.9444,
+   "recall_ci95": [
+    0.9297,
+    0.9561
+   ],
+   "specificity": 0.9817,
+   "specificity_ci95": [
+    0.9709,
+    0.9886
+   ]
+  },
+  "test_per_language": {
+   "bn": {
+    "n": 310,
+    "positives": 164,
+    "negatives": 146,
+    "macro_f1": 0.9871,
+    "macro_f1_ci95_bootstrap": [
+     0.974,
+     0.9968
+    ],
+    "recall": 0.9817,
+    "recall_ci95": [
+     0.9476,
+     0.9938
+    ],
+    "specificity": 0.9932,
+    "specificity_ci95": [
+     0.9622,
+     0.9988
+    ]
+   },
+   "en": {
+    "n": 1480,
+    "positives": 822,
+    "negatives": 658,
+    "macro_f1": 0.9503,
+    "macro_f1_ci95_bootstrap": [
+     0.9395,
+     0.9611
+    ],
+    "recall": 0.9294,
+    "recall_ci95": [
+     0.9099,
+     0.945
+    ],
+    "specificity": 0.9772,
+    "specificity_ci95": [
+     0.9627,
+     0.9861
+    ]
+   },
+   "mixed": {
+    "n": 31,
+    "positives": 15,
+    "negatives": 16,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.7961,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.8064,
+     1.0
+    ]
+   },
+   "zh": {
+    "n": 278,
+    "positives": 168,
+    "negatives": 110,
+    "macro_f1": 0.9813,
+    "macro_f1_ci95_bootstrap": [
+     0.9651,
+     0.9963
+    ],
+    "recall": 0.9762,
+    "recall_ci95": [
+     0.9404,
+     0.9907
+    ],
+    "specificity": 0.9909,
+    "specificity_ci95": [
+     0.9503,
+     0.9984
+    ]
+   }
+  },
+  "test_per_source": {
+   "deepset": {
+    "n": 116,
+    "positives": 60,
+    "negatives": 56,
+    "macro_f1": 0.9136,
+    "macro_f1_ci95_bootstrap": [
+     0.8614,
+     0.9569
+    ],
+    "recall": 0.8333,
+    "recall_ci95": [
+     0.7197,
+     0.9069
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9358,
+     1.0
+    ]
+   },
+   "multijail": {
+    "n": 198,
+    "positives": 198,
+    "negatives": 0,
+    "recall": 0.8485,
+    "recall_ci95": [
+     0.7919,
+     0.8918
+    ]
+   },
+   "neuralchemy": {
+    "n": 942,
+    "positives": 552,
+    "negatives": 390,
+    "macro_f1": 0.9618,
+    "macro_f1_ci95_bootstrap": [
+     0.9481,
+     0.9739
+    ],
+    "recall": 0.962,
+    "recall_ci95": [
+     0.9425,
+     0.975
+    ],
+    "specificity": 0.9641,
+    "specificity_ci95": [
+     0.9407,
+     0.9785
+    ]
+   },
+   "yl_finance_synth": {
+    "n": 843,
+    "positives": 359,
+    "negatives": 484,
+    "macro_f1": 0.9915,
+    "macro_f1_ci95_bootstrap": [
+     0.9851,
+     0.9975
+    ],
+    "recall": 0.9889,
+    "recall_ci95": [
+     0.9717,
+     0.9957
+    ],
+    "specificity": 0.9938,
+    "specificity_ci95": [
+     0.9819,
+     0.9979
+    ]
+   }
+  },
+  "finance_synth_per_channel": {
+   "chat_message": {
+    "n": 107,
+    "positives": 49,
+    "negatives": 58,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9273,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9379,
+     1.0
+    ]
+   },
+   "email": {
+    "n": 141,
+    "positives": 65,
+    "negatives": 76,
+    "macro_f1": 0.9715,
+    "macro_f1_ci95_bootstrap": [
+     0.9362,
+     0.9929
+    ],
+    "recall": 0.9846,
+    "recall_ci95": [
+     0.9179,
+     0.9973
+    ],
+    "specificity": 0.9605,
+    "specificity_ci95": [
+     0.8903,
+     0.9865
+    ]
+   },
+   "invoice_memo": {
+    "n": 158,
+    "positives": 69,
+    "negatives": 89,
+    "macro_f1": 0.9871,
+    "macro_f1_ci95_bootstrap": [
+     0.9678,
+     1.0
+    ],
+    "recall": 0.971,
+    "recall_ci95": [
+     0.9003,
+     0.992
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9586,
+     1.0
+    ]
+   },
+   "ocr_text": {
+    "n": 96,
+    "positives": 44,
+    "negatives": 52,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9197,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9312,
+     1.0
+    ]
+   },
+   "payee_note": {
+    "n": 87,
+    "positives": 34,
+    "negatives": 53,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8985,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9324,
+     1.0
+    ]
+   },
+   "token_name": {
+    "n": 54,
+    "positives": 25,
+    "negatives": 29,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8668,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.883,
+     1.0
+    ]
+   },
+   "web_snippet": {
+    "n": 101,
+    "positives": 35,
+    "negatives": 66,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9011,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.945,
+     1.0
+    ]
+   },
+   "x402_description": {
+    "n": 99,
+    "positives": 38,
+    "negatives": 61,
+    "macro_f1": 0.9893,
+    "macro_f1_ci95_bootstrap": [
+     0.9662,
+     1.0
+    ],
+    "recall": 0.9737,
+    "recall_ci95": [
+     0.8651,
+     0.9953
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9408,
+     1.0
+    ]
+   }
+  },
+  "finance_synth_per_language": {
+   "bn": {
+    "n": 244,
+    "positives": 98,
+    "negatives": 146,
+    "macro_f1": 0.9872,
+    "macro_f1_ci95_bootstrap": [
+     0.9711,
+     1.0
+    ],
+    "recall": 0.9796,
+    "recall_ci95": [
+     0.9286,
+     0.9944
+    ],
+    "specificity": 0.9932,
+    "specificity_ci95": [
+     0.9622,
+     0.9988
+    ]
+   },
+   "en": {
+    "n": 383,
+    "positives": 171,
+    "negatives": 212,
+    "macro_f1": 0.9921,
+    "macro_f1_ci95_bootstrap": [
+     0.9817,
+     1.0
+    ],
+    "recall": 0.9883,
+    "recall_ci95": [
+     0.9584,
+     0.9968
+    ],
+    "specificity": 0.9953,
+    "specificity_ci95": [
+     0.9738,
+     0.9992
+    ]
+   },
+   "mixed": {
+    "n": 31,
+    "positives": 15,
+    "negatives": 16,
+    "macro_f1": 1.0,
+    "macro_f1_ci95_bootstrap": [
+     1.0,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.7961,
+     1.0
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.8064,
+     1.0
+    ]
+   },
+   "zh": {
+    "n": 185,
+    "positives": 75,
+    "negatives": 110,
+    "macro_f1": 0.9944,
+    "macro_f1_ci95_bootstrap": [
+     0.9827,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9513,
+     1.0
+    ],
+    "specificity": 0.9909,
+    "specificity_ci95": [
+     0.9503,
+     0.9984
+    ]
+   }
+  },
+  "test_per_kind": {
+   "adversarial": {
+    "n": 79,
+    "positives": 79,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9536,
+     1.0
+    ]
+   },
+   "benign": {
+    "n": 446,
+    "positives": 0,
+    "negatives": 446,
+    "specificity": 0.9686,
+    "specificity_ci95": [
+     0.948,
+     0.9812
+    ]
+   },
+   "direct_injection": {
+    "n": 374,
+    "positives": 374,
+    "negatives": 0,
+    "recall": 0.9679,
+    "recall_ci95": [
+     0.9448,
+     0.9816
+    ]
+   },
+   "encoding": {
+    "n": 30,
+    "positives": 30,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8865,
+     1.0
+    ]
+   },
+   "finance_benign_chat_message": {
+    "n": 58,
+    "positives": 0,
+    "negatives": 58,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9379,
+     1.0
+    ]
+   },
+   "finance_benign_email": {
+    "n": 76,
+    "positives": 0,
+    "negatives": 76,
+    "specificity": 0.9605,
+    "specificity_ci95": [
+     0.8903,
+     0.9865
+    ]
+   },
+   "finance_benign_invoice_memo": {
+    "n": 89,
+    "positives": 0,
+    "negatives": 89,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9586,
+     1.0
+    ]
+   },
+   "finance_benign_ocr_text": {
+    "n": 52,
+    "positives": 0,
+    "negatives": 52,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9312,
+     1.0
+    ]
+   },
+   "finance_benign_payee_note": {
+    "n": 53,
+    "positives": 0,
+    "negatives": 53,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9324,
+     1.0
+    ]
+   },
+   "finance_benign_token_name": {
+    "n": 29,
+    "positives": 0,
+    "negatives": 29,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.883,
+     1.0
+    ]
+   },
+   "finance_benign_web_snippet": {
+    "n": 66,
+    "positives": 0,
+    "negatives": 66,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.945,
+     1.0
+    ]
+   },
+   "finance_benign_x402_description": {
+    "n": 61,
+    "positives": 0,
+    "negatives": 61,
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9408,
+     1.0
+    ]
+   },
+   "finance_chat_message": {
+    "n": 49,
+    "positives": 49,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9273,
+     1.0
+    ]
+   },
+   "finance_email": {
+    "n": 65,
+    "positives": 65,
+    "negatives": 0,
+    "recall": 0.9846,
+    "recall_ci95": [
+     0.9179,
+     0.9973
+    ]
+   },
+   "finance_invoice_memo": {
+    "n": 69,
+    "positives": 69,
+    "negatives": 0,
+    "recall": 0.971,
+    "recall_ci95": [
+     0.9003,
+     0.992
+    ]
+   },
+   "finance_ocr_text": {
+    "n": 44,
+    "positives": 44,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9197,
+     1.0
+    ]
+   },
+   "finance_payee_note": {
+    "n": 34,
+    "positives": 34,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8985,
+     1.0
+    ]
+   },
+   "finance_token_name": {
+    "n": 25,
+    "positives": 25,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8668,
+     1.0
+    ]
+   },
+   "finance_web_snippet": {
+    "n": 35,
+    "positives": 35,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.9011,
+     1.0
+    ]
+   },
+   "finance_x402_description": {
+    "n": 38,
+    "positives": 38,
+    "negatives": 0,
+    "recall": 0.9737,
+    "recall_ci95": [
+     0.8651,
+     0.9953
+    ]
+   },
+   "jailbreak": {
+    "n": 248,
+    "positives": 248,
+    "negatives": 0,
+    "recall": 0.8105,
+    "recall_ci95": [
+     0.7571,
+     0.8544
+    ]
+   },
+   "training_extraction": {
+    "n": 10,
+    "positives": 10,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.7225,
+     1.0
+    ]
+   }
+  },
+  "specificity_benign_finance": {
+   "synthetic_test": {
+    "n": 484,
+    "positives": 0,
+    "negatives": 484,
+    "specificity": 0.9938,
+    "specificity_ci95": [
+     0.9819,
+     0.9979
+    ]
+   },
+   "bench_legit_texts": {
+    "n": 296,
+    "positives": 0,
+    "negatives": 296,
+    "specificity": 0.875,
+    "specificity_ci95": [
+     0.8325,
+     0.9079
+    ]
+   },
+   "combined": {
+    "n": 780,
+    "positives": 0,
+    "negatives": 780,
+    "specificity": 0.9487,
+    "specificity_ci95": [
+     0.9309,
+     0.9621
+    ]
+   }
+  },
+  "external_nvidia_ipi": {
+   "n": 1812,
+   "positives": 1271,
+   "negatives": 541,
+   "macro_f1": 0.9588,
+   "macro_f1_ci95_bootstrap": [
+    0.9487,
+    0.9685
+   ],
+   "recall": 0.9693,
+   "recall_ci95": [
+    0.9583,
+    0.9775
+   ],
+   "specificity": 0.9556,
+   "specificity_ci95": [
+    0.9348,
+    0.97
+   ]
+  },
+  "bench_attacks_sentinel_relevant": {
+   "n": 198,
+   "positives": 198,
+   "negatives": 0,
+   "recall": 0.8889,
+   "recall_ci95": [
+    0.8375,
+    0.9255
+   ]
+  },
+  "bench_attacks_per_family": {
+   "direct_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.7727,
+    "recall_ci95": [
+     0.5656,
+     0.8988
+    ]
+   },
+   "email_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8513,
+     1.0
+    ]
+   },
+   "invoice_memo_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.7273,
+    "recall_ci95": [
+     0.5185,
+     0.8685
+    ]
+   },
+   "lookalike_address": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9545,
+    "recall_ci95": [
+     0.782,
+     0.9919
+    ]
+   },
+   "multilingual": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 1.0,
+    "recall_ci95": [
+     0.8513,
+     1.0
+    ]
+   },
+   "payee_note_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.7727,
+    "recall_ci95": [
+     0.5656,
+     0.8988
+    ]
+   },
+   "split_payment": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9091,
+    "recall_ci95": [
+     0.7219,
+     0.9747
+    ]
+   },
+   "token_name_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9545,
+    "recall_ci95": [
+     0.782,
+     0.9919
+    ]
+   },
+   "urgency_authority": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9091,
+    "recall_ci95": [
+     0.7219,
+     0.9747
+    ]
+   },
+   "visual_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9091,
+    "recall_ci95": [
+     0.7219,
+     0.9747
+    ]
+   },
+   "within_mandate": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.0,
+    "recall_ci95": [
+     0.0,
+     0.1487
+    ]
+   },
+   "x402_description_injection": {
+    "n": 22,
+    "positives": 22,
+    "negatives": 0,
+    "recall": 0.9545,
+    "recall_ci95": [
+     0.782,
+     0.9919
+    ]
+   }
+  },
+  "bench_attacks_per_language": {
+   "bn": {
+    "n": 41,
+    "positives": 41,
+    "negatives": 0,
+    "recall": 0.8293,
+    "recall_ci95": [
+     0.6874,
+     0.9147
+    ]
+   },
+   "en": {
+    "n": 124,
+    "positives": 124,
+    "negatives": 0,
+    "recall": 0.8952,
+    "recall_ci95": [
+     0.8289,
+     0.9377
+    ]
+   },
+   "mixed": {
+    "n": 33,
+    "positives": 33,
+    "negatives": 0,
+    "recall": 0.9394,
+    "recall_ci95": [
+     0.8039,
+     0.9832
+    ]
+   }
+  },
+  "bench_heldout_family": {
+   "n": 36,
+   "positives": 36,
+   "negatives": 0,
+   "recall": 0.8889,
+   "recall_ci95": [
+    0.7469,
+    0.9559
+   ]
+  },
+  "bench_heldout_plus_bench_legit": {
+   "n": 332,
+   "positives": 36,
+   "negatives": 296,
+   "macro_f1": 0.7681,
+   "macro_f1_ci95_bootstrap": [
+    0.7007,
+    0.829
+   ],
+   "recall": 0.8889,
+   "recall_ci95": [
+    0.7469,
+    0.9559
+   ],
+   "specificity": 0.875,
+   "specificity_ci95": [
+    0.8325,
+    0.9079
+   ]
+  }
+ },
+ "training": {
+  "base": "jhu-clsp/mmBERT-base",
+  "fp16": true,
+  "max_len": 320,
+  "epochs": 3,
+  "batch_size": 32,
+  "lr": 5e-05,
+  "train_rows": 19371,
+  "train_secs": 1394,
+  "gpu_infer_secs": 36.4,
+  "best_metric": 0.9722846489367764
+ },
+ "hf_repo": "ABRUBAB/yl-sentinel-mmbert-base",
+ "hf_revision": "1062546bb103606fd85df8ea348d5d803304de26"
+}

@@ -1,0 +1,37 @@
+{
+ "source_revision": "0498f6b2d62d707b99afe7841c7c3158f4a7bc77",
+ "check_rows": 600,
+ "variants": {
+  "dyn_all": {
+   "mb": 857.4,
+   "label_agreement_vs_torch": 0.74,
+   "mean_abs_prob_diff": 0.26763,
+   "kaggle_cpu_p50_ms_seq64_2threads": 92.3
+  },
+  "dyn_no_mlp_wo": {
+   "mb": 913.0,
+   "label_agreement_vs_torch": 0.9667,
+   "mean_abs_prob_diff": 0.0272,
+   "kaggle_cpu_p50_ms_seq64_2threads": 100.2
+  },
+  "dyn_attn_only": {
+   "mb": 1024.1,
+   "label_agreement_vs_torch": 0.9783,
+   "mean_abs_prob_diff": 0.01862,
+   "kaggle_cpu_p50_ms_seq64_2threads": 109.7
+  },
+  "weightonly8": {
+   "mb": 869.7,
+   "label_agreement_vs_torch": 1.0,
+   "mean_abs_prob_diff": 0.00061,
+   "kaggle_cpu_p50_ms_seq64_2threads": 217.0
+  },
+  "fp32": {
+   "mb": 1173.7,
+   "label_agreement_vs_torch": 1.0,
+   "mean_abs_prob_diff": 0.0,
+   "kaggle_cpu_p50_ms_seq64_2threads": 123.7
+  }
+ },
+ "source": "Kaggle CPU job absanim/yl-sentinel-quantize (ml/sentinel/kaggle_quantize.py); 600 held-out rows; latency on the Kaggle CPU, 2 threads"
+}

@@ -1,0 +1,222 @@
+{
+  "id": "nadia",
+  "title": "Nadia, a student from Dhaka studying in Hong Kong",
+  "labels": "All parties fictional. tHKD and tUSD are team-minted test units; USDC is testnet USDC.",
+  "default_unit": "tHKD",
+  "units": [
+    "tHKD",
+    "tUSD",
+    "USDC"
+  ],
+  "wallet_balance": {
+    "tHKD": "18500",
+    "tUSD": "400",
+    "USDC": "250"
+  },
+  "payees": [
+    {
+      "id": "harbour_homes",
+      "name": "Harbour Homes Ltd",
+      "aliases": [
+        "landlord",
+        "my landlord",
+        "Harbour Homes",
+        "rent account"
+      ],
+      "category": "rent",
+      "unit": "tHKD",
+      "address": "0xfaac91dc84e6148df82112430d215869046c15e4"
+    },
+    {
+      "id": "hbu_bursar",
+      "name": "Harbour Bay University Bursar",
+      "aliases": [
+        "the university",
+        "bursar",
+        "HBU",
+        "tuition office"
+      ],
+      "category": "tuition",
+      "unit": "tHKD",
+      "address": "0x734b40b0177da0a7b7f052e1bdcab6e59d471641"
+    },
+    {
+      "id": "pearl_river_fx",
+      "name": "Pearl River FX Desk",
+      "aliases": [
+        "FX desk",
+        "Pearl River",
+        "exchange desk"
+      ],
+      "category": "treasury",
+      "unit": "tHKD",
+      "address": "0xcf6aa995f1dc4c7d0007562194f0a2ba5c34d881"
+    },
+    {
+      "id": "lantern_canteen",
+      "name": "Lantern Canteen",
+      "aliases": [
+        "canteen",
+        "campus canteen",
+        "meal plan"
+      ],
+      "category": "food",
+      "unit": "tHKD",
+      "address": "0x1c8ad5b0561b5adad4ee28f7f68a2d4ce99fe54b"
+    },
+    {
+      "id": "harbour_transit",
+      "name": "Harbour Transit Card",
+      "aliases": [
+        "transit card",
+        "travel card",
+        "bus and metro card"
+      ],
+      "category": "transport",
+      "unit": "tHKD",
+      "address": "0x4b124984243552f33f9e69cdc1bbf1ada4401218"
+    },
+    {
+      "id": "kowloon_power",
+      "name": "Kowloon Power and Water",
+      "aliases": [
+        "utilities",
+        "electricity bill",
+        "power company"
+      ],
+      "category": "utilities",
+      "unit": "tHKD",
+      "address": "0x18ca25146579648d9ed1a086761b4b63d185bf1c"
+    },
+    {
+      "id": "rahman_family",
+      "name": "Rahman family (home account)",
+      "aliases": [
+        "my family",
+        "Ammu",
+        "home"
+      ],
+      "category": "other",
+      "unit": "tUSD",
+      "address": "0x436365f181d7e88997aeaf598de1346be77b834e"
+    },
+    {
+      "id": "campus_print",
+      "name": "Campus Print and Copy",
+      "aliases": [
+        "print shop",
+        "copy centre"
+      ],
+      "category": "services",
+      "unit": "tHKD",
+      "address": "0x469fe02c3daa6b0c4315de9e5dd58988aa935d9b"
+    }
+  ],
+  "mandate": {
+    "rules": [
+      {
+        "type": "payee_payment",
+        "payee": "harbour_homes",
+        "category": "rent",
+        "amount": {
+          "value": "6500",
+          "unit": "tHKD"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": 1,
+        "max_risk_class": null
+      },
+      {
+        "type": "category_budget",
+        "payee": null,
+        "category": "food",
+        "amount": {
+          "value": "2400",
+          "unit": "tHKD"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "category_budget",
+        "payee": null,
+        "category": "transport",
+        "amount": {
+          "value": "600",
+          "unit": "tHKD"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "deadline_payment",
+        "payee": "hbu_bursar",
+        "category": "tuition",
+        "amount": {
+          "value": "42000",
+          "unit": "tHKD"
+        },
+        "period": null,
+        "date": "2026-11-30",
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "reserve_floor",
+        "payee": null,
+        "category": null,
+        "amount": {
+          "value": "3000",
+          "unit": "tHKD"
+        },
+        "period": null,
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "approval_threshold",
+        "payee": null,
+        "category": null,
+        "amount": {
+          "value": "1000",
+          "unit": "tHKD"
+        },
+        "period": null,
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "new_payee_requires_approval",
+        "payee": null,
+        "category": null,
+        "amount": null,
+        "period": null,
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "velocity",
+        "payee": null,
+        "category": null,
+        "amount": {
+          "value": "5",
+          "unit": "tHKD"
+        },
+        "period": "day",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      }
+    ],
+    "notes": "velocity.amount.value is a count of payments per period (unit ignored)."
+  },
+  "agent_address": "0x672b540eb3721b27102db279bb546af3288530bb"
+}

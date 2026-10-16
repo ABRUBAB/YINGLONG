@@ -1,0 +1,487 @@
+[
+ {
+  "repo": "ABRUBAB/yl-sentinel-mmbert-base",
+  "type": "model",
+  "role": "M1 sentinel, primary arm (fine-tuned jhu-clsp/mmBERT-base) + ONNX int8",
+  "private": true,
+  "revision": "1062546bb103606fd85df8ea348d5d803304de26",
+  "last_modified": "2026-10-16 00:55:24+00:00",
+  "files": [
+   {
+    "path": "config.json",
+    "bytes": 1989,
+    "sha256": null
+   },
+   {
+    "path": "model.safetensors",
+    "bytes": 1230141424,
+    "sha256": "cd5ed65a136988870f7e34327af705c3ba8001445129adad4168096a2bd8c983"
+   },
+   {
+    "path": "onnx/model_int8.onnx",
+    "bytes": 911923664,
+    "sha256": "8775f388fc9eea0c0c310395668812fc2d5e4954959aa006e27ef7ebd5c95176"
+   },
+   {
+    "path": "onnx/tokenizer.json",
+    "bytes": 34363354,
+    "sha256": "79154e60949631bff0fc5e22216cfcbf2a2e8246702b03de19b157ea65988998"
+   },
+   {
+    "path": "onnx/tokenizer_config.json",
+    "bytes": 710,
+    "sha256": null
+   },
+   {
+    "path": "onnx/variants/quant_report.json",
+    "bytes": 875,
+    "sha256": null
+   },
+   {
+    "path": "predictions.jsonl",
+    "bytes": 1240343,
+    "sha256": null
+   },
+   {
+    "path": "tokenizer.json",
+    "bytes": 34363286,
+    "sha256": "6a897b9bde31210cc245f29000ea68b7f8401cd06a08c27893a75474f851f08e"
+   },
+   {
+    "path": "tokenizer_config.json",
+    "bytes": 574,
+    "sha256": null
+   },
+   {
+    "path": "yl_train_meta.json",
+    "bytes": 7222,
+    "sha256": null
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-sentinel-mdeberta-v3-base",
+  "type": "model",
+  "role": "M1 sentinel, control arm (fine-tuned microsoft/mdeberta-v3-base)",
+  "private": true,
+  "revision": "771d7aeaca3c1e3a342291845d5b34a89044593d",
+  "last_modified": "2026-10-16 00:26:51+00:00",
+  "files": [
+   {
+    "path": "baselines/predictions_protectai_v2.jsonl",
+    "bytes": 925267,
+    "sha256": null
+   },
+   {
+    "path": "config.json",
+    "bytes": 947,
+    "sha256": null
+   },
+   {
+    "path": "model.safetensors",
+    "bytes": 1115268200,
+    "sha256": "74706b5bf217dc4c1f4a7ddb2a8ed7cc43539b8bddcaf602c84af1d940fa5815"
+   },
+   {
+    "path": "predictions.jsonl",
+    "bytes": 1250940,
+    "sha256": null
+   },
+   {
+    "path": "tokenizer.json",
+    "bytes": 16034114,
+    "sha256": "b41e6c1b54dfc92b7a2a483aafe32620c61cc92fc1be9e2194bd89494f3796fa"
+   },
+   {
+    "path": "tokenizer_config.json",
+    "bytes": 2928,
+    "sha256": null
+   },
+   {
+    "path": "yl_train_meta.json",
+    "bytes": 7154,
+    "sha256": null
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-sentinel-mmbert-small",
+  "type": "model",
+  "role": "M1 sentinel, low-latency arm (fine-tuned jhu-clsp/mmBERT-small) + ONNX",
+  "private": true,
+  "revision": "b3288a4b782b28f547a03ab8178d619bfb2f5090",
+  "last_modified": "2026-10-16 01:12:17+00:00",
+  "files": [
+   {
+    "path": "config.json",
+    "bytes": 1988,
+    "sha256": null
+   },
+   {
+    "path": "model.safetensors",
+    "bytes": 562583392,
+    "sha256": "a3f341517f3d02863c96c5a1201c6225b4e2e646364501fa496d7b7626ad9ec0"
+   },
+   {
+    "path": "onnx/model_int8.onnx",
+    "bytes": 441425360,
+    "sha256": "9078e8c69df7b9c0f30e2bd6e05478e03388e79d7caaf59a4df6c9171bbe7cb7"
+   },
+   {
+    "path": "onnx/tokenizer.json",
+    "bytes": 34363354,
+    "sha256": "79154e60949631bff0fc5e22216cfcbf2a2e8246702b03de19b157ea65988998"
+   },
+   {
+    "path": "onnx/tokenizer_config.json",
+    "bytes": 710,
+    "sha256": null
+   },
+   {
+    "path": "predictions.jsonl",
+    "bytes": 1239666,
+    "sha256": null
+   },
+   {
+    "path": "tokenizer.json",
+    "bytes": 34363286,
+    "sha256": "6a897b9bde31210cc245f29000ea68b7f8401cd06a08c27893a75474f851f08e"
+   },
+   {
+    "path": "tokenizer_config.json",
+    "bytes": 574,
+    "sha256": null
+   },
+   {
+    "path": "yl_train_meta.json",
+    "bytes": 7207,
+    "sha256": null
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-intent-qwen3.5-2b",
+  "type": "model",
+  "role": "M4 intent model, Qwen3.5-2B arm (LoRA adapter + GGUF Q4_K_M)",
+  "private": true,
+  "revision": "1b6b1313b8fa11e721c94d9c119ee47a6e30c4ae",
+  "last_modified": "2026-10-16 07:12:08+00:00",
+  "files": [
+   {
+    "path": "adapter/adapter_config.json",
+    "bytes": 1640,
+    "sha256": null
+   },
+   {
+    "path": "adapter/adapter_model.safetensors",
+    "bytes": 67332688,
+    "sha256": "4f6cfcced8b1b509d5aa397356fe449d0c7afc7732903d76f5c7ec5506e86400"
+   },
+   {
+    "path": "adapter/tokenizer.json",
+    "bytes": 19989325,
+    "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+   },
+   {
+    "path": "adapter/tokenizer_config.json",
+    "bytes": 7145,
+    "sha256": null
+   },
+   {
+    "path": "adapter/trainer_state.json",
+    "bytes": 13188,
+    "sha256": null
+   },
+   {
+    "path": "adapter/yl_ckpt_meta.json",
+    "bytes": 41,
+    "sha256": null
+   },
+   {
+    "path": "preds_bench.jsonl",
+    "bytes": 77738,
+    "sha256": null
+   },
+   {
+    "path": "preds_test.jsonl",
+    "bytes": 488297,
+    "sha256": null
+   },
+   {
+    "path": "results.json",
+    "bytes": 3902,
+    "sha256": null
+   },
+   {
+    "path": "yl-intent-qwen3.5-2b-Q4_K_M.gguf",
+    "bytes": 1274396320,
+    "sha256": "a685d7066c4d7898820ebdd523330022450cc737475a3669b02ccdfb2b6299de"
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-intent-qwen3-1.7b",
+  "type": "model",
+  "role": "M4 intent model, Qwen3-1.7B fallback-family arm (LoRA adapter + GGUF Q4_K_M)",
+  "private": true,
+  "revision": "e4e8ba08021053832059c0bdd75fc502d95a6bb9",
+  "last_modified": "2026-10-16 06:17:37+00:00",
+  "files": [
+   {
+    "path": "adapter/adapter_config.json",
+    "bytes": 1285,
+    "sha256": null
+   },
+   {
+    "path": "adapter/adapter_model.safetensors",
+    "bytes": 69782384,
+    "sha256": "2f2f7fbb1b41dcfa6cea2bac4e94cca59d64bab2ad031f9b3c3c7843f9a75757"
+   },
+   {
+    "path": "adapter/tokenizer.json",
+    "bytes": 11422924,
+    "sha256": "476870a1f2fb6f6a2759a6ede2383bf9d5d738f17844563b65c91965b722ae09"
+   },
+   {
+    "path": "adapter/tokenizer_config.json",
+    "bytes": 5131,
+    "sha256": null
+   },
+   {
+    "path": "adapter/trainer_state.json",
+    "bytes": 13188,
+    "sha256": null
+   },
+   {
+    "path": "adapter/yl_ckpt_meta.json",
+    "bytes": 41,
+    "sha256": null
+   },
+   {
+    "path": "preds_bench.jsonl",
+    "bytes": 77275,
+    "sha256": null
+   },
+   {
+    "path": "preds_test.jsonl",
+    "bytes": 485665,
+    "sha256": null
+   },
+   {
+    "path": "results.json",
+    "bytes": 3902,
+    "sha256": null
+   },
+   {
+    "path": "yl-intent-qwen3-1.7b-Q4_K_M.gguf",
+    "bytes": 1107409280,
+    "sha256": "6e93e9ff9264468cb4dd9d0eee6f00a0c4c45b3d041817b0220e94e0f8e6a29b"
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-intent-qwen3-4b",
+  "type": "model",
+  "role": "M4 intent model, Qwen3-4B fallback-family arm (LoRA adapter + GGUF Q4_K_M)",
+  "private": true,
+  "revision": "3bd7578d4d39918adf8376c2ed2322b94139b58e",
+  "last_modified": "2026-10-16 07:07:27+00:00",
+  "files": [
+   {
+    "path": "adapter/adapter_config.json",
+    "bytes": 1283,
+    "sha256": null
+   },
+   {
+    "path": "adapter/adapter_model.safetensors",
+    "bytes": 132187888,
+    "sha256": "ee03084fe3872f94345f6061ad168225f137263c22c11a9a2782f66cf19ef2f9"
+   },
+   {
+    "path": "adapter/tokenizer.json",
+    "bytes": 11422924,
+    "sha256": "476870a1f2fb6f6a2759a6ede2383bf9d5d738f17844563b65c91965b722ae09"
+   },
+   {
+    "path": "adapter/tokenizer_config.json",
+    "bytes": 5131,
+    "sha256": null
+   },
+   {
+    "path": "adapter/trainer_state.json",
+    "bytes": 13217,
+    "sha256": null
+   },
+   {
+    "path": "adapter/yl_ckpt_meta.json",
+    "bytes": 39,
+    "sha256": null
+   },
+   {
+    "path": "preds_bench.jsonl",
+    "bytes": 77202,
+    "sha256": null
+   },
+   {
+    "path": "preds_test.jsonl",
+    "bytes": 485589,
+    "sha256": null
+   },
+   {
+    "path": "results.json",
+    "bytes": 3877,
+    "sha256": null
+   },
+   {
+    "path": "yl-intent-qwen3-4b-Q4_K_M.gguf",
+    "bytes": 2497280960,
+    "sha256": "98bd75006c66e0d2548ec3a0b022601dd40d6eff38218427e7f83b23d99e08a9"
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-intent-baselines",
+  "type": "model",
+  "role": "M4 zero-shot google/gemma-4-E2B-it results",
+  "private": true,
+  "revision": "de8863c64f4f8bcc67b9bcb7f8217a777a7a23a1",
+  "last_modified": "2026-10-16 05:09:20+00:00",
+  "files": [
+   {
+    "path": "results_gemma_zeroshot.json",
+    "bytes": 2024,
+    "sha256": null
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-cpu-models",
+  "type": "model",
+  "role": "M3 anomaly and M5 LightGBM quantile models",
+  "private": true,
+  "revision": "9499d5575e0816414495c2533528ecdd3c0d7590",
+  "last_modified": "2026-10-15 23:42:49+00:00",
+  "files": [
+   {
+    "path": "m3/m3_lightgbm.txt",
+    "bytes": 1397931,
+    "sha256": null
+   },
+   {
+    "path": "m3/m3_models.pkl",
+    "bytes": 30185406,
+    "sha256": "7b8af61b9c7f4412bf84794a855f3d9eaa96a8f4877eca395d6fdbd0427483a6"
+   },
+   {
+    "path": "m5/m5_lgbm_q0.05.txt",
+    "bytes": 857836,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.1.txt",
+    "bytes": 859023,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.2.txt",
+    "bytes": 859456,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.3.txt",
+    "bytes": 859859,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.4.txt",
+    "bytes": 860388,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.5.txt",
+    "bytes": 860078,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.6.txt",
+    "bytes": 859123,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.7.txt",
+    "bytes": 857678,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.8.txt",
+    "bytes": 855823,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.9.txt",
+    "bytes": 853245,
+    "sha256": null
+   },
+   {
+    "path": "m5/m5_lgbm_q0.95.txt",
+    "bytes": 852973,
+    "sha256": null
+   }
+  ]
+ },
+ {
+  "repo": "ABRUBAB/yl-private-data",
+  "type": "dataset",
+  "role": "private data: generated shards, verified splits, Chinese-script rows, bench Chinese variants",
+  "private": true,
+  "revision": "67022bce4b04976413a2857e29cff1f972c11c98",
+  "last_modified": "2026-10-15 23:41:47+00:00",
+  "files": [
+   {
+    "path": "bench/v1/multilingual_zh.jsonl",
+    "bytes": 31205,
+    "sha256": null
+   },
+   {
+    "path": "intent/v1/test.jsonl",
+    "bytes": 923553,
+    "sha256": null
+   },
+   {
+    "path": "intent/v1/train.jsonl",
+    "bytes": 7720064,
+    "sha256": null
+   },
+   {
+    "path": "intent/v1/val.jsonl",
+    "bytes": 369053,
+    "sha256": null
+   },
+   {
+    "path": "sentinel/v1/ext_test.jsonl",
+    "bytes": 1081102,
+    "sha256": null
+   },
+   {
+    "path": "sentinel/v1/manifest.json",
+    "bytes": 1344,
+    "sha256": null
+   },
+   {
+    "path": "sentinel/v1/test.jsonl",
+    "bytes": 970682,
+    "sha256": null
+   },
+   {
+    "path": "sentinel/v1/train.jsonl",
+    "bytes": 6467901,
+    "sha256": null
+   },
+   {
+    "path": "sentinel/v1/validation.jsonl",
+    "bytes": 738101,
+    "sha256": null
+   }
+  ]
+ }
+]

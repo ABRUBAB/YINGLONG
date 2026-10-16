@@ -1,0 +1,43 @@
+{
+ "m3": {
+  "repo": "ABRUBAB/yl-cpu-models",
+  "revision": "9499d5575e0816414495c2533528ecdd3c0d7590",
+  "subfolder": "m3",
+  "local_dir": "artifacts/m3",
+  "files": {
+   "m3_lightgbm.txt": "1ed97c2a723ac4f848f0130cef4d1759535419f41c1c2af1f4aa7255b2de4fc0",
+   "m3_models.pkl": "7b8af61b9c7f4412bf84794a855f3d9eaa96a8f4877eca395d6fdbd0427483a6"
+  }
+ },
+ "m5": {
+  "repo": "ABRUBAB/yl-cpu-models",
+  "revision": "9499d5575e0816414495c2533528ecdd3c0d7590",
+  "subfolder": "m5",
+  "local_dir": "artifacts/m5",
+  "files": {
+   "m5_lgbm_q0.05.txt": "be1f6e4de1f685a8ee5ffa62d4c05152224c657fa732337160bd6726bdaa8a08",
+   "m5_lgbm_q0.1.txt": "60444a43248e2630094a1f0c478d6a71a1cbd306b5e69b52c7a9ad6d61c5deb9",
+   "m5_lgbm_q0.2.txt": "c6df9ea4398f5bd682fc1d370e4fceed830ae2a5e1a5f5beab27289d79a95041",
+   "m5_lgbm_q0.3.txt": "8d0dcc600cec09e979811437f50b978b23a15c30f1129ae991ce6dedb5485181",
+   "m5_lgbm_q0.4.txt": "86ac9b0cb25ee3e1e64949c786e8956b22cff8c88342907dbbcaa7c06a95fa7a",
+   "m5_lgbm_q0.5.txt": "0940abba1f8503caebb25b9a54fe88f4fbead998b81a6d7c81526cffd61157a6",
+   "m5_lgbm_q0.6.txt": "534c0e634d02b0212411ebe5841dbf77d87a7eaba431b0d2154ccf4e09a13b52",
+   "m5_lgbm_q0.7.txt": "79a9463fcfc0a50c5020df50a5c026559f4d5658cde542eba6f1d1152d089bae",
+   "m5_lgbm_q0.8.txt": "f1f9026781293ee0fff1503bf792d20ea1029eb73acc39367745037973fbb8c9",
+   "m5_lgbm_q0.9.txt": "3bec617d40c964615c448edf839d19db86b12bb98768c06ab33f776190401f9d",
+   "m5_lgbm_q0.95.txt": "e312618863067b834e9c991bbb91a879f84f23488498f7e44c648753e33b8afc"
+  }
+ },
+ "m1": {
+  "repo": "ABRUBAB/yl-sentinel-mmbert-base",
+  "revision": "1062546bb103606fd85df8ea348d5d803304de26",
+  "subfolder": "onnx",
+  "local_dir": "artifacts/m1/yl-sentinel-mmbert-base",
+  "files": {
+   "model_int8.onnx": "8775f388fc9eea0c0c310395668812fc2d5e4954959aa006e27ef7ebd5c95176",
+   "tokenizer.json": "79154e60949631bff0fc5e22216cfcbf2a2e8246702b03de19b157ea65988998"
+  },
+  "threshold": 0.2,
+  "max_len": 320
+ }
+}

@@ -1,0 +1,74 @@
+{
+ "version": "sentinel_v1",
+ "stats": {
+  "train": {
+   "n": 15224,
+   "pos": 8707,
+   "by_lang": {
+    "en": 12368,
+    "zh": 1283,
+    "bn": 1432,
+    "mixed": 141
+   },
+   "by_source": {
+    "neuralchemy": 9853,
+    "deepset": 546,
+    "multijail": 678,
+    "yl_finance_synth": 4147
+   }
+  },
+  "validation": {
+   "n": 1592,
+   "pos": 849,
+   "by_lang": {
+    "en": 1193,
+    "zh": 180,
+    "bn": 197,
+    "mixed": 22
+   },
+   "by_source": {
+    "neuralchemy": 941,
+    "multijail": 69,
+    "yl_finance_synth": 582
+   }
+  },
+  "test": {
+   "n": 2099,
+   "pos": 1169,
+   "by_lang": {
+    "en": 1480,
+    "zh": 278,
+    "bn": 310,
+    "mixed": 31
+   },
+   "by_source": {
+    "neuralchemy": 942,
+    "deepset": 116,
+    "multijail": 198,
+    "yl_finance_synth": 843
+   }
+  },
+  "ext_test": {
+   "n": 1812,
+   "pos": 1271,
+   "by_lang": {
+    "en": 1812
+   },
+   "by_source": {
+    "nvidia_ipi": 1812
+   }
+  }
+ },
+ "sha256": {
+  "ext_test.jsonl": "06028d0e2a9e426de9ec0316c356d22f57fa8f0ae3cf0858ea9debd8f7e18335",
+  "test.jsonl": "557fb77a2ef4f0221f6da8f86ed244ef7ed0c91fcaab378971653a6f82e6ec3a",
+  "train.jsonl": "c811b639977b62940f18f575af414ec078e6f700d2b10c6162bbcc91ce14f538",
+  "validation.jsonl": "ac0986bae6cd18cbe2474191bf8c4677c0e828861236b780b16e5f8e1a8c4618"
+ },
+ "hf_commit": "5e701ed8d1112bc4ae9d78d0687bfaab69a656e7",
+ "repo_copy": {
+  "file": "ml/data/sentinel/finance_synth_v1.jsonl",
+  "rows": 4415,
+  "sha256": "bf26908142f619459c178584a5de83640167ca4e9de0d38f6cf068db657ecb21"
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "version": "intent_v1",
+ "generated": 17400,
+ "kept": 12398,
+ "drops": {
+  "language_mismatch": 1890,
+  "verify_date_mismatch": 651,
+  "truncated_or_empty": 619,
+  "verify_amount_mismatch": 1372,
+  "verify_date_should_be_missing": 37,
+  "amount_not_in_text": 49,
+  "verify_amount_should_be_missing": 4,
+  "duplicate_text": 353,
+  "refusal": 6,
+  "verify_mandate_amount_missing": 20,
+  "verify_recurrence_mismatch": 1
+ },
+ "stats": {
+  "train": {
+   "n": 10643,
+   "repo_rows": 9041,
+   "by_language": {
+    "bn": 2638,
+    "mixed": 2500,
+    "en": 3903,
+    "zh": 1602
+   },
+   "by_task": {
+    "intent": 7796,
+    "mandate": 2847
+   },
+   "by_kind": {
+    "query_activity": 505,
+    "pay": 2823,
+    "sweep": 224,
+    "query_forecast": 273,
+    "change_mandate": 475,
+    "unknown": 421,
+    "pause": 288,
+    "escrow": 425,
+    "convert": 703,
+    "query_balance": 334,
+    "add_payee": 549,
+    "schedule": 776,
+    "mandate": 2847
+   }
+  },
+  "val": {
+   "n": 500,
+   "repo_rows": 434,
+   "by_language": {
+    "bn": 125,
+    "mixed": 128,
+    "zh": 66,
+    "en": 181
+   },
+   "by_task": {
+    "intent": 354,
+    "mandate": 146
+   },
+   "by_kind": {
+    "escrow": 23,
+    "add_payee": 28,
+    "pay": 124,
+    "query_balance": 19,
+    "query_activity": 24,
+    "unknown": 19,
+    "convert": 31,
+    "sweep": 9,
+    "query_forecast": 11,
+    "pause": 13,
+    "schedule": 30,
+    "change_mandate": 23,
+    "mandate": 146
+   }
+  },
+  "test": {
+   "n": 1255,
+   "repo_rows": 1069,
+   "by_language": {
+    "mixed": 283,
+    "bn": 318,
+    "zh": 186,
+    "en": 468
+   },
+   "by_task": {
+    "intent": 917,
+    "mandate": 338
+   },
+   "by_kind": {
+    "change_mandate": 64,
+    "pay": 303,
+    "convert": 90,
+    "schedule": 87,
+    "query_balance": 45,
+    "unknown": 49,
+    "pause": 31,
+    "query_activity": 51,
+    "query_forecast": 40,
+    "add_payee": 62,
+    "escrow": 68,
+    "sweep": 27,
+    "mandate": 338
+   }
+  }
+ },
+ "private_sha256": {
+  "train.jsonl": "1a4016a252d390429eab758d542c1966fe36e8962e6e797b5a722f142d638cff",
+  "val.jsonl": "be9b07aeafb1f52d55b37d2fb75672e98cb77dab4e5753ac784c6f40c36e737c",
+  "test.jsonl": "89528a559d3e86062a5f3fa80b8468557d24126f6f807d3f4e80dcc3f1349120"
+ },
+ "repo_sha256": {
+  "intent_v1_train.jsonl": "49de918be47bef913c4683d9ef77b3ffd56230ade4e66fa8eedbe45c84533ff3",
+  "intent_v1_val.jsonl": "a485b819801be3b021c64ea86f09886621e1b35c18684b3a226806b6bcb0c3b5",
+  "intent_v1_test.jsonl": "763719a3caf53a5fd00ab03bb75ddbbe281f03849e3a1080678189f1ef4edadf"
+ },
+ "hf_dataset": "ABRUBAB/yl-private-data",
+ "hf_commit": "67022bce4b04976413a2857e29cff1f972c11c98"
+}

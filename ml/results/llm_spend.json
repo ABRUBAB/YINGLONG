@@ -1,0 +1,12 @@
+{
+ "calls": 34,
+ "cost_usd": 0.0,
+ "by_model": {
+  "nvidia/nemotron-3-super-120b-a12b:free": {
+   "calls": 34,
+   "prompt_tokens": 137349,
+   "completion_tokens": 136161,
+   "cost_usd": 0.0
+  }
+ }
+}

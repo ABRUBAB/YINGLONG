@@ -1,0 +1,246 @@
+{
+  "id": "lotus_lane",
+  "title": "Lotus Lane Trading, a Shenzhen SME with a Hong Kong subsidiary",
+  "labels": "All parties fictional. CNY amounts settle on a coin-free consortium rail simulator (no real e-CNY); tHKD and tUSD are test units; USDC is testnet USDC.",
+  "default_unit": "CNY",
+  "units": [
+    "CNY",
+    "tHKD",
+    "tUSD",
+    "USDC"
+  ],
+  "wallet_balance": {
+    "CNY": "2450000",
+    "tHKD": "820000",
+    "tUSD": "35000",
+    "USDC": "5000"
+  },
+  "payees": [
+    {
+      "id": "shenzhen_components",
+      "name": "Shenzhen Components Co.",
+      "aliases": [
+        "components supplier",
+        "SZ Components",
+        "chip supplier"
+      ],
+      "category": "supplier",
+      "unit": "CNY",
+      "address": "0x2900614a4655d1f45c2cf1f8dd94bea11c45312d"
+    },
+    {
+      "id": "dongguan_packaging",
+      "name": "Dongguan Packaging Works",
+      "aliases": [
+        "packaging supplier",
+        "box supplier",
+        "Dongguan Packaging"
+      ],
+      "category": "supplier",
+      "unit": "CNY",
+      "address": "0xcb59cac4f7f1d3d01d4f99ed647348794ba0eb6e"
+    },
+    {
+      "id": "kowloon_forwarders",
+      "name": "Kowloon Forwarders Ltd",
+      "aliases": [
+        "forwarder",
+        "logistics",
+        "freight agent"
+      ],
+      "category": "services",
+      "unit": "tHKD",
+      "address": "0x8ad4c119847c5d7120528a4019a453d20f6ea949"
+    },
+    {
+      "id": "staff_payroll",
+      "name": "Lotus Lane staff payroll",
+      "aliases": [
+        "payroll",
+        "salaries",
+        "staff wages"
+      ],
+      "category": "payroll",
+      "unit": "CNY",
+      "address": "0x7d310b96cf13c25b9bc93c63f3ec6d3df89fd1b0"
+    },
+    {
+      "id": "pearl_river_fx",
+      "name": "Pearl River FX Desk",
+      "aliases": [
+        "FX desk",
+        "Pearl River",
+        "exchange desk"
+      ],
+      "category": "treasury",
+      "unit": "CNY",
+      "address": "0xf014c1834256663fa8940909e6b07d7354c0f357"
+    },
+    {
+      "id": "lotus_lane_hk",
+      "name": "Lotus Lane Trading (HK) Ltd treasury",
+      "aliases": [
+        "HK subsidiary",
+        "Hong Kong entity",
+        "HK treasury"
+      ],
+      "category": "treasury",
+      "unit": "tHKD",
+      "address": "0x5c9a6986aee784a2d68a2fd844c0c5a7d952394e"
+    },
+    {
+      "id": "bay_cloud_services",
+      "name": "Bay Cloud Services",
+      "aliases": [
+        "cloud provider",
+        "hosting",
+        "Bay Cloud"
+      ],
+      "category": "services",
+      "unit": "tUSD",
+      "address": "0x05e4972c95f3b502c7b2e1d090f335f492a54fdf"
+    },
+    {
+      "id": "nanshan_utilities",
+      "name": "Nanshan Utilities",
+      "aliases": [
+        "utilities",
+        "power bill",
+        "factory electricity"
+      ],
+      "category": "utilities",
+      "unit": "CNY",
+      "address": "0x8833ecbfa40a9b1472d6aa491bcd3789a2afd473"
+    }
+  ],
+  "mandate": {
+    "rules": [
+      {
+        "type": "payee_payment",
+        "payee": "shenzhen_components",
+        "category": "supplier",
+        "amount": {
+          "value": "200000",
+          "unit": "CNY"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "payee_payment",
+        "payee": "dongguan_packaging",
+        "category": "supplier",
+        "amount": {
+          "value": "80000",
+          "unit": "CNY"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "payee_payment",
+        "payee": "staff_payroll",
+        "category": "payroll",
+        "amount": {
+          "value": "380000",
+          "unit": "CNY"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": 25,
+        "max_risk_class": null
+      },
+      {
+        "type": "payee_payment",
+        "payee": "kowloon_forwarders",
+        "category": "services",
+        "amount": {
+          "value": "60000",
+          "unit": "tHKD"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "reserve_floor",
+        "payee": null,
+        "category": null,
+        "amount": {
+          "value": "500000",
+          "unit": "CNY"
+        },
+        "period": null,
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "approval_threshold",
+        "payee": null,
+        "category": null,
+        "amount": {
+          "value": "100000",
+          "unit": "CNY"
+        },
+        "period": null,
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "new_payee_requires_approval",
+        "payee": null,
+        "category": null,
+        "amount": null,
+        "period": null,
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "velocity",
+        "payee": null,
+        "category": null,
+        "amount": {
+          "value": "12",
+          "unit": "CNY"
+        },
+        "period": "day",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      },
+      {
+        "type": "suitability",
+        "payee": "pearl_river_fx",
+        "category": "treasury",
+        "amount": null,
+        "period": null,
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": 2
+      },
+      {
+        "type": "jurisdiction",
+        "payee": "lotus_lane_hk",
+        "category": "treasury",
+        "amount": {
+          "value": "1000000",
+          "unit": "tHKD"
+        },
+        "period": "month",
+        "date": null,
+        "day_of_month": null,
+        "max_risk_class": null
+      }
+    ],
+    "notes": "velocity.amount.value is a count of payments per period (unit ignored). jurisdiction caps cross-border sweeps to the HK subsidiary."
+  },
+  "agent_address": "0x7982ac95812e00ca4e55a157cf4bd9ff37931664"
+}

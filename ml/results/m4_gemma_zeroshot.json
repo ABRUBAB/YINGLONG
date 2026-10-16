@@ -1,0 +1,120 @@
+{
+ "model": "google/gemma-4-E2B-it",
+ "mode": "zero-shot, same system prompt, fp16",
+ "test_sample": 300,
+ "metrics": {
+  "overall": {
+   "n": 300,
+   "json_validity": 0.1033,
+   "json_validity_ci95": [
+    0.0738,
+    0.1429
+   ],
+   "exact_match": 0.0067,
+   "exact_match_ci95": [
+    0.0018,
+    0.024
+   ],
+   "slot_precision": 0.5448,
+   "slot_recall": 0.4524,
+   "slot_f1": 0.4944
+  },
+  "task=intent": {
+   "n": 214,
+   "json_validity": 0.1449,
+   "json_validity_ci95": [
+    0.104,
+    0.1983
+   ],
+   "exact_match": 0.0093,
+   "exact_match_ci95": [
+    0.0026,
+    0.0334
+   ],
+   "slot_precision": 0.5386,
+   "slot_recall": 0.6916,
+   "slot_f1": 0.6056
+  },
+  "task=mandate": {
+   "n": 86,
+   "json_validity": 0.0,
+   "json_validity_ci95": [
+    0.0,
+    0.0428
+   ],
+   "exact_match": 0.0,
+   "exact_match_ci95": [
+    0.0,
+    0.0428
+   ],
+   "slot_precision": 0.5988,
+   "slot_recall": 0.1232,
+   "slot_f1": 0.2044
+  },
+  "language=bn": {
+   "n": 77,
+   "json_validity": 0.1299,
+   "json_validity_ci95": [
+    0.0721,
+    0.2228
+   ],
+   "exact_match": 0.0,
+   "exact_match_ci95": [
+    0.0,
+    0.0475
+   ],
+   "slot_precision": 0.513,
+   "slot_recall": 0.5344,
+   "slot_f1": 0.5235
+  },
+  "language=en": {
+   "n": 107,
+   "json_validity": 0.0748,
+   "json_validity_ci95": [
+    0.0384,
+    0.1406
+   ],
+   "exact_match": 0.0187,
+   "exact_match_ci95": [
+    0.0051,
+    0.0656
+   ],
+   "slot_precision": 0.6328,
+   "slot_recall": 0.4751,
+   "slot_f1": 0.5427
+  },
+  "language=mixed": {
+   "n": 75,
+   "json_validity": 0.0933,
+   "json_validity_ci95": [
+    0.0459,
+    0.1803
+   ],
+   "exact_match": 0.0,
+   "exact_match_ci95": [
+    0.0,
+    0.0487
+   ],
+   "slot_precision": 0.4844,
+   "slot_recall": 0.3394,
+   "slot_f1": 0.3991
+  },
+  "language=zh": {
+   "n": 41,
+   "json_validity": 0.1463,
+   "json_validity_ci95": [
+    0.0688,
+    0.2844
+   ],
+   "exact_match": 0.0,
+   "exact_match_ci95": [
+    0.0,
+    0.0857
+   ],
+   "slot_precision": 0.5067,
+   "slot_recall": 0.479,
+   "slot_f1": 0.4924
+  }
+ },
+ "hf_repo": "ABRUBAB/yl-intent-baselines"
+}
