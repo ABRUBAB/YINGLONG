@@ -61,7 +61,12 @@ export async function ensurePassport(
       ],
     });
     registerTx = res.hash;
-    agentId = await ctx.read<bigint>({ address: registry, abi: abi.YinglongPassportRegistryAbi, functionName: "agentIdOf", args: [wallet] });
+    // Public RPCs behind a load balancer can answer from a node one block behind: wait until the passport is visible.
+    for (let i = 0; i < 30; i++) {
+      agentId = await ctx.read<bigint>({ address: registry, abi: abi.YinglongPassportRegistryAbi, functionName: "agentIdOf", args: [wallet] });
+      if (agentId !== 0n) break;
+      await new Promise((r) => setTimeout(r, 1000));
+    }
   }
   const attestTxs: Hex[] = [];
   for (const i of issuers) {

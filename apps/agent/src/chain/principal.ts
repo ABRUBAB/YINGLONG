@@ -95,7 +95,9 @@ export async function actAsPrincipal(ctx: LedgerContext, p: Principal, calls: Ca
     ...(ctx.profile.legacyTx ? { maxFeePerGas: 0n, maxPriorityFeePerGas: 0n } : {}),
   });
   op.signature = await p.sign(await userOpDigest(ctx.pub, op));
-  return submitUserOp({ publicClient: ctx.pub, relayer: ctx.wallet("relayer"), entryPoint: ctx.addr("EntryPoint"), op, ...ctx.txOpts() });
+  const res = await submitUserOp({ publicClient: ctx.pub, relayer: ctx.wallet("relayer"), entryPoint: ctx.addr("EntryPoint"), op, ...ctx.txOpts() });
+  await ctx.awaitHead((await ctx.pub.getTransactionReceipt({ hash: res.txHash })).blockNumber);
+  return res;
 }
 
 /** EIP-712 digest of a delegation under the deployed DelegationManager's own domain (read from chain). */

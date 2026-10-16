@@ -98,7 +98,12 @@ async function ensurePassportForKey(
       ],
     });
     registerTx = res.hash;
-    [agentId] = await walletInfo(ctx, wallet);
+    // Wait until a load-balanced public RPC shows the new passport.
+    for (let i = 0; i < 30; i++) {
+      [agentId] = await walletInfo(ctx, wallet);
+      if (agentId !== 0n) break;
+      await new Promise((r) => setTimeout(r, 1000));
+    }
   }
   const attestTxs: Hex[] = [];
   for (const i of issuers) {

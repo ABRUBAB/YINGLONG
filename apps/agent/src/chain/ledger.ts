@@ -53,6 +53,21 @@ export class LedgerContext {
     return head > wall ? head : wall;
   }
 
+  /**
+   * Public RPCs behind a load balancer (Base Sepolia's sepolia.base.org) can answer the next read from a node that
+   * has not seen the block a transaction was just mined in. Wait until the head we read is at least that block, so
+   * nonces, counters and pause state read after a write are current.
+   */
+  async awaitHead(block: bigint, timeoutMs = 15_000): Promise<void> {
+    if (this.name === "fisco") return;
+    const end = Date.now() + timeoutMs;
+    let seen = 0;
+    while (Date.now() < end) {
+      if ((await this.pub.getBlockNumber({ cacheTime: 0 })) >= block && ++seen >= 2) return;
+      await new Promise((r) => setTimeout(r, 400));
+    }
+  }
+
   private ticking?: Promise<void>;
 
   /**
@@ -121,6 +136,7 @@ export class LedgerContext {
     }
     const hash = await w.writeContract({ ...call, chain: this.chain, account: w.account!, ...this.txOpts() } as never);
     const receipt = await this.pub.waitForTransactionReceipt({ hash, timeout: 120_000 });
+    await this.awaitHead(receipt.blockNumber);
     return { hash, receipt, ok: receipt.status === "success" };
   }
 
