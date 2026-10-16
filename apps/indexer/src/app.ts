@@ -1,4 +1,5 @@
 import { Hono, type Context } from "hono";
+import { cors } from "hono/cors";
 import { getAddress } from "viem";
 import type { LedgerName } from "@yinglong/sdk";
 import { Anchorer } from "./anchoring";
@@ -47,6 +48,8 @@ function clientIp(c: Context): string {
 
 export function createApp(deps: IndexerDeps): Hono {
   const app = new Hono();
+  // Read-only routes (anchors, Merkle proofs, the FISCO proxy) may be read from the web app in a browser.
+  app.use("*", cors({ origin: (o) => o ?? "*", allowMethods: ["GET", "POST"], allowHeaders: ["Content-Type"] }));
   const { anchorer, breaker, proxy, config } = deps;
 
   app.get("/", (c) =>
