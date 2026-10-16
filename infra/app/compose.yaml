@@ -56,8 +56,10 @@ services:
       <<: *env
       ECNY_LEDGER: fisco
       ECNY_STATE_DIR: /data
+      ECNY_ADMIN_TOKEN_FILE: /run/secrets/admin-token.txt
     volumes:
       - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
+      - /opt/yinglong/secrets/admin-token.txt:/run/secrets/admin-token.txt:ro
       - /opt/yinglong/data/ecny:/data
   indexer:
     <<: *node

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { encodeAbiParameters, encodeFunctionData, keccak256, stringToBytes, type Address, type Hex } from "viem";
+import { existsSync, readFileSync } from "node:fs";
+import { encodeAbiParameters, encodeFunctionData, keccak256, stringToBytes, zeroHash, type Address, type Hex } from "viem";
 import { abi, docHash, type DecodedRevert, type Tier } from "@yinglong/sdk";
 import { formatUnits, type Delegation, type Mandate } from "@yinglong/mandate";
 import { HandleStore } from "@yinglong/provenance";
@@ -275,13 +276,19 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     } else if (unit === "CNY") {
       method = "instruct";
       const now = Number((await ctx.pub.getBlock()).timestamp);
+      // The instruction's condition: the invoice both readers agreed on (registered with the operator as matched),
+      // a condition the user stated (left for the operator to confirm), or none (zero hash: pay on instruction).
+      const invoiceRef = reads.find((r) => r.flags.length === 0 && r.fields.invoiceRef?.value)?.fields.invoiceRef?.value ?? undefined;
+      const conditionLabel = invoiceRef ? `invoice:${invoiceRef}` : intent.conditions.length ? `condition:${intent.conditions.join(",")}` : undefined;
+      const conditionHash = conditionLabel ? keccak256(stringToBytes(conditionLabel)) : zeroHash;
+      if (invoiceRef) await registerInvoiceCondition(conditionHash, invoiceRef, payee.label);
       payment = { asset, recipient: payee.address, beneficiary: payee.address, amount, method: "instruct" };
       execution = singleExecution({
         to: asset,
         data: encodeFunctionData({
           abi: abi.ConditionalPaymentInstructionsAbi,
           functionName: "instruct",
-          args: [payee.address, amount, keccak256(stringToBytes(`purpose:${payee.category}`)), keccak256(stringToBytes(`condition:${intent.conditions.join(",") || "none"}`)), BigInt(now + 7 * 86400)],
+          args: [payee.address, amount, keccak256(stringToBytes(`purpose:${payee.category}`)), conditionHash, BigInt(now + 7 * 86400)],
         }),
       });
     } else if (intent.kind === "sweep") {
@@ -469,6 +476,27 @@ async function tripBreaker(ctx: LedgerContext, account: Address, reason: string)
   }
   const res = await ctx.write("breaker-watcher", { address: ctx.addr("KillSwitchRegistry"), abi: abi.KillSwitchRegistryAbi as never, functionName: "trip", args: [account] });
   return { tripped: res.ok, txHash: res.hash, reason };
+}
+
+/**
+ * Tell the coin-free rail's operator (the e-CNY-style simulator) that an invoice was matched: both independent
+ * readers extracted the same invoice reference, payee and amount. The operator executes an instruction whose
+ * condition is this invoice and rejects instructions whose condition it does not know or that is unmet.
+ */
+async function registerInvoiceCondition(conditionHash: Hex, invoiceRef: string, payeeLabel: string): Promise<void> {
+  const url = process.env.ECNY_URL ?? "http://127.0.0.1:8792";
+  const tokenFile = process.env.AGENT_ADMIN_TOKEN_FILE;
+  const token = process.env.ECNY_ADMIN_TOKEN ?? (tokenFile && existsSync(tokenFile) ? readFileSync(tokenFile, "utf8").trim() : "");
+  try {
+    await fetch(`${url}/conditions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-token": token },
+      body: JSON.stringify({ conditionHash, kind: "invoice", ref: invoiceRef, satisfied: true, note: `Invoice ${invoiceRef} from ${payeeLabel} matched by two independent readers (fictional; test environment).` }),
+      signal: AbortSignal.timeout(5_000),
+    });
+  } catch {
+    /* operator unreachable: the instruction stays pending and is rejected as unmatched, which is the safe outcome */
+  }
 }
 
 // ---------------------------------------------------------------- approvals (T2)

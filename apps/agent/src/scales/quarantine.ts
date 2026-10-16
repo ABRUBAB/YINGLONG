@@ -51,6 +51,8 @@ export interface QuarantinedRead {
     amount: Tagged<string | null>;
     currency: Tagged<string>;
     dueDate: Tagged<string | null>;
+    /** Kept only when every reader extracted the same reference (it becomes the instruction's condition). */
+    invoiceRef?: Tagged<string | null>;
   };
   flags: string[];
   readers: { name: string; output: ReaderOutput }[];
@@ -110,6 +112,7 @@ export async function readDocument(
       amount: tag(agreement.amount ? a.amount : null, source),
       currency: tag(a.currency, source),
       dueDate: tag(a.dueDate, source),
+      invoiceRef: tag(a.invoiceRef && a.invoiceRef === b.invoiceRef ? a.invoiceRef : null, source),
     },
     flags,
     readers,

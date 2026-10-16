@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { getAddress, type Address } from "viem";
 import type { LedgerName } from "@yinglong/sdk";
@@ -67,7 +68,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): EcnySimConfig 
     host: env.ECNY_HOST ?? "127.0.0.1",
     statePath: resolve(env.ECNY_STATE_DIR ?? resolve(appRoot, "state"), `${ledger}.json`),
     pollIntervalMs: int(env.ECNY_POLL_MS, 3_000),
-    adminToken: env.ECNY_ADMIN_TOKEN || undefined,
+    adminToken: env.ECNY_ADMIN_TOKEN || (env.ECNY_ADMIN_TOKEN_FILE && existsSync(env.ECNY_ADMIN_TOKEN_FILE) ? readFileSync(env.ECNY_ADMIN_TOKEN_FILE, "utf8").trim() : undefined) || undefined,
     knownAccounts: [...defaultAccounts(), ...extraPayees],
     conditions: defaultConditions(),
     allowedPurposes: [], // any purpose allowed by default
