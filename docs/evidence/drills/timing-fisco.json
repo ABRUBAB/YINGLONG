@@ -1,0 +1,299 @@
+{
+  "generatedBy": "apps/agent/scripts/drills.ts",
+  "api": "https://api.yinglong-agent.tech",
+  "at": "2026-10-16T00:32:48.241Z",
+  "ledgers": [
+    "fisco"
+  ],
+  "method": "serverMs: from submitting the signed Trip (pause) or the signed user operation (revoke) to its receipt, measured by the agent API next to the ledger; clientMs adds the scripted passkey signature and the network round trip from the drill client; blocks = inclusion block minus the head block read just before submission.",
+  "signer": "scripted passkey (software P-256 key)",
+  "pause": {
+    "n": 7,
+    "confirmed": 7,
+    "serverMs": {
+      "p50": 222,
+      "p95": 230,
+      "max": 230
+    },
+    "clientMs": {
+      "p50": 327,
+      "p95": 335
+    },
+    "blocks": {
+      "p50": 1,
+      "max": 1
+    }
+  },
+  "revoke": {
+    "n": 5,
+    "confirmed": 5,
+    "serverMs": {
+      "p50": 213,
+      "p95": 215,
+      "max": 215
+    },
+    "clientMs": {
+      "p50": 318,
+      "p95": 323
+    },
+    "blocks": {
+      "p50": 1,
+      "max": 1
+    }
+  },
+  "reseal": {
+    "n": 5,
+    "ms": {
+      "p50": 747
+    }
+  },
+  "rows": [
+    {
+      "action": "pause",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x103dc8d03ccf7a80173f7a4db9661ddeb720c5245be395dbc3f8fb8b4a1847f6",
+      "outcome": "confirmed",
+      "serverMs": 222,
+      "clientMs": 327,
+      "headAtSubmit": 382,
+      "inclusionBlock": 383,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:15.333Z"
+    },
+    {
+      "action": "resume",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0xbbb1592790fb1ad8ed333ffa383a235f6f23a713c9529b213ce446f607681e8e",
+      "outcome": "confirmed",
+      "serverMs": 223,
+      "clientMs": 330,
+      "headAtSubmit": 383,
+      "inclusionBlock": 384,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:18.788Z"
+    },
+    {
+      "action": "pause",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x847856503e9b18dfae501749aec69cf19c8bc48c99bc9c7b2957ad042450f89e",
+      "outcome": "confirmed",
+      "serverMs": 227,
+      "clientMs": 333,
+      "headAtSubmit": 384,
+      "inclusionBlock": 385,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:19.336Z"
+    },
+    {
+      "action": "resume",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x132b2a799d3e958c7f05f9bc349bd8bbff8c42be325631bbd0abc27ce7b85edb",
+      "outcome": "confirmed",
+      "serverMs": 223,
+      "clientMs": 329,
+      "headAtSubmit": 385,
+      "inclusionBlock": 386,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:23.582Z"
+    },
+    {
+      "action": "pause",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0xdd84b6f48584efad6892fe6bc4be21b55c53db39ecc87d9c255b65bcb39b7d91",
+      "outcome": "confirmed",
+      "serverMs": 225,
+      "clientMs": 329,
+      "headAtSubmit": 386,
+      "inclusionBlock": 387,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:24.122Z"
+    },
+    {
+      "action": "resume",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x5b88c908ba81b081e636b76f9d360cd7b0763b0b22e7c1120c6b20f7a7e6cb38",
+      "outcome": "confirmed",
+      "serverMs": 220,
+      "clientMs": 326,
+      "headAtSubmit": 387,
+      "inclusionBlock": 388,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:27.135Z"
+    },
+    {
+      "action": "pause",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x6ace81b1e6f3026e935cd45bf55fe7dddd188292a71236c59593919c6e535eb5",
+      "outcome": "confirmed",
+      "serverMs": 219,
+      "clientMs": 325,
+      "headAtSubmit": 388,
+      "inclusionBlock": 389,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:27.674Z"
+    },
+    {
+      "action": "resume",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0xeadcd699363fc842683c59a3813fc65948181cca450404ede38998fb4aa038e5",
+      "outcome": "confirmed",
+      "serverMs": 628,
+      "clientMs": 732,
+      "headAtSubmit": 389,
+      "inclusionBlock": 390,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:30.822Z"
+    },
+    {
+      "action": "pause",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x4f971f7b5b8fe507b3ae13ddaa74ef714b4f52b637fdc4bc2fdf75200069c6b1",
+      "outcome": "confirmed",
+      "serverMs": 230,
+      "clientMs": 335,
+      "headAtSubmit": 390,
+      "inclusionBlock": 391,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:31.767Z"
+    },
+    {
+      "action": "resume",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x3258f742a384bf8946046f2a21c5d99b8bd55a80807858fec08b57e12d99de33",
+      "outcome": "confirmed",
+      "serverMs": 219,
+      "clientMs": 327,
+      "headAtSubmit": 391,
+      "inclusionBlock": 392,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:34.576Z"
+    },
+    {
+      "action": "pause",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x0b40f30d53c5b7a4aff48c33042736632d68c10780f12090b6103a4145cdc0ab",
+      "outcome": "confirmed",
+      "serverMs": 220,
+      "clientMs": 326,
+      "headAtSubmit": 392,
+      "inclusionBlock": 393,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:35.114Z"
+    },
+    {
+      "action": "resume",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0xe05fe2f464f96baafff51c319c175f0feabf0fcfd23872e6c10609626b39a5fb",
+      "outcome": "confirmed",
+      "serverMs": 219,
+      "clientMs": 321,
+      "headAtSubmit": 393,
+      "inclusionBlock": 394,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:37.667Z"
+    },
+    {
+      "action": "pause",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0x231026314024ee26cd8220a0c75599a20e43970ddeee92b7f084978906ca46a5",
+      "outcome": "confirmed",
+      "serverMs": 218,
+      "clientMs": 326,
+      "headAtSubmit": 394,
+      "inclusionBlock": 395,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:38.210Z"
+    },
+    {
+      "action": "resume",
+      "principal": "nadia",
+      "ledger": "fisco",
+      "txHash": "0xa48c31016d495e578b30c8c74405a64aa61b2d9876703698825d58489c35144e",
+      "outcome": "confirmed",
+      "serverMs": 217,
+      "clientMs": 319,
+      "headAtSubmit": 395,
+      "inclusionBlock": 396,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:40.848Z"
+    },
+    {
+      "action": "revoke",
+      "principal": "guest",
+      "ledger": "fisco",
+      "txHash": "0x3c5b4a863c57cff833768d89cd824279a5e02db683a0adee08cbbfb5495cba78",
+      "outcome": "confirmed",
+      "serverMs": 214,
+      "clientMs": 320,
+      "headAtSubmit": 396,
+      "inclusionBlock": 397,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:41.492Z"
+    },
+    {
+      "action": "revoke",
+      "principal": "guest",
+      "ledger": "fisco",
+      "txHash": "0xe7b53350e5593de24707e1f27ac485737f5d95ad9be548396454105fdef1f7ff",
+      "outcome": "confirmed",
+      "serverMs": 215,
+      "clientMs": 323,
+      "headAtSubmit": 398,
+      "inclusionBlock": 399,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:42.901Z"
+    },
+    {
+      "action": "revoke",
+      "principal": "guest",
+      "ledger": "fisco",
+      "txHash": "0xf361fd9a3f8d0f84cb59f3f32878fcf6f7fd61048086f4a9febd104558458334",
+      "outcome": "confirmed",
+      "serverMs": 212,
+      "clientMs": 318,
+      "headAtSubmit": 400,
+      "inclusionBlock": 401,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:44.288Z"
+    },
+    {
+      "action": "revoke",
+      "principal": "guest",
+      "ledger": "fisco",
+      "txHash": "0xebb2b6c9330e0603aa16afa1ab22d3f2a516618ce3549a9043f5cdc51b620e29",
+      "outcome": "confirmed",
+      "serverMs": 213,
+      "clientMs": 318,
+      "headAtSubmit": 402,
+      "inclusionBlock": 403,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:45.680Z"
+    },
+    {
+      "action": "revoke",
+      "principal": "guest",
+      "ledger": "fisco",
+      "txHash": "0x517ade80124700471a6aad682d85b63ed1b0c126d70c3a6f479b89861f79f0a8",
+      "outcome": "confirmed",
+      "serverMs": 211,
+      "clientMs": 318,
+      "headAtSubmit": 404,
+      "inclusionBlock": 405,
+      "blocks": 1,
+      "at": "2026-10-16T00:32:47.072Z"
+    }
+  ]
+}
