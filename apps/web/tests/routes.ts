@@ -9,7 +9,7 @@ export const ROUTES = [
   { path: "/approve/apr-tuition", name: "approve", heading: /Approve/ },
   { path: "/challenge", name: "challenge", heading: /Nothing you type can move funds/ },
   { path: "/city", name: "city", heading: /Two rails, one engine/ },
-  { path: "/start", name: "start", heading: /Your agent, your mandate, your key/ },
+  { path: "/start", name: "start", heading: /Get your own AI agent in three steps/ },
   { path: "/about", name: "about", heading: /An agent wallet/ },
 ] as const;
 

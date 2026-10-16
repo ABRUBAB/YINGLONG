@@ -1,4 +1,4 @@
-export { createPasskey, signHash, rpIdFor, currentRpId, passkeysSupported, PasskeyCancelledError, PRODUCTION_RP_ID } from "./webauthn";
+export { createPasskey, signHash, rpIdFor, currentRpId, passkeysSupported, PasskeyCancelledError, PasskeyServiceError, PRODUCTION_RP_ID } from "./webauthn";
 export type { CreatedPasskey } from "./webauthn";
 export {
   encodeWebAuthnSignature,

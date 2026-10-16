@@ -88,6 +88,18 @@ export class SignUpRefusedError extends Error {
   }
 }
 
+/**
+ * One passkey assertion for one sign-up step. The page asks for each step on its own tap: Android's credential
+ * manager refuses a second request that starts while the first sheet is still closing.
+ */
+export async function signStep(review: SignUpReview, credentialId: string, step: "publish" | "delegation"): Promise<Hex> {
+  if (!review.ok) throw new SignUpRefusedError(review.problems);
+  const s = review.steps.find((x) => x.step === step)!;
+  const sig = await signHash(s.digest, { keyIds: [credentialId] });
+  if (sig.keyId !== credentialId) throw new Error("The authenticator answered with a different passkey.");
+  return sig.signature;
+}
+
 /** Two passkey assertions with this credential: the publish operation first, then the delegation. */
 export async function signSignUp(
   review: SignUpReview,

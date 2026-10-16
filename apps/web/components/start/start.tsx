@@ -8,8 +8,9 @@ import type { VisitorDraft, VisitorSealResult, VisitorSignUp } from "@/lib/api/v
 import { ApiRequestError, getApi, isSample } from "@/lib/api";
 import { invalidate, useAgent } from "@/lib/api/hooks";
 import { clearVisitorSession } from "@/lib/api/session";
-import { passkeysSupported, PasskeyCancelledError } from "@/lib/passkey";
-import { completeSignUp, createVisitorPasskey, reviewSignUp, signSignUp, SignUpRefusedError, type SignUpReview, type VisitorKey } from "@/lib/visitor";
+import type { Hex } from "viem";
+import { passkeysSupported, PasskeyCancelledError, PasskeyServiceError } from "@/lib/passkey";
+import { completeSignUp, createVisitorPasskey, reviewSignUp, signStep, SignUpRefusedError, type SignUpReview, type VisitorKey } from "@/lib/visitor";
 import { useVisitorSession } from "@/components/session";
 import { Button, buttonClass } from "@/components/ui/button";
 import { SampleBadge, TxLink } from "@/components/data/parts";
@@ -22,21 +23,24 @@ type Phase =
   | { at: "creating" }
   | { at: "registering"; key: VisitorKey }
   | { at: "review"; key: VisitorKey; signUp: VisitorSignUp; review: SignUpReview }
-  | { at: "signing"; key: VisitorKey; signUp: VisitorSignUp; review: SignUpReview; step: "publish" | "delegation" | "sealing" }
+  | { at: "half"; key: VisitorKey; signUp: VisitorSignUp; review: SignUpReview; publishSig: Hex }
+  | { at: "signing"; key: VisitorKey; signUp: VisitorSignUp; review: SignUpReview; step: "publish" | "delegation" | "sealing"; publishSig?: Hex }
   | { at: "done"; signUp: VisitorSignUp; sealed: VisitorSealResult }
   | { at: "error"; message: string; key?: VisitorKey };
 
 function describe(e: unknown): string {
-  if (e instanceof PasskeyCancelledError) return "The passkey prompt was dismissed. Nothing was created or signed.";
+  if (e instanceof PasskeyCancelledError) return "The fingerprint prompt was closed, so nothing was saved. Tap the button again when you are ready.";
+  if (e instanceof PasskeyServiceError)
+    return "Your phone's passkey service did not answer. Tap Try again. If it keeps happening, check that a password manager with passkeys (for example Google Password Manager) is turned on in your phone's settings.";
   if (e instanceof SignUpRefusedError) return e.message;
   if (e instanceof Error) return e.message;
-  return "Something went wrong. Nothing was signed.";
+  return "Something went wrong. Nothing was saved.";
 }
 
 const STEPS = [
-  { n: 1, label: "Say", hint: "your rules, your words" },
-  { n: 2, label: "See", hint: "what the code enforces" },
-  { n: 3, label: "Seal", hint: "with a passkey on this device" },
+  { n: 1, label: "Write", hint: "your rules in your own words" },
+  { n: 2, label: "Check", hint: "exactly what will be enforced" },
+  { n: 3, label: "Lock", hint: "with your fingerprint or face" },
 ];
 
 function Stepper({ phase }: { phase: Phase["at"] }) {
@@ -137,14 +141,28 @@ export function Start() {
     else void create(mandate);
   }
 
-  async function seal() {
+  /** Confirmation 1 of 2, on its own tap: save the rules (the publishing operation). */
+  async function confirmFirst() {
     if (phase.at !== "review") return;
     const { key, signUp, review } = phase;
     try {
       setPhase({ at: "signing", key, signUp, review, step: "publish" });
-      const sigs = await signSignUp(review, key.credentialId, (step) => setPhase({ at: "signing", key, signUp, review, step }));
-      setPhase({ at: "signing", key, signUp, review, step: "sealing" });
-      const sealed = await completeSignUp(getApi(), signUp, key, sigs);
+      const publishSig = await signStep(review, key.credentialId, "publish");
+      setPhase({ at: "half", key, signUp, review, publishSig });
+    } catch (e) {
+      setPhase({ at: "error", message: describe(e), key });
+    }
+  }
+
+  /** Confirmation 2 of 2, on a second tap: give the agent permission (the delegation), then lock it in. */
+  async function confirmSecond() {
+    if (phase.at !== "half") return;
+    const { key, signUp, review, publishSig } = phase;
+    try {
+      setPhase({ at: "signing", key, signUp, review, step: "delegation", publishSig });
+      const delegationSig = await signStep(review, key.credentialId, "delegation");
+      setPhase({ at: "signing", key, signUp, review, step: "sealing", publishSig });
+      const sealed = await completeSignUp(getApi(), signUp, key, { userOpSignature: publishSig, delegationSignature: delegationSig });
       invalidate("me", "pause", "mandates", "budgets", "receipts", "approvals", "session");
       setPhase({ at: "done", signUp, sealed });
     } catch (e) {
@@ -155,7 +173,7 @@ export function Start() {
   const busy = phase.at === "creating" || phase.at === "registering" || phase.at === "signing" || phase.at === "drafting";
   // The delegation's Hash Ring: draft while you read, holding while the passkey signs, sealed after.
   const ring =
-    phase.at === "review" || phase.at === "signing" || phase.at === "done"
+    phase.at === "review" || phase.at === "half" || phase.at === "signing" || phase.at === "done"
       ? {
           hash: phase.signUp.mandate.delegationHash,
           phase: (phase.at === "done" ? "sealed" : phase.at === "signing" ? "holding" : "draft") as "sealed" | "holding" | "draft",
@@ -167,16 +185,16 @@ export function Start() {
       <header className="grid gap-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="eyebrow m-0 text-fg-muted">Try it with your own passkey</p>
+            <p className="eyebrow m-0 text-fg-muted">Try it yourself</p>
             <h1 className="type-display m-0 mt-2 max-w-[20ch] text-[2.2rem] leading-[1.05] text-fg-0 sm:text-[2.8rem]">
-              Your agent, your mandate, your key.
+              Get your own AI agent in three steps.
             </h1>
           </div>
           <SampleBadge />
         </div>
         <p className="measure m-0 text-lead text-fg-2">
-          Say what your agent may do. See what the code will enforce, decoded from the compiled caveats. Seal it with a passkey created on
-          this device: the account&apos;s only signer, and you read both messages before it signs.
+          Tell your agent what it may spend, check the rules, then lock them with your phone&apos;s fingerprint or face unlock. After
+          that, your agent can only spend inside those rules. Test money only.
         </p>
         <Stepper phase={phase.at} />
       </header>
@@ -186,18 +204,18 @@ export function Start() {
           {phase.at === "intro" && session && !again ? (
             <section aria-labelledby="start-create" className="yl-card grid gap-4 p-5 sm:p-6">
               <h2 id="start-create" className="m-0 text-18 font-semibold text-fg-0">
-                This device already has your account
+                You already have an agent on this device
               </h2>
               <p className="m-0 text-13 text-fg-2">
-                Visitor <span className="font-mono">{session.visitorId}</span>, sealed with passkey{" "}
-                <span className="font-mono">{shortHash(session.credentialId, 6, 4)}</span>.
+                Your account <span className="font-mono">{session.visitorId}</span> is locked with this phone&apos;s passkey{" "}
+                <span className="font-mono text-fg-muted">({shortHash(session.credentialId, 6, 4)})</span>.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link href="/app" className={buttonClass("primary", "lg")}>
-                  Open your console
+                  Open my agent
                 </Link>
                 <Button variant="secondary" size="lg" disabled={!supported} onClick={() => clearVisitorSession()}>
-                  Start over with a new passkey
+                  Start again with a new passkey
                 </Button>
               </div>
             </section>
@@ -207,12 +225,12 @@ export function Start() {
             <>
               {!supported ? (
                 <p role="alert" className="m-0 text-13 text-fg-1">
-                  This browser cannot create passkeys. Open this page on a phone or a browser with passkey support.
+                  This browser cannot use passkeys. Open this page in Chrome or Safari on your phone.
                 </p>
               ) : null}
               {resealing ? (
                 <p className="m-0 text-13 text-fg-2">
-                  Your previous mandate is revoked. The same passkey seals a new one: same account, same agent, new rules on chain.
+                  Your old rules were cancelled. Write new ones and lock them with the same fingerprint: same account, same agent.
                 </p>
               ) : null}
               <SayStep
@@ -222,7 +240,7 @@ export function Start() {
                 onStandard={() => sealWith(undefined)}
                 busy={phase.at === "drafting"}
                 error={draftError}
-                standardLabel="Use the standard visitor mandate"
+                standardLabel="Skip and use simple ready-made rules"
                 disabled={!supported}
               />
             </>
@@ -234,43 +252,45 @@ export function Start() {
               busy={busy}
               onEdit={() => setPhase({ at: "intro" })}
               onSeal={() => sealWith(phase.draft.draft)}
-              sealLabel="Seal with my passkey"
+              sealLabel="Looks right: lock it with my fingerprint"
             />
           ) : null}
 
           {phase.at === "creating" ? (
             <p role="status" className="m-0 flex items-center gap-2 text-15 text-fg-1">
-              <StateRing state="waiting" size={20} glyphOnly label="Waiting" /> Waiting for your passkey prompt.
+              <StateRing state="waiting" size={20} glyphOnly label="Waiting" /> Your phone will ask you to create a passkey. Confirm with your fingerprint or face.
             </p>
           ) : null}
 
           {phase.at === "registering" ? (
             <div role="status" className="grid gap-2">
               <p className="m-0 flex items-center gap-2 text-15 text-fg-1">
-                <StateRing state="pending" size={20} glyphOnly label="Working" /> Deploying your account on the ledger.
+                <StateRing state="pending" size={20} glyphOnly label="Working" /> Creating your account. This takes about 10 seconds.
               </p>
               <p className="m-0 text-13 text-fg-muted">
-                The service deploys an account whose only signer is your passkey, registers your agent&apos;s passport and mints test units. On
-                the team-run FISCO BCOS chain this takes 5 to 15 seconds.
+                We are setting up an account that only your passkey can control, giving your agent an ID, and adding some test money to
+                play with.
               </p>
             </div>
           ) : null}
 
-          {phase.at === "review" || phase.at === "signing" ? <ReviewView phase={phase} onSeal={() => void seal()} /> : null}
+          {phase.at === "review" || phase.at === "half" || phase.at === "signing" ? (
+            <ReviewView phase={phase} onFirst={() => void confirmFirst()} onSecond={() => void confirmSecond()} />
+          ) : null}
 
           {phase.at === "done" ? (
             <section aria-labelledby="start-done" className="grid gap-4" role="status">
               <h2 id="start-done" className="m-0 flex items-center gap-2 text-18 font-semibold text-fg-0">
-                <StateRing state="sealed" size={24} glyphOnly label="Sealed" /> Sealed with your passkey
+                <StateRing state="sealed" size={24} glyphOnly label="Sealed" /> Done. Your agent is ready.
               </h2>
               <p className="m-0 text-13 text-fg-2">
-                Your mandate is published and your agent may act only inside it. Every signature from now on (approvals, pause, resume,
-                revoke) is your passkey on this device.
+                Your rules are now saved on the blockchain, and your agent can only spend inside them. Whenever something needs you
+                (a bigger payment, a pause, cancelling the rules), your phone will ask for your fingerprint again.
               </p>
               <TxLink ledger={phase.sealed.ledger} hash={phase.sealed.publishTx} badge={phase.sealed.ledgerBadge} label="Published" />
               <div className="flex flex-wrap gap-3">
                 <Button size="lg" onClick={() => router.push("/app")}>
-                  Open your console
+                  Open my agent
                 </Button>
               </div>
             </section>
@@ -283,7 +303,7 @@ export function Start() {
               </p>
               <div className="flex flex-wrap gap-3">
                 {phase.key ? (
-                  <Button onClick={() => void register(phase.key!)}>Try again with the same passkey</Button>
+                  <Button onClick={() => void register(phase.key!)}>Try again</Button>
                 ) : (
                   <Button onClick={() => void create()} disabled={!supported}>
                     Create a passkey
@@ -307,14 +327,12 @@ export function Start() {
               <HashRing hash={ring.hash} size={184} phase={ring.phase} progress={ring.phase === "holding" ? 1 : 0} drawIn={ring.phase === "sealed"} bare={false} />
             </div>
           ) : null}
-          <p className="eyebrow m-0 text-fg-muted">What this is</p>
+          <p className="eyebrow m-0 text-fg-muted">Good to know</p>
           <ul className="m-0 grid list-none gap-3 p-0">
-            <li>Your passkey never leaves this device. YINGLONG receives only its public key; the service never holds a key for you.</li>
-            <li>Your account is a smart account whose only signer is this passkey: no seed phrase, no operator key.</li>
-            <li>
-              Test units only, on {ledgers ?? "a test ledger"}. Nothing here has monetary value or reaches a bank.
-            </li>
-            <li>Your agent can pay three sample merchants, small amounts alone and up to 200 with your passkey. Everything else is refused on chain.</li>
+            <li>Your fingerprint never leaves your phone. We only receive a public key, never anything that could sign for you.</li>
+            <li>Only your passkey controls your account. There is no password and no secret phrase to lose.</li>
+            <li>This uses test money on {ledgers ?? "a test blockchain"}. Nothing here is real money or touches a bank.</li>
+            <li>Your agent can pay a few sample shops: small amounts on its own, bigger ones only after you confirm. Anything else is blocked by the blockchain itself.</li>
           </ul>
           <div className="flex flex-wrap gap-1.5">
             <LabelChip>Test units only</LabelChip>
@@ -328,18 +346,25 @@ export function Start() {
 
 function ReviewView({
   phase,
-  onSeal,
+  onFirst,
+  onSecond,
 }: {
-  phase: Extract<Phase, { at: "review" | "signing" }>;
-  onSeal: () => void;
+  phase: Extract<Phase, { at: "review" | "half" | "signing" }>;
+  onFirst: () => void;
+  onSecond: () => void;
 }) {
   const { signUp, review } = phase;
   const signing = phase.at === "signing" ? phase.step : null;
+  const firstDone = phase.at === "half" || (phase.at === "signing" && phase.step !== "publish");
+  const plain: Record<string, { title: string; body: string }> = {
+    publish: { title: "Save your rules", body: "Writes your rules onto the blockchain, from your own account, so anyone can check them." },
+    delegation: { title: "Give your agent permission", body: "Lets your agent act for you, but only inside the rules you just saved." },
+  };
   return (
     <>
       <section aria-labelledby="start-mandate" className="grid gap-4">
         <h2 id="start-mandate" className="m-0 text-18 font-semibold text-fg-0">
-          {signUp.mandate.title}
+          Your rules
         </h2>
         <ol className="m-0 grid list-none gap-0 p-0">
           {signUp.mandate.sentences.map((s, i) => (
@@ -349,69 +374,80 @@ function ReviewView({
             </li>
           ))}
         </ol>
-        <dl className="m-0 grid grid-cols-[8rem_1fr] gap-x-3 gap-y-1.5 text-12">
-          <dt className="text-fg-muted">Your account</dt>
-          <dd className="m-0 font-mono break-all text-fg-1">{signUp.account}</dd>
-          <dt className="text-fg-muted">Your agent</dt>
-          <dd className="m-0 text-fg-1">
-            {signUp.agent.label} <span className="font-mono text-fg-muted">#{signUp.agent.agentId}</span>{" "}
-            <span className="font-mono text-fg-muted">{shortHash(signUp.agent.wallet, 8, 6)}</span>
-          </dd>
-          <dt className="text-fg-muted">Ledger</dt>
-          <dd className="m-0 text-fg-1">{signUp.ledgerBadge ?? signUp.ledger}</dd>
-        </dl>
       </section>
 
-      <section aria-labelledby="start-messages" className="grid gap-5">
+      <section aria-labelledby="start-messages" className="grid gap-4">
         <h2 id="start-messages" className="m-0 text-18 font-semibold text-fg-0">
-          The two messages your passkey signs
+          Confirm twice with your fingerprint
         </h2>
-        {review.steps.map((st, i) => (
-          <article key={st.step} className="grid gap-3 rounded-card border border-line-2 bg-bg-1 p-4" aria-labelledby={`msg-${st.step}`}>
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 id={`msg-${st.step}`} className="m-0 text-15 font-semibold text-fg-0">
-                <span className="font-mono text-12 text-fg-muted">{i + 1} of 2</span> {st.title}
-              </h3>
-              {signing === st.step ? <StateRing state="waiting" size={16} label="Waiting for your passkey" /> : null}
-            </div>
-            <ul className="m-0 grid list-disc gap-1 pl-5 text-13 text-fg-1">
-              {st.review.lines.map((l) => (
-                <li key={l}>{l}</li>
-              ))}
-            </ul>
-            <ul className="m-0 grid list-none gap-1.5 p-0">
-              <li>
-                <StateRing
-                  state={st.guard.ok ? "verified" : "refused"}
-                  size={16}
-                  label={st.guard.ok ? `Signing guard: ${st.guard.primaryType} message, digest recomputed` : `Signing guard refused: ${st.guard.reason}`}
-                />
-              </li>
-              {st.review.checks.map((c) => (
-                <li key={c.label}>
-                  <StateRing state={c.ok ? "verified" : "refused"} size={16} label={c.ok ? c.label : `${c.label}: no`} />
-                </li>
-              ))}
-            </ul>
-            <p className="m-0 rounded-control bg-bg-2 px-3 py-2 font-mono text-11 break-all text-fg-2">Signs exactly {st.digest}</p>
-          </article>
-        ))}
+        <p className="m-0 text-13 text-fg-2">Your phone asks two times, one tap each. Nothing is saved until both are done.</p>
+        {review.steps.map((st, i) => {
+          const t = plain[st.step] ?? { title: st.title, body: "" };
+          const done = st.step === "publish" && firstDone;
+          return (
+            <article key={st.step} className="grid gap-2 rounded-card border border-line-2 bg-bg-1 p-4" aria-labelledby={`msg-${st.step}`}>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 id={`msg-${st.step}`} className="m-0 text-15 font-semibold text-fg-0">
+                  <span className="font-mono text-12 text-fg-muted">Step {i + 1} of 2</span> {t.title}
+                </h3>
+                {done ? (
+                  <StateRing state="verified" size={16} label="Confirmed" />
+                ) : signing === st.step ? (
+                  <StateRing state="waiting" size={16} label="Waiting for your fingerprint" />
+                ) : null}
+              </div>
+              <p className="m-0 text-13 text-fg-1">{t.body}</p>
+              <details className="text-12 text-fg-2">
+                <summary className="cursor-pointer text-fg-muted">Technical details (for checking)</summary>
+                <ul className="m-0 mt-2 grid list-disc gap-1 pl-5">
+                  {st.review.lines.map((l) => (
+                    <li key={l}>{l}</li>
+                  ))}
+                </ul>
+                <ul className="m-0 mt-2 grid list-none gap-1.5 p-0">
+                  <li>
+                    <StateRing
+                      state={st.guard.ok ? "verified" : "refused"}
+                      size={16}
+                      label={st.guard.ok ? `Checked on this device: a ${st.guard.primaryType} message, nothing else` : `Blocked on this device: ${st.guard.reason}`}
+                    />
+                  </li>
+                  {st.review.checks.map((c) => (
+                    <li key={c.label}>
+                      <StateRing state={c.ok ? "verified" : "refused"} size={16} label={c.ok ? c.label : `${c.label}: no`} />
+                    </li>
+                  ))}
+                </ul>
+                <p className="m-0 mt-2 rounded-control bg-bg-2 px-3 py-2 font-mono text-11 break-all">Signs exactly {st.digest}</p>
+                <dl className="m-0 mt-2 grid grid-cols-[7rem_1fr] gap-x-3 gap-y-1">
+                  <dt className="text-fg-muted">Your account</dt>
+                  <dd className="m-0 font-mono break-all">{signUp.account}</dd>
+                  <dt className="text-fg-muted">Your agent</dt>
+                  <dd className="m-0">
+                    {signUp.agent.label} <span className="font-mono">#{signUp.agent.agentId}</span>
+                  </dd>
+                  <dt className="text-fg-muted">Blockchain</dt>
+                  <dd className="m-0">{signUp.ledgerBadge ?? signUp.ledger}</dd>
+                </dl>
+              </details>
+            </article>
+          );
+        })}
         {!review.ok ? (
           <p role="alert" className="m-0 text-13 text-fg-1">
-            Signing is blocked: {review.problems.join("; ")}.
+            This was blocked for your safety: {review.problems.join("; ")}.
           </p>
         ) : null}
         <div className="flex flex-wrap items-center gap-4">
-          <Button size="lg" onClick={onSeal} disabled={!review.ok || signing !== null}>
-            {signing === "publish"
-              ? "Passkey prompt 1 of 2"
-              : signing === "delegation"
-                ? "Passkey prompt 2 of 2"
-                : signing === "sealing"
-                  ? "Sealing on the ledger"
-                  : "Sign both with your passkey"}
-          </Button>
-          <span className="text-12 text-fg-muted">Two prompts: one per message. Nothing is sealed until both verify on chain.</span>
+          {!firstDone ? (
+            <Button size="lg" onClick={onFirst} disabled={!review.ok || signing !== null}>
+              {signing === "publish" ? "Waiting for your fingerprint..." : "Step 1 of 2: Save my rules"}
+            </Button>
+          ) : (
+            <Button size="lg" onClick={onSecond} disabled={signing !== null}>
+              {signing === "delegation" ? "Waiting for your fingerprint..." : signing === "sealing" ? "Finishing..." : "Step 2 of 2: Give my agent permission"}
+            </Button>
+          )}
         </div>
       </section>
     </>

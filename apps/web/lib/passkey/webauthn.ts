@@ -26,6 +26,19 @@ export function passkeysSupported(): boolean {
   return typeof window !== "undefined" && typeof window.PublicKeyCredential === "function" && !!navigator.credentials;
 }
 
+/** The phone's passkey service failed without the user cancelling (Android Credential Manager "unknown error"). */
+export class PasskeyServiceError extends Error {
+  constructor() {
+    super("Your phone's passkey service did not answer.");
+    this.name = "PasskeyServiceError";
+  }
+}
+
+/** Android's credential manager can refuse a request that starts while its previous sheet is still closing. */
+function isServiceHiccup(e: unknown): boolean {
+  return e instanceof DOMException && (e.name === "UnknownError" || e.name === "NotReadableError" || e.name === "InvalidStateError");
+}
+
 export class PasskeyCancelledError extends Error {
   constructor() {
     super("The passkey prompt was dismissed or timed out.");
@@ -74,6 +87,7 @@ export async function createPasskey(opts: {
       },
     })) as PublicKeyCredential;
   } catch (e) {
+    if (isServiceHiccup(e)) throw new PasskeyServiceError();
     wrap(e);
   }
   const res = cred.response as AuthenticatorAttestationResponse;
@@ -110,9 +124,8 @@ export async function signHash(
 ): Promise<EncodedWebAuthnSignature> {
   const challenge = hexToBytes(hash);
   if (challenge.length !== 32) throw new Error("signHash expects a 32-byte hash");
-  let cred: PublicKeyCredential;
-  try {
-    cred = (await navigator.credentials.get({
+  const request = () =>
+    navigator.credentials.get({
       signal: opts.signal,
       publicKey: {
         challenge: challenge as BufferSource,
@@ -121,9 +134,20 @@ export async function signHash(
         userVerification: "required",
         timeout: 60_000,
       },
-    })) as PublicKeyCredential;
+    }) as Promise<PublicKeyCredential>;
+  let cred: PublicKeyCredential;
+  try {
+    cred = await request();
   } catch (e) {
-    wrap(e);
+    if (!isServiceHiccup(e)) wrap(e);
+    // One retry after the previous sheet has had time to close.
+    await new Promise((r) => setTimeout(r, 900));
+    try {
+      cred = await request();
+    } catch (e2) {
+      if (isServiceHiccup(e2)) throw new PasskeyServiceError();
+      wrap(e2);
+    }
   }
   const res = cred.response as AuthenticatorAssertionResponse;
   return encodeWebAuthnSignature({

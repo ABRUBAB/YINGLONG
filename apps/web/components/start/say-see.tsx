@@ -42,13 +42,13 @@ export function SayStep({
   return (
     <section aria-labelledby={`${id}-h`} className="yl-card yl-card-raised grid gap-5 p-5 sm:p-7">
       <div className="grid gap-1.5">
-        <p className="kicker m-0">01 Say</p>
+        <p className="kicker m-0">Step 1: Write</p>
         <h2 id={`${id}-h`} className="m-0 text-22 font-semibold text-fg-0">
-          Say what your agent may do, in your own words
+          Tell your agent what it may spend
         </h2>
         <p className="m-0 max-w-[60ch] text-13 text-fg-2">
-          Who it may pay, how much a day, when to ask you, what to keep in the account. A model or a rule parser only fills a fixed form from
-          your words; every number must appear in what you wrote. Code then clamps it to the visitor limits and compiles it into caveats.
+          Write it like a message: which shops it may pay, how much per day, when it must ask you first, and how much to always keep.
+          AI only turns your words into a form; it cannot add numbers you did not write.
         </p>
       </div>
       <form
@@ -77,11 +77,11 @@ export function SayStep({
           className="block min-h-[132px] w-full resize-y rounded-card border border-line-3 bg-bg-1 px-4 py-3.5 text-18 leading-relaxed text-fg-0 outline-none placeholder:text-15 placeholder:text-fg-muted focus:border-fg-2"
         />
         <div className="flex flex-wrap items-center justify-between gap-2 text-11 text-fg-muted">
-          <span>English, or your own mix of words. Test units only.</span>
+          <span>Write in English. Test money only.</span>
           <span className="font-mono tabular">{text.length} / 2000</span>
         </div>
         <div className="grid gap-2" aria-label="Examples">
-          <p className="m-0 text-12 text-fg-2">Start from an example</p>
+          <p className="m-0 text-12 text-fg-2">Or start from an example</p>
           <ul className="m-0 grid list-none gap-2 p-0">
             {SAY_EXAMPLES.map((ex, i) => (
               <li key={ex}>
@@ -99,7 +99,7 @@ export function SayStep({
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <Button type="submit" size="lg" disabled={!text.trim() || busy || disabled}>
-            {busy ? "Compiling your rules" : "See what the code enforces"}
+            {busy ? "Reading your rules..." : "Check my rules"}
           </Button>
           <Button type="button" variant="secondary" size="lg" disabled={busy || disabled} onClick={onStandard}>
             {standardLabel}
@@ -160,12 +160,13 @@ export function SeeStep({ d, onEdit, onSeal, busy, sealLabel }: { d: VisitorDraf
       <div className="yl-card grid gap-6 p-5 sm:p-7 md:grid-cols-[minmax(0,1fr)_220px] md:gap-8">
         <div className="grid content-start gap-4">
           <div className="grid gap-1.5">
-            <p className="kicker m-0">02 See</p>
+            <p className="kicker m-0">Step 2: Check</p>
             <h2 id={`${id}-h`} ref={heading} tabIndex={-1} className="m-0 scroll-mt-[calc(var(--nav-h)+24px)] text-22 font-semibold text-fg-0">
-              What the code will enforce
+              These are the exact rules your agent will follow
             </h2>
             <p className="m-0 text-13 text-fg-2">
-              Decoded from the {d.compiled.caveatCount} compiled caveats, not from your words. This is the whole of your agent&apos;s authority.
+              Read back from the final rule set (not from your message), so what you see is what will be enforced. Your agent can do
+              nothing outside this list.
             </p>
           </div>
           <ol className="m-0 grid list-none gap-0 p-0" aria-label="Decoded caveats, in order">
@@ -184,17 +185,17 @@ export function SeeStep({ d, onEdit, onSeal, busy, sealLabel }: { d: VisitorDraf
             ))}
           </ol>
           <p className="m-0 font-mono text-11 text-fg-muted tabular" aria-live="polite">
-            {compiled ? `${d.decodedSentences.length} caveats decoded` : `decoding caveat ${shown + 1} of ${d.decodedSentences.length}`}
-            {compiled ? (d.roundTrip.ok ? "; round trip checks pass" : "; round trip check failed") : ""}
+            {compiled ? `${d.decodedSentences.length} rules ready` : `reading rule ${shown + 1} of ${d.decodedSentences.length}`}
+            {compiled ? (d.roundTrip.ok ? "; double-checked" : "; check failed") : ""}
           </p>
         </div>
         <div className="grid content-start justify-items-center gap-3 border-t border-line-1 pt-5 md:border-t-0 md:border-l md:pt-0 md:pl-8">
           <HashRing key={d.compiled.delegationHash} hash={d.compiled.delegationHash} size={176} phase="draft" drawIn bare={false} />
           <p className="m-0 text-center text-11 leading-snug text-fg-muted">
-            preview: final hash depends on your new account
+            Your rules fingerprint (it changes if any rule changes)
           </p>
           {ring !== "absent" ? (
-            <StateRing state={ring === "match" ? "verified" : "refused"} size={16} label={ring === "match" ? "Service ring matches this page" : "Service ring differs"} />
+            <StateRing state={ring === "match" ? "verified" : "refused"} size={16} label={ring === "match" ? "Matches the server" : "Does not match the server"} />
           ) : null}
           <LedgerChip ledger={d.ledger} badge={d.ledgerBadge} compact />
         </div>
@@ -203,9 +204,9 @@ export function SeeStep({ d, onEdit, onSeal, busy, sealLabel }: { d: VisitorDraf
       <div className="yl-card grid gap-4 p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="grid gap-1">
-            <h3 className="m-0 text-15 font-semibold text-fg-0">You said, the code enforces</h3>
+            <h3 className="m-0 text-15 font-semibold text-fg-0">What you wrote vs. what will be enforced</h3>
             <p className="m-0 text-12 text-fg-muted">
-              {d.flagged === 0 ? "Every rule is enforced as you said it, or takes the standard visitor value." : `${d.flagged} row${d.flagged === 1 ? "" : "s"} to read before you seal.`}
+              {d.flagged === 0 ? "Everything is enforced as you wrote it, or uses a safe default." : `Please read ${d.flagged} highlighted row${d.flagged === 1 ? "" : "s"} before you continue.`}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -220,8 +221,8 @@ export function SeeStep({ d, onEdit, onSeal, busy, sealLabel }: { d: VisitorDraf
             <thead>
               <tr>
                 <th scope="col">Rule</th>
-                <th scope="col">You said</th>
-                <th scope="col">Enforced</th>
+                <th scope="col">You wrote</th>
+                <th scope="col">Will be enforced</th>
                 <th scope="col">Status</th>
               </tr>
             </thead>
@@ -248,7 +249,7 @@ export function SeeStep({ d, onEdit, onSeal, busy, sealLabel }: { d: VisitorDraf
         </div>
         {d.adjustments.length ? (
           <div className="grid gap-1.5 border-t border-line-1 pt-3">
-            <h4 className="m-0 text-12 font-medium text-fg-2">Adjustments made by the bounds</h4>
+            <h4 className="m-0 text-12 font-medium text-fg-2">Changed to stay within the test limits</h4>
             <ul className="m-0 grid list-none gap-1 p-0 text-12">
               {d.adjustments.map((a, i) => (
                 <li key={`${a.field}-${i}`} className="text-fg-2">
@@ -262,7 +263,7 @@ export function SeeStep({ d, onEdit, onSeal, busy, sealLabel }: { d: VisitorDraf
         ) : null}
         {d.payeeBook.length ? (
           <p className="m-0 border-t border-line-1 pt-3 text-12 text-fg-muted">
-            Payee book written by the same signed operation: <span className="text-fg-1">{d.payeeBook.map((p) => p.label).join(", ")}</span>.
+            Shops your agent may pay: <span className="text-fg-1">{d.payeeBook.map((p) => p.label).join(", ")}</span>.
           </p>
         ) : null}
         {d.note ? <p className="m-0 text-11 text-fg-muted">{d.note}</p> : null}
@@ -279,7 +280,7 @@ export function SeeStep({ d, onEdit, onSeal, busy, sealLabel }: { d: VisitorDraf
         <Button variant="secondary" size="lg" onClick={onEdit} disabled={busy}>
           Edit
         </Button>
-        <span className="text-12 text-fg-muted">Your passkey is asked only after the next screen shows both messages, decoded.</span>
+        <span className="text-12 text-fg-muted">Nothing is saved yet. Your fingerprint is asked on the next screen.</span>
       </div>
     </section>
   );

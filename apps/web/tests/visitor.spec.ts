@@ -15,27 +15,29 @@ test("visitor: create a passkey, read both messages, seal, act, revoke, seal aga
   const passkey = await addVirtualPasskey(context, page);
 
   await page.goto("/start", { waitUntil: "networkidle" });
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Your agent, your mandate, your key/);
-  await page.getByRole("button", { name: "Use the standard visitor mandate" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Get your own AI agent in three steps/);
+  await page.getByRole("button", { name: "Skip and use simple ready-made rules" }).click();
 
   // Both messages decoded on this page and passed by the signing guard before anything is signed.
-  await expect(page.getByRole("heading", { name: "The two messages your passkey signs" })).toBeVisible();
-  await expect(page.getByText(/Signing guard: PackedUserOperation message, digest recomputed/)).toBeVisible();
-  await expect(page.getByText(/Signing guard: Delegation message, digest recomputed/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Confirm twice with your fingerprint" })).toBeVisible();
+  for (const d of await page.getByText("Technical details (for checking)").all()) await d.click();
+  await expect(page.getByText(/Checked on this device: a PackedUserOperation message, nothing else/)).toBeVisible();
+  await expect(page.getByText(/Checked on this device: a Delegation message, nothing else/)).toBeVisible();
   await expect(page.getByText("It publishes exactly this mandate for your own agent")).toBeVisible();
   await expect(page.getByText("Its rules are exactly the rules being published")).toBeVisible();
   await expect(page.getByText(/: no$/)).toHaveCount(0);
   await page.screenshot({ path: "test-results/screens/start-review-1440.png", fullPage: true });
 
-  await page.getByRole("button", { name: "Sign both with your passkey" }).click();
-  await expect(page.getByRole("heading", { name: /Sealed with your passkey/ })).toBeVisible();
+  await page.getByRole("button", { name: "Step 1 of 2: Save my rules" }).click();
+  await page.getByRole("button", { name: "Step 2 of 2: Give my agent permission" }).click();
+  await expect(page.getByRole("heading", { name: /Done. Your agent is ready/ })).toBeVisible();
   const creds = await passkey.credentials();
   expect(creds).toHaveLength(1);
   expect(creds[0]!.signCount).toBeGreaterThanOrEqual(2);
   // The publish transaction opens in our FISCO ledger decoder.
   await expect(page.locator('main a[href^="/proof/tx/fisco/0x"]')).toHaveCount(1);
 
-  await page.getByRole("button", { name: "Open your console" }).click();
+  await page.getByRole("button", { name: "Open my agent" }).click();
   await expect(page).toHaveURL(/\/app$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^Visitor [0-9A-F]{4}$/);
   await expect(page.getByText("Your passkey account")).toBeVisible();
@@ -51,12 +53,13 @@ test("visitor: create a passkey, read both messages, seal, act, revoke, seal aga
 
   // The same passkey seals a new mandate (same visitor id).
   await reseal.click();
-  await page.getByRole("button", { name: "Use the standard visitor mandate" }).click();
-  await page.getByRole("button", { name: "Sign both with your passkey" }).click();
-  await expect(page.getByRole("heading", { name: /Sealed with your passkey/ })).toBeVisible();
+  await page.getByRole("button", { name: "Skip and use simple ready-made rules" }).click();
+  await page.getByRole("button", { name: "Step 1 of 2: Save my rules" }).click();
+  await page.getByRole("button", { name: "Step 2 of 2: Give my agent permission" }).click();
+  await expect(page.getByRole("heading", { name: /Done. Your agent is ready/ })).toBeVisible();
   expect(await passkey.credentials()).toHaveLength(1);
 
-  await page.getByRole("button", { name: "Open your console" }).click();
+  await page.getByRole("button", { name: "Open my agent" }).click();
   await expect(page.getByText(/acts inside mandate v2/)).toBeVisible();
   await page.screenshot({ path: "test-results/screens/visitor-console-1440.png", fullPage: true });
   expect(errors).toEqual([]);
@@ -66,8 +69,8 @@ test("visitor: a dismissed passkey prompt creates nothing and says so", async ({
   const passkey = await addVirtualPasskey(context, page);
   await passkey.cdp.send("WebAuthn.setUserVerified", { authenticatorId: passkey.authenticatorId, isUserVerified: false });
   await page.goto("/start", { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Use the standard visitor mandate" }).click();
-  await expect(page.getByText(/The passkey prompt was dismissed\. Nothing was created or signed\./)).toBeVisible();
+  await page.getByRole("button", { name: "Skip and use simple ready-made rules" }).click();
+  await expect(page.getByText(/The fingerprint prompt was closed, so nothing was saved\./)).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("yinglong.visitor.v1"))).toBeNull();
 });
 
@@ -77,19 +80,20 @@ test("visitor: say, see, seal: own words compile to caveats, clamped and unmappe
   await page.getByLabel("Your rules, in plain English").fill(
     "Only Arena Cafe and Kowloon Food Mart. Food at most 1500 a day. Ask me above 25, never more than 300 in one payment. Keep 150. Also tip the barista sometimes.",
   );
-  await page.getByRole("button", { name: "See what the code enforces" }).click();
-  await expect(page.getByRole("heading", { name: "What the code will enforce" })).toBeVisible();
+  await page.getByRole("button", { name: "Check my rules" }).click();
+  await expect(page.getByRole("heading", { name: "These are the exact rules your agent will follow" })).toBeVisible();
   const decoded = page.getByRole("list", { name: "Decoded caveats, in order" });
   await expect(decoded.getByText("It may pay only Arena Cafe and Kowloon Food Mart (your PayeeBook).")).toBeVisible();
   await expect(page.getByText("Clamped").first()).toBeVisible();
   await expect(page.getByText("Not enforced").first()).toBeVisible();
-  await expect(page.getByText("preview: final hash depends on your new account")).toBeVisible();
+  await expect(page.getByText("Your rules fingerprint (it changes if any rule changes)")).toBeVisible();
   await page.getByRole("button", { name: "Edit" }).click();
   await expect(page.getByLabel("Your rules, in plain English")).toHaveValue(/Food at most 1500 a day/);
-  await page.getByRole("button", { name: "See what the code enforces" }).click();
-  await page.getByRole("button", { name: "Seal with my passkey" }).click();
-  await expect(page.getByRole("heading", { name: "The two messages your passkey signs" })).toBeVisible();
-  await page.getByRole("button", { name: "Sign both with your passkey" }).click();
-  await expect(page.getByRole("heading", { name: /Sealed with your passkey/ })).toBeVisible();
+  await page.getByRole("button", { name: "Check my rules" }).click();
+  await page.getByRole("button", { name: "Looks right: lock it with my fingerprint" }).click();
+  await expect(page.getByRole("heading", { name: "Confirm twice with your fingerprint" })).toBeVisible();
+  await page.getByRole("button", { name: "Step 1 of 2: Save my rules" }).click();
+  await page.getByRole("button", { name: "Step 2 of 2: Give my agent permission" }).click();
+  await expect(page.getByRole("heading", { name: /Done. Your agent is ready/ })).toBeVisible();
   expect(await passkey.credentials()).toHaveLength(1);
 });

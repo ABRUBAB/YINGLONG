@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-16T06:16:48.254Z",
+  "generatedAt": "2026-10-16T08:36:51.584Z",
   "timeline": {
-    "head": "2539b53",
-    "count": 73,
+    "head": "8812f4e",
+    "count": 77,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-16T11:59:18+06:00",
+    "last": "2026-10-16T13:52:00+06:00",
     "commits": [
       {
         "hash": "b9b6640",
@@ -515,6 +515,34 @@
         "hash": "2539b53",
         "at": "2026-10-16T11:59:18+06:00",
         "subject": "Say, see, seal for visitors: plain-language mandate drafts (closed schema, bounds, decoded back into English with a said-vs-enforced diff), sign-up and re-seal with the visitor's own rules",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "52cc438",
+        "at": "2026-10-16T13:28:20+06:00",
+        "subject": "ML: sentinel (mmBERT, fine-tuned; served on CPU with pinned hashes), intent models (Qwen3.5-2B, Qwen3-4B, Qwen3-1.7B LoRA), behaviour anomaly and cash-flow forecaster, with generated results; attack bench (300 attacks, 13 families, held-out family hash pinned before training)",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "40a5575",
+        "at": "2026-10-16T13:32:10+06:00",
+        "subject": "Site: full-bleed hero with the orbit framed from its projected size, mobile nav sheet within the viewport, smoother rendering (on-demand frames, adaptive DPR, CSS scroll timelines, content-visibility), new home sections (nine scales, same rules on two chains, proof wall, your own agent), richer About with a generated build timeline; inner pages restyled with insights, coverage, escrows, credentials, cash forecast, payroll and the say-see-seal sign-up",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "57aafb9",
+        "at": "2026-10-16T13:48:38+06:00",
+        "subject": "Video: ElevenLabs narration (master 4:40 and 60-second cut, varied 1-2 s breaks, pronunciation notes) and the cinematic shot plan",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "8812f4e",
+        "at": "2026-10-16T13:52:00+06:00",
+        "subject": "Base private-mandate record: received amounts and stored commitments re-derived from the chain (the first run read a lagging node); the script now waits for the head before reading",
         "track": "agent",
         "milestone": false
       }

@@ -31,7 +31,7 @@ export async function sentinel(text: string): Promise<SentinelResult> {
   if (url) {
     try {
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 4_000);
+      const timer = setTimeout(() => ctrl.abort(), Number(process.env.SENTINEL_TIMEOUT_MS ?? 8_000));
       const r = await fetch(`${url.replace(/\/$/, "")}/sentinel`, {
         method: "POST",
         signal: ctrl.signal,
@@ -40,11 +40,13 @@ export async function sentinel(text: string): Promise<SentinelResult> {
       });
       clearTimeout(timer);
       if (r.ok) {
-        const j = (await r.json()) as { score: number; label?: string; model_sha?: string; model?: string };
+        const j = (await r.json()) as { score: number; label?: string; threshold?: number; model_sha?: string; model?: string };
         const h = heuristicSentinel(text);
+        // The service applies the threshold chosen on validation data; use its label when it gives one.
+        const label = j.label === "injection" || j.label === "benign" ? j.label : j.score >= (j.threshold ?? 0.5) ? "injection" : "benign";
         return {
           score: j.score,
-          label: j.score >= 0.5 ? "injection" : "benign",
+          label,
           model: j.model ?? `M1 sentinel ${j.model_sha?.slice(0, 12) ?? ""}`.trim(),
           matched: h.matched,
         };
