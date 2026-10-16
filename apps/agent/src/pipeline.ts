@@ -456,8 +456,11 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   };
 
   // T2, and an "ask" that came only from AI escalation (a valid payment exists): the user decides with an
-  // explicit passkey approval. An ask caused by missing or ungrounded data has no payment to approve.
-  if ((decision === "needs_approval" || (decision === "ask" && groundIssues.length === 0 && !intent.ambiguities.length)) && execution && payment && assetDoc && payee && simulation) {
+  // explicit passkey approval. An ask caused by missing or ungrounded data has no payment to approve, and a
+  // redemption the ledger refuses for any reason other than the missing co-signature would still revert after
+  // approval, so it gets none.
+  const approvable = !!simulation && (simulation.ok || simulation.revert?.name === "CoSignRequired");
+  if ((decision === "needs_approval" || (decision === "ask" && groundIssues.length === 0 && !intent.ambiguities.length)) && execution && payment && assetDoc && payee && approvable) {
     p.approvalId = await createCosignApproval(ctx, st, p, execution);
   }
   if (decision === "refused" || decision === "ask") {

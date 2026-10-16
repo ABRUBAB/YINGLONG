@@ -52,8 +52,10 @@ function transactions() {
     const byLedger = (counts[r.ledger] ??= {});
     byLedger[r.receipt.outcome] = (byLedger[r.receipt.outcome] ?? 0) + 1;
   }
-  const latest = all
-    .filter((r) => r.receipt.txHash && !/^0x0{60}/.test(r.receipt.txHash))
+  const withTx = all.filter((r) => r.receipt.txHash && !/^0x0{60}/.test(r.receipt.txHash));
+  // Payments and refusals first: the timed pause and resume drills would otherwise fill the list.
+  const story = withTx.filter((r) => r.payment || r.revertError);
+  const latest = (story.length >= 12 ? story : [...withTx.filter((r) => !story.includes(r)), ...story])
     .slice(-12)
     .reverse()
     .map((r) => ({
