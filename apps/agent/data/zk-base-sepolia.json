@@ -1,0 +1,382 @@
+{
+  "label": "Live run with real transactions and real UltraHonk proofs. Test units (tHKD) only. Not audited.",
+  "ledger": "base-sepolia",
+  "rpcChainId": 84532,
+  "evmChainId": "84532",
+  "badge": "Base Sepolia (testnet)",
+  "runAt": "2026-10-16T05:48:08.314Z",
+  "durationMs": 32365,
+  "toolchain": {
+    "nargo": "1.0.0-rc.5",
+    "noirc": "1.0.0-rc.5+0f759ffe9176ffbbe7f67b159ac2c3202e0748a0",
+    "bb": "5.2.1",
+    "noir_js": "1.0.0-rc.5",
+    "bb.js": "5.2.1",
+    "installed": {
+      "noir_js": "1.0.0-rc.5",
+      "bb.js": "5.2.1"
+    },
+    "verifierSolc": "0.8.27+commit.40a35a09",
+    "projectSolc": "0.8.23",
+    "evmVersion": "london",
+    "foundry": "1.8.5"
+  },
+  "principal": {
+    "account": "0x61d66E35C556A7061EE6EF83A02E9242c3689240",
+    "did": "did:pkh:eip155:84532:0x61d66e35c556a7061ee6ef83a02e9242c3689240",
+    "signer": "scripted passkey (software P-256 key)"
+  },
+  "agent": {
+    "label": "guest-arena",
+    "wallet": "0x34d38756f7388193187C1Dda220b0E49C3d713c6",
+    "agentId": "2",
+    "attestTxs": [],
+    "note": "agent-ying already holds passport #1 bound to another principal on base-sepolia."
+  },
+  "mandate": {
+    "mandateHash": "0xaf335b2f3063b26632c04ac8ad203fb2abe2b3ce504bb1beea8edb7e617a68d6",
+    "delegationHash": "0x9cf4040d7244c0df6312ef1a72ab1e0ab955a4fee9e1b9080ad8ef8b40ac4e4e",
+    "commitment": "0x1b9548d90360dabc38b5f49bdd200f83e9dd9e8e07d6f0dac694d79d245afe0f",
+    "publishTx": "0x4e84ca0c60c92aefa660cc59808f40f4267dca43a15013bdc8b5684084a5bda8",
+    "retiredMandate": "0xfe0c202c93f2d833ad60d4f19b10b7c603996b37cc60647d28c3d2099e9a6156",
+    "caveats": [
+      {
+        "name": "AllowedTargetsEnforcer",
+        "enforcer": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f"
+      },
+      {
+        "name": "AllowedMethodsEnforcer",
+        "enforcer": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704"
+      },
+      {
+        "name": "ValueLteEnforcer",
+        "enforcer": "0x05282A658456a1444CE458d9F8bcb6D884E69f26"
+      },
+      {
+        "name": "ForbiddenTargetsEnforcer",
+        "enforcer": "0x28734131bF29Be297C59352C2b23c08932F315A8"
+      },
+      {
+        "name": "GlobalPauseEnforcer",
+        "enforcer": "0x8Bd87Eeca3FB1011421a2B8A3445426a23BedC85"
+      },
+      {
+        "name": "AgentLineageEnforcer",
+        "enforcer": "0xE42990C2308C71ea3c53907Bf312075028Fbb2E0"
+      },
+      {
+        "name": "MandateBindingEnforcer",
+        "enforcer": "0x39D289d8572F07a3f64F4E4d80208CE650766476"
+      },
+      {
+        "name": "ZKMandateEnforcer",
+        "enforcer": "0xf5175d7755c009702069c7eef85fc0c41bc8c423"
+      }
+    ],
+    "publicDocument": {
+      "kind": "yinglong.private-mandate/v1",
+      "ledger": "base-sepolia",
+      "chainId": 84532,
+      "principal": {
+        "account": "0x61d66E35C556A7061EE6EF83A02E9242c3689240",
+        "did": "did:pkh:eip155:84532:0x61d66e35c556a7061ee6ef83a02e9242c3689240"
+      },
+      "agent": {
+        "wallet": "0x34d38756f7388193187C1Dda220b0E49C3d713c6",
+        "agentId": "2"
+      },
+      "lineageId": "yinglong:zk:private-mandate",
+      "asset": {
+        "symbol": "tHKD",
+        "address": "0xA77e5C328A29b29dB6df21d0C479E0B01A53e558"
+      },
+      "methods": [
+        "transfer"
+      ],
+      "jurisdiction": "hk",
+      "validity": {
+        "from": 1792126060,
+        "until": 1823665660
+      },
+      "zk": {
+        "proofType": 1,
+        "circuit": "mandate_compliance",
+        "vkHash": "0x05c62f51284e760d87811fdcc9218c1ebd0b101695ceb6cf002e43c391a48494",
+        "router": "0x3f8f6975e51c638161ca1d88d89d878129d6e080",
+        "enforcer": "0xf5175d7755c009702069c7eef85fc0c41bc8c423",
+        "commitment": "0x1b9548d90360dabc38b5f49bdd200f83e9dd9e8e07d6f0dac694d79d245afe0f",
+        "statement": "Each payment proves in zero knowledge that the payee is in the hidden allowlist, the claimed time is not after the hidden expiry, and the running total stays within the hidden cap; the running total is carried as a hiding commitment."
+      },
+      "nonce": "0x2be237cd33e8689e82022eedda40eb31f484dd474bec290c6320c79742c01d74"
+    },
+    "sealedBy": "scripted passkey (software P-256 key)"
+  },
+  "demoDisclosure": {
+    "note": "Disclosed in this file for the demo narrative only. On-chain there is only the commitment; the salt, the expiry and the blindings are never written anywhere.",
+    "hiddenCap": "10000000000",
+    "hiddenAllowlist": [
+      {
+        "label": "Harbour Homes",
+        "address": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6"
+      },
+      {
+        "label": "HBU bursar",
+        "address": "0x81085F62863966c3c21ac5fAe866D36f8766980F"
+      },
+      {
+        "label": "Kowloon Food Mart",
+        "address": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc"
+      }
+    ]
+  },
+  "payments": [
+    {
+      "label": "rent deposit to Harbour Homes",
+      "payee": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6",
+      "amount": "4000000000",
+      "nonce": "1",
+      "claimedTime": "1792129670",
+      "proveMs": 2183,
+      "proofBytes": 7616,
+      "tx": "0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f",
+      "ok": true,
+      "gasUsed": "4117616",
+      "gasLimit": "5396901",
+      "block": "48180694",
+      "received": "0",
+      "oldRunningCommitment": "0x0b63a53787021a4a962a452c2921b3663aff1ffd8d5510540f8e659e782956f1",
+      "newRunningCommitment": "0x292bacfb86ea657b2eb815ce2029043a16e071126db40773d57d3a30b9f7301c",
+      "storedCommitmentMatches": false,
+      "explorer": "https://sepolia.basescan.org/tx/0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f"
+    },
+    {
+      "label": "course fee to the HBU bursar",
+      "payee": "0x81085F62863966c3c21ac5fAe866D36f8766980F",
+      "amount": "3500000000",
+      "nonce": "2",
+      "claimedTime": "1792129676",
+      "proveMs": 688,
+      "proofBytes": 7616,
+      "tx": "0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df",
+      "ok": true,
+      "gasUsed": "4117650",
+      "gasLimit": "5396946",
+      "block": "48180697",
+      "received": "0",
+      "oldRunningCommitment": "0x292bacfb86ea657b2eb815ce2029043a16e071126db40773d57d3a30b9f7301c",
+      "newRunningCommitment": "0x2c1a608838e7258d28932e2a315f1313630ef1c5764bb03e48c4419d5a62a251",
+      "storedCommitmentMatches": false,
+      "explorer": "https://sepolia.basescan.org/tx/0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df"
+    }
+  ],
+  "overCap": {
+    "label": "groceries at Kowloon Food Mart",
+    "payee": "0x2f8e5f6ee8ee79ac388b8c124a62f5489f4bfbbc",
+    "attemptedAmount": "3000000000",
+    "runningTotalBefore": "7500000000",
+    "proverRefusal": "payment would exceed the mandate cap: no proof exists",
+    "circuitRefusal": "Circuit execution failed: cap exceeded"
+  },
+  "forged": {
+    "description": "payment 2's proof re-used for the 3,000 tHKD over-cap transfer under nonce 3",
+    "simulation": "InvalidMandateProof()",
+    "tx": "0x918e11d3a659c4287d0d9ec231fd377156ebbf729186f51d989e9fb122342c29",
+    "ok": false,
+    "gasUsed": "841515",
+    "gasLimit": "12000000",
+    "block": "48180698",
+    "revert": "InvalidMandateProof()",
+    "explorer": "https://sepolia.basescan.org/tx/0x918e11d3a659c4287d0d9ec231fd377156ebbf729186f51d989e9fb122342c29"
+  },
+  "replayed": {
+    "description": "payment 2's redemption (same proof, same nonce) sent again",
+    "simulation": "NonceAlreadyUsed(2)",
+    "tx": "0x4a5a5115f7bbea8475bee569f9655976a783db55895dd16a4bcadf48d36f5a8e",
+    "ok": false,
+    "gasUsed": "375420",
+    "gasLimit": "12000000",
+    "block": "48180700",
+    "revert": "NonceAlreadyUsed(2)",
+    "explorer": "https://sepolia.basescan.org/tx/0x4a5a5115f7bbea8475bee569f9655976a783db55895dd16a4bcadf48d36f5a8e"
+  },
+  "finalRunningCommitment": "0x2c1a608838e7258d28932e2a315f1313630ef1c5764bb03e48c4419d5a62a251",
+  "steps": [
+    {
+      "step": "zk stack",
+      "ledger": "base-sepolia",
+      "router": "0x3f8f6975e51c638161ca1d88d89d878129d6e080",
+      "enforcer": "0xf5175d7755c009702069c7eef85fc0c41bc8c423",
+      "verifier": "0x281f32486d69fe6A5C38906430965C73238F55c6",
+      "evmChainId": "84532",
+      "rpcChainId": 84532
+    },
+    {
+      "step": "principal",
+      "ledger": "base-sepolia",
+      "account": "0x61d66E35C556A7061EE6EF83A02E9242c3689240",
+      "did": "did:pkh:eip155:84532:0x61d66e35c556a7061ee6ef83a02e9242c3689240",
+      "signer": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "passport",
+      "ledger": "base-sepolia",
+      "agent": "guest-arena",
+      "wallet": "0x34d38756f7388193187C1Dda220b0E49C3d713c6",
+      "agentId": "2",
+      "attestTxs": [],
+      "note": "agent-ying already holds passport #1 bound to another principal on base-sepolia."
+    },
+    {
+      "step": "seal",
+      "ledger": "base-sepolia",
+      "publishTx": "0x4e84ca0c60c92aefa660cc59808f40f4267dca43a15013bdc8b5684084a5bda8",
+      "retiredMandate": "0xfe0c202c93f2d833ad60d4f19b10b7c603996b37cc60647d28c3d2099e9a6156",
+      "mandateHash": "0xaf335b2f3063b26632c04ac8ad203fb2abe2b3ce504bb1beea8edb7e617a68d6",
+      "delegationHash": "0x9cf4040d7244c0df6312ef1a72ab1e0ab955a4fee9e1b9080ad8ef8b40ac4e4e",
+      "commitment": "0x1b9548d90360dabc38b5f49bdd200f83e9dd9e8e07d6f0dac694d79d245afe0f",
+      "caveats": [
+        "AllowedTargetsEnforcer",
+        "AllowedMethodsEnforcer",
+        "ValueLteEnforcer",
+        "ForbiddenTargetsEnforcer",
+        "GlobalPauseEnforcer",
+        "AgentLineageEnforcer",
+        "MandateBindingEnforcer",
+        "ZKMandateEnforcer"
+      ],
+      "sealedBy": "scripted passkey (software P-256 key)"
+    },
+    {
+      "step": "payment 1: rent deposit to Harbour Homes",
+      "ledger": "base-sepolia",
+      "label": "rent deposit to Harbour Homes",
+      "payee": "0x21D42c26Edb10418eA4A6FA3a6D7cc79dF6DB8d6",
+      "amount": "4000000000",
+      "nonce": "1",
+      "claimedTime": "1792129670",
+      "proveMs": 2183,
+      "proofBytes": 7616,
+      "tx": "0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f",
+      "ok": true,
+      "gasUsed": "4117616",
+      "gasLimit": "5396901",
+      "block": "48180694",
+      "received": "0",
+      "oldRunningCommitment": "0x0b63a53787021a4a962a452c2921b3663aff1ffd8d5510540f8e659e782956f1",
+      "newRunningCommitment": "0x292bacfb86ea657b2eb815ce2029043a16e071126db40773d57d3a30b9f7301c",
+      "storedCommitmentMatches": false,
+      "explorer": "https://sepolia.basescan.org/tx/0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f"
+    },
+    {
+      "step": "payment 2: course fee to the HBU bursar",
+      "ledger": "base-sepolia",
+      "label": "course fee to the HBU bursar",
+      "payee": "0x81085F62863966c3c21ac5fAe866D36f8766980F",
+      "amount": "3500000000",
+      "nonce": "2",
+      "claimedTime": "1792129676",
+      "proveMs": 688,
+      "proofBytes": 7616,
+      "tx": "0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df",
+      "ok": true,
+      "gasUsed": "4117650",
+      "gasLimit": "5396946",
+      "block": "48180697",
+      "received": "0",
+      "oldRunningCommitment": "0x292bacfb86ea657b2eb815ce2029043a16e071126db40773d57d3a30b9f7301c",
+      "newRunningCommitment": "0x2c1a608838e7258d28932e2a315f1313630ef1c5764bb03e48c4419d5a62a251",
+      "storedCommitmentMatches": false,
+      "explorer": "https://sepolia.basescan.org/tx/0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df"
+    },
+    {
+      "step": "over-cap: no proof exists",
+      "ledger": "base-sepolia",
+      "attempted": "3000000000",
+      "proverRefusal": "payment would exceed the mandate cap: no proof exists",
+      "circuitRefusal": "Circuit execution failed: cap exceeded"
+    },
+    {
+      "step": "forged proof reverted on-chain",
+      "ledger": "base-sepolia",
+      "description": "payment 2's proof re-used for the 3,000 tHKD over-cap transfer under nonce 3",
+      "simulation": "InvalidMandateProof()",
+      "tx": "0x918e11d3a659c4287d0d9ec231fd377156ebbf729186f51d989e9fb122342c29",
+      "ok": false,
+      "gasUsed": "841515",
+      "gasLimit": "12000000",
+      "block": "48180698",
+      "revert": "InvalidMandateProof()",
+      "explorer": "https://sepolia.basescan.org/tx/0x918e11d3a659c4287d0d9ec231fd377156ebbf729186f51d989e9fb122342c29"
+    },
+    {
+      "step": "replayed proof reverted on-chain",
+      "ledger": "base-sepolia",
+      "description": "payment 2's redemption (same proof, same nonce) sent again",
+      "simulation": "NonceAlreadyUsed(2)",
+      "tx": "0x4a5a5115f7bbea8475bee569f9655976a783db55895dd16a4bcadf48d36f5a8e",
+      "ok": false,
+      "gasUsed": "375420",
+      "gasLimit": "12000000",
+      "block": "48180700",
+      "revert": "NonceAlreadyUsed(2)",
+      "explorer": "https://sepolia.basescan.org/tx/0x4a5a5115f7bbea8475bee569f9655976a783db55895dd16a4bcadf48d36f5a8e"
+    }
+  ],
+  "supervisorView": {
+    "agentId": "2",
+    "agentWallet": "0x34d38756f7388193187C1Dda220b0E49C3d713c6",
+    "principal": "did:pkh:eip155:84532:0x61d66e35c556a7061ee6ef83a02e9242c3689240",
+    "ledger": "base-sepolia",
+    "commitment": "0x1b9548d90360dabc38b5f49bdd200f83e9dd9e8e07d6f0dac694d79d245afe0f",
+    "mandateHash": "0xaf335b2f3063b26632c04ac8ad203fb2abe2b3ce504bb1beea8edb7e617a68d6",
+    "delegationHash": "0x9cf4040d7244c0df6312ef1a72ab1e0ab955a4fee9e1b9080ad8ef8b40ac4e4e",
+    "runningCommitment": "0x2c1a608838e7258d28932e2a315f1313630ef1c5764bb03e48c4419d5a62a251",
+    "proofStatus": "verified on-chain: 2 payments accepted, over-cap payment unprovable, forged and replayed proofs rejected",
+    "verifierTx": {
+      "ledger": "base-sepolia",
+      "chainId": 84532,
+      "txHash": "0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df"
+    },
+    "verifier": {
+      "router": "0x3f8f6975e51c638161ca1d88d89d878129d6e080",
+      "enforcer": "0xf5175d7755c009702069c7eef85fc0c41bc8c423",
+      "honkVerifier": "0x281f32486d69fe6A5C38906430965C73238F55c6",
+      "vkHash": "0x05c62f51284e760d87811fdcc9218c1ebd0b101695ceb6cf002e43c391a48494",
+      "proofType": 1
+    },
+    "statements": [
+      {
+        "statement": "The mandate behind the commitment exists and the agent knows it (cap, payee allowlist, expiry hidden).",
+        "result": "proved",
+        "txHash": "0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f"
+      },
+      {
+        "statement": "Payment 1 (rent deposit to Harbour Homes): payee is in the hidden allowlist, claimed time is before the hidden expiry, running total stays within the hidden cap.",
+        "result": "proved and verified on-chain",
+        "amount": "4000000000",
+        "txHash": "0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f"
+      },
+      {
+        "statement": "Payment 2 (course fee to the HBU bursar): payee is in the hidden allowlist, claimed time is before the hidden expiry, running total stays within the hidden cap.",
+        "result": "proved and verified on-chain",
+        "amount": "3500000000",
+        "txHash": "0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df"
+      },
+      {
+        "statement": "A third payment of 3,000 tHKD would push the running total over the hidden cap.",
+        "result": "no proof exists (Circuit execution failed: cap exceeded)"
+      },
+      {
+        "statement": "A forged proof (payment 2's proof for the over-cap transfer) is rejected.",
+        "result": "InvalidMandateProof()",
+        "txHash": "0x918e11d3a659c4287d0d9ec231fd377156ebbf729186f51d989e9fb122342c29"
+      },
+      {
+        "statement": "A replayed proof (payment 2 resent) is rejected.",
+        "result": "NonceAlreadyUsed(2)",
+        "txHash": "0x4a5a5115f7bbea8475bee569f9655976a783db55895dd16a4bcadf48d36f5a8e"
+      }
+    ],
+    "note": "Amounts and payees of executed payments are public on the ledger; the cap, the rest of the allowlist, the expiry and the salt are not. Test units only."
+  }
+}

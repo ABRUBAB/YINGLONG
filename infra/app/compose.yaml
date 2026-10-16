@@ -71,7 +71,7 @@ services:
     command: ["npx", "tsx", "apps/indexer/src/main.ts"]
     environment:
       <<: *env
-      ANCHOR_LEDGERS: ${ANCHOR_LEDGERS:-fisco}
+      ANCHOR_LEDGERS: ${ANCHOR_LEDGERS:-fisco,base-sepolia}
       AGENT_API_URL: http://127.0.0.1:8787
       INDEXER_DATA_DIR: /data
       FISCO_PROXY_UPSTREAM: http://127.0.0.1:8549
