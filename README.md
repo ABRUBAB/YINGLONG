@@ -1,32 +1,157 @@
-<p align="center"><img src="docs/assets/yinglong-coin-512.png" width="112" alt="YINGLONG mark: a dragon inside a ring with a pearl"></p>
+<a href="https://app.yinglong-agent.tech">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/banner.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/banner-light.png">
+    <img src="docs/assets/readme/banner.png" width="100%" alt="YINGLONG: Always with you. Never beyond your mandate.">
+  </picture>
+</a>
 
-<h1 align="center">YINGLONG</h1>
-<p align="center"><b>Personal Agent Identity &amp; Mandated Finance</b><br><i>Always with you. Never beyond your mandate.</i></p>
+<p align="center">
+  <a href="https://github.com/ABRUBAB/YINGLONG/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/ABRUBAB/YINGLONG/ci.yml?branch=main&style=flat-square&label=CI&labelColor=0B0C0F"></a>
+  <a href="https://app.yinglong-agent.tech"><img alt="Live app" src="https://img.shields.io/website?url=https%3A%2F%2Fapp.yinglong-agent.tech&style=flat-square&label=live%20app&labelColor=0B0C0F&up_message=online&up_color=2E5C95&down_color=6A7280"></a>
+  <img alt="Topic F: Agent Wallet" src="https://img.shields.io/badge/Topic%20F-Agent%20Wallet-1E2228?style=flat-square&labelColor=0B0C0F">
+  <img alt="FISCO BCOS 3.17.1, team-run" src="https://img.shields.io/badge/FISCO%20BCOS%203.17.1-team--run-2E5C95?style=flat-square&labelColor=0B0C0F">
+  <img alt="Base Sepolia, testnet" src="https://img.shields.io/badge/Base%20Sepolia-testnet-7A5A10?style=flat-square&labelColor=0B0C0F">
+  <a href="LICENSE"><img alt="Licence: Apache-2.0" src="https://img.shields.io/badge/licence-Apache--2.0-353B45?style=flat-square&labelColor=0B0C0F"></a>
+</p>
 
-YINGLONG gives a person or a company a verifiable AI agent that can act on their money, but only as them, only inside the mandate they sealed, and always with proof. A mandate is a **digital power of attorney, enforced by code**: the user says the rules in plain language, YINGLONG compiles them into an ERC-7710 delegation whose caveat enforcers *are* the rules, the user seals it with a passkey (a company: 2 of 3 directors), and the **same enforcer bytecode** runs on a public chain and on a FISCO BCOS consortium chain. Every action, allowed or refused, leaves an accountability receipt anchored on the ledgers.
+<p align="center">
+  <a href="https://app.yinglong-agent.tech"><b>Live app</b></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://app.yinglong-agent.tech/start"><b>Sign up with your passkey</b></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://app.yinglong-agent.tech/challenge"><b>Judge's Challenge</b></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://app.yinglong-agent.tech/proof"><b>Proof</b></a>
+  &nbsp;&middot;&nbsp;
+  <a href="docs/JUDGES_GUIDE.md"><b>Judges' guide</b></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://api.yinglong-agent.tech/v1/health"><b>API</b></a>
+  &nbsp;&middot;&nbsp;
+  <a href="docs/deck/out/yinglong-deck.pdf"><b>Deck (PDF)</b></a>
+  <br>
+  <sub>60-second video: <!-- gen:links.video_60s -->not yet measured<!-- /gen --></sub>
+</p>
 
-Entry for the **2026 Shenzhen International FinTech Competition, International Track, Topic F (Agent Wallet)**, proven through two deep scenarios on one engine: a cross-border student in Hong Kong and a Shenzhen SME treasury with its Hong Kong subsidiary.
+---
 
-| Try it | |
-|---|---|
-| Live app | https://app.yinglong-agent.tech |
-| Judge's Challenge (attack the agent from your phone) | https://app.yinglong-agent.tech/challenge |
-| Agent API | https://api.yinglong-agent.tech/v1/health |
-| FISCO BCOS read-only RPC (regulator node) | `POST https://api.yinglong-agent.tech/rpc/fisco` |
-| One-page proof | [PROOF.md](PROOF.md) |
-| Judges' guide (what to click, what is simulated) | [docs/JUDGES_GUIDE.md](docs/JUDGES_GUIDE.md) |
+## What it is
 
-## Verify it yourself in one command
+**A verifiable AI agent that acts on your money only as you, only inside the mandate you sealed, and always with proof.**
+A mandate is a digital power of attorney enforced by code: you say the rules in plain language, YINGLONG compiles them into an ERC-7710 delegation whose caveat enforcers *are* the rules, and you seal it with a passkey (a company: 2 of 3 directors).
+The same caveat bytecode runs on a local EVM test chain and on our team-run FISCO BCOS consortium chain, and anyone can verify a mandate with one command; the public-testnet deployment is pending.
 
-An independent Python implementation decodes a sealed mandate back into English, recomputes its delegation hash, checks that the published caveats are exactly the ones enforced, checks every enforcer's code hash and draws the Hash Ring:
+<sub>Entry for the 2026 Shenzhen International FinTech Competition, International Track, **Topic F (Agent Wallet)**.</sub>
 
-```bash
-uvx --from 'git+https://github.com/ABRUBAB/YINGLONG#subdirectory=tools/verify-py' yinglong verify nadia --chain anvil --offline
+<table>
+  <tr>
+    <td align="center" width="25%"><h3><!-- gen:tests.contracts -->93<!-- /gen --></h3><sub>Foundry contract tests</sub></td>
+    <td align="center" width="25%"><h3><!-- gen:tests.py -->105<!-- /gen --></h3><sub>Python verifier tests</sub></td>
+    <td align="center" width="25%"><h3><!-- gen:tests.ts -->75<!-- /gen --></h3><sub>TypeScript tests</sub></td>
+    <td align="center" width="25%"><h3><!-- gen:chain.bytecode.equal -->39<!-- /gen --> / <!-- gen:chain.bytecode.total -->46<!-- /gen --></h3><sub>contracts with identical bytecode<br>(<!-- gen:chain.bytecode.pair -->Anvil vs FISCO BCOS<!-- /gen -->)</sub></td>
+  </tr>
+</table>
+
+<sub>Every number on this page is generated by <code>apps/agent/scripts/finalize.ts</code> from JSON produced by the code. Nothing is typed by hand.</sub>
+
+## Try it in 60 seconds
+
+1. **Open the live app** at [app.yinglong-agent.tech](https://app.yinglong-agent.tech) and look at Nadia's console: every row carries a state word, a tier and, when it is on chain, a hash with its ledger badge.
+2. **Sign up with your passkey** at [`/start`](https://app.yinglong-agent.tech/start). No password: your device's WebAuthn passkey seals your own mandate on the team-run FISCO BCOS chain, in test units.
+3. **Ask Ying to pay** inside the mandate. Code and the chain decide; the AI only proposes and explains.
+4. **Attack it** on the [Judge's Challenge](https://app.yinglong-agent.tech/challenge): type any attack, or switch on "bypass" to push a raw redemption straight to the chain and get the revert hash back.
+5. **Check the proof** at [`/proof`](https://app.yinglong-agent.tech/proof), or decode any FISCO BCOS transaction at `https://api.yinglong-agent.tech/v1/tx/fisco/<hash>`.
+
+## The interface
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech"><img src="docs/assets/readme/screen-home.webp" width="100%" alt="Home: the Mandate Orbit hero"></a>
+      <br><sub><b>Home.</b> The Mandate Orbit: the ring is the mandate you drew, the pearl is the agent's on-chain identity.</sub>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech/app"><img src="docs/assets/readme/screen-console.webp" width="100%" alt="Console: activity, authority panel and budgets"></a>
+      <br><sub><b>Console.</b> Nadia's agent: activity by tier, the Authority panel with the Hash Ring, live budgets and one-tap Pause.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech/treasury"><img src="docs/assets/readme/screen-treasury.webp" width="100%" alt="Treasury: lanes, director queue and instruction ledger"></a>
+      <br><sub><b>Treasury.</b> Lotus Lane (fictional): budget lanes, the 2-of-3 director queue and the coin-free instruction ledger.</sub>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech/city"><img src="docs/assets/readme/screen-city.webp" width="100%" alt="Agent City: two rails, one engine"></a>
+      <br><sub><b>Agent City.</b> Shenzhen and Hong Kong rails on one engine; every principal, agent and payment is read live from the agent service.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech/proof"><img src="docs/assets/readme/screen-proof.webp" width="100%" alt="Proof Center"></a>
+      <br><sub><b>Proof.</b> The Proof Center: every number carries its source, every hash opens in the decoder.</sub>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech/challenge"><img src="docs/assets/readme/screen-challenge.webp" width="100%" alt="Judge's Challenge"></a>
+      <br><sub><b>Judge's Challenge.</b> Scan for a guest mandate and attack the agent; the board shows which scale stopped each attempt.</sub>
+    </td>
+  </tr>
+</table>
+
+## How it works
+
+```mermaid
+flowchart LR
+  subgraph Principal
+    U[User or directors]
+  end
+  subgraph Mandate
+    SEAL[Mandate Studio + compiler]
+  end
+  subgraph Agent
+    REQ[Request, invoice, email, quote] --> SCALES[Nine scales: normalise, sentinel, quarantine, ground, policy, counterparty, simulate, anomaly, chain]
+    SCALES -->|act / ask you / refuse| SIGNER[Isolated signer]
+  end
+  subgraph Ledgers
+    BASE[(Public ledger)]
+    FISCO[(FISCO BCOS consortium ledger, team-run, + regulator node)]
+  end
+  U -->|say, see, seal| SEAL
+  SEAL -->|ERC-7710 delegation, caveats = rules| BASE
+  SEAL -->|same enforcer bytecode| FISCO
+  SIGNER --> BASE & FISCO
+  BASE & FISCO --> VEIN[Receipts, Merkle anchors, supervisor view]
 ```
 
-Against the live consortium ledger (needs the read-only RPC above): `yinglong verify <mandateHash> --chain fisco --rpc https://api.yinglong-agent.tech/rpc/fisco`. Any transaction: `yinglong verify-tx <hash> --chain fisco`.
+### The five pillars
 
-## Evidence (generated, never typed)
+| | Pillar | What it guarantees |
+|:---:|---|---|
+| <img src="docs/assets/readme/pillar-pearl.svg" width="22" alt=""> | **Pearl**: trusted identity | An agent passport binds the agent wallet to the person's or company's DID, provenance hashes and issuer attestations. A self-registered agent with no trusted attestation (our rogue agent, Mirage) is refused by the chain. |
+| <img src="docs/assets/readme/pillar-seal.svg" width="22" alt=""> | **Seal**: controlled authority | Tiers T0 to T4 plus "ask". T1 acts inside the mandate; T2 needs the user's passkey (checked on-chain through ERC-1271); T3 only the user or the board; T4 is refused by deterministic rules and reverted with a typed error. **The AI can only raise a tier, never lower it.** |
+| <img src="docs/assets/readme/pillar-scales.svg" width="22" alt=""> | **Scales**: defended execution | The privileged planner never sees untrusted text; quarantined readers return a closed schema; the payee is an enum of the user's payee book, so the model cannot emit an address at all. |
+| <img src="docs/assets/readme/pillar-vein.svg" width="22" alt=""> | **Vein**: traceable evidence | EIP-712 receipts, hash-chained and Merkle-anchored on the ledgers, checkable by the team-run regulator node. |
+| <img src="docs/assets/readme/pillar-gate.svg" width="22" alt=""> | **Gate**: settlement by jurisdiction | The jurisdiction profile decides the rail. Under the mainland profile only coin-free conditional payment instructions are possible; an e-CNY-style simulator plays the operator bank. |
+
+### Two scenarios, one engine
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <b>Scenario 1: a cross-border student in Hong Kong</b><br><br>
+      Nadia (fictional) gives her agent Ying a mandate for rent, food and tuition in test units. Ying pays inside the caps, asks her passkey for anything unusual, and the chain reverts a look-alike payee or an over-budget payment with a typed error.<br><br>
+      <a href="https://app.yinglong-agent.tech/app">Open Nadia's console</a>
+    </td>
+    <td width="50%" valign="top">
+      <b>Scenario 2: a Shenzhen SME treasury and its Hong Kong subsidiary</b><br><br>
+      Lotus Lane Trading (fictional) runs a treasurer agent inside budget lanes sealed by 2 of 3 directors, on the coin-free rail in Shenzhen; the same agent identity is re-sealed for Hong Kong with no code change.<br><br>
+      <a href="https://app.yinglong-agent.tech/treasury">Open the treasury</a>
+    </td>
+  </tr>
+</table>
+
+## Evidence
+
+Generated, never typed. One page: [PROOF.md](PROOF.md).
 
 <!-- gen:proof.table -->
 | What it proves | Ledger | Transaction |
@@ -56,62 +181,80 @@ Against the live consortium ledger (needs the read-only RPC above): `yinglong ve
 
 Full table: [docs/EXECUTION_EVIDENCE.md](docs/EXECUTION_EVIDENCE.md). Contracts and tests: <!-- gen:tests.contracts -->93<!-- /gen --> Foundry tests (including 59 with real zero-knowledge proofs), <!-- gen:tests.py -->105<!-- /gen --> Python verifier tests. Bytecode equality across ledgers: <!-- gen:chain.bytecode.equal -->39<!-- /gen --> of <!-- gen:chain.bytecode.total -->46<!-- /gen --> deployed contracts identical (<!-- gen:chain.bytecode.pair -->Anvil vs FISCO BCOS<!-- /gen -->).
 
-## How it works
+## Verify it yourself
 
-```mermaid
-flowchart LR
-  U[User or directors] -->|say, see, seal| SEAL[Mandate Studio + compiler]
-  SEAL -->|ERC-7710 delegation, caveats = rules| BASE[(Public ledger)]
-  SEAL -->|same enforcer bytecode| FISCO[(FISCO BCOS consortium ledger + regulator node)]
-  REQ[Request, invoice, email, quote] --> SCALES[Nine scales: normalise, sentinel, quarantine, ground, policy, counterparty, simulate, anomaly, chain]
-  SCALES -->|act / ask you / refuse| SIGNER[Isolated signer]
-  SIGNER --> BASE & FISCO
-  BASE & FISCO --> VEIN[Receipts, Merkle anchors both ways, supervisor view]
-```
-
-- **Pearl (trusted identity):** an agent passport binds the agent wallet to the person's or company's DID, to provenance hashes and to issuer attestations ("dual authorisation"). A self-registered agent with no trusted attestation (our rogue agent, Mirage) is refused by the chain.
-- **Seal (controlled authority):** tiers T0 to T4 plus "ask", mapped to the three decision classes of China's 2026 agent guidance. T1 inside the mandate; T2 needs the user's passkey (checked on-chain through ERC-1271); T3 only the user or the board; T4 refused by deterministic rules and reverted by the chain with a typed error. **The AI can only raise a tier, never lower it.**
-- **Scales (defended execution):** a privileged planner never sees untrusted text; quarantined readers return a closed schema; the payee is an enum of the user's payee book, so the model cannot emit an address at all.
-- **Vein (traceable evidence):** EIP-712 receipts, hash-chained, Merkle-anchored on both ledgers, checkable by the regulator node.
-- **Gate (compliant settlement):** the jurisdiction profile decides the rail; under the mainland profile only coin-free conditional payment instructions are possible (an e-CNY-style simulator plays the operator bank).
-
-Details: [docs/TECHNICAL.md](docs/TECHNICAL.md) · [docs/ENFORCERS.md](docs/ENFORCERS.md) · [docs/API.md](docs/API.md) · [docs/SECURITY_SELF_ASSESSMENT.md](docs/SECURITY_SELF_ASSESSMENT.md) · [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) · [docs/COMPLIANCE_MATRIX.md](docs/COMPLIANCE_MATRIX.md) · [docs/PIA.md](docs/PIA.md) · [docs/INCIDENT_RESPONSE.md](docs/INCIDENT_RESPONSE.md) · [docs/CLAIMS.md](docs/CLAIMS.md)
-
-## Run it locally
-
-Requirements: Node 22+, pnpm 12, Foundry 1.8.5, Python 3.11+ with uv.
+An independent Python implementation decodes a sealed mandate back into English, recomputes its delegation hash, checks that the published caveats are exactly the ones enforced, checks every enforcer's code hash and draws the Hash Ring:
 
 ```bash
-git clone --recurse-submodules https://github.com/ABRUBAB/YINGLONG && cd YINGLONG
-pnpm install
-cd contracts && forge test && cd ..                 # 89+ contract tests incl. real ZK proofs
-anvil --port 8645 &                                  # local bench chain
-node scripts/deploy.mjs anvil --rpc http://127.0.0.1:8645
-npx tsx apps/agent/scripts/e2e.ts anvil             # the student scenario end to end
+uvx --from 'git+https://github.com/ABRUBAB/YINGLONG#subdirectory=tools/verify-py' yinglong verify nadia --chain anvil --offline
 ```
 
-Testnet keys are generated outside the repository (`../.secrets/testnet-keys.json`); see `docs/TECHNICAL.md`.
+Against the live consortium ledger (read-only RPC `POST https://api.yinglong-agent.tech/rpc/fisco`):
 
-## Repository
+```bash
+yinglong verify <mandateHash> --chain fisco --rpc https://api.yinglong-agent.tech/rpc/fisco
+yinglong verify-tx <hash> --chain fisco --rpc https://api.yinglong-agent.tech/rpc/fisco
+```
+
+## Under the hood
+
+<details>
+<summary><b>Repository map</b></summary>
+<br>
 
 | Path | What |
 |---|---|
-| `contracts/` | Foundry: registries, 13 custom caveat enforcers + ZK private-mandate enforcer, rails, tests |
+| `contracts/` | Foundry: registries, custom caveat enforcers + ZK private-mandate enforcer, rails, tests |
 | `circuits/` | Noir circuit and UltraHonk verifier for the stateful private mandate |
 | `packages/mandate` | Mandate schema, compiler, decompiler, round-trip verification, Hash Ring |
 | `packages/sdk`, `packages/provenance` | Ledger profiles, ABIs, accounts and user operations; tagged provenance |
 | `apps/agent` | Agent runtime: the nine scales, intent model, receipts, API |
 | `apps/signer` | Isolated signer with its own guard |
 | `apps/services`, `apps/ecny-sim`, `apps/indexer` | Agent City service agents (x402), e-CNY-style simulator, anchoring and breaker |
-| `apps/web` | The interface (ORBIT design system) |
+| `apps/web` | The interface (ORBIT design system, [docs/DESIGN.md](docs/DESIGN.md)) |
 | `tools/verify-py` | `yinglong verify`, the independent Python verifier |
 | `ml/`, `bench/` | Injection sentinel, intent model, YINGLONG-Bench |
 | `infra/` | FISCO BCOS chain, edge, application stack |
 
+Read more: [Technical](docs/TECHNICAL.md) &middot; [Enforcers](docs/ENFORCERS.md) &middot; [API](docs/API.md) &middot; [Security self-assessment](docs/SECURITY_SELF_ASSESSMENT.md) &middot; [Threat model](docs/THREAT_MODEL.md) &middot; [Compliance matrix](docs/COMPLIANCE_MATRIX.md) &middot; [PIA](docs/PIA.md) &middot; [Incident response](docs/INCIDENT_RESPONSE.md) &middot; [Claims register](docs/CLAIMS.md)
+
+</details>
+
+<details>
+<summary><b>Run it locally</b></summary>
+<br>
+
+Requirements: Node 22+, pnpm 12, Foundry 1.8.5, Python 3.11+ with uv.
+
+```bash
+git clone --recurse-submodules https://github.com/ABRUBAB/YINGLONG && cd YINGLONG
+pnpm install
+cd contracts && forge test && cd ..                 # contract tests, including real ZK proofs
+anvil --port 8645 &                                  # local bench chain
+node scripts/deploy.mjs anvil --rpc http://127.0.0.1:8645
+npx tsx apps/agent/scripts/e2e.ts anvil             # the student scenario end to end
+```
+
+Testnet keys are generated outside the repository (`../.secrets/testnet-keys.json`); see [docs/TECHNICAL.md](docs/TECHNICAL.md).
+
+</details>
+
 ## Honesty card
 
-Test units only, no monetary value. Public testnet and a team-run FISCO BCOS chain. e-CNY-style simulator, not the PBoC sandbox and not connected to any bank. No bank partnership, no licence, no third-party audit, not production-ready. Automated runs sign with scripted passkeys (software P-256 keys) and are labelled as such; the app uses real WebAuthn passkeys.
+> [!IMPORTANT]
+> **Test units only, no monetary value.** Public testnet and a team-run FISCO BCOS chain (the regulator node is a team-run observer). e-CNY-style simulator, not the PBoC sandbox and not connected to any bank. No bank partnership, no licence, no third-party audit, not production-ready. Every person and company in the scenarios is fictional.
+
+> [!NOTE]
+> The app uses real WebAuthn passkeys; automated runs sign with scripted passkeys (software P-256 keys) and their receipts say so. Base Sepolia status: <!-- gen:deploy.base.status -->rehearsed end to end on a local fork of Base Sepolia; live deployment pending testnet ETH<!-- /gen -->. What is real and what is simulated, item by item: [docs/JUDGES_GUIDE.md](docs/JUDGES_GUIDE.md#4-what-is-real-what-is-simulated).
 
 ---
 
-<p align="center">A Shadow Chaser innovation.</p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/signature-lockup-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/signature-lockup-light.svg">
+    <img src="docs/assets/readme/signature-lockup-light.svg" height="22" alt="A Shadow Chaser innovation">
+  </picture>
+  <br><br>
+  <sub>Built by team Shadow Chaser for the 2026 Shenzhen International FinTech Competition. Licensed under <a href="LICENSE">Apache-2.0</a>.</sub>
+</p>
