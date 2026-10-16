@@ -1,0 +1,1 @@
+FOUNDRY_DYNAMIC_TEST_LINKING=false halmos --root contracts --match-contract '^Sym' --function check_ --loop 4 --solver-timeout-assertion 300000 --json-output contracts/reports/halmos.raw.json   (cwd: repository root; dynamic test linking is disabled because Halmos cannot execute the vm.deployCode calls it generates)

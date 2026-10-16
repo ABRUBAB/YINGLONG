@@ -1,0 +1,1 @@
+forge coverage --report summary --report lcov --report-file reports/lcov.info > reports/coverage.summary.txt   (cwd: contracts/; no --ir-minimum needed)

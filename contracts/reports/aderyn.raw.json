@@ -1,0 +1,1059 @@
+{
+  "files_summary": {
+    "total_source_units": 34,
+    "total_sloc": 2150
+  },
+  "files_details": {
+    "files_details": [
+      {
+        "file_path": "src\\enforcers\\AgentLineageEnforcer.sol",
+        "n_sloc": 35
+      },
+      {
+        "file_path": "src\\enforcers\\CategoryBudgetEnforcer.sol",
+        "n_sloc": 86
+      },
+      {
+        "file_path": "src\\enforcers\\CoSignEnforcer.sol",
+        "n_sloc": 90
+      },
+      {
+        "file_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+        "n_sloc": 38
+      },
+      {
+        "file_path": "src\\enforcers\\GlobalPauseEnforcer.sol",
+        "n_sloc": 33
+      },
+      {
+        "file_path": "src\\enforcers\\JurisdictionEnforcer.sol",
+        "n_sloc": 50
+      },
+      {
+        "file_path": "src\\enforcers\\MandateBindingEnforcer.sol",
+        "n_sloc": 49
+      },
+      {
+        "file_path": "src\\enforcers\\ReputationGateEnforcer.sol",
+        "n_sloc": 49
+      },
+      {
+        "file_path": "src\\enforcers\\ReserveFloorEnforcer.sol",
+        "n_sloc": 28
+      },
+      {
+        "file_path": "src\\enforcers\\SuitabilityEnforcer.sol",
+        "n_sloc": 35
+      },
+      {
+        "file_path": "src\\enforcers\\VelocityEnforcer.sol",
+        "n_sloc": 49
+      },
+      {
+        "file_path": "src\\enforcers\\VerifiedPayeeEnforcer.sol",
+        "n_sloc": 45
+      },
+      {
+        "file_path": "src\\enforcers\\VetoTimelockEnforcer.sol",
+        "n_sloc": 100
+      },
+      {
+        "file_path": "src\\enforcers\\YinglongEnforcer.sol",
+        "n_sloc": 12
+      },
+      {
+        "file_path": "src\\interfaces\\IYinglongViews.sol",
+        "n_sloc": 24
+      },
+      {
+        "file_path": "src\\rails\\ConditionalPaymentInstructions.sol",
+        "n_sloc": 122
+      },
+      {
+        "file_path": "src\\rails\\ProductRegistry.sol",
+        "n_sloc": 37
+      },
+      {
+        "file_path": "src\\rails\\ProtectedPayment.sol",
+        "n_sloc": 90
+      },
+      {
+        "file_path": "src\\rails\\SignedQuoteSettlement.sol",
+        "n_sloc": 74
+      },
+      {
+        "file_path": "src\\rails\\TestMoneyMarketFund.sol",
+        "n_sloc": 35
+      },
+      {
+        "file_path": "src\\rails\\TestUnits.sol",
+        "n_sloc": 82
+      },
+      {
+        "file_path": "src\\registries\\AccountabilityLedger.sol",
+        "n_sloc": 114
+      },
+      {
+        "file_path": "src\\registries\\KillSwitchRegistry.sol",
+        "n_sloc": 114
+      },
+      {
+        "file_path": "src\\registries\\MandateRegistry.sol",
+        "n_sloc": 179
+      },
+      {
+        "file_path": "src\\registries\\PayeeBook.sol",
+        "n_sloc": 47
+      },
+      {
+        "file_path": "src\\registries\\YinglongPassportRegistry.sol",
+        "n_sloc": 213
+      },
+      {
+        "file_path": "src\\utils\\Categories.sol",
+        "n_sloc": 13
+      },
+      {
+        "file_path": "src\\utils\\Errors.sol",
+        "n_sloc": 29
+      },
+      {
+        "file_path": "src\\utils\\YinglongCreate2Deployer.sol",
+        "n_sloc": 16
+      },
+      {
+        "file_path": "src\\utils\\YinglongEIP712.sol",
+        "n_sloc": 28
+      },
+      {
+        "file_path": "src\\zk\\IZKVerifierRouter.sol",
+        "n_sloc": 8
+      },
+      {
+        "file_path": "src\\zk\\ZKErrors.sol",
+        "n_sloc": 7
+      },
+      {
+        "file_path": "src\\zk\\ZKMandateEnforcer.sol",
+        "n_sloc": 181
+      },
+      {
+        "file_path": "src\\zk\\ZKVerifierRouter.sol",
+        "n_sloc": 38
+      }
+    ]
+  },
+  "issue_count": {
+    "high": 2,
+    "low": 12
+  },
+  "high_issues": {
+    "issues": [
+      {
+        "title": "ETH transferred without address checks",
+        "description": "Consider introducing checks for `msg.sender` to ensure the recipient of the money is as intended.",
+        "detector_name": "eth-send-unchecked-address",
+        "instances": [
+          {
+            "contract_path": "src\\rails\\ProtectedPayment.sol",
+            "line_no": 97,
+            "src": "3776:6",
+            "src_char": "3776:6"
+          },
+          {
+            "contract_path": "src\\rails\\SignedQuoteSettlement.sol",
+            "line_no": 54,
+            "src": "2606:16",
+            "src_char": "2606:16"
+          },
+          {
+            "contract_path": "src\\rails\\SignedQuoteSettlement.sol",
+            "line_no": 60,
+            "src": "2889:17",
+            "src_char": "2889:17"
+          }
+        ]
+      },
+      {
+        "title": "Reentrancy: State change after external call",
+        "description": "Changing state after an external call can lead to re-entrancy attacks.Use the checks-effects-interactions pattern to avoid this issue.",
+        "detector_name": "reentrancy-state-change",
+        "instances": [
+          {
+            "contract_path": "src\\enforcers\\CategoryBudgetEnforcer.sol",
+            "line_no": 89,
+            "src": "3638:98",
+            "src_char": "3638:98",
+            "hint": "State is changed at: `spent[key_] = newSpent_`"
+          }
+        ]
+      }
+    ]
+  },
+  "low_issues": {
+    "issues": [
+      {
+        "title": "Costly operations inside loop",
+        "description": "Invoking `SSTORE` operations in loops may waste gas. Use a local variable to hold the loop computation result.",
+        "detector_name": "costly-loop",
+        "instances": [
+          {
+            "contract_path": "src\\registries\\PayeeBook.sol",
+            "line_no": 41,
+            "src": "1790:120",
+            "src_char": "1790:120"
+          }
+        ]
+      },
+      {
+        "title": "Literal Instead of Constant",
+        "description": "Define and use `constant` variables instead of using literals. If the same constant literal value is used multiple times, create a constant state variable and reference it throughout the contract.",
+        "detector_name": "literal-instead-of-constant",
+        "instances": [
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 20,
+            "src": "1149:2",
+            "src_char": "1149:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 21,
+            "src": "1218:2",
+            "src_char": "1218:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 24,
+            "src": "1356:2",
+            "src_char": "1356:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 24,
+            "src": "1369:2",
+            "src_char": "1369:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 42,
+            "src": "1724:2",
+            "src_char": "1724:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 45,
+            "src": "1951:2",
+            "src_char": "1951:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 47,
+            "src": "2048:2",
+            "src_char": "2048:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 47,
+            "src": "2061:2",
+            "src_char": "2061:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\MandateBindingEnforcer.sol",
+            "line_no": 32,
+            "src": "1526:2",
+            "src_char": "1526:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\MandateBindingEnforcer.sol",
+            "line_no": 56,
+            "src": "2412:2",
+            "src_char": "2412:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ReputationGateEnforcer.sol",
+            "line_no": 33,
+            "src": "1708:2",
+            "src_char": "1708:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ReputationGateEnforcer.sol",
+            "line_no": 60,
+            "src": "2689:2",
+            "src_char": "2689:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ReputationGateEnforcer.sol",
+            "line_no": 60,
+            "src": "2703:2",
+            "src_char": "2703:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ReputationGateEnforcer.sol",
+            "line_no": 61,
+            "src": "2775:2",
+            "src_char": "2775:2"
+          },
+          {
+            "contract_path": "src\\enforcers\\ReputationGateEnforcer.sol",
+            "line_no": 61,
+            "src": "2789:2",
+            "src_char": "2789:2"
+          },
+          {
+            "contract_path": "src\\rails\\TestMoneyMarketFund.sol",
+            "line_no": 40,
+            "src": "1724:2",
+            "src_char": "1724:2"
+          },
+          {
+            "contract_path": "src\\rails\\TestMoneyMarketFund.sol",
+            "line_no": 40,
+            "src": "1748:2",
+            "src_char": "1748:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 145,
+            "src": "6959:2",
+            "src_char": "6959:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 146,
+            "src": "7041:2",
+            "src_char": "7041:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 147,
+            "src": "7075:3",
+            "src_char": "7075:3"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 148,
+            "src": "7172:2",
+            "src_char": "7172:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 148,
+            "src": "7175:2",
+            "src_char": "7175:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 206,
+            "src": "9393:3",
+            "src_char": "9393:3"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 241,
+            "src": "10979:1",
+            "src_char": "10979:1"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 241,
+            "src": "11002:1",
+            "src_char": "11002:1"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 242,
+            "src": "11086:2",
+            "src_char": "11086:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 243,
+            "src": "11185:1",
+            "src_char": "11185:1"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 243,
+            "src": "11187:2",
+            "src_char": "11187:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 244,
+            "src": "11220:3",
+            "src_char": "11220:3"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 245,
+            "src": "11314:2",
+            "src_char": "11314:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 245,
+            "src": "11317:2",
+            "src_char": "11317:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 259,
+            "src": "11967:2",
+            "src_char": "11967:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 260,
+            "src": "12020:2",
+            "src_char": "12020:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 260,
+            "src": "12023:2",
+            "src_char": "12023:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 261,
+            "src": "12066:2",
+            "src_char": "12066:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 261,
+            "src": "12069:2",
+            "src_char": "12069:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 262,
+            "src": "12123:2",
+            "src_char": "12123:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 262,
+            "src": "12126:3",
+            "src_char": "12126:3"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 263,
+            "src": "12179:3",
+            "src_char": "12179:3"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 263,
+            "src": "12183:3",
+            "src_char": "12183:3"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 266,
+            "src": "12353:2",
+            "src_char": "12353:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 266,
+            "src": "12368:2",
+            "src_char": "12368:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKVerifierRouter.sol",
+            "line_no": 51,
+            "src": "2560:2",
+            "src_char": "2560:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKVerifierRouter.sol",
+            "line_no": 53,
+            "src": "2663:2",
+            "src_char": "2663:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKVerifierRouter.sol",
+            "line_no": 56,
+            "src": "2808:2",
+            "src_char": "2808:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKVerifierRouter.sol",
+            "line_no": 56,
+            "src": "2821:2",
+            "src_char": "2821:2"
+          },
+          {
+            "contract_path": "src\\zk\\ZKVerifierRouter.sol",
+            "line_no": 62,
+            "src": "3185:2",
+            "src_char": "3185:2"
+          }
+        ]
+      },
+      {
+        "title": "Local Variable Shadows State Variable",
+        "description": "Rename the local variable that shadows another state variable.",
+        "detector_name": "local-variable-shadowing",
+        "instances": [
+          {
+            "contract_path": "src\\rails\\TestMoneyMarketFund.sol",
+            "line_no": 25,
+            "src": "1171:5",
+            "src_char": "1171:5"
+          },
+          {
+            "contract_path": "src\\rails\\TestMoneyMarketFund.sol",
+            "line_no": 25,
+            "src": "1192:7",
+            "src_char": "1192:7"
+          }
+        ]
+      },
+      {
+        "title": "Missing Inheritance",
+        "description": "There is an interface / abstract contract that is potentially missing (not included in) the inheritance of this contract.",
+        "detector_name": "missing-inheritance",
+        "instances": [
+          {
+            "contract_path": "src\\rails\\ConditionalPaymentInstructions.sol",
+            "line_no": 14,
+            "src": "836:30",
+            "src_char": "836:30",
+            "hint": "Is this contract supposed to implement an interface? Consider extending one of the following: IRailInfo"
+          },
+          {
+            "contract_path": "src\\rails\\ProductRegistry.sol",
+            "line_no": 10,
+            "src": "443:15",
+            "src_char": "443:15",
+            "hint": "Is this contract supposed to implement an interface? Consider extending one of the following: IProductRegistryView"
+          },
+          {
+            "contract_path": "src\\registries\\MandateRegistry.sol",
+            "line_no": 25,
+            "src": "1290:15",
+            "src_char": "1290:15",
+            "hint": "Is this contract supposed to implement an interface? Consider extending one of the following: IMandateRegistryView"
+          },
+          {
+            "contract_path": "src\\registries\\PayeeBook.sol",
+            "line_no": 8,
+            "src": "392:9",
+            "src_char": "392:9",
+            "hint": "Is this contract supposed to implement an interface? Consider extending one of the following: IPayeeBookView"
+          }
+        ]
+      },
+      {
+        "title": "Modifier Invoked Only Once",
+        "description": "Consider removing the modifier or inlining the logic into the calling function.",
+        "detector_name": "modifier-used-only-once",
+        "instances": [
+          {
+            "contract_path": "src\\zk\\ZKMandateEnforcer.sol",
+            "line_no": 178,
+            "src": "8280:26",
+            "src_char": "8280:26"
+          }
+        ]
+      },
+      {
+        "title": "Loop Contains `require`/`revert`",
+        "description": "Avoid `require` / `revert` statements in a loop because a single bad item can cause the whole transaction to fail. It's better to forgive on fail and return failed elements post processing of the loop",
+        "detector_name": "require-revert-in-loop",
+        "instances": [
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 46,
+            "src": "1992:118",
+            "src_char": "1992:118"
+          },
+          {
+            "contract_path": "src\\registries\\PayeeBook.sol",
+            "line_no": 41,
+            "src": "1834:76",
+            "src_char": "1834:76"
+          }
+        ]
+      },
+      {
+        "title": "State Change Without Event",
+        "description": "There are state variable changes in this function but no event is emitted. Consider emitting an event to enable offchain indexers to track the changes.",
+        "detector_name": "state-change-without-event",
+        "instances": [
+          {
+            "contract_path": "src\\registries\\KillSwitchRegistry.sol",
+            "line_no": 115,
+            "src": "5163:18",
+            "src_char": "5163:18"
+          },
+          {
+            "contract_path": "src\\registries\\YinglongPassportRegistry.sol",
+            "line_no": 163,
+            "src": "7445:17",
+            "src_char": "7445:17"
+          }
+        ]
+      },
+      {
+        "title": "Address State Variable Set Without Checks",
+        "description": "Check for `address(0)` when assigning values to address state variables.",
+        "detector_name": "state-no-address-check",
+        "instances": [
+          {
+            "contract_path": "src\\rails\\ConditionalPaymentInstructions.sol",
+            "line_no": 64,
+            "src": "2447:20",
+            "src_char": "2447:20"
+          },
+          {
+            "contract_path": "src\\rails\\ConditionalPaymentInstructions.sol",
+            "line_no": 130,
+            "src": "4932:14",
+            "src_char": "4932:14"
+          },
+          {
+            "contract_path": "src\\rails\\ProductRegistry.sol",
+            "line_no": 27,
+            "src": "899:14",
+            "src_char": "899:14"
+          },
+          {
+            "contract_path": "src\\rails\\TestMoneyMarketFund.sol",
+            "line_no": 26,
+            "src": "1249:14",
+            "src_char": "1249:14"
+          },
+          {
+            "contract_path": "src\\rails\\TestUnits.sol",
+            "line_no": 51,
+            "src": "2314:16",
+            "src_char": "2314:16"
+          },
+          {
+            "contract_path": "src\\rails\\TestUnits.sol",
+            "line_no": 70,
+            "src": "2882:12",
+            "src_char": "2882:12"
+          },
+          {
+            "contract_path": "src\\registries\\AccountabilityLedger.sol",
+            "line_no": 56,
+            "src": "2029:14",
+            "src_char": "2029:14"
+          },
+          {
+            "contract_path": "src\\registries\\AccountabilityLedger.sol",
+            "line_no": 73,
+            "src": "2570:11",
+            "src_char": "2570:11"
+          },
+          {
+            "contract_path": "src\\registries\\KillSwitchRegistry.sol",
+            "line_no": 47,
+            "src": "2582:24",
+            "src_char": "2582:24"
+          },
+          {
+            "contract_path": "src\\registries\\KillSwitchRegistry.sol",
+            "line_no": 117,
+            "src": "5285:23",
+            "src_char": "5285:23"
+          },
+          {
+            "contract_path": "src\\registries\\MandateRegistry.sol",
+            "line_no": 97,
+            "src": "3912:24",
+            "src_char": "3912:24"
+          },
+          {
+            "contract_path": "src\\registries\\YinglongPassportRegistry.sol",
+            "line_no": 74,
+            "src": "4057:24",
+            "src_char": "4057:24"
+          },
+          {
+            "contract_path": "src\\registries\\YinglongPassportRegistry.sol",
+            "line_no": 231,
+            "src": "10801:23",
+            "src_char": "10801:23"
+          },
+          {
+            "contract_path": "src\\zk\\ZKVerifierRouter.sol",
+            "line_no": 28,
+            "src": "1431:22",
+            "src_char": "1431:22"
+          }
+        ]
+      },
+      {
+        "title": "State Variable Could Be Immutable",
+        "description": "State variables that are only changed in the constructor should be declared immutable to save gas. Add the `immutable` attribute to state variables that are only changed in the constructor",
+        "detector_name": "state-variable-could-be-immutable",
+        "instances": [
+          {
+            "contract_path": "src\\rails\\ProductRegistry.sol",
+            "line_no": 17,
+            "src": "580:5",
+            "src_char": "580:5"
+          },
+          {
+            "contract_path": "src\\rails\\TestMoneyMarketFund.sol",
+            "line_no": 20,
+            "src": "1006:5",
+            "src_char": "1006:5"
+          },
+          {
+            "contract_path": "src\\rails\\TestUnits.sol",
+            "line_no": 28,
+            "src": "1611:8",
+            "src_char": "1611:8"
+          },
+          {
+            "contract_path": "src\\rails\\TestUnits.sol",
+            "line_no": 29,
+            "src": "1639:5",
+            "src_char": "1639:5"
+          },
+          {
+            "contract_path": "src\\registries\\MandateRegistry.sol",
+            "line_no": 65,
+            "src": "2504:10",
+            "src_char": "2504:10"
+          }
+        ]
+      },
+      {
+        "title": "Unchecked Return",
+        "description": "Function returns a value but it is ignored. Consider checking the return value.",
+        "detector_name": "unchecked-return",
+        "instances": [
+          {
+            "contract_path": "src\\enforcers\\ReserveFloorEnforcer.sol",
+            "line_no": 27,
+            "src": "1300:20",
+            "src_char": "1300:20"
+          }
+        ]
+      },
+      {
+        "title": "Unused Error",
+        "description": "Consider using or removing the unused error.",
+        "detector_name": "unused-error",
+        "instances": [
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 9,
+            "src": "332:38",
+            "src_char": "332:38"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 10,
+            "src": "371:76",
+            "src_char": "371:76"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 11,
+            "src": "448:79",
+            "src_char": "448:79"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 12,
+            "src": "528:55",
+            "src_char": "528:55"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 13,
+            "src": "584:78",
+            "src_char": "584:78"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 14,
+            "src": "663:53",
+            "src_char": "663:53"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 15,
+            "src": "717:45",
+            "src_char": "717:45"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 16,
+            "src": "763:56",
+            "src_char": "763:56"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 17,
+            "src": "820:56",
+            "src_char": "820:56"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 18,
+            "src": "877:37",
+            "src_char": "877:37"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 19,
+            "src": "915:15",
+            "src_char": "915:15"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 20,
+            "src": "931:21",
+            "src_char": "931:21"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 21,
+            "src": "953:38",
+            "src_char": "953:38"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 22,
+            "src": "992:28",
+            "src_char": "992:28"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 23,
+            "src": "1021:56",
+            "src_char": "1021:56"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 24,
+            "src": "1078:41",
+            "src_char": "1078:41"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 25,
+            "src": "1120:42",
+            "src_char": "1120:42"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 26,
+            "src": "1163:87",
+            "src_char": "1163:87"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 27,
+            "src": "1251:71",
+            "src_char": "1251:71"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 28,
+            "src": "1323:21",
+            "src_char": "1323:21"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 29,
+            "src": "1345:20",
+            "src_char": "1345:20"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 30,
+            "src": "1366:29",
+            "src_char": "1366:29"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 31,
+            "src": "1396:44",
+            "src_char": "1396:44"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 32,
+            "src": "1441:43",
+            "src_char": "1441:43"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 33,
+            "src": "1485:35",
+            "src_char": "1485:35"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 34,
+            "src": "1521:25",
+            "src_char": "1521:25"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 35,
+            "src": "1547:41",
+            "src_char": "1547:41"
+          },
+          {
+            "contract_path": "src\\utils\\Errors.sol",
+            "line_no": 36,
+            "src": "1589:38",
+            "src_char": "1589:38"
+          },
+          {
+            "contract_path": "src\\zk\\ZKErrors.sol",
+            "line_no": 9,
+            "src": "323:40",
+            "src_char": "323:40"
+          },
+          {
+            "contract_path": "src\\zk\\ZKErrors.sol",
+            "line_no": 11,
+            "src": "452:50",
+            "src_char": "452:50"
+          },
+          {
+            "contract_path": "src\\zk\\ZKErrors.sol",
+            "line_no": 13,
+            "src": "549:42",
+            "src_char": "549:42"
+          },
+          {
+            "contract_path": "src\\zk\\ZKErrors.sol",
+            "line_no": 15,
+            "src": "659:44",
+            "src_char": "659:44"
+          },
+          {
+            "contract_path": "src\\zk\\ZKErrors.sol",
+            "line_no": 17,
+            "src": "801:72",
+            "src_char": "801:72"
+          },
+          {
+            "contract_path": "src\\zk\\ZKErrors.sol",
+            "line_no": 19,
+            "src": "946:39",
+            "src_char": "946:39"
+          }
+        ]
+      },
+      {
+        "title": "Public Function Not Used Internally",
+        "description": "If a function is marked public but is not used internally, consider marking it as `external`.",
+        "detector_name": "unused-public-function",
+        "instances": [
+          {
+            "contract_path": "src\\enforcers\\ForbiddenTargetsEnforcer.sol",
+            "line_no": 19,
+            "src": "1033:12",
+            "src_char": "1033:12"
+          }
+        ]
+      }
+    ]
+  },
+  "detectors_used": [
+    "abi-encode-packed-hash-collision",
+    "arbitrary-transfer-from",
+    "assert-state-change",
+    "block-timestamp-deadline",
+    "boolean-equality",
+    "builtin-symbol-shadowing",
+    "centralization-risk",
+    "constant-function-changes-state",
+    "constant-function-contains-assembly",
+    "contract-locks-ether",
+    "costly-loop",
+    "dangerous-unary-operator",
+    "dead-code",
+    "delegate-call-unchecked-address",
+    "delegatecall-in-loop",
+    "delete-nested-mapping",
+    "deprecated-oz-function",
+    "division-before-multiplication",
+    "dynamic-array-length-assignment",
+    "ecrecover",
+    "empty-block",
+    "empty-require-revert",
+    "enumerable-loop-removal",
+    "eth-send-unchecked-address",
+    "experimental-encoder",
+    "function-initializing-state",
+    "function-pointer-in-constructor",
+    "function-selector-collision",
+    "inconsistent-type-names",
+    "incorrect-caret-operator",
+    "incorrect-erc20-interface",
+    "incorrect-erc721-interface",
+    "incorrect-shift-order",
+    "incorrect-use-of-modifier",
+    "internal-function-used-once",
+    "large-numeric-literal",
+    "literal-instead-of-constant",
+    "local-variable-shadowing",
+    "missing-inheritance",
+    "misused-boolean",
+    "modifier-used-only-once",
+    "msg-value-in-loop",
+    "multiple-constructors",
+    "multiple-placeholders",
+    "nested-struct-in-mapping",
+    "non-reentrant-not-first",
+    "out-of-order-retryable",
+    "pre-declared-local-variable-usage",
+    "push-zero-opcode",
+    "redundant-statement",
+    "reentrancy-state-change",
+    "require-revert-in-loop",
+    "return-bomb",
+    "reused-contract-name",
+    "rtlo",
+    "selfdestruct",
+    "signed-integer-storage-array",
+    "solmate-safe-transfer-lib",
+    "state-change-without-event",
+    "state-no-address-check",
+    "state-variable-could-be-constant",
+    "state-variable-could-be-immutable",
+    "state-variable-init-order",
+    "state-variable-read-external",
+    "state-variable-shadowing",
+    "storage-array-length-not-cached",
+    "storage-array-memory-edit",
+    "strict-equality-contract-balance",
+    "tautological-compare",
+    "tautology-or-contradiction",
+    "todo",
+    "tx-origin-used-for-auth",
+    "unchecked-low-level-call",
+    "unchecked-return",
+    "unchecked-send",
+    "uninitialized-local-variable",
+    "unprotected-initializer",
+    "unsafe-casting",
+    "unsafe-erc20-operation",
+    "unsafe-oz-erc721-mint",
+    "unspecific-solidity-pragma",
+    "unused-error",
+    "unused-import",
+    "unused-public-function",
+    "unused-state-variable",
+    "void-constructor",
+    "weak-randomness",
+    "yul-return"
+  ]
+}

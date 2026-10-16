@@ -1,0 +1,37 @@
+[
+  {
+    "attempt": "npm i -g --prefix D:/tools/npm-global @cyfrin/aderyn",
+    "result": "failed",
+    "detail": "the package's install script refuses the host: Platform with type Windows_NT and architecture x64 is not supported (supported: aarch64-apple-darwin, aarch64-unknown-linux-gnu, x86_64-apple-darwin, x86_64-unknown-linux-gnu)"
+  },
+  {
+    "attempt": "GitHub release aderyn-v0.6.8 prebuilt binaries",
+    "result": "not available",
+    "detail": "the release ships macOS and Linux archives only; there is no Windows binary"
+  },
+  {
+    "attempt": "cargo install aderyn --locked (Rust stable, x86_64-pc-windows-gnu, installed under D:/tools)",
+    "result": "failed",
+    "detail": "crates.io only carries the old aderyn 0.1.9; its build failed with rustc E0786 invalid-metadata errors on this host"
+  },
+  {
+    "attempt": "cargo build --release -p aderyn from the v0.6.8 source release (SHA-256 checked against the release's .sha256 file) with its pinned nightly toolchain",
+    "result": "failed",
+    "detail": "rustc crashed (stack overflow) on several dependencies and the 32-bit C:/MinGW dlltool was picked up"
+  },
+  {
+    "attempt": "same source, cargo +stable, LTO off, msys64 mingw64 binutils first on PATH, RUST_MIN_STACK raised",
+    "result": "failed",
+    "detail": "dependencies built; aderyn_driver uses #![feature] (nightly only)"
+  },
+  {
+    "attempt": "same, with RUSTC_BOOTSTRAP=aderyn_driver (feature gate allowed for that crate only)",
+    "result": "failed",
+    "detail": "aderyn/src/mcp.rs uses a Unix-only SIGTERM handler without a non-Unix fallback"
+  },
+  {
+    "attempt": "same, with the local patch reports/aderyn-windows.patch",
+    "result": "built and ran",
+    "detail": "the patch adds a non-Unix fallback for the MCP server's SIGTERM handler and normalises Windows path separators (and the verbatim path prefix) where per-file stats are collected and where the detector entrypoint looks up aderyn-ignore lines (it previously panicked on every finding), plus an opt-in ADERYN_DEBUG_PATHS trace; no detector code is changed"
+  }
+]

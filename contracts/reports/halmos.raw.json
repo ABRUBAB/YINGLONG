@@ -1,0 +1,380 @@
+{
+    "exitcode": 1,
+    "test_results": {
+        "test/symbolic/SymbolicEnforcers.t.sol:SymCategoryBudget": [
+            {
+                "name": "check_categoryCapsHold(address,uint256,address,uint256,address,uint256,uint32,uint32,uint32)",
+                "exitcode": 0,
+                "num_models": 0,
+                "models": [],
+                "num_paths": [
+                    2930,
+                    1640,
+                    0
+                ],
+                "time": [
+                    329.72937059999094,
+                    329.72716399999626,
+                    0.002196599991293624
+                ],
+                "num_bounded_loops": 0
+            },
+            {
+                "name": "check_vacuity_budgetPaymentCanPass(address,uint256)",
+                "exitcode": 1,
+                "num_models": 3,
+                "models": [
+                    {
+                        "model": {
+                            "p__to_address_98faa70_00": {
+                                "full_name": "p__to_address_98faa70_00",
+                                "variable_name": "",
+                                "solidity_type": "to",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            },
+                            "p__amount_uint256_64c7711_00": {
+                                "full_name": "p__amount_uint256_64c7711_00",
+                                "variable_name": "",
+                                "solidity_type": "amount",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            }
+                        },
+                        "is_valid": true
+                    },
+                    {
+                        "model": {
+                            "p__to_address_98faa70_00": {
+                                "full_name": "p__to_address_98faa70_00",
+                                "variable_name": "",
+                                "solidity_type": "to",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 4369
+                            },
+                            "p__amount_uint256_64c7711_00": {
+                                "full_name": "p__amount_uint256_64c7711_00",
+                                "variable_name": "",
+                                "solidity_type": "amount",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            }
+                        },
+                        "is_valid": true
+                    },
+                    {
+                        "model": {
+                            "p__to_address_98faa70_00": {
+                                "full_name": "p__to_address_98faa70_00",
+                                "variable_name": "",
+                                "solidity_type": "to",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 8738
+                            },
+                            "p__amount_uint256_64c7711_00": {
+                                "full_name": "p__amount_uint256_64c7711_00",
+                                "variable_name": "",
+                                "solidity_type": "amount",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            }
+                        },
+                        "is_valid": true
+                    }
+                ],
+                "num_paths": [
+                    8,
+                    4,
+                    0
+                ],
+                "time": [
+                    0.7069016000023112,
+                    0.6055626000015764,
+                    0.10132879999582656
+                ],
+                "num_bounded_loops": 0
+            }
+        ],
+        "test/symbolic/SymbolicEnforcers.t.sol:SymForbiddenTargets": [
+            {
+                "name": "check_forbiddenTargetsUnreachable(address,address,address,address,address,address,bytes4,uint256)",
+                "exitcode": 0,
+                "num_models": 0,
+                "models": [],
+                "num_paths": [
+                    14,
+                    7,
+                    0
+                ],
+                "time": [
+                    0.1965848000108963,
+                    0.19653689999540802,
+                    3.91000066883862e-05
+                ],
+                "num_bounded_loops": 0
+            },
+            {
+                "name": "check_vacuity_targetCanPass(address,address,uint256)",
+                "exitcode": 1,
+                "num_models": 1,
+                "models": [
+                    {
+                        "model": {
+                            "p__target_address_4a5ba25_00": {
+                                "full_name": "p__target_address_4a5ba25_00",
+                                "variable_name": "",
+                                "solidity_type": "target",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            },
+                            "p__f0_address_494d73b_00": {
+                                "full_name": "p__f0_address_494d73b_00",
+                                "variable_name": "",
+                                "solidity_type": "f0",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 730750818665451459101842416358141509827966271488
+                            }
+                        },
+                        "is_valid": true
+                    }
+                ],
+                "num_paths": [
+                    6,
+                    3,
+                    0
+                ],
+                "time": [
+                    0.1787070999998832,
+                    0.07788919999438804,
+                    0.10081110001192428
+                ],
+                "num_bounded_loops": 0
+            }
+        ],
+        "test/symbolic/SymbolicEnforcers.t.sol:SymGlobalPause": [
+            {
+                "name": "check_pausedAccountRefused(uint8,uint64,uint32,uint256,uint8)",
+                "exitcode": 0,
+                "num_models": 0,
+                "models": [],
+                "num_paths": [
+                    152,
+                    144,
+                    0
+                ],
+                "time": [
+                    19.222046800001408,
+                    19.22186399999191,
+                    0.0001753999968059361
+                ],
+                "num_bounded_loops": 0
+            },
+            {
+                "name": "check_vacuity_unpausedCanPass(uint256,uint8)",
+                "exitcode": 1,
+                "num_models": 2,
+                "models": [
+                    {
+                        "model": {
+                            "p__status_uint8_2c9b469_00": {
+                                "full_name": "p__status_uint8_2c9b469_00",
+                                "variable_name": "",
+                                "solidity_type": "status",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 1
+                            },
+                            "p__agentId_uint256_d213bbe_00": {
+                                "full_name": "p__agentId_uint256_d213bbe_00",
+                                "variable_name": "",
+                                "solidity_type": "agentId",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 57896044618658097711785492504343953926634992332820282019728792003956564819968
+                            }
+                        },
+                        "is_valid": true
+                    },
+                    {
+                        "model": {
+                            "p__status_uint8_2c9b469_00": {
+                                "full_name": "p__status_uint8_2c9b469_00",
+                                "variable_name": "",
+                                "solidity_type": "status",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            },
+                            "p__agentId_uint256_d213bbe_00": {
+                                "full_name": "p__agentId_uint256_d213bbe_00",
+                                "variable_name": "",
+                                "solidity_type": "agentId",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            }
+                        },
+                        "is_valid": true
+                    }
+                ],
+                "num_paths": [
+                    4,
+                    1,
+                    0
+                ],
+                "time": [
+                    0.24569549999432638,
+                    0.14456309999513905,
+                    0.10112479999952484
+                ],
+                "num_bounded_loops": 0
+            }
+        ],
+        "test/symbolic/SymbolicEnforcers.t.sol:SymReserveFloor": [
+            {
+                "name": "check_onlySingleDefaultMode(bytes32)",
+                "exitcode": 0,
+                "num_models": 0,
+                "models": [],
+                "num_paths": [
+                    3,
+                    3,
+                    0
+                ],
+                "time": [
+                    0.03518110000004526,
+                    0.03514859999995679,
+                    2.4900000425986946e-05
+                ],
+                "num_bounded_loops": 0
+            },
+            {
+                "name": "check_reserveFloorHolds(uint256,uint256,uint256)",
+                "exitcode": 0,
+                "num_models": 0,
+                "models": [],
+                "num_paths": [
+                    6,
+                    4,
+                    0
+                ],
+                "time": [
+                    0.31495679999352433,
+                    0.31491830000595655,
+                    2.8800001018680632e-05
+                ],
+                "num_bounded_loops": 0
+            },
+            {
+                "name": "check_vacuity_floorCanPass(uint256,uint256)",
+                "exitcode": 1,
+                "num_models": 1,
+                "models": [
+                    {
+                        "model": {
+                            "p__balance_uint256_fe1cedb_00": {
+                                "full_name": "p__balance_uint256_fe1cedb_00",
+                                "variable_name": "",
+                                "solidity_type": "balance",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            },
+                            "p__floor_uint256_8d53de9_00": {
+                                "full_name": "p__floor_uint256_8d53de9_00",
+                                "variable_name": "",
+                                "solidity_type": "floor",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 0
+                            }
+                        },
+                        "is_valid": true
+                    }
+                ],
+                "num_paths": [
+                    2,
+                    1,
+                    0
+                ],
+                "time": [
+                    0.16444849999970756,
+                    0.06352480000350624,
+                    0.10091819999797735
+                ],
+                "num_bounded_loops": 0
+            }
+        ],
+        "test/symbolic/SymbolicEnforcers.t.sol:SymVerifiedPayee": [
+            {
+                "name": "check_onlyVerifiedPayees(uint8,address,uint256,bytes32,bool)",
+                "exitcode": 0,
+                "num_models": 0,
+                "models": [],
+                "num_paths": [
+                    39,
+                    34,
+                    0
+                ],
+                "time": [
+                    5.719690599988098,
+                    5.719508399997721,
+                    0.00017150001076515764
+                ],
+                "num_bounded_loops": 0
+            },
+            {
+                "name": "check_vacuity_payeeCanPass(address,uint256)",
+                "exitcode": 1,
+                "num_models": 2,
+                "models": [
+                    {
+                        "model": {
+                            "p__to_address_a0a0198_00": {
+                                "full_name": "p__to_address_a0a0198_00",
+                                "variable_name": "",
+                                "solidity_type": "to",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 4369
+                            }
+                        },
+                        "is_valid": true
+                    },
+                    {
+                        "model": {
+                            "p__to_address_a0a0198_00": {
+                                "full_name": "p__to_address_a0a0198_00",
+                                "variable_name": "",
+                                "solidity_type": "to",
+                                "smt_type": "BitVec 256",
+                                "size_bits": 256,
+                                "value": 17476
+                            }
+                        },
+                        "is_valid": true
+                    }
+                ],
+                "num_paths": [
+                    4,
+                    1,
+                    0
+                ],
+                "time": [
+                    0.42928589999792166,
+                    0.32845019998785574,
+                    0.10082799999509007
+                ],
+                "num_bounded_loops": 0
+            }
+        ]
+    }
+}

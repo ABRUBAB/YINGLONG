@@ -1,0 +1,211 @@
+Compiling 164 files with Solc 0.8.23
+Solc 0.8.23 finished in 14.53s
+Compiler run successful!
+Analysing contracts...
+Running tests...
+
+Ran 30 tests for test/NadiaMandate.t.sol:NadiaMandateTest
+[PASS] test_T1_foodUnderT1Cap() (gas: 1543085)
+[PASS] test_T1_rentToVerifiedPayeeWithinBudget() (gas: 1553593)
+[PASS] test_T1_sweepIntoSuitableFund() (gas: 1610107)
+[PASS] test_T2_coSignBoundToExactExecution() (gas: 1388630)
+[PASS] test_T2_coSignNonceCannotBeReplayed() (gas: 2502518)
+[PASS] test_T2_coSignedPaymentPasses() (gas: 1847477)
+[PASS] test_T2_ecdsaSignatureNeverSatisfiesPasskeyAccount() (gas: 1623266)
+[PASS] test_T2_newPayeeServiceAboveNewPayeeCap() (gas: 2293636)
+[PASS] test_T2_requiresCoSignAboveT1Cap() (gas: 1108585)
+[PASS] test_T4_aboveT2Ceiling() (gas: 1105609)
+[PASS] test_T4_categoryBudgetExceeded_food() (gas: 2288146)
+[PASS] test_T4_lineageViolation_unregisteredRedeemer() (gas: 737267)
+[PASS] test_T4_mandateNotPublishedIsUnbound() (gas: 771815)
+[PASS] test_T4_payeeNotVerified_mirage() (gas: 1098053)
+[PASS] test_T4_railNotPermitted_mainlandProfileCannotMoveTokens() (gas: 1301457)
+[PASS] test_T4_reserveFloorBreached() (gas: 1762354)
+[PASS] test_T4_selfCallToAccountIsForbidden() (gas: 368347)
+[PASS] test_T4_tokenApprovalIsNotAnAllowedMethod() (gas: 1010428)
+[PASS] test_T4_unsuitableProduct() (gas: 1236824)
+[PASS] test_T4_velocityExceeded_splitPayments() (gas: 9980636)
+[PASS] test_drill_leakedAgentKeyIsBoundedByCaveats() (gas: 2454105)
+[PASS] test_escrow_cannotRouteToUnverifiedPayeeThroughEscrow() (gas: 1107045)
+[PASS] test_escrow_tuitionDepositReleasedOnEnrolment() (gas: 2175720)
+[PASS] test_pause_guardianCanPauseButNotUnpause() (gas: 134010)
+[PASS] test_pause_passkeySignatureRelayedByAnyone() (gas: 3094355)
+[PASS] test_publishedCaveatsRoundTrip() (gas: 603760)
+[PASS] test_quote_convertAtSignedPriceThenExpiredReplayReverts() (gas: 3159101)
+[PASS] test_resealNeverResetsBudgets() (gas: 3981322)
+[PASS] test_revokedMandateMovesNothing() (gas: 1106302)
+[PASS] test_supervisorHaltsAgentIdentity() (gas: 964119)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 1.56s (1.14s CPU time)
+
+Ran 12 tests for test/zk/ZKVerifierRouter.t.sol:ZKVerifierRouterTest
+[PASS] test_eachPublicInputIsBound() (gas: 24012390)
+[PASS] test_malformedPublicInputs_reverts() (gas: 17684887)
+[PASS] test_onlyRegistrar() (gas: 39029)
+[PASS] test_proofForOtherInputs_false() (gas: 19607166)
+[PASS] test_publicInputAboveFieldModulus_false() (gas: 20888553)
+[PASS] test_registrationIsAppendOnly() (gas: 36171)
+[PASS] test_renounceFreezesRouter() (gas: 21551710)
+[PASS] test_truncatedProof_false() (gas: 19191402)
+[PASS] test_unknownProofType_reverts() (gas: 19149616)
+[PASS] test_validProof_true() (gas: 21507616)
+[PASS] test_verifierMustHaveCode() (gas: 41266)
+[PASS] test_wrongNumberOfPublicInputs_false() (gas: 19347957)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 1.56s (758.99ms CPU time)
+
+Ran 6 tests for test/zk/ZKMandateEnforcerDM.t.sol:ZKMandateEnforcerDMTest
+[PASS] test_delegationHashMatchesProver() (gas: 17706203)
+[PASS] test_redeem_invariant8_secondFails() (gas: 82735792)
+[PASS] test_redeem_realProofs_movesTokensAndAdvancesState() (gas: 122733153)
+[PASS] test_redeem_replay_reverts() (gas: 47239000)
+[PASS] test_redeem_tamperedAmount_reverts() (gas: 22861055)
+[PASS] test_redeem_wrongPayee_reverts() (gas: 22865552)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 1.56s (986.78ms CPU time)
+
+Ran 41 tests for test/zk/ZKMandateEnforcer.t.sol:ZKMandateEnforcerTest
+[PASS] testFuzz_tamperedAmount_reverts(uint128) (runs: 16, μ: 22682947, ~: 22682917)
+[PASS] test_amountAboveU128_reverts() (gas: 20755592)
+[PASS] test_badTerms_revert() (gas: 22539515)
+[PASS] test_batchCallType_reverts() (gas: 22195919)
+[PASS] test_chainOfThree_reachesCapExactly() (gas: 58884684)
+[PASS] test_claimedTimeTooFarAhead_reverts() (gas: 22205782)
+[PASS] test_claimedTimeTooOld_reverts() (gas: 22205570)
+[PASS] test_claimedTimeWindowEdges_pass() (gas: 32999438)
+[PASS] test_dirtyRecipientBits_reverts() (gas: 22184037)
+[PASS] test_expired_claimingLaterTimeThanProven_reverts() (gas: 24153802)
+[PASS] test_expired_proofAtExpiry_lateBlock_reverts() (gas: 23650362)
+[PASS] test_expiryTolerance_isAtMost300Seconds() (gas: 24609541)
+[PASS] test_fixtureArgsMatchSolidityAbiEncoding() (gas: 60881720)
+[PASS] test_gas_verifyPath() (gas: 23832017)
+[PASS] test_initialRunningCommitmentMatchesProver() (gas: 17657137)
+[PASS] test_invariant8_reverseOrder_secondFails() (gas: 31087645)
+[PASS] test_invariant8_twoValidProofsAboveCap_secondFails() (gas: 76669954)
+[PASS] test_nativeValue_reverts() (gas: 22183306)
+[PASS] test_noImmutables_runtimeBytecodeIsChainIndependent() (gas: 20347)
+[PASS] test_nonCanonicalArgs_reverts() (gas: 26606074)
+[PASS] test_nonceNotAFieldElement_reverts() (gas: 25128421)
+[PASS] test_notATransfer_reverts() (gas: 22183622)
+[PASS] test_outOfOrderChain_reverts() (gas: 22682267)
+[PASS] test_publicInputLayoutMatchesProver() (gas: 133109607)
+[PASS] test_replayProofUnderFreshNonce_reverts() (gas: 25601186)
+[PASS] test_replaySameNonce_reverts() (gas: 30613061)
+[PASS] test_shortExecution_reverts() (gas: 19287611)
+[PASS] test_stateIsKeyedByDelegationManager() (gas: 72580670)
+[PASS] test_tamperedAmount_reverts() (gas: 26266096)
+[PASS] test_tamperedNewRunningCommitment_reverts() (gas: 24154713)
+[PASS] test_tamperedProofByte_reverts() (gas: 44099073)
+[PASS] test_transferWithExtraCalldata_reverts() (gas: 22184897)
+[PASS] test_truncatedArgs_reverts() (gas: 22202291)
+[PASS] test_tryExecType_reverts() (gas: 22196006)
+[PASS] test_validProof_passes_and_advancesState() (gas: 47905999)
+[PASS] test_wrongChainId_reverts() (gas: 22682722)
+[PASS] test_wrongDelegationHash_reverts() (gas: 22682159)
+[PASS] test_wrongMandateCommitment_reverts() (gas: 22682151)
+[PASS] test_wrongPayee_notAllowlisted_reverts() (gas: 22680701)
+[PASS] test_wrongPayee_otherAllowlisted_reverts() (gas: 22680614)
+[PASS] test_zeroNewRunningCommitment_reverts() (gas: 23675950)
+Suite result: ok. 41 passed; 0 failed; 0 skipped; finished in 2.05s (7.58s CPU time)
+
+Ran 3 tests for test/GasOverhead.t.sol:GasOverheadTest
+[PASS] test_gasMarginal_perCaveat() (gas: 862027765)
+[PASS] test_gasOverhead_fullVsStock_daily() (gas: 92092793)
+[PASS] test_gasOverhead_fullVsStock_intraday() (gas: 91507445)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 11.23s (14.65s CPU time)
+
+Ran 1 test for test/invariants/MandateInvariants.t.sol:MandateInvariantsTest
+[PASS]
+MandateInvariantsTest invariants:
+[PASS] invariant_authorityUnchanged
+[PASS] invariant_categoryCapsHold
+[PASS] invariant_noMovementWhilePaused
+[PASS] invariant_onlyVerifiedPayees
+[PASS] invariant_reserveFloorHolds
+ MandateInvariantsTest invariants (runs: 128, calls: 8192, reverts: 0)
+
+╭----------------+----------+-------+---------+----------╮
+| Contract       | Selector | Calls | Reverts | Discards |
++========================================================+
+| MandateHandler | step     | 8192  | 0       | 0        |
+╰----------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 97.33s (97.28s CPU time)
+
+Ran 6 test suites in 97.35s (115.29s CPU time): 93 tests passed, 0 failed, 0 skipped (93 total tests)
+
+╭----------------------------------------------+-------------------+-------------------+-----------------+------------------╮
+| File                                         | % Lines           | % Statements      | % Branches      | % Funcs          |
++===========================================================================================================================+
+| script/DeployYinglong.s.sol                  | 0.00% (0/103)     | 0.00% (0/109)     | 0.00% (0/4)     | 0.00% (0/7)      |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/AgentLineageEnforcer.sol       | 88.89% (8/9)      | 83.33% (15/18)    | 33.33% (1/3)    | 50.00% (1/2)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/CategoryBudgetEnforcer.sol     | 84.38% (27/32)    | 89.13% (41/46)    | 50.00% (4/8)    | 20.00% (1/5)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/CoSignEnforcer.sol             | 93.94% (31/33)    | 91.49% (43/47)    | 66.67% (8/12)   | 66.67% (4/6)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/ForbiddenTargetsEnforcer.sol   | 57.14% (8/14)     | 55.56% (15/27)    | 25.00% (1/4)    | 50.00% (1/2)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/GlobalPauseEnforcer.sol        | 90.00% (9/10)     | 93.33% (14/15)    | 75.00% (3/4)    | 50.00% (1/2)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/JurisdictionEnforcer.sol       | 90.00% (18/20)    | 91.18% (31/34)    | 57.14% (4/7)    | 33.33% (1/3)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/MandateBindingEnforcer.sol     | 81.25% (13/16)    | 84.21% (16/19)    | 50.00% (3/6)    | 50.00% (1/2)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/ReputationGateEnforcer.sol     | 0.00% (0/17)      | 0.00% (0/32)      | 0.00% (0/7)     | 0.00% (0/2)      |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/ReserveFloorEnforcer.sol       | 90.00% (9/10)     | 90.91% (10/11)    | 50.00% (1/2)    | 66.67% (2/3)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/SuitabilityEnforcer.sol        | 91.67% (11/12)    | 93.75% (15/16)    | 66.67% (2/3)    | 66.67% (2/3)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/VelocityEnforcer.sol           | 88.89% (16/18)    | 92.31% (24/26)    | 60.00% (3/5)    | 33.33% (1/3)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/VerifiedPayeeEnforcer.sol      | 88.24% (15/17)    | 88.46% (23/26)    | 60.00% (3/5)    | 66.67% (2/3)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/VetoTimelockEnforcer.sol       | 2.27% (1/44)      | 0.00% (0/56)      | 0.00% (0/9)     | 10.00% (1/10)    |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/enforcers/YinglongEnforcer.sol           | 100.00% (3/3)     | 83.33% (5/6)      | 0.00% (0/1)     | 100.00% (1/1)    |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/libraries/PaymentDecoder.sol             | 78.12% (25/32)    | 67.50% (27/40)    | 38.46% (5/13)   | 100.00% (2/2)    |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/rails/ConditionalPaymentInstructions.sol | 4.17% (2/48)      | 2.22% (1/45)      | 0.00% (0/6)     | 8.33% (1/12)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/rails/ProductRegistry.sol                | 64.71% (11/17)    | 61.11% (11/18)    | 25.00% (1/4)    | 60.00% (3/5)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/rails/ProtectedPayment.sol               | 66.67% (18/27)    | 59.38% (19/32)    | 0.00% (0/6)     | 60.00% (3/5)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/rails/SignedQuoteSettlement.sol          | 85.71% (24/28)    | 80.00% (28/35)    | 20.00% (1/5)    | 83.33% (5/6)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/rails/TestMoneyMarketFund.sol            | 57.14% (8/14)     | 46.67% (7/15)     | 0.00% (0/2)     | 50.00% (2/4)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/rails/TestUnits.sol                      | 41.94% (13/31)    | 28.95% (11/38)    | 0.00% (0/8)     | 42.86% (3/7)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/registries/AccountabilityLedger.sol      | 5.00% (2/40)      | 2.86% (1/35)      | 0.00% (0/8)     | 7.69% (1/13)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/registries/KillSwitchRegistry.sol        | 61.54% (40/65)    | 50.79% (32/63)    | 25.00% (3/12)   | 68.42% (13/19)   |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/registries/MandateRegistry.sol           | 90.91% (60/66)    | 82.05% (64/78)    | 15.38% (2/13)   | 69.23% (9/13)    |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/registries/PayeeBook.sol                 | 54.17% (13/24)    | 45.83% (11/24)    | 33.33% (1/3)    | 33.33% (2/6)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/registries/YinglongPassportRegistry.sol  | 64.42% (67/104)   | 66.04% (70/106)   | 25.00% (4/16)   | 45.45% (10/22)   |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/utils/YinglongCreate2Deployer.sol        | 0.00% (0/7)       | 0.00% (0/6)       | 0.00% (0/1)     | 0.00% (0/2)      |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/utils/YinglongEIP712.sol                 | 87.50% (7/8)      | 100.00% (6/6)     | N/A (0/0)       | 75.00% (3/4)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/zk/ZKMandateEnforcer.sol                 | 95.59% (65/68)    | 97.87% (92/94)    | 89.47% (17/19)  | 83.33% (10/12)   |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| src/zk/ZKVerifierRouter.sol                  | 100.00% (22/22)   | 97.06% (33/34)    | 83.33% (5/6)    | 100.00% (4/4)    |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| test/YinglongBase.t.sol                      | 75.15% (124/165)  | 71.28% (134/188)  | 100.00% (1/1)   | 100.00% (11/11)  |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| test/invariants/MandateInvariants.t.sol      | 90.67% (68/75)    | 95.70% (89/93)    | 85.00% (17/20)  | 45.45% (5/11)    |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| test/symbolic/SymbolicEnforcers.t.sol        | 0.00% (0/166)     | 0.00% (0/185)     | 0.00% (0/26)    | 0.00% (0/24)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| test/zk/ZKMandateEnforcerDM.t.sol            | 60.00% (3/5)      | 50.00% (1/2)      | N/A (0/0)       | 66.67% (2/3)     |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| test/zk/ZKTestBase.sol                       | 100.00% (44/44)   | 100.00% (51/51)   | 50.00% (5/10)   | 100.00% (9/9)    |
+|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
+| Total                                        | 55.52% (785/1414) | 56.09% (940/1676) | 36.68% (95/259) | 47.18% (117/248) |
+╰----------------------------------------------+-------------------+-------------------+-----------------+------------------╯
+Wrote LCOV report.

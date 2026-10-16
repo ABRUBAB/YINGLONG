@@ -1,0 +1,2140 @@
+{
+ "test/GasOverhead.t.sol:GasOverheadTest": {
+  "duration": "3s 536ms 734\u00c2\u00b5s",
+  "test_results": {
+   "test_gasMarginal_perCaveat()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 604546400
+     }
+    },
+    "labeled_addresses": {
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx",
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner"
+    },
+    "duration": "3s 519ms 262\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_gasOverhead_fullVsStock_daily()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 64762793
+     }
+    },
+    "labeled_addresses": {
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx",
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner"
+    },
+    "duration": "450ms 685\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_gasOverhead_fullVsStock_intraday()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 64173817
+     }
+    },
+    "labeled_addresses": {
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx",
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner"
+    },
+    "duration": "490ms 104\u00c2\u00b5s",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   }
+  },
+  "warnings": []
+ },
+ "test/NadiaMandate.t.sol:NadiaMandateTest": {
+  "duration": "129ms 556\u00c2\u00b5s 500ns",
+  "test_results": {
+   "test_T1_foodUnderT1Cap()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1324230
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "6ms 364\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T1_rentToVerifiedPayeeWithinBudget()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1333902
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "6ms 231\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T1_sweepIntoSuitableFund()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1387600
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "6ms 266\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T2_coSignBoundToExactExecution()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1242639
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "8ms 403\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T2_coSignNonceCannotBeReplayed()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 2151990
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "13ms 627\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T2_coSignedPaymentPasses()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1603387
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "10ms 535\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T2_ecdsaSignatureNeverSatisfiesPasskeyAccount()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1469987
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "9ms 421\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T2_newPayeeServiceAboveNewPayeeCap()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1951983
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "13ms 359\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T2_requiresCoSignAboveT1Cap()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 988290
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "4ms 703\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_aboveT2Ceiling()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 986546
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "4ms 642\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_categoryBudgetExceeded_food()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1942622
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "13ms 524\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_lineageViolation_unregisteredRedeemer()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 620645
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "18ms 84\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_mandateNotPublishedIsUnbound()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 644118
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "4ms 849\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_payeeNotVerified_mirage()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 982496
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "4ms 95\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_railNotPermitted_mainlandProfileCannotMoveTokens()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1117532
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "6ms 226\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_reserveFloorBreached()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1550600
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "10ms 874\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_selfCallToAccountIsForbidden()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 339338
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "3ms 394\u00c2\u00b5s 400ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_tokenApprovalIsNotAnAllowedMethod()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 921860
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "5ms 231\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_unsuitableProduct()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1097478
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "5ms 373\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_T4_velocityExceeded_splitPayments()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 8103070
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "84ms 764\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_drill_leakedAgentKeyIsBoundedByCaveats()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 2245615
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x885f0b850506276b0d075f0e6011e94fc13e9436": "ying-rotated",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "12ms 168\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_escrow_cannotRouteToUnverifiedPayeeThroughEscrow()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 989925
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "4ms 622\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_escrow_tuitionDepositReleasedOnEnrolment()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1918666
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "23ms 522\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_pause_guardianCanPauseButNotUnpause()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 131106
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "144\u00c2\u00b5s",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_pause_passkeySignatureRelayedByAnyone()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 2776110
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x011f44c68a9877b052c5de168e499e05573f8db8": "relayer",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "17ms 759\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_publishedCaveatsRoundTrip()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 557231
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "1ms 869\u00c2\u00b5s 400ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_quote_convertAtSignedPriceThenExpiredReplayReverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 2760964
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "12ms 232\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_resealNeverResetsBudgets()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 3448022
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "19ms 231\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_revokedMandateMovesNothing()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 1000030
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "5ms 184\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_supervisorHaltsAgentIdentity()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 894838
+     }
+    },
+    "labeled_addresses": {
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx"
+    },
+    "duration": "3ms 830\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   }
+  },
+  "warnings": []
+ },
+ "test/invariants/MandateInvariants.t.sol:MandateInvariantsTest": {
+  "duration": "40s 261ms 823\u00c2\u00b5s 900ns",
+  "test_results": {
+   "invariant_authorityUnchanged()": {
+    "status": "Success",
+    "reason": null,
+    "invariant_predicate_results": [
+     {
+      "name": "invariant_authorityUnchanged",
+      "status": "Success"
+     },
+     {
+      "name": "invariant_categoryCapsHold",
+      "status": "Success"
+     },
+     {
+      "name": "invariant_noMovementWhilePaused",
+      "status": "Success"
+     },
+     {
+      "name": "invariant_onlyVerifiedPayees",
+      "status": "Success"
+     },
+     {
+      "name": "invariant_reserveFloorHolds",
+      "status": "Success"
+     }
+    ],
+    "invariant_count": 5,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Invariant": {
+      "runs": 128,
+      "calls": 8192,
+      "reverts": 0,
+      "workers": 1,
+      "metrics": {
+       "test/invariants/MandateInvariants.t.sol:MandateHandler.step": {
+        "calls": 8192,
+        "reverts": 0,
+        "discards": 0
+       }
+      },
+      "failed_corpus_replays": 0,
+      "optimization_best_value": null
+     }
+    },
+    "labeled_addresses": {
+     "0x223f924aadd9bcb7a52b67022426e75fbc5acd6b": "mirage",
+     "0xd04b15d8de72ae133867dc3e1bc0ee785718178c": "harbour-homes",
+     "0x5098e79ba983dabaac202679443cbca358f17f7c": "pearl-river-fx",
+     "0x73231de0246a09216cdb510e0a0a588d77fa8f37": "agent-owner",
+     "0x29fe7c4196189be8039932c4aecb6bd8b86ddac3": "hbu-bursar",
+     "0x95e391a1f3ddd679b008d378f814ef6f77df899e": "ying",
+     "0x74e05ac2ea6b21e1a9a7e6d5f4ab9e706bdcc3c6": "issuer-harbour-digital-bank",
+     "0x645115763710b3b0c97094f9a28444c738a9abac": "supervisor",
+     "0x2ab4f1e5f14e1bc9c3d22459043ca8136e526474": "food-mart",
+     "0x619d5d1e620c70442e67726b0e4cbf8c6e111b19": "guardian",
+     "0xc1eeb3669bb52b7686e5b6f810cdeac45b17dfa7": "dm-owner",
+     "0x0315908a466b88a6c3a822a9042a49836150bd99": "issuer-hbu"
+    },
+    "duration": "40s 223ms 467\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   }
+  },
+  "warnings": []
+ },
+ "test/zk/ZKMandateEnforcer.t.sol:ZKMandateEnforcerTest": {
+  "duration": "1s 41ms 522\u00c2\u00b5s 900ns",
+  "test_results": {
+   "testFuzz_tamperedAmount_reverts(uint128)": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Fuzz": {
+      "first_case": {
+       "gas": 22550720,
+       "stipend": 21384
+      },
+      "runs": 16,
+      "mean_gas": 22529249,
+      "median_gas": 22529252,
+      "failed_corpus_replays": 0
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "805ms 741\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_amountAboveU128_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 20648031
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "29ms 307\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_badTerms_revert()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22391144
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "44ms 632\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_batchCallType_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22056381
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "62ms 437\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_chainOfThree_reachesCapExactly()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 58387086
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "215ms 464\u00c2\u00b5s",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_claimedTimeTooFarAhead_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22063623
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "33ms 336\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_claimedTimeTooOld_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22063527
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "30ms 359\u00c2\u00b5s",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_claimedTimeWindowEdges_pass()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 32690883
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "153ms 348\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_dirtyRecipientBits_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22043966
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "31ms 228\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_expired_claimingLaterTimeThanProven_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 23965387
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "91ms 874\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_expired_proofAtExpiry_lateBlock_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 23475834
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "38ms 386\u00c2\u00b5s 700ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_expiryTolerance_isAtMost300Seconds()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 24455651
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "90ms 459\u00c2\u00b5s 700ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_fixtureArgsMatchSolidityAbiEncoding()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 59988612
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "363ms 595\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_gas_verifyPath()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 23744892
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "126ms 800\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_initialRunningCommitmentMatchesProver()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 17623191
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "11ms 67\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_invariant8_reverseOrder_secondFails()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 30779463
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "132ms 401\u00c2\u00b5s",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_invariant8_twoValidProofsAboveCap_secondFails()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 76136218
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "356ms 358\u00c2\u00b5s 700ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_nativeValue_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22043320
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "40ms 83\u00c2\u00b5s 700ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_noImmutables_runtimeBytecodeIsChainIndependent()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 15459
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "120\u00c2\u00b5s 400ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_nonCanonicalArgs_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 26361741
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "48ms 213\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_nonceNotAFieldElement_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 24918829
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "70ms 238\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_notATransfer_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22043705
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "29ms 349\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_outOfOrderChain_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22528546
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "44ms 601\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_publicInputLayoutMatchesProver()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 132478696
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "288ms 726\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_replayProofUnderFreshNonce_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 25379583
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "49ms 196\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_replaySameNonce_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 30316306
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "129ms 780\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_shortExecution_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 19214374
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "19ms 971\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_stateIsKeyedByDelegationManager()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 72094343
+     }
+    },
+    "labeled_addresses": {
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent",
+     "0xab88bb58b86b108da1f09007645fce3ca54a3ac3": "otherDM",
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator"
+    },
+    "duration": "208ms 824\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_tamperedAmount_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 26024769
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "57ms 671\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_tamperedNewRunningCommitment_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 23966013
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "46ms 200\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_tamperedProofByte_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 43832449
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "82ms 835\u00c2\u00b5s 700ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_transferWithExtraCalldata_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22044630
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "40ms 895\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_truncatedArgs_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22061342
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "57ms 874\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_tryExecType_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22056414
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "55ms 464\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_validProof_passes_and_advancesState()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 47583515
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "180ms 525\u00c2\u00b5s",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_wrongChainId_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22528924
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "49ms 61\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_wrongDelegationHash_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22528600
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "58ms 52\u00c2\u00b5s 400ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_wrongMandateCommitment_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22528612
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "56ms 581\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_wrongPayee_notAllowlisted_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22527578
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "55ms 745\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_wrongPayee_otherAllowlisted_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22527491
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "49ms 835\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_zeroNewRunningCommitment_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 23499611
+     }
+    },
+    "labeled_addresses": {
+     "0x8f191416613d6b7d58cad9b92393a4ffa379533c": "delegator",
+     "0x5fa59300b772d54451e6921c4a0db8fd3ddad8ce": "agent"
+    },
+    "duration": "58ms 250\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   }
+  },
+  "warnings": []
+ },
+ "test/zk/ZKMandateEnforcerDM.t.sol:ZKMandateEnforcerDMTest": {
+  "duration": "749ms 363\u00c2\u00b5s 700ns",
+  "test_results": {
+   "test_delegationHashMatchesProver()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 17658050
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "40ms 315\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_redeem_invariant8_secondFails()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 82275119
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "170ms 897\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_redeem_realProofs_movesTokensAndAdvancesState()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 122118787
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "217ms 669\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_redeem_replay_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 46856906
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "106ms 151\u00c2\u00b5s 900ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_redeem_tamperedAmount_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22674101
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "38ms 90\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_redeem_wrongPayee_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 22678444
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "36ms 540\u00c2\u00b5s 200ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   }
+  },
+  "warnings": []
+ },
+ "test/zk/ZKVerifierRouter.t.sol:ZKVerifierRouterTest": {
+  "duration": "758ms 674\u00c2\u00b5s 500ns",
+  "test_results": {
+   "test_eachPublicInputIsBound()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 23819020
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "46ms 979\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_malformedPublicInputs_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 17646696
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "10ms 708\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_onlyRegistrar()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 36946
+     }
+    },
+    "labeled_addresses": {
+     "0x49052147f5d97a723debdf07680fffadad29a5dc": "stranger"
+    },
+    "duration": "263\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_proofForOtherInputs_false()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 19527409
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "19ms 106\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_publicInputAboveFieldModulus_false()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 20771960
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "23ms 965\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_registrationIsAppendOnly()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 34993
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "93\u00c2\u00b5s 100ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_renounceFreezesRouter()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 21470220
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "49ms 708\u00c2\u00b5s 400ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_truncatedProof_false()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 19111677
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "15ms 543\u00c2\u00b5s 600ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_unknownProofType_reverts()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 19078333
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "13ms 324\u00c2\u00b5s 500ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_validProof_true()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 21426823
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "69ms 711\u00c2\u00b5s 800ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_verifierMustHaveCode()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 39356
+     }
+    },
+    "labeled_addresses": {
+     "0x060dfb664769fb9bf1369b01d92fafbc7c451bfc": "eoa"
+    },
+    "duration": "181\u00c2\u00b5s 300ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   },
+   "test_wrongNumberOfPublicInputs_false()": {
+    "status": "Success",
+    "reason": null,
+    "counterexample": null,
+    "logs": [],
+    "decoded_logs": [],
+    "kind": {
+     "Unit": {
+      "gas": 19267072
+     }
+    },
+    "labeled_addresses": {},
+    "duration": "18ms 132\u00c2\u00b5s 700ns",
+    "breakpoints": {},
+    "gas_snapshots": {}
+   }
+  },
+  "warnings": []
+ }
+}

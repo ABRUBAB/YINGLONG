@@ -1,0 +1,66 @@
+--- a/aderyn/src/mcp.rs
++++ b/aderyn/src/mcp.rs
+@@ -127,6 +127,8 @@
+         let mut term = signal(SignalKind::terminate()).expect("failed to install SIGTERM handler");
+         term.recv().await;
+     };
++    #[cfg(not(unix))]
++    let terminate = std::future::pending::<()>();
+ 
+     tokio::select! {
+         _ = ctrl_c => {},
+--- a/aderyn_core/src/detect/entrypoint.rs
++++ b/aderyn_core/src/detect/entrypoint.rs
+@@ -260,14 +260,22 @@
+             issue.instances = detectors_instances
+                 .into_iter()
+                 .filter(|(instance, _)| {
+-                    let Some(lines_to_ignore_in_file) = ignore_lines.get(
+-                        &dunce::canonicalize(root_rel_path.join(&instance.0).as_path())
+-                            .unwrap()
+-                            .to_string_lossy()
+-                            .to_string(),
+-                    ) else {
++                    // Windows portability: stats keys mix separators and may carry the verbatim prefix; compare normalised.
++                    let wanted_ = dunce::canonicalize(root_rel_path.join(&instance.0).as_path())
++                        .unwrap()
++                        .to_string_lossy()
++                        .replace('\\', "/");
++                    let Some(lines_to_ignore_in_file) = ignore_lines
++                        .iter()
++                        .find(|(k_, _)| {
++                            let k_n_ = k_.replace('\\', "/");
++                            k_n_.strip_prefix("//?/").unwrap_or(&k_n_) == wanted_
++                        })
++                        .map(|(_, v_)| v_)
++                    else {
+                         panic!(
+-                            "File Not Found in Ignore stats: {}",
++                            "File Not Found in Ignore stats (keys: {:?}): {}",
++                            ignore_lines.keys().take(3).collect::<Vec<_>>(),
+                             &dunce::canonicalize(root_rel_path.join(&instance.0).as_path())
+                                 .unwrap()
+                                 .to_string_lossy()
+--- a/aderyn_core/src/stats.rs
++++ b/aderyn_core/src/stats.rs
+@@ -46,7 +46,19 @@
+         .map(|source_unit| {
+             let path = source_unit.absolute_path.clone().expect("absolute path not inserted");
+             let path = path.replace("//", "/"); // Condense entries that look like `contracts/templegold//AuctionBase.sol`
+-            if !context.included.contains(&PathBuf::from_str(&path).unwrap()) {
++            // Windows portability: compare with '/' separators and allow relative vs absolute forms.
++            let path_n_ = path.replace('\\', "/");
++            let is_included_ = context.included.contains(&PathBuf::from_str(&path).unwrap())
++                || context.included.iter().any(|p_| {
++                    let p_n_ = p_.to_string_lossy().replace('\\', "/");
++                    p_n_ == path_n_
++                        || path_n_.ends_with(&format!("/{}", p_n_))
++                        || p_n_.ends_with(&format!("/{}", path_n_))
++                });
++            if std::env::var("ADERYN_DEBUG_PATHS").is_ok() {
++                eprintln!("stats path={} included={} sample={:?}", path, is_included_, context.included.iter().next());
++            }
++            if !is_included_ {
+                 return None;
+             }
+             let content = source_unit.source.as_ref().expect("source not filled");

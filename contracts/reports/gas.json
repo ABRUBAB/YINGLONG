@@ -1,0 +1,175 @@
+{
+  "tool": "forge test (gasleft deltas)",
+  "version": "forge Version: 1.8.5",
+  "command": "forge test --match-path test/GasOverhead.t.sol --json -vv > reports/gas.raw.json   (cwd: contracts/)",
+  "generatedAt": "2026-10-16T01:40:24Z",
+  "commit": "99e8147edb8cfcd4467597907d46e586a34048ad",
+  "srcTree": "b665c8d9696f51ab03ccb0ada697798e96399ee5",
+  "srcHasUncommittedChanges": false,
+  "uncommittedPathsUnderContracts": [
+    "contracts/reports/",
+    "contracts/test/GasOverhead.t.sol",
+    "contracts/test/symbolic/"
+  ],
+  "testStatus": {
+    "test_gasMarginal_perCaveat()": "Success",
+    "test_gasOverhead_fullVsStock_daily()": "Success",
+    "test_gasOverhead_fullVsStock_intraday()": "Success"
+  },
+  "isolate": "effective config has isolate = true (forge config --json), so every top-level call is its own transaction: each sample includes the 21000 base cost and calldata cost, with cold storage",
+  "payment": "1 tHKD ERC-20 transfer to a verified payee (food category) by the agent, via DelegationManager.redeemDelegations",
+  "configs": {
+    "full": "Nadia's sealed mandate from YinglongBase._nadiaCaveats: 15 caveats = 3 stock (AllowedTargets, AllowedMethods, ValueLte) + 12 YINGLONG",
+    "stock": "4 stock caveats: AllowedTargets, AllowedMethods, ValueLte, ERC20TransferAmount"
+  },
+  "cadences": {
+    "daily": "one day between samples: every full-mandate redemption opens a new VelocityEnforcer window",
+    "intraday": "90 minutes between samples (full mandate pays every 3 hours, 8 per day)"
+  },
+  "headline": {
+    "metric": "median of per-payment (full - stock) gas, daily cadence",
+    "median": 433180,
+    "p95": 437289,
+    "n": 20
+  },
+  "scenarios": {
+    "daily": {
+      "test": "test_gasOverhead_fullVsStock_daily()",
+      "full": {
+        "n": 20,
+        "median": 841072,
+        "p95": 853307,
+        "min": 836679,
+        "max": 859813
+      },
+      "stock": {
+        "n": 20,
+        "median": 407464,
+        "p95": 407745,
+        "min": 407127,
+        "max": 441540
+      },
+      "calldataGas": {
+        "full": 42260,
+        "stock": 12452
+      },
+      "overheadPaired": {
+        "n": 20,
+        "median": 433180,
+        "p95": 437289,
+        "min": 411767,
+        "max": 452242
+      },
+      "overheadOfMedians": 433608
+    },
+    "intraday": {
+      "test": "test_gasOverhead_fullVsStock_intraday()",
+      "full": {
+        "n": 20,
+        "median": 807365,
+        "p95": 843195,
+        "min": 802481,
+        "max": 853316
+      },
+      "stock": {
+        "n": 20,
+        "median": 407481,
+        "p95": 407797,
+        "min": 407118,
+        "max": 441540
+      },
+      "calldataGas": {
+        "full": 42260,
+        "stock": 12452
+      },
+      "overheadPaired": {
+        "n": 20,
+        "median": 399832,
+        "p95": 432144,
+        "min": 395363,
+        "max": 435547
+      },
+      "overheadOfMedians": 399884
+    }
+  },
+  "marginalPerCaveat": {
+    "method": "full mandate minus one YINGLONG caveat, paired by sample index, daily cadence; includes that caveat's calldata, hook dispatch and hook execution",
+    "results": {
+      "ForbiddenTargetsEnforcer": {
+        "n": 20,
+        "medianPaired": 38039,
+        "p95Paired": 40271,
+        "calldataGasMedian": 3676
+      },
+      "GlobalPauseEnforcer": {
+        "n": 20,
+        "medianPaired": 38580,
+        "p95Paired": 40032,
+        "calldataGasMedian": 1780
+      },
+      "AgentLineageEnforcer": {
+        "n": 20,
+        "medianPaired": 32689,
+        "p95Paired": 34505,
+        "calldataGasMedian": 2076
+      },
+      "MandateBindingEnforcer": {
+        "n": 20,
+        "medianPaired": 39294,
+        "p95Paired": 40746,
+        "calldataGasMedian": 1924
+      },
+      "JurisdictionEnforcer": {
+        "n": 20,
+        "medianPaired": 31492,
+        "p95Paired": 33836,
+        "calldataGasMedian": 2248
+      },
+      "VerifiedPayeeEnforcer": {
+        "n": 20,
+        "medianPaired": 38652,
+        "p95Paired": 42010,
+        "calldataGasMedian": 3848
+      },
+      "CoSignEnforcer": {
+        "n": 20,
+        "medianPaired": 42055,
+        "p95Paired": 45323,
+        "calldataGasMedian": 3372
+      },
+      "CategoryBudgetEnforcer(tHKD)": {
+        "n": 20,
+        "medianPaired": 54093,
+        "p95Paired": 58631,
+        "calldataGasMedian": 4376
+      },
+      "ReserveFloorEnforcer": {
+        "n": 20,
+        "medianPaired": 23229,
+        "p95Paired": 24681,
+        "calldataGasMedian": 1576
+      },
+      "VelocityEnforcer": {
+        "n": 20,
+        "medianPaired": 71536,
+        "p95Paired": 73880,
+        "calldataGasMedian": 1892
+      },
+      "SuitabilityEnforcer": {
+        "n": 20,
+        "medianPaired": 35018,
+        "p95Paired": 36471,
+        "calldataGasMedian": 1588
+      },
+      "CategoryBudgetEnforcer(tUSD)": {
+        "n": 20,
+        "medianPaired": 34323,
+        "p95Paired": 37409,
+        "calldataGasMedian": 3160
+      }
+    },
+    "sumOfMedians": 479000
+  },
+  "percentile": "p95 is nearest-rank",
+  "rawFileNote": "reports/gas.raw.json keeps decoded_logs; the raw event logs and traces fields were removed to keep it small"
+}

@@ -1,0 +1,701 @@
+{
+  "tool": "forge coverage",
+  "version": "forge Version: 1.8.5",
+  "command": "forge coverage --report summary --report lcov --report-file reports/lcov.info > reports/coverage.summary.txt   (cwd: contracts/; no --ir-minimum needed)",
+  "generatedAt": "2026-10-16T01:40:22Z",
+  "commit": "99e8147edb8cfcd4467597907d46e586a34048ad",
+  "srcTree": "b665c8d9696f51ab03ccb0ada697798e96399ee5",
+  "srcHasUncommittedChanges": false,
+  "uncommittedPathsUnderContracts": [
+    "contracts/reports/",
+    "contracts/test/GasOverhead.t.sol",
+    "contracts/test/symbolic/"
+  ],
+  "scope": "contracts/src only (rows for test/, script/ and lib/ dropped from the same run)",
+  "total": {
+    "lines": {
+      "hit": 546,
+      "found": 856,
+      "pct": 63.79
+    },
+    "statements": {
+      "hit": 665,
+      "found": 1048,
+      "pct": 63.45
+    },
+    "branches": {
+      "hit": 72,
+      "found": 198,
+      "pct": 36.36
+    },
+    "functions": {
+      "hit": 90,
+      "found": 183,
+      "pct": 49.18
+    }
+  },
+  "perFile": {
+    "src/enforcers/AgentLineageEnforcer.sol": {
+      "lines": {
+        "hit": 8,
+        "found": 9,
+        "pct": 88.89
+      },
+      "statements": {
+        "hit": 15,
+        "found": 18,
+        "pct": 83.33
+      },
+      "branches": {
+        "hit": 1,
+        "found": 3,
+        "pct": 33.33
+      },
+      "functions": {
+        "hit": 1,
+        "found": 2,
+        "pct": 50.0
+      }
+    },
+    "src/enforcers/CategoryBudgetEnforcer.sol": {
+      "lines": {
+        "hit": 27,
+        "found": 32,
+        "pct": 84.38
+      },
+      "statements": {
+        "hit": 41,
+        "found": 46,
+        "pct": 89.13
+      },
+      "branches": {
+        "hit": 4,
+        "found": 8,
+        "pct": 50.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 5,
+        "pct": 20.0
+      }
+    },
+    "src/enforcers/CoSignEnforcer.sol": {
+      "lines": {
+        "hit": 31,
+        "found": 33,
+        "pct": 93.94
+      },
+      "statements": {
+        "hit": 43,
+        "found": 47,
+        "pct": 91.49
+      },
+      "branches": {
+        "hit": 8,
+        "found": 12,
+        "pct": 66.67
+      },
+      "functions": {
+        "hit": 4,
+        "found": 6,
+        "pct": 66.67
+      }
+    },
+    "src/enforcers/ForbiddenTargetsEnforcer.sol": {
+      "lines": {
+        "hit": 8,
+        "found": 14,
+        "pct": 57.14
+      },
+      "statements": {
+        "hit": 15,
+        "found": 27,
+        "pct": 55.56
+      },
+      "branches": {
+        "hit": 1,
+        "found": 4,
+        "pct": 25.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 2,
+        "pct": 50.0
+      }
+    },
+    "src/enforcers/GlobalPauseEnforcer.sol": {
+      "lines": {
+        "hit": 9,
+        "found": 10,
+        "pct": 90.0
+      },
+      "statements": {
+        "hit": 14,
+        "found": 15,
+        "pct": 93.33
+      },
+      "branches": {
+        "hit": 3,
+        "found": 4,
+        "pct": 75.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 2,
+        "pct": 50.0
+      }
+    },
+    "src/enforcers/JurisdictionEnforcer.sol": {
+      "lines": {
+        "hit": 18,
+        "found": 20,
+        "pct": 90.0
+      },
+      "statements": {
+        "hit": 31,
+        "found": 34,
+        "pct": 91.18
+      },
+      "branches": {
+        "hit": 4,
+        "found": 7,
+        "pct": 57.14
+      },
+      "functions": {
+        "hit": 1,
+        "found": 3,
+        "pct": 33.33
+      }
+    },
+    "src/enforcers/MandateBindingEnforcer.sol": {
+      "lines": {
+        "hit": 13,
+        "found": 16,
+        "pct": 81.25
+      },
+      "statements": {
+        "hit": 16,
+        "found": 19,
+        "pct": 84.21
+      },
+      "branches": {
+        "hit": 3,
+        "found": 6,
+        "pct": 50.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 2,
+        "pct": 50.0
+      }
+    },
+    "src/enforcers/ReputationGateEnforcer.sol": {
+      "lines": {
+        "hit": 0,
+        "found": 17,
+        "pct": 0.0
+      },
+      "statements": {
+        "hit": 0,
+        "found": 32,
+        "pct": 0.0
+      },
+      "branches": {
+        "hit": 0,
+        "found": 7,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 0,
+        "found": 2,
+        "pct": 0.0
+      }
+    },
+    "src/enforcers/ReserveFloorEnforcer.sol": {
+      "lines": {
+        "hit": 9,
+        "found": 10,
+        "pct": 90.0
+      },
+      "statements": {
+        "hit": 10,
+        "found": 11,
+        "pct": 90.91
+      },
+      "branches": {
+        "hit": 1,
+        "found": 2,
+        "pct": 50.0
+      },
+      "functions": {
+        "hit": 2,
+        "found": 3,
+        "pct": 66.67
+      }
+    },
+    "src/enforcers/SuitabilityEnforcer.sol": {
+      "lines": {
+        "hit": 11,
+        "found": 12,
+        "pct": 91.67
+      },
+      "statements": {
+        "hit": 15,
+        "found": 16,
+        "pct": 93.75
+      },
+      "branches": {
+        "hit": 2,
+        "found": 3,
+        "pct": 66.67
+      },
+      "functions": {
+        "hit": 2,
+        "found": 3,
+        "pct": 66.67
+      }
+    },
+    "src/enforcers/VelocityEnforcer.sol": {
+      "lines": {
+        "hit": 16,
+        "found": 18,
+        "pct": 88.89
+      },
+      "statements": {
+        "hit": 24,
+        "found": 26,
+        "pct": 92.31
+      },
+      "branches": {
+        "hit": 3,
+        "found": 5,
+        "pct": 60.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 3,
+        "pct": 33.33
+      }
+    },
+    "src/enforcers/VerifiedPayeeEnforcer.sol": {
+      "lines": {
+        "hit": 15,
+        "found": 17,
+        "pct": 88.24
+      },
+      "statements": {
+        "hit": 23,
+        "found": 26,
+        "pct": 88.46
+      },
+      "branches": {
+        "hit": 3,
+        "found": 5,
+        "pct": 60.0
+      },
+      "functions": {
+        "hit": 2,
+        "found": 3,
+        "pct": 66.67
+      }
+    },
+    "src/enforcers/VetoTimelockEnforcer.sol": {
+      "lines": {
+        "hit": 1,
+        "found": 44,
+        "pct": 2.27
+      },
+      "statements": {
+        "hit": 0,
+        "found": 56,
+        "pct": 0.0
+      },
+      "branches": {
+        "hit": 0,
+        "found": 9,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 10,
+        "pct": 10.0
+      }
+    },
+    "src/enforcers/YinglongEnforcer.sol": {
+      "lines": {
+        "hit": 3,
+        "found": 3,
+        "pct": 100.0
+      },
+      "statements": {
+        "hit": 5,
+        "found": 6,
+        "pct": 83.33
+      },
+      "branches": {
+        "hit": 0,
+        "found": 1,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 1,
+        "pct": 100.0
+      }
+    },
+    "src/libraries/PaymentDecoder.sol": {
+      "lines": {
+        "hit": 25,
+        "found": 32,
+        "pct": 78.12
+      },
+      "statements": {
+        "hit": 27,
+        "found": 40,
+        "pct": 67.5
+      },
+      "branches": {
+        "hit": 5,
+        "found": 13,
+        "pct": 38.46
+      },
+      "functions": {
+        "hit": 2,
+        "found": 2,
+        "pct": 100.0
+      }
+    },
+    "src/rails/ConditionalPaymentInstructions.sol": {
+      "lines": {
+        "hit": 2,
+        "found": 48,
+        "pct": 4.17
+      },
+      "statements": {
+        "hit": 1,
+        "found": 45,
+        "pct": 2.22
+      },
+      "branches": {
+        "hit": 0,
+        "found": 6,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 12,
+        "pct": 8.33
+      }
+    },
+    "src/rails/ProductRegistry.sol": {
+      "lines": {
+        "hit": 11,
+        "found": 17,
+        "pct": 64.71
+      },
+      "statements": {
+        "hit": 11,
+        "found": 18,
+        "pct": 61.11
+      },
+      "branches": {
+        "hit": 1,
+        "found": 4,
+        "pct": 25.0
+      },
+      "functions": {
+        "hit": 3,
+        "found": 5,
+        "pct": 60.0
+      }
+    },
+    "src/rails/ProtectedPayment.sol": {
+      "lines": {
+        "hit": 18,
+        "found": 27,
+        "pct": 66.67
+      },
+      "statements": {
+        "hit": 19,
+        "found": 32,
+        "pct": 59.38
+      },
+      "branches": {
+        "hit": 0,
+        "found": 6,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 3,
+        "found": 5,
+        "pct": 60.0
+      }
+    },
+    "src/rails/SignedQuoteSettlement.sol": {
+      "lines": {
+        "hit": 24,
+        "found": 28,
+        "pct": 85.71
+      },
+      "statements": {
+        "hit": 28,
+        "found": 35,
+        "pct": 80.0
+      },
+      "branches": {
+        "hit": 1,
+        "found": 5,
+        "pct": 20.0
+      },
+      "functions": {
+        "hit": 5,
+        "found": 6,
+        "pct": 83.33
+      }
+    },
+    "src/rails/TestMoneyMarketFund.sol": {
+      "lines": {
+        "hit": 8,
+        "found": 14,
+        "pct": 57.14
+      },
+      "statements": {
+        "hit": 7,
+        "found": 15,
+        "pct": 46.67
+      },
+      "branches": {
+        "hit": 0,
+        "found": 2,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 2,
+        "found": 4,
+        "pct": 50.0
+      }
+    },
+    "src/rails/TestUnits.sol": {
+      "lines": {
+        "hit": 13,
+        "found": 31,
+        "pct": 41.94
+      },
+      "statements": {
+        "hit": 11,
+        "found": 38,
+        "pct": 28.95
+      },
+      "branches": {
+        "hit": 0,
+        "found": 8,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 3,
+        "found": 7,
+        "pct": 42.86
+      }
+    },
+    "src/registries/AccountabilityLedger.sol": {
+      "lines": {
+        "hit": 2,
+        "found": 40,
+        "pct": 5.0
+      },
+      "statements": {
+        "hit": 1,
+        "found": 35,
+        "pct": 2.86
+      },
+      "branches": {
+        "hit": 0,
+        "found": 8,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 1,
+        "found": 13,
+        "pct": 7.69
+      }
+    },
+    "src/registries/KillSwitchRegistry.sol": {
+      "lines": {
+        "hit": 40,
+        "found": 65,
+        "pct": 61.54
+      },
+      "statements": {
+        "hit": 32,
+        "found": 63,
+        "pct": 50.79
+      },
+      "branches": {
+        "hit": 3,
+        "found": 12,
+        "pct": 25.0
+      },
+      "functions": {
+        "hit": 13,
+        "found": 19,
+        "pct": 68.42
+      }
+    },
+    "src/registries/MandateRegistry.sol": {
+      "lines": {
+        "hit": 60,
+        "found": 66,
+        "pct": 90.91
+      },
+      "statements": {
+        "hit": 64,
+        "found": 78,
+        "pct": 82.05
+      },
+      "branches": {
+        "hit": 2,
+        "found": 13,
+        "pct": 15.38
+      },
+      "functions": {
+        "hit": 9,
+        "found": 13,
+        "pct": 69.23
+      }
+    },
+    "src/registries/PayeeBook.sol": {
+      "lines": {
+        "hit": 13,
+        "found": 24,
+        "pct": 54.17
+      },
+      "statements": {
+        "hit": 11,
+        "found": 24,
+        "pct": 45.83
+      },
+      "branches": {
+        "hit": 1,
+        "found": 3,
+        "pct": 33.33
+      },
+      "functions": {
+        "hit": 2,
+        "found": 6,
+        "pct": 33.33
+      }
+    },
+    "src/registries/YinglongPassportRegistry.sol": {
+      "lines": {
+        "hit": 67,
+        "found": 104,
+        "pct": 64.42
+      },
+      "statements": {
+        "hit": 70,
+        "found": 106,
+        "pct": 66.04
+      },
+      "branches": {
+        "hit": 4,
+        "found": 16,
+        "pct": 25.0
+      },
+      "functions": {
+        "hit": 10,
+        "found": 22,
+        "pct": 45.45
+      }
+    },
+    "src/utils/YinglongCreate2Deployer.sol": {
+      "lines": {
+        "hit": 0,
+        "found": 7,
+        "pct": 0.0
+      },
+      "statements": {
+        "hit": 0,
+        "found": 6,
+        "pct": 0.0
+      },
+      "branches": {
+        "hit": 0,
+        "found": 1,
+        "pct": 0.0
+      },
+      "functions": {
+        "hit": 0,
+        "found": 2,
+        "pct": 0.0
+      }
+    },
+    "src/utils/YinglongEIP712.sol": {
+      "lines": {
+        "hit": 7,
+        "found": 8,
+        "pct": 87.5
+      },
+      "statements": {
+        "hit": 6,
+        "found": 6,
+        "pct": 100.0
+      },
+      "branches": {
+        "hit": 0,
+        "found": 0,
+        "pct": null
+      },
+      "functions": {
+        "hit": 3,
+        "found": 4,
+        "pct": 75.0
+      }
+    },
+    "src/zk/ZKMandateEnforcer.sol": {
+      "lines": {
+        "hit": 65,
+        "found": 68,
+        "pct": 95.59
+      },
+      "statements": {
+        "hit": 92,
+        "found": 94,
+        "pct": 97.87
+      },
+      "branches": {
+        "hit": 17,
+        "found": 19,
+        "pct": 89.47
+      },
+      "functions": {
+        "hit": 10,
+        "found": 12,
+        "pct": 83.33
+      }
+    },
+    "src/zk/ZKVerifierRouter.sol": {
+      "lines": {
+        "hit": 22,
+        "found": 22,
+        "pct": 100.0
+      },
+      "statements": {
+        "hit": 33,
+        "found": 34,
+        "pct": 97.06
+      },
+      "branches": {
+        "hit": 5,
+        "found": 6,
+        "pct": 83.33
+      },
+      "functions": {
+        "hit": 4,
+        "found": 4,
+        "pct": 100.0
+      }
+    }
+  },
+  "lcov": "contracts/reports/lcov.info",
+  "note": "forge coverage compiles without the optimizer; percentages are over instrumented items only."
+}

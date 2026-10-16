@@ -1,0 +1,52 @@
+Compiling 164 files with Solc 0.8.23
+Solc 0.8.23 finished in 60.59s
+Compiler run successful!
+WARNING  Skipped VmContractHelper143.json due to parsing failure: KeyError:    
+         'ast'                                                                 
+         (see https://github.com/a16z/halmos/wiki/warnings#parsing-error)      
+Running 2 tests for test/symbolic/SymbolicEnforcers.t.sol:SymCategoryBudget
+[PASS] check_categoryCapsHold(address,uint256,address,uint256,address,uint256,uint32,uint32,uint32) (paths: 2930, time: 329.73s, bounds: [])
+Counterexample: 
+    p__amount_uint256_64c7711_00 = 0x00
+    p__to_address_98faa70_00 = 0x00
+Counterexample: 
+    p__amount_uint256_64c7711_00 = 0x00
+    p__to_address_98faa70_00 = 0x1111
+Counterexample: 
+    p__amount_uint256_64c7711_00 = 0x00
+    p__to_address_98faa70_00 = 0x2222
+[FAIL] check_vacuity_budgetPaymentCanPass(address,uint256) (paths: 8, time: 0.71s, bounds: [])
+Symbolic test result: 1 passed; 1 failed; time: 330.93s
+Running 2 tests for test/symbolic/SymbolicEnforcers.t.sol:SymForbiddenTargets
+[PASS] check_forbiddenTargetsUnreachable(address,address,address,address,address,address,bytes4,uint256) (paths: 14, time: 0.20s, bounds: [])
+Counterexample: 
+    p__f0_address_494d73b_00 = 0x8000000000000000000000000000000000000000
+    p__target_address_4a5ba25_00 = 0x00
+[FAIL] check_vacuity_targetCanPass(address,address,uint256) (paths: 6, time: 0.18s, bounds: [])
+Symbolic test result: 1 passed; 1 failed; time: 0.41s
+Running 2 tests for test/symbolic/SymbolicEnforcers.t.sol:SymGlobalPause
+[PASS] check_pausedAccountRefused(uint8,uint64,uint32,uint256,uint8) (paths: 152, time: 19.22s, bounds: [])
+Counterexample: 
+    p__agentId_uint256_d213bbe_00 = 0x8000000000000000000000000000000000000000000000000000000000000000
+    p__status_uint8_2c9b469_00 = 0x01
+Counterexample: 
+    p__agentId_uint256_d213bbe_00 = 0x00
+    p__status_uint8_2c9b469_00 = 0x00
+[FAIL] check_vacuity_unpausedCanPass(uint256,uint8) (paths: 4, time: 0.25s, bounds: [])
+Symbolic test result: 1 passed; 1 failed; time: 19.51s
+Running 3 tests for test/symbolic/SymbolicEnforcers.t.sol:SymReserveFloor
+[PASS] check_onlySingleDefaultMode(bytes32) (paths: 3, time: 0.04s, bounds: [])
+[PASS] check_reserveFloorHolds(uint256,uint256,uint256) (paths: 6, time: 0.31s, bounds: [])
+Counterexample: 
+    p__balance_uint256_fe1cedb_00 = 0x00
+    p__floor_uint256_8d53de9_00 = 0x00
+[FAIL] check_vacuity_floorCanPass(uint256,uint256) (paths: 2, time: 0.16s, bounds: [])
+Symbolic test result: 2 passed; 1 failed; time: 0.57s
+Running 2 tests for test/symbolic/SymbolicEnforcers.t.sol:SymVerifiedPayee
+[PASS] check_onlyVerifiedPayees(uint8,address,uint256,bytes32,bool) (paths: 39, time: 5.72s, bounds: [])
+Counterexample: 
+    p__to_address_a0a0198_00 = 0x1111
+Counterexample: 
+    p__to_address_a0a0198_00 = 0x4444
+[FAIL] check_vacuity_payeeCanPass(address,uint256) (paths: 4, time: 0.43s, bounds: [])
+Symbolic test result: 1 passed; 1 failed; time: 6.33s

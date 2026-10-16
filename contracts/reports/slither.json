@@ -1,0 +1,194 @@
+{
+  "tool": "slither",
+  "version": "0.11.6",
+  "command": "slither . --filter-paths \"lib/|test/|script/\" --json reports/slither.raw.json   (cwd: contracts/)",
+  "generatedAt": "2026-10-16T01:40:17Z",
+  "commit": "99e8147edb8cfcd4467597907d46e586a34048ad",
+  "srcTree": "b665c8d9696f51ab03ccb0ada697798e96399ee5",
+  "srcHasUncommittedChanges": false,
+  "uncommittedPathsUnderContracts": [
+    "contracts/reports/",
+    "contracts/test/GasOverhead.t.sol",
+    "contracts/test/symbolic/"
+  ],
+  "scope": "contracts/src (lib/, test/ and script/ filtered out)",
+  "success": true,
+  "detectorsRun": 102,
+  "rawCountsByImpact": {
+    "High": 0,
+    "Medium": 14,
+    "Low": 34,
+    "Informational": 298,
+    "Optimization": 5
+  },
+  "rawCountsByImpactAndDetector": {
+    "Medium": {
+      "incorrect-equality": 2,
+      "uninitialized-local": 5,
+      "unused-return": 7
+    },
+    "Low": {
+      "missing-zero-check": 15,
+      "reentrancy-benign": 1,
+      "timestamp": 18
+    },
+    "Informational": {
+      "assembly": 3,
+      "low-level-calls": 2,
+      "missing-inheritance": 8,
+      "naming-convention": 285
+    },
+    "Optimization": {
+      "immutable-states": 5
+    }
+  },
+  "openAfterTriage": {
+    "High": 0,
+    "Medium": 0
+  },
+  "triage": [
+    {
+      "id": "8ee0cae62fa545e4c15dd6148a4aafcb265c4fa6d32201bea46f68436001402b",
+      "impact": "Medium",
+      "confidence": "High",
+      "detector": "incorrect-equality",
+      "location": "src/registries/MandateRegistry.sol#L188",
+      "description": "MandateRegistry._publish(MandateRegistry.PublishParams) (src/registries/MandateRegistry.sol#183-224) uses a dangerous strict equality:",
+      "verdict": "false positive",
+      "reason": "Strict equality is on the Status enum of a stored mandate, which only the account's own publish/supersede/revoke writes; the detector targets attacker-influenced values such as balances, none is involved."
+    },
+    {
+      "id": "d46620cbb74d7e733911a26e17f90cea9a16e22dc3910a30588d9ca08c94b5d6",
+      "impact": "Medium",
+      "confidence": "High",
+      "detector": "incorrect-equality",
+      "location": "src/registries/AccountabilityLedger.sol#L139",
+      "description": "AccountabilityLedger.latestRoot() (src/registries/AccountabilityLedger.sol#138-142) uses a dangerous strict equality:",
+      "verdict": "false positive",
+      "reason": "latestRoot() is a view that tests whether the batch array is empty; array length is not attacker-manipulable in the way the detector (balance/ether equality) assumes."
+    },
+    {
+      "id": "07bc7859e41833dd51bcda5388f3c40da6e83fc31a24da11c3d1e3f57d44138f",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "uninitialized-local",
+      "location": "src/enforcers/JurisdictionEnforcer.sol#L46",
+      "description": "JurisdictionEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).allowed_ (src/enforcers/JurisdictionEnforcer.sol#46) is a local variable never initialized",
+      "verdict": "false positive",
+      "reason": "allowed_ is meant to start false and is set true only when the asset is found in the sealed list; the default is the fail-closed value."
+    },
+    {
+      "id": "81aabbeba7e54ea00a05014be3acc987de2e3092b676384abb4a0c0c61159358",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "uninitialized-local",
+      "location": "src/enforcers/CategoryBudgetEnforcer.sol#L93",
+      "description": "CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).found_ (src/enforcers/CategoryBudgetEnforcer.sol#93) is a local variable never initialized",
+      "verdict": "false positive",
+      "reason": "found_ starts false and is set only when the category is in the sealed list; if it stays false the hook reverts with CategoryBudgetExceeded (fail closed)."
+    },
+    {
+      "id": "83ee39c9debd1ab4ed011e6890d50f973ae183de5b04512a16b9f292457816b7",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "uninitialized-local",
+      "location": "src/enforcers/MandateBindingEnforcer.sol#L55",
+      "description": "MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).receiptNonce_ (src/enforcers/MandateBindingEnforcer.sol#55) is a local variable never initialized",
+      "verdict": "false positive",
+      "reason": "receiptNonce_ defaults to zero when the optional args are empty; it is only emitted in an event, never used for a decision."
+    },
+    {
+      "id": "db462635fbddadf78a1283c1c28b8bda7d8112992ca113e94a072151d150c512",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "uninitialized-local",
+      "location": "src/enforcers/MandateBindingEnforcer.sol#L54",
+      "description": "MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).intentHash_ (src/enforcers/MandateBindingEnforcer.sol#54) is a local variable never initialized",
+      "verdict": "false positive",
+      "reason": "intentHash_ defaults to zero when the optional args are empty; it is only emitted in an event, never used for a decision."
+    },
+    {
+      "id": "e008bd2205700b389c763ffe444155a59293ec57f3f64b92323e35aeb4c514ca",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "uninitialized-local",
+      "location": "src/enforcers/CategoryBudgetEnforcer.sol#L92",
+      "description": "CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).cap_ (src/enforcers/CategoryBudgetEnforcer.sol#92) is a local variable never initialized",
+      "verdict": "false positive",
+      "reason": "cap_ is read only after found_ is true, and it is assigned in the same branch that sets found_."
+    },
+    {
+      "id": "59527cc6f3ab5f607ac311ad14c2fe0c696e6e9ae3ab866df2ed13c4d03cd39b",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "unused-return",
+      "location": "src/enforcers/ReputationGateEnforcer.sol#L53",
+      "description": "ReputationGateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/ReputationGateEnforcer.sol#36-63) ignores return value by (localId_,None,None) = IPassportView(t_.passport).walletInfo(p_.beneficiary) (src/enforcers/ReputationGateEnforcer.sol#53)",
+      "verdict": "false positive",
+      "reason": "Only the local agent id is needed to decide whether the beneficiary is an agent; status and DID are deliberately ignored here (VerifiedPayeeEnforcer governs who may be paid)."
+    },
+    {
+      "id": "807e40d17ebab269bbaad972daeeb3d42c5b8b8a0fa56e3b6651dc838a8f6f2c",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "unused-return",
+      "location": "src/enforcers/VerifiedPayeeEnforcer.sol#L46",
+      "description": "VerifiedPayeeEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/VerifiedPayeeEnforcer.sol#26-50) ignores return value by (active_,None) = IPayeeBookView(payeeBook_).lookup(_delegator,p_.beneficiary) (src/enforcers/VerifiedPayeeEnforcer.sol#46)",
+      "verdict": "false positive",
+      "reason": "Payee verification needs only the active flag; the category is consumed by the budget and co-sign enforcers."
+    },
+    {
+      "id": "9ca634e69288c3b248fc15c7bc6e8511b5403c1d894b709f0f13119b04d3275a",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "unused-return",
+      "location": "src/rails/TestUnits.sol#L100",
+      "description": "TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes) (src/rails/TestUnits.sol#83-105) ignores return value by (signer_,err_,None) = ECDSA.tryRecover(digest_,_signature) (src/rails/TestUnits.sol#100)",
+      "verdict": "false positive",
+      "reason": "Both the recovered signer and the RecoverError are checked; the ignored third value is only the error argument used for revert data."
+    },
+    {
+      "id": "9f321498e0d949dea70bbf08d026584a16558e4b7a3702a6d24adcf0476343d6",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "unused-return",
+      "location": "src/enforcers/YinglongEnforcer.sol#L22",
+      "description": "YinglongEnforcer._requireSingleDefault(ModeCode) (src/enforcers/YinglongEnforcer.sol#21-24) ignores return value by (callType_,execType_,None,None) = ModeLib.decode(_mode) (src/enforcers/YinglongEnforcer.sol#22)",
+      "verdict": "false positive",
+      "reason": "Only call type and exec type decide single/default mode; mode selector and payload are not interpreted by the framework's DeleGatorCore for single default executions."
+    },
+    {
+      "id": "a2164f5443fb2f8190c6f4ae6ed089db148339335e32fba9a2e31f332bbafc62",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "unused-return",
+      "location": "src/enforcers/GlobalPauseEnforcer.sol#L39",
+      "description": "GlobalPauseEnforcer.beforeAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/GlobalPauseEnforcer.sol#22-42) ignores return value by (agentId_,status_,None) = IPassportView(passport_).walletInfo(_redeemer) (src/enforcers/GlobalPauseEnforcer.sol#39)",
+      "verdict": "false positive",
+      "reason": "The pause check needs agent id and status only; the owner DID is checked by AgentLineageEnforcer."
+    },
+    {
+      "id": "deae0d490c6388ad47494993d931171a50772be1f9f5524c00111b8bcf883e0d",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "unused-return",
+      "location": "src/enforcers/ForbiddenTargetsEnforcer.sol#L43",
+      "description": "ForbiddenTargetsEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/ForbiddenTargetsEnforcer.sol#28-49) ignores return value by (target_,None,None) = _executionCallData.decodeSingle() (src/enforcers/ForbiddenTargetsEnforcer.sol#43)",
+      "verdict": "false positive",
+      "reason": "The forbidden-target rule concerns only the call target; value and calldata are governed by ValueLte and AllowedMethods and the payment enforcers."
+    },
+    {
+      "id": "f0af46df4c7b6c370fef0decf2612f63fb82cae0a351f0ed2a13eba1bafb0d03",
+      "impact": "Medium",
+      "confidence": "Medium",
+      "detector": "unused-return",
+      "location": "src/zk/ZKMandateEnforcer.sol#L184",
+      "description": "ZKMandateEnforcer._requireSingleDefaultMode(ModeCode) (src/zk/ZKMandateEnforcer.sol#183-186) ignores return value by (callType_,execType_,None,None) = ModeLib.decode(_mode) (src/zk/ZKMandateEnforcer.sol#184)",
+      "verdict": "false positive",
+      "reason": "Same pattern as YinglongEnforcer._requireSingleDefault: only call type and exec type are relevant."
+    }
+  ],
+  "truePositives": [],
+  "lowAndInformationalNote": "Low, Informational and Optimization findings are counted but not triaged here.",
+  "contractsAnalyzed": 64
+}

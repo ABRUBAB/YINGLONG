@@ -1,0 +1,113 @@
+{
+  "tool": "aderyn",
+  "version": "aderyn 0.6.8 (built from the v0.6.8 source release with the local Windows portability patch reports/aderyn-windows.patch)",
+  "command": "aderyn . --src src -x lib,test,script -o reports/aderyn.raw.json   (cwd: contracts/)",
+  "generatedAt": "2026-10-16T01:40:20Z",
+  "commit": "99e8147edb8cfcd4467597907d46e586a34048ad",
+  "srcTree": "b665c8d9696f51ab03ccb0ada697798e96399ee5",
+  "srcHasUncommittedChanges": false,
+  "uncommittedPathsUnderContracts": [
+    "contracts/reports/",
+    "contracts/test/GasOverhead.t.sol",
+    "contracts/test/symbolic/"
+  ],
+  "status": "run",
+  "scope": "contracts/src (lib, test and script excluded)",
+  "filesSummary": {
+    "total_source_units": 34,
+    "total_sloc": 2150
+  },
+  "detectorsUsed": 88,
+  "rawCounts": {
+    "High": 2,
+    "Low": 12,
+    "HighInstances": 4,
+    "LowInstances": 114
+  },
+  "openAfterTriage": {
+    "HighInstances": 0
+  },
+  "triage": [
+    {
+      "detector": "eth-send-unchecked-address",
+      "title": "ETH transferred without address checks",
+      "location": "src/rails/ProtectedPayment.sol#L97",
+      "verdict": "false positive",
+      "reason": "refund() moves no ETH; it returns the escrowed ERC-20 to the payer recorded at creation (never to msg.sender), only after refundAfter and once (Held -> Refunded, nonReentrant)."
+    },
+    {
+      "detector": "eth-send-unchecked-address",
+      "title": "ETH transferred without address checks",
+      "location": "src/rails/SignedQuoteSettlement.sol#L54",
+      "verdict": "false positive",
+      "reason": "depositLiquidity() moves no ETH; it pulls the caller's own ERC-20 and credits the caller's liquidity."
+    },
+    {
+      "detector": "eth-send-unchecked-address",
+      "title": "ETH transferred without address checks",
+      "location": "src/rails/SignedQuoteSettlement.sol#L60",
+      "verdict": "false positive",
+      "reason": "withdrawLiquidity() moves no ETH; it pays ERC-20 only to msg.sender, bounded by msg.sender's own credited liquidity (checked subtraction reverts first)."
+    },
+    {
+      "detector": "reentrancy-state-change",
+      "title": "Reentrancy: State change after external call",
+      "location": "src/enforcers/CategoryBudgetEnforcer.sol#L89",
+      "verdict": "false positive",
+      "reason": "IPayeeBookView.lookup is declared view, so it is a STATICCALL: the callee cannot change state or re-enter a state-changing path; the spent counter is keyed by msg.sender (the DelegationManager)."
+    }
+  ],
+  "truePositives": [],
+  "lowByDetector": {
+    "costly-loop": 1,
+    "literal-instead-of-constant": 47,
+    "local-variable-shadowing": 2,
+    "missing-inheritance": 4,
+    "modifier-used-only-once": 1,
+    "require-revert-in-loop": 2,
+    "state-change-without-event": 2,
+    "state-no-address-check": 14,
+    "state-variable-could-be-immutable": 5,
+    "unchecked-return": 1,
+    "unused-error": 34,
+    "unused-public-function": 1
+  },
+  "lowNote": "Aderyn has no Medium level; Low findings are counted, not triaged.",
+  "attempts": [
+    {
+      "attempt": "npm i -g --prefix D:/tools/npm-global @cyfrin/aderyn",
+      "result": "failed",
+      "detail": "the package's install script refuses the host: Platform with type Windows_NT and architecture x64 is not supported (supported: aarch64-apple-darwin, aarch64-unknown-linux-gnu, x86_64-apple-darwin, x86_64-unknown-linux-gnu)"
+    },
+    {
+      "attempt": "GitHub release aderyn-v0.6.8 prebuilt binaries",
+      "result": "not available",
+      "detail": "the release ships macOS and Linux archives only; there is no Windows binary"
+    },
+    {
+      "attempt": "cargo install aderyn --locked (Rust stable, x86_64-pc-windows-gnu, installed under D:/tools)",
+      "result": "failed",
+      "detail": "crates.io only carries the old aderyn 0.1.9; its build failed with rustc E0786 invalid-metadata errors on this host"
+    },
+    {
+      "attempt": "cargo build --release -p aderyn from the v0.6.8 source release (SHA-256 checked against the release's .sha256 file) with its pinned nightly toolchain",
+      "result": "failed",
+      "detail": "rustc crashed (stack overflow) on several dependencies and the 32-bit C:/MinGW dlltool was picked up"
+    },
+    {
+      "attempt": "same source, cargo +stable, LTO off, msys64 mingw64 binutils first on PATH, RUST_MIN_STACK raised",
+      "result": "failed",
+      "detail": "dependencies built; aderyn_driver uses #![feature] (nightly only)"
+    },
+    {
+      "attempt": "same, with RUSTC_BOOTSTRAP=aderyn_driver (feature gate allowed for that crate only)",
+      "result": "failed",
+      "detail": "aderyn/src/mcp.rs uses a Unix-only SIGTERM handler without a non-Unix fallback"
+    },
+    {
+      "attempt": "same, with the local patch reports/aderyn-windows.patch",
+      "result": "built and ran",
+      "detail": "the patch adds a non-Unix fallback for the MCP server's SIGTERM handler and normalises Windows path separators (and the verbatim path prefix) where per-file stats are collected and where the detector entrypoint looks up aderyn-ignore lines (it previously panicked on every finding), plus an opt-in ADERYN_DEBUG_PATHS trace; no detector code is changed"
+    }
+  ]
+}

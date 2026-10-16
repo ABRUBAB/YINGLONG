@@ -1,0 +1,79 @@
+{
+  "tool": "forge test",
+  "version": "forge Version: 1.8.5",
+  "command": "forge test --json > reports/forge-test.raw.json   (cwd: contracts/)",
+  "generatedAt": "2026-10-16T01:40:39Z",
+  "commit": "99e8147edb8cfcd4467597907d46e586a34048ad",
+  "srcTree": "b665c8d9696f51ab03ccb0ada697798e96399ee5",
+  "srcHasUncommittedChanges": false,
+  "uncommittedPathsUnderContracts": [
+    "contracts/reports/",
+    "contracts/test/GasOverhead.t.sol",
+    "contracts/test/symbolic/"
+  ],
+  "settings": {
+    "fuzz.runs": 512,
+    "invariant.runs": 128,
+    "invariant.depth": 64,
+    "invariant.fail_on_revert": false,
+    "profile": "default"
+  },
+  "tests": {
+    "unit": 91,
+    "fuzz": 1,
+    "invariant": 5,
+    "failed": []
+  },
+  "notes": [
+    "Foundry runs the invariant_* functions of one contract in a single shared campaign; its calls are counted once and every invariant is checked after each call",
+    "per-test inline config can override the default fuzz runs (forge-config comments in test files)",
+    "the traces field was removed from reports/forge-test.raw.json to keep it small; nothing else was changed"
+  ],
+  "calls": {
+    "invariantHandlerCalls": 8192,
+    "invariantReverts": 0,
+    "invariantRuns": 128,
+    "fuzzRuns": 16,
+    "total": 8208,
+    "definition": "total = invariant handler calls (all runs x depth) + fuzz-test runs (one call each)"
+  },
+  "campaigns": [
+    {
+      "test": "test/invariants/MandateInvariants.t.sol:MandateInvariantsTest::invariant_authorityUnchanged()",
+      "kind": "invariant campaign",
+      "runs": 128,
+      "calls": 8192,
+      "reverts": 0,
+      "workers": 1,
+      "invariantsChecked": [
+        {
+          "name": "invariant_authorityUnchanged",
+          "status": "Success"
+        },
+        {
+          "name": "invariant_categoryCapsHold",
+          "status": "Success"
+        },
+        {
+          "name": "invariant_noMovementWhilePaused",
+          "status": "Success"
+        },
+        {
+          "name": "invariant_onlyVerifiedPayees",
+          "status": "Success"
+        },
+        {
+          "name": "invariant_reserveFloorHolds",
+          "status": "Success"
+        }
+      ],
+      "status": "Success"
+    },
+    {
+      "test": "test/zk/ZKMandateEnforcer.t.sol:ZKMandateEnforcerTest::testFuzz_tamperedAmount_reverts(uint128)",
+      "kind": "fuzz",
+      "runs": 16,
+      "status": "Success"
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "tool": "halmos",
+  "version": "halmos 0.3.3",
+  "command": "FOUNDRY_DYNAMIC_TEST_LINKING=false halmos --root contracts --match-contract '^Sym' --function check_ --loop 4 --solver-timeout-assertion 300000 --json-output contracts/reports/halmos.raw.json   (cwd: repository root; dynamic test linking is disabled because Halmos cannot execute the vm.deployCode calls it generates)",
+  "generatedAt": "2026-10-16T01:40:36Z",
+  "commit": "99e8147edb8cfcd4467597907d46e586a34048ad",
+  "srcTree": "b665c8d9696f51ab03ccb0ada697798e96399ee5",
+  "srcHasUncommittedChanges": false,
+  "uncommittedPathsUnderContracts": [
+    "contracts/reports/",
+    "contracts/test/GasOverhead.t.sol",
+    "contracts/test/symbolic/"
+  ],
+  "scope": "Our enforcers' hook logic called directly (this test contract plays the DelegationManager), with the real PayeeBook, KillSwitchRegistry and TestUnits; the DelegationManager, the smart account, signature verification and the passport registry (mocked) are NOT symbolically executed",
+  "claim": "bounded: a property marked 'proved within bounds' has no counterexample over all symbolic inputs listed, with loops unrolled to the bound below; this is not a full proof of the invariant",
+  "bounds": {
+    "loop": 4,
+    "solverTimeoutAssertionMs": 300000,
+    "depth": "halmos default (0 = unlimited path length)",
+    "width": "halmos default (0 = unlimited number of paths)",
+    "dynamicLengths": "all byte strings are built inside the checks with fixed lengths"
+  },
+  "properties": [
+    {
+      "invariant": 1,
+      "property": "No redemption sequence exceeds any category cap in any period",
+      "check": "SymCategoryBudget.check_categoryCapsHold",
+      "status": "proved within bounds",
+      "symbolicInputs": "CategoryBudgetEnforcer.beforeHook x3: symbolic recipients (PayeeBook categories RENT/FOOD/TUITION/unlisted), symbolic uint256 amounts, symbolic start time and two symbolic uint32 time steps; ghost sum per (category, period)",
+      "paths": {
+        "all": 2930,
+        "normal": 1640,
+        "stuck": 0
+      },
+      "timeSeconds": {
+        "total": 329.73,
+        "paths": 329.73,
+        "models": 0.0
+      },
+      "boundedLoops": 0,
+      "counterexamples": []
+    },
+    {
+      "invariant": 2,
+      "property": "The reserve floor is never breached",
+      "check": "SymReserveFloor.check_reserveFloorHolds",
+      "status": "proved within bounds",
+      "symbolicInputs": "ReserveFloorEnforcer.afterAllHook after a TestUnits transfer: symbolic start balance, amount and floor; asserts the hook passes exactly when the final balance is at least the floor",
+      "paths": {
+        "all": 6,
+        "normal": 4,
+        "stuck": 0
+      },
+      "timeSeconds": {
+        "total": 0.31,
+        "paths": 0.31,
+        "models": 0.0
+      },
+      "boundedLoops": 0,
+      "counterexamples": []
+    },
+    {
+      "invariant": 2,
+      "property": "Only single-call default-mode executions are accepted (precondition of the floor check)",
+      "check": "SymReserveFloor.check_onlySingleDefaultMode",
+      "status": "proved within bounds",
+      "symbolicInputs": "ReserveFloorEnforcer.beforeHook with a fully symbolic bytes32 ModeCode",
+      "paths": {
+        "all": 3,
+        "normal": 3,
+        "stuck": 0
+      },
+      "timeSeconds": {
+        "total": 0.04,
+        "paths": 0.04,
+        "models": 0.0
+      },
+      "boundedLoops": 0,
+      "counterexamples": []
+    },
+    {
+      "invariant": 3,
+      "property": "A paused account moves nothing",
+      "check": "SymGlobalPause.check_pausedAccountRefused",
+      "status": "proved within bounds",
+      "symbolicInputs": "GlobalPauseEnforcer.beforeAllHook with the real KillSwitchRegistry: symbolic subset of {self trip, guardian trip, supervisor halt, dead-man timer with symbolic interval, agent untrip, account untrip}, symbolic elapsed time, symbolic passport agent id and status",
+      "paths": {
+        "all": 152,
+        "normal": 144,
+        "stuck": 0
+      },
+      "timeSeconds": {
+        "total": 19.22,
+        "paths": 19.22,
+        "models": 0.0
+      },
+      "boundedLoops": 0,
+      "counterexamples": []
+    },
+    {
+      "invariant": 4,
+      "property": "Only verified payees receive funds",
+      "check": "SymVerifiedPayee.check_onlyVerifiedPayees",
+      "status": "proved within bounds",
+      "symbolicInputs": "VerifiedPayeeEnforcer.beforeHook with the real PayeeBook: symbolic payment shape (transfer, transferAndCall with and without beneficiary word, instruct), symbolic recipient, amount and beneficiary word, optional payee removal",
+      "paths": {
+        "all": 39,
+        "normal": 34,
+        "stuck": 0
+      },
+      "timeSeconds": {
+        "total": 5.72,
+        "paths": 5.72,
+        "models": 0.0
+      },
+      "boundedLoops": 0,
+      "counterexamples": []
+    },
+    {
+      "invariant": 5,
+      "property": "No redemption reaches the account, the DelegationManager or a protected registry",
+      "check": "SymForbiddenTargets.check_forbiddenTargetsUnreachable",
+      "status": "proved within bounds",
+      "symbolicInputs": "ForbiddenTargetsEnforcer.beforeHook: symbolic target, delegator, 4 symbolic forbidden addresses, selector and argument",
+      "paths": {
+        "all": 14,
+        "normal": 7,
+        "stuck": 0
+      },
+      "timeSeconds": {
+        "total": 0.2,
+        "paths": 0.2,
+        "models": 0.0
+      },
+      "boundedLoops": 0,
+      "counterexamples": []
+    }
+  ],
+  "vacuityProbes": [
+    {
+      "invariant": 1,
+      "probe": "check_vacuity_budgetPaymentCanPass",
+      "expected": "counterexample (shows the hook can pass, so the property check is not vacuous)",
+      "status": "counterexample",
+      "nonVacuous": true,
+      "counterexamples": [
+        {
+          "model": {
+            "p__to_address_98faa70_00": {
+              "full_name": "p__to_address_98faa70_00",
+              "variable_name": "",
+              "solidity_type": "to",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            },
+            "p__amount_uint256_64c7711_00": {
+              "full_name": "p__amount_uint256_64c7711_00",
+              "variable_name": "",
+              "solidity_type": "amount",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            }
+          },
+          "is_valid": true
+        },
+        {
+          "model": {
+            "p__to_address_98faa70_00": {
+              "full_name": "p__to_address_98faa70_00",
+              "variable_name": "",
+              "solidity_type": "to",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 4369
+            },
+            "p__amount_uint256_64c7711_00": {
+              "full_name": "p__amount_uint256_64c7711_00",
+              "variable_name": "",
+              "solidity_type": "amount",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            }
+          },
+          "is_valid": true
+        },
+        {
+          "model": {
+            "p__to_address_98faa70_00": {
+              "full_name": "p__to_address_98faa70_00",
+              "variable_name": "",
+              "solidity_type": "to",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 8738
+            },
+            "p__amount_uint256_64c7711_00": {
+              "full_name": "p__amount_uint256_64c7711_00",
+              "variable_name": "",
+              "solidity_type": "amount",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            }
+          },
+          "is_valid": true
+        }
+      ]
+    },
+    {
+      "invariant": 2,
+      "probe": "check_vacuity_floorCanPass",
+      "expected": "counterexample (shows the hook can pass, so the property check is not vacuous)",
+      "status": "counterexample",
+      "nonVacuous": true,
+      "counterexamples": [
+        {
+          "model": {
+            "p__balance_uint256_fe1cedb_00": {
+              "full_name": "p__balance_uint256_fe1cedb_00",
+              "variable_name": "",
+              "solidity_type": "balance",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            },
+            "p__floor_uint256_8d53de9_00": {
+              "full_name": "p__floor_uint256_8d53de9_00",
+              "variable_name": "",
+              "solidity_type": "floor",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            }
+          },
+          "is_valid": true
+        }
+      ]
+    },
+    {
+      "invariant": 3,
+      "probe": "check_vacuity_unpausedCanPass",
+      "expected": "counterexample (shows the hook can pass, so the property check is not vacuous)",
+      "status": "counterexample",
+      "nonVacuous": true,
+      "counterexamples": [
+        {
+          "model": {
+            "p__status_uint8_2c9b469_00": {
+              "full_name": "p__status_uint8_2c9b469_00",
+              "variable_name": "",
+              "solidity_type": "status",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 1
+            },
+            "p__agentId_uint256_d213bbe_00": {
+              "full_name": "p__agentId_uint256_d213bbe_00",
+              "variable_name": "",
+              "solidity_type": "agentId",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 57896044618658097711785492504343953926634992332820282019728792003956564819968
+            }
+          },
+          "is_valid": true
+        },
+        {
+          "model": {
+            "p__status_uint8_2c9b469_00": {
+              "full_name": "p__status_uint8_2c9b469_00",
+              "variable_name": "",
+              "solidity_type": "status",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            },
+            "p__agentId_uint256_d213bbe_00": {
+              "full_name": "p__agentId_uint256_d213bbe_00",
+              "variable_name": "",
+              "solidity_type": "agentId",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            }
+          },
+          "is_valid": true
+        }
+      ]
+    },
+    {
+      "invariant": 4,
+      "probe": "check_vacuity_payeeCanPass",
+      "expected": "counterexample (shows the hook can pass, so the property check is not vacuous)",
+      "status": "counterexample",
+      "nonVacuous": true,
+      "counterexamples": [
+        {
+          "model": {
+            "p__to_address_a0a0198_00": {
+              "full_name": "p__to_address_a0a0198_00",
+              "variable_name": "",
+              "solidity_type": "to",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 4369
+            }
+          },
+          "is_valid": true
+        },
+        {
+          "model": {
+            "p__to_address_a0a0198_00": {
+              "full_name": "p__to_address_a0a0198_00",
+              "variable_name": "",
+              "solidity_type": "to",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 17476
+            }
+          },
+          "is_valid": true
+        }
+      ]
+    },
+    {
+      "invariant": 5,
+      "probe": "check_vacuity_targetCanPass",
+      "expected": "counterexample (shows the hook can pass, so the property check is not vacuous)",
+      "status": "counterexample",
+      "nonVacuous": true,
+      "counterexamples": [
+        {
+          "model": {
+            "p__target_address_4a5ba25_00": {
+              "full_name": "p__target_address_4a5ba25_00",
+              "variable_name": "",
+              "solidity_type": "target",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 0
+            },
+            "p__f0_address_494d73b_00": {
+              "full_name": "p__f0_address_494d73b_00",
+              "variable_name": "",
+              "solidity_type": "f0",
+              "smt_type": "BitVec 256",
+              "size_bits": 256,
+              "value": 730750818665451459101842416358141509827966271488
+            }
+          },
+          "is_valid": true
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "provedWithinBounds": 6,
+    "total": 6,
+    "invariantsCovered": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "fieldNotes": "paths = halmos num_paths (all, normal, stuck); timeSeconds = halmos time (total, paths, models), wall clock on the machine that ran it",
+  "kontrol": "not run"
+}

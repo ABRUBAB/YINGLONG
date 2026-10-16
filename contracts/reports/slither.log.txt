@@ -1,0 +1,453 @@
+
+Detector: incorrect-equality
+AccountabilityLedger.latestRoot() (src/registries/AccountabilityLedger.sol#138-142) uses a dangerous strict equality:
+	- _batches.length == 0 (src/registries/AccountabilityLedger.sol#139)
+MandateRegistry._publish(MandateRegistry.PublishParams) (src/registries/MandateRegistry.sol#183-224) uses a dangerous strict equality:
+	- live_ != bytes32(0) && _mandates[live_].status == Status.Live (src/registries/MandateRegistry.sol#188)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities
+
+Detector: uninitialized-local
+JurisdictionEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).allowed_ (src/enforcers/JurisdictionEnforcer.sol#46) is a local variable never initialized
+MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).intentHash_ (src/enforcers/MandateBindingEnforcer.sol#54) is a local variable never initialized
+CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).cap_ (src/enforcers/CategoryBudgetEnforcer.sol#92) is a local variable never initialized
+MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).receiptNonce_ (src/enforcers/MandateBindingEnforcer.sol#55) is a local variable never initialized
+CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address).found_ (src/enforcers/CategoryBudgetEnforcer.sol#93) is a local variable never initialized
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables
+
+Detector: unused-return
+YinglongEnforcer._requireSingleDefault(ModeCode) (src/enforcers/YinglongEnforcer.sol#21-24) ignores return value by (callType_,execType_,None,None) = ModeLib.decode(_mode) (src/enforcers/YinglongEnforcer.sol#22)
+ForbiddenTargetsEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/ForbiddenTargetsEnforcer.sol#28-49) ignores return value by (target_,None,None) = _executionCallData.decodeSingle() (src/enforcers/ForbiddenTargetsEnforcer.sol#43)
+GlobalPauseEnforcer.beforeAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/GlobalPauseEnforcer.sol#22-42) ignores return value by (agentId_,status_,None) = IPassportView(passport_).walletInfo(_redeemer) (src/enforcers/GlobalPauseEnforcer.sol#39)
+ReputationGateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/ReputationGateEnforcer.sol#36-63) ignores return value by (localId_,None,None) = IPassportView(t_.passport).walletInfo(p_.beneficiary) (src/enforcers/ReputationGateEnforcer.sol#53)
+VerifiedPayeeEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/VerifiedPayeeEnforcer.sol#26-50) ignores return value by (active_,None) = IPayeeBookView(payeeBook_).lookup(_delegator,p_.beneficiary) (src/enforcers/VerifiedPayeeEnforcer.sol#46)
+TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes) (src/rails/TestUnits.sol#83-105) ignores return value by (signer_,err_,None) = ECDSA.tryRecover(digest_,_signature) (src/rails/TestUnits.sol#100)
+ZKMandateEnforcer._requireSingleDefaultMode(ModeCode) (src/zk/ZKMandateEnforcer.sol#183-186) ignores return value by (callType_,execType_,None,None) = ModeLib.decode(_mode) (src/zk/ZKMandateEnforcer.sol#184)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+
+Detector: missing-zero-check
+JurisdictionEnforcer.railKindOf(address)._asset (src/enforcers/JurisdictionEnforcer.sol#58) lacks a zero-check on :
+		- (ok_,ret_) = _asset.staticcall(abi.encodeWithSelector(IRailInfo.railKind.selector)) (src/enforcers/JurisdictionEnforcer.sol#59)
+ConditionalPaymentInstructions.constructor(address)._operator (src/rails/ConditionalPaymentInstructions.sol#63) lacks a zero-check on :
+		- operator = _operator (src/rails/ConditionalPaymentInstructions.sol#64)
+ConditionalPaymentInstructions.transferOperator(address)._to (src/rails/ConditionalPaymentInstructions.sol#128) lacks a zero-check on :
+		- operator = _to (src/rails/ConditionalPaymentInstructions.sol#130)
+ProductRegistry.constructor(address)._admin (src/rails/ProductRegistry.sol#26) lacks a zero-check on :
+		- admin = _admin (src/rails/ProductRegistry.sol#27)
+TestMoneyMarketFund.constructor(string,string,address)._asset (src/rails/TestMoneyMarketFund.sol#25) lacks a zero-check on :
+		- asset = _asset (src/rails/TestMoneyMarketFund.sol#26)
+TestUnits.constructor(string,string,uint8,string,address,bytes32)._minter (src/rails/TestUnits.sol#43) lacks a zero-check on :
+		- minter = _minter (src/rails/TestUnits.sol#51)
+TestUnits.transferMinter(address)._to (src/rails/TestUnits.sol#67) lacks a zero-check on :
+		- minter = _to (src/rails/TestUnits.sol#70)
+AccountabilityLedger.constructor(address)._admin (src/registries/AccountabilityLedger.sol#55) lacks a zero-check on :
+		- admin = _admin (src/registries/AccountabilityLedger.sol#56)
+AccountabilityLedger.transferAdmin(address)._to (src/registries/AccountabilityLedger.sol#70) lacks a zero-check on :
+		- admin = _to (src/registries/AccountabilityLedger.sol#73)
+KillSwitchRegistry.constructor(address,bytes32)._supervisor (src/registries/KillSwitchRegistry.sol#46) lacks a zero-check on :
+		- supervisor = _supervisor (src/registries/KillSwitchRegistry.sol#47)
+KillSwitchRegistry.transferSupervisor(address)._to (src/registries/KillSwitchRegistry.sol#115) lacks a zero-check on :
+		- pendingSupervisor = _to (src/registries/KillSwitchRegistry.sol#117)
+MandateRegistry.constructor(address)._killSwitch (src/registries/MandateRegistry.sol#96) lacks a zero-check on :
+		- killSwitch = _killSwitch (src/registries/MandateRegistry.sol#97)
+YinglongPassportRegistry.constructor(address,bytes32)._supervisor (src/registries/YinglongPassportRegistry.sol#70-71) lacks a zero-check on :
+		- supervisor = _supervisor (src/registries/YinglongPassportRegistry.sol#73)
+YinglongPassportRegistry.transferSupervisor(address)._to (src/registries/YinglongPassportRegistry.sol#224) lacks a zero-check on :
+		- pendingSupervisor = _to (src/registries/YinglongPassportRegistry.sol#225-226)
+ZKVerifierRouter.constructor(address).registrar_ (src/zk/ZKVerifierRouter.sol#27) lacks a zero-check on :
+		- registrar = registrar_ (src/zk/ZKVerifierRouter.sol#28)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: reentrancy-benign
+Reentrancy in SignedQuoteSettlement.depositLiquidity(address,uint256) (src/rails/SignedQuoteSettlement.sol#53-57):
+	External calls:
+	- IERC20(_token).safeTransferFrom(msg.sender,address(this),_amount) (src/rails/SignedQuoteSettlement.sol#54-55)
+	State variables written after the call(s):
+	- liquidity[msg.sender][_token] += _amount (src/rails/SignedQuoteSettlement.sol#55)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+
+Detector: timestamp
+CategoryBudgetEnforcer.periodOf(uint64,uint64) (src/enforcers/CategoryBudgetEnforcer.sol#50-53) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp < _start (src/enforcers/CategoryBudgetEnforcer.sol#51)
+CoSignEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/CoSignEnforcer.sol#80-116) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > expiry_ (src/enforcers/CoSignEnforcer.sol#110)
+	- expiry_ > block.timestamp + t_.maxApprovalWindow (src/enforcers/CoSignEnforcer.sol#110-111)
+VetoTimelockEnforcer.vetoWithSig(address,bytes32,bytes32,uint256,bytes) (src/enforcers/VetoTimelockEnforcer.sol#79-88) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > _deadline (src/enforcers/VetoTimelockEnforcer.sol#82)
+VetoTimelockEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/enforcers/VetoTimelockEnforcer.sol#98-121) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp < readyAt_ (src/enforcers/VetoTimelockEnforcer.sol#118)
+ConditionalPaymentInstructions.expire(uint256) (src/rails/ConditionalPaymentInstructions.sol#115-121) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp <= i_.validUntil (src/rails/ConditionalPaymentInstructions.sol#117)
+ProtectedPayment.refund(uint256) (src/rails/ProtectedPayment.sol#97-104) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp < e_.refundAfter (src/rails/ProtectedPayment.sol#100)
+SignedQuoteSettlement.onTransferReceived(address,address,uint256,bytes) (src/rails/SignedQuoteSettlement.sol#70-94) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > q_.expiry (src/rails/SignedQuoteSettlement.sol#81)
+TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes) (src/rails/TestUnits.sol#83-105) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp <= _validAfter (src/rails/TestUnits.sol#94)
+	- block.timestamp >= _validBefore (src/rails/TestUnits.sol#95)
+AccountabilityLedger.latestRoot() (src/registries/AccountabilityLedger.sol#138-142) uses timestamp for comparisons
+	Dangerous comparisons:
+	- _batches.length == 0 (src/registries/AccountabilityLedger.sol#139)
+KillSwitchRegistry.tripIfStale(address) (src/registries/KillSwitchRegistry.sol#72-76) uses timestamp for comparisons
+	Dangerous comparisons:
+	- interval_ == 0 || block.timestamp <= uint256(lastHeartbeat[_account]) + interval_ (src/registries/KillSwitchRegistry.sol#74)
+KillSwitchRegistry.isPaused(address,address) (src/registries/KillSwitchRegistry.sol#130-134) uses timestamp for comparisons
+	Dangerous comparisons:
+	- interval_ != 0 && block.timestamp > uint256(lastHeartbeat[_account]) + interval_ (src/registries/KillSwitchRegistry.sol#133)
+KillSwitchRegistry._useSig(bytes32,address,uint256,uint256,bytes) (src/registries/KillSwitchRegistry.sol#146-152) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > _deadline (src/registries/KillSwitchRegistry.sol#147)
+MandateRegistry.isLive(bytes32) (src/registries/MandateRegistry.sol#135-138) uses timestamp for comparisons
+	Dangerous comparisons:
+	- m_.status == Status.Live && block.timestamp >= m_.validFrom && block.timestamp <= m_.validUntil (src/registries/MandateRegistry.sol#137)
+MandateRegistry.canExecute(address,address,address,uint256) (src/registries/MandateRegistry.sol#165-174) uses timestamp for comparisons
+	Dangerous comparisons:
+	- h_ == bytes32(0) || ! isLive(h_) (src/registries/MandateRegistry.sol#172)
+MandateRegistry._publish(MandateRegistry.PublishParams) (src/registries/MandateRegistry.sol#183-224) uses timestamp for comparisons
+	Dangerous comparisons:
+	- _mandates[_p.mandateHash].status != Status.None (src/registries/MandateRegistry.sol#184)
+	- live_ != bytes32(0) && _mandates[live_].status == Status.Live (src/registries/MandateRegistry.sol#188)
+YinglongPassportRegistry.isAttestedBy(uint256,address) (src/registries/YinglongPassportRegistry.sol#188-193) uses timestamp for comparisons
+	Dangerous comparisons:
+	- a_.issuedAt != 0 && ! a_.revoked && (a_.expiresAt == 0 || a_.expiresAt >= block.timestamp) (src/registries/YinglongPassportRegistry.sol#192-193)
+YinglongPassportRegistry._bindWallet(uint256,address,address,uint256,bytes) (src/registries/YinglongPassportRegistry.sol#260-273) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > _deadline (src/registries/YinglongPassportRegistry.sol#265)
+ZKMandateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address) (src/zk/ZKMandateEnforcer.sol#100-132) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > uint256(p_.claimedTime) + MAX_CLAIMED_TIME_AGE || uint256(p_.claimedTime) > block.timestamp + MAX_CLAIMED_TIME_SKEW (src/zk/ZKMandateEnforcer.sol#118-119)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+
+Detector: assembly
+PaymentDecoder.decode(bytes) (src/libraries/PaymentDecoder.sol#36-74) uses assembly
+	- INLINE ASM (src/libraries/PaymentDecoder.sol#56-58)
+PaymentDecoder._firstWord(bytes) (src/libraries/PaymentDecoder.sol#76-80) uses assembly
+	- INLINE ASM (src/libraries/PaymentDecoder.sol#77-79)
+YinglongCreate2Deployer.deploy(bytes32,bytes) (src/utils/YinglongCreate2Deployer.sol#13-20) uses assembly
+	- INLINE ASM (src/utils/YinglongCreate2Deployer.sol#15-17)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+
+Detector: low-level-calls
+Low level call in JurisdictionEnforcer.railKindOf(address) (src/enforcers/JurisdictionEnforcer.sol#58-64):
+	- (ok_,ret_) = _asset.staticcall(abi.encodeWithSelector(IRailInfo.railKind.selector)) (src/enforcers/JurisdictionEnforcer.sol#59)
+Low level call in ZKVerifierRouter.verifyProof(uint8,bytes,bytes) (src/zk/ZKVerifierRouter.sol#48-63):
+	- (ok,ret) = verifier.staticcall(abi.encodeWithSelector(IHonkVerifier.verify.selector,proof,words)) (src/zk/ZKVerifierRouter.sol#61)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+
+Detector: missing-inheritance
+ProductRegistry (src/rails/ProductRegistry.sol#10-52) should inherit from IProductRegistryView (src/interfaces/IYinglongViews.sol#19-21)
+ProtectedPayment (src/rails/ProtectedPayment.sol#16-113) should inherit from IERC1363Receiver (src/rails/TestUnits.sol#9-11)
+SignedQuoteSettlement (src/rails/SignedQuoteSettlement.sol#17-94) should inherit from IERC1363Receiver (src/rails/TestUnits.sol#9-11)
+TestMoneyMarketFund (src/rails/TestMoneyMarketFund.sol#15-51) should inherit from IERC1363Receiver (src/rails/TestUnits.sol#9-11)
+KillSwitchRegistry (src/registries/KillSwitchRegistry.sol#17-164) should inherit from IKillSwitchView (src/interfaces/IYinglongViews.sol#15-17)
+MandateRegistry (src/registries/MandateRegistry.sol#25-235) should inherit from IMandateRegistryView (src/enforcers/MandateBindingEnforcer.sol#8-11)
+PayeeBook (src/registries/PayeeBook.sol#8-65) should inherit from IPayeeBookView (src/interfaces/IYinglongViews.sol#5-7)
+YinglongPassportRegistry (src/registries/YinglongPassportRegistry.sol#19-273) should inherit from IPassportView (src/interfaces/IYinglongViews.sol#9-13)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-inheritance
+
+Detector: naming-convention
+Parameter AgentLineageEnforcer.getTermsInfo(bytes)._terms (src/enforcers/AgentLineageEnforcer.sol#18) is not in mixedCase
+Parameter AgentLineageEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/AgentLineageEnforcer.sol#28) is not in mixedCase
+Parameter AgentLineageEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/AgentLineageEnforcer.sol#30) is not in mixedCase
+Parameter AgentLineageEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._redeemer (src/enforcers/AgentLineageEnforcer.sol#34) is not in mixedCase
+Parameter CategoryBudgetEnforcer.getTermsInfo(bytes)._terms (src/enforcers/CategoryBudgetEnforcer.sol#43) is not in mixedCase
+Parameter CategoryBudgetEnforcer.periodOf(uint64,uint64)._start (src/enforcers/CategoryBudgetEnforcer.sol#50) is not in mixedCase
+Parameter CategoryBudgetEnforcer.periodOf(uint64,uint64)._length (src/enforcers/CategoryBudgetEnforcer.sol#50) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentKey(address,address,address,uint32,uint256)._dm (src/enforcers/CategoryBudgetEnforcer.sol#55) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentKey(address,address,address,uint32,uint256)._delegator (src/enforcers/CategoryBudgetEnforcer.sol#55) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentKey(address,address,address,uint32,uint256)._asset (src/enforcers/CategoryBudgetEnforcer.sol#55) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentKey(address,address,address,uint32,uint256)._categoryId (src/enforcers/CategoryBudgetEnforcer.sol#55) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentKey(address,address,address,uint32,uint256)._period (src/enforcers/CategoryBudgetEnforcer.sol#55) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentNow(address,address,address,uint32,uint64,uint64)._dm (src/enforcers/CategoryBudgetEnforcer.sol#64) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentNow(address,address,address,uint32,uint64,uint64)._delegator (src/enforcers/CategoryBudgetEnforcer.sol#64) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentNow(address,address,address,uint32,uint64,uint64)._asset (src/enforcers/CategoryBudgetEnforcer.sol#64) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentNow(address,address,address,uint32,uint64,uint64)._categoryId (src/enforcers/CategoryBudgetEnforcer.sol#64) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentNow(address,address,address,uint32,uint64,uint64)._start (src/enforcers/CategoryBudgetEnforcer.sol#64) is not in mixedCase
+Parameter CategoryBudgetEnforcer.spentNow(address,address,address,uint32,uint64,uint64)._length (src/enforcers/CategoryBudgetEnforcer.sol#64) is not in mixedCase
+Parameter CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/CategoryBudgetEnforcer.sol#73) is not in mixedCase
+Parameter CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/CategoryBudgetEnforcer.sol#75) is not in mixedCase
+Parameter CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/CategoryBudgetEnforcer.sol#76) is not in mixedCase
+Parameter CategoryBudgetEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/CategoryBudgetEnforcer.sol#78) is not in mixedCase
+Parameter CoSignEnforcer.getTermsInfo(bytes)._terms (src/enforcers/CoSignEnforcer.sol#48-49) is not in mixedCase
+Parameter CoSignEnforcer.approvalDigest(bytes32,bytes32,uint256,uint256)._delegationHash (src/enforcers/CoSignEnforcer.sol#66) is not in mixedCase
+Parameter CoSignEnforcer.approvalDigest(bytes32,bytes32,uint256,uint256)._executionHash (src/enforcers/CoSignEnforcer.sol#66-67) is not in mixedCase
+Parameter CoSignEnforcer.approvalDigest(bytes32,bytes32,uint256,uint256)._nonce (src/enforcers/CoSignEnforcer.sol#67) is not in mixedCase
+Parameter CoSignEnforcer.approvalDigest(bytes32,bytes32,uint256,uint256)._expiry (src/enforcers/CoSignEnforcer.sol#67) is not in mixedCase
+Parameter CoSignEnforcer.thresholdFor(CoSignEnforcer.Terms,address,address)._t (src/enforcers/CoSignEnforcer.sol#75) is not in mixedCase
+Parameter CoSignEnforcer.thresholdFor(CoSignEnforcer.Terms,address,address)._delegator (src/enforcers/CoSignEnforcer.sol#75) is not in mixedCase
+Parameter CoSignEnforcer.thresholdFor(CoSignEnforcer.Terms,address,address)._beneficiary (src/enforcers/CoSignEnforcer.sol#75-76) is not in mixedCase
+Parameter CoSignEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/CoSignEnforcer.sol#81-82) is not in mixedCase
+Parameter CoSignEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._args (src/enforcers/CoSignEnforcer.sol#82-85) is not in mixedCase
+Parameter CoSignEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/CoSignEnforcer.sol#85) is not in mixedCase
+Parameter CoSignEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/CoSignEnforcer.sol#86-87) is not in mixedCase
+Parameter CoSignEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegationHash (src/enforcers/CoSignEnforcer.sol#87-88) is not in mixedCase
+Parameter CoSignEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/CoSignEnforcer.sol#88-89) is not in mixedCase
+Parameter ForbiddenTargetsEnforcer.getTermsInfo(bytes)._terms (src/enforcers/ForbiddenTargetsEnforcer.sol#19) is not in mixedCase
+Parameter ForbiddenTargetsEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/ForbiddenTargetsEnforcer.sol#29) is not in mixedCase
+Parameter ForbiddenTargetsEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/ForbiddenTargetsEnforcer.sol#31) is not in mixedCase
+Parameter ForbiddenTargetsEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/ForbiddenTargetsEnforcer.sol#32) is not in mixedCase
+Parameter ForbiddenTargetsEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/ForbiddenTargetsEnforcer.sol#34) is not in mixedCase
+Parameter GlobalPauseEnforcer.getTermsInfo(bytes)._terms (src/enforcers/GlobalPauseEnforcer.sol#17) is not in mixedCase
+Parameter GlobalPauseEnforcer.beforeAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/GlobalPauseEnforcer.sol#23) is not in mixedCase
+Parameter GlobalPauseEnforcer.beforeAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/GlobalPauseEnforcer.sol#25) is not in mixedCase
+Parameter GlobalPauseEnforcer.beforeAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/GlobalPauseEnforcer.sol#28) is not in mixedCase
+Parameter GlobalPauseEnforcer.beforeAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._redeemer (src/enforcers/GlobalPauseEnforcer.sol#29) is not in mixedCase
+Parameter JurisdictionEnforcer.getTermsInfo(bytes)._terms (src/enforcers/JurisdictionEnforcer.sol#23) is not in mixedCase
+Parameter JurisdictionEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/JurisdictionEnforcer.sol#30) is not in mixedCase
+Parameter JurisdictionEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/JurisdictionEnforcer.sol#32) is not in mixedCase
+Parameter JurisdictionEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/JurisdictionEnforcer.sol#33) is not in mixedCase
+Parameter JurisdictionEnforcer.railKindOf(address)._asset (src/enforcers/JurisdictionEnforcer.sol#58) is not in mixedCase
+Parameter MandateBindingEnforcer.getTermsInfo(bytes)._terms (src/enforcers/MandateBindingEnforcer.sol#31) is not in mixedCase
+Parameter MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/MandateBindingEnforcer.sol#37) is not in mixedCase
+Parameter MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._args (src/enforcers/MandateBindingEnforcer.sol#38) is not in mixedCase
+Parameter MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/MandateBindingEnforcer.sol#39) is not in mixedCase
+Parameter MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegationHash (src/enforcers/MandateBindingEnforcer.sol#41) is not in mixedCase
+Parameter MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/MandateBindingEnforcer.sol#42) is not in mixedCase
+Parameter MandateBindingEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._redeemer (src/enforcers/MandateBindingEnforcer.sol#43) is not in mixedCase
+Parameter ReputationGateEnforcer.getTermsInfo(bytes)._terms (src/enforcers/ReputationGateEnforcer.sol#29) is not in mixedCase
+Parameter ReputationGateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/ReputationGateEnforcer.sol#37) is not in mixedCase
+Parameter ReputationGateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/ReputationGateEnforcer.sol#39) is not in mixedCase
+Parameter ReputationGateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/ReputationGateEnforcer.sol#40) is not in mixedCase
+Parameter ReserveFloorEnforcer.getTermsInfo(bytes)._terms (src/enforcers/ReserveFloorEnforcer.sol#16) is not in mixedCase
+Parameter ReserveFloorEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/ReserveFloorEnforcer.sol#21) is not in mixedCase
+Parameter ReserveFloorEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/ReserveFloorEnforcer.sol#21) is not in mixedCase
+Parameter ReserveFloorEnforcer.afterAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/ReserveFloorEnforcer.sol#30) is not in mixedCase
+Parameter ReserveFloorEnforcer.afterAllHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/ReserveFloorEnforcer.sol#30) is not in mixedCase
+Parameter SuitabilityEnforcer.getTermsInfo(bytes)._terms (src/enforcers/SuitabilityEnforcer.sol#16) is not in mixedCase
+Parameter SuitabilityEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/SuitabilityEnforcer.sol#22) is not in mixedCase
+Parameter SuitabilityEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/SuitabilityEnforcer.sol#24) is not in mixedCase
+Parameter SuitabilityEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/SuitabilityEnforcer.sol#25) is not in mixedCase
+Parameter VelocityEnforcer.getTermsInfo(bytes)._terms (src/enforcers/VelocityEnforcer.sol#27) is not in mixedCase
+Parameter VelocityEnforcer.usageKey(address,address,uint256)._dm (src/enforcers/VelocityEnforcer.sol#37) is not in mixedCase
+Parameter VelocityEnforcer.usageKey(address,address,uint256)._delegator (src/enforcers/VelocityEnforcer.sol#37) is not in mixedCase
+Parameter VelocityEnforcer.usageKey(address,address,uint256)._windowIndex (src/enforcers/VelocityEnforcer.sol#37) is not in mixedCase
+Parameter VelocityEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/VelocityEnforcer.sol#42) is not in mixedCase
+Parameter VelocityEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/VelocityEnforcer.sol#44) is not in mixedCase
+Parameter VelocityEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/VelocityEnforcer.sol#45) is not in mixedCase
+Parameter VelocityEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/VelocityEnforcer.sol#47) is not in mixedCase
+Parameter VerifiedPayeeEnforcer.getTermsInfo(bytes)._terms (src/enforcers/VerifiedPayeeEnforcer.sol#17) is not in mixedCase
+Parameter VerifiedPayeeEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/VerifiedPayeeEnforcer.sol#27) is not in mixedCase
+Parameter VerifiedPayeeEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/VerifiedPayeeEnforcer.sol#29) is not in mixedCase
+Parameter VerifiedPayeeEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/VerifiedPayeeEnforcer.sol#30) is not in mixedCase
+Parameter VerifiedPayeeEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/VerifiedPayeeEnforcer.sol#32) is not in mixedCase
+Parameter VetoTimelockEnforcer.getTermsInfo(bytes)._terms (src/enforcers/VetoTimelockEnforcer.sol#50) is not in mixedCase
+Parameter VetoTimelockEnforcer.scheduleKey(address,bytes32,bytes32)._dm (src/enforcers/VetoTimelockEnforcer.sol#55) is not in mixedCase
+Parameter VetoTimelockEnforcer.scheduleKey(address,bytes32,bytes32)._delegationHash (src/enforcers/VetoTimelockEnforcer.sol#55) is not in mixedCase
+Parameter VetoTimelockEnforcer.scheduleKey(address,bytes32,bytes32)._executionHash (src/enforcers/VetoTimelockEnforcer.sol#55) is not in mixedCase
+Parameter VetoTimelockEnforcer.schedule(address,bytes32,address,bytes)._dm (src/enforcers/VetoTimelockEnforcer.sol#60) is not in mixedCase
+Parameter VetoTimelockEnforcer.schedule(address,bytes32,address,bytes)._delegationHash (src/enforcers/VetoTimelockEnforcer.sol#60) is not in mixedCase
+Parameter VetoTimelockEnforcer.schedule(address,bytes32,address,bytes)._delegator (src/enforcers/VetoTimelockEnforcer.sol#60) is not in mixedCase
+Parameter VetoTimelockEnforcer.schedule(address,bytes32,address,bytes)._executionCallData (src/enforcers/VetoTimelockEnforcer.sol#60) is not in mixedCase
+Parameter VetoTimelockEnforcer.veto(address,bytes32,bytes32)._dm (src/enforcers/VetoTimelockEnforcer.sol#71) is not in mixedCase
+Parameter VetoTimelockEnforcer.veto(address,bytes32,bytes32)._delegationHash (src/enforcers/VetoTimelockEnforcer.sol#71) is not in mixedCase
+Parameter VetoTimelockEnforcer.veto(address,bytes32,bytes32)._executionHash (src/enforcers/VetoTimelockEnforcer.sol#71) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoWithSig(address,bytes32,bytes32,uint256,bytes)._dm (src/enforcers/VetoTimelockEnforcer.sol#79) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoWithSig(address,bytes32,bytes32,uint256,bytes)._delegationHash (src/enforcers/VetoTimelockEnforcer.sol#79) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoWithSig(address,bytes32,bytes32,uint256,bytes)._executionHash (src/enforcers/VetoTimelockEnforcer.sol#79) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoWithSig(address,bytes32,bytes32,uint256,bytes)._deadline (src/enforcers/VetoTimelockEnforcer.sol#79) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoWithSig(address,bytes32,bytes32,uint256,bytes)._sig (src/enforcers/VetoTimelockEnforcer.sol#79) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoDigest(address,bytes32,bytes32,uint256)._dm (src/enforcers/VetoTimelockEnforcer.sol#90) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoDigest(address,bytes32,bytes32,uint256)._delegationHash (src/enforcers/VetoTimelockEnforcer.sol#90) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoDigest(address,bytes32,bytes32,uint256)._executionHash (src/enforcers/VetoTimelockEnforcer.sol#90) is not in mixedCase
+Parameter VetoTimelockEnforcer.vetoDigest(address,bytes32,bytes32,uint256)._deadline (src/enforcers/VetoTimelockEnforcer.sol#90) is not in mixedCase
+Parameter VetoTimelockEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/enforcers/VetoTimelockEnforcer.sol#99) is not in mixedCase
+Parameter VetoTimelockEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/enforcers/VetoTimelockEnforcer.sol#101) is not in mixedCase
+Parameter VetoTimelockEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/enforcers/VetoTimelockEnforcer.sol#102) is not in mixedCase
+Parameter VetoTimelockEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegationHash (src/enforcers/VetoTimelockEnforcer.sol#103) is not in mixedCase
+Parameter VetoTimelockEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegator (src/enforcers/VetoTimelockEnforcer.sol#104) is not in mixedCase
+Parameter VetoTimelockEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._redeemer (src/enforcers/VetoTimelockEnforcer.sol#105) is not in mixedCase
+Parameter PaymentDecoder.decode(bytes)._executionCallData (src/libraries/PaymentDecoder.sol#36) is not in mixedCase
+Parameter ConditionalPaymentInstructions.instruct(address,uint256,bytes32,bytes32,uint64)._payee (src/rails/ConditionalPaymentInstructions.sol#73) is not in mixedCase
+Parameter ConditionalPaymentInstructions.instruct(address,uint256,bytes32,bytes32,uint64)._amount (src/rails/ConditionalPaymentInstructions.sol#73) is not in mixedCase
+Parameter ConditionalPaymentInstructions.instruct(address,uint256,bytes32,bytes32,uint64)._purposeHash (src/rails/ConditionalPaymentInstructions.sol#73) is not in mixedCase
+Parameter ConditionalPaymentInstructions.instruct(address,uint256,bytes32,bytes32,uint64)._conditionHash (src/rails/ConditionalPaymentInstructions.sol#73) is not in mixedCase
+Parameter ConditionalPaymentInstructions.instruct(address,uint256,bytes32,bytes32,uint64)._validUntil (src/rails/ConditionalPaymentInstructions.sol#73) is not in mixedCase
+Parameter ConditionalPaymentInstructions.execute(uint256,bytes32)._id (src/rails/ConditionalPaymentInstructions.sol#97) is not in mixedCase
+Parameter ConditionalPaymentInstructions.execute(uint256,bytes32)._simulatorRef (src/rails/ConditionalPaymentInstructions.sol#97) is not in mixedCase
+Parameter ConditionalPaymentInstructions.reject(uint256,bytes32)._id (src/rails/ConditionalPaymentInstructions.sol#107) is not in mixedCase
+Parameter ConditionalPaymentInstructions.reject(uint256,bytes32)._reasonCode (src/rails/ConditionalPaymentInstructions.sol#107) is not in mixedCase
+Parameter ConditionalPaymentInstructions.expire(uint256)._id (src/rails/ConditionalPaymentInstructions.sol#115) is not in mixedCase
+Parameter ConditionalPaymentInstructions.postBalance(address,uint256,bytes32)._account (src/rails/ConditionalPaymentInstructions.sol#123) is not in mixedCase
+Parameter ConditionalPaymentInstructions.postBalance(address,uint256,bytes32)._balance (src/rails/ConditionalPaymentInstructions.sol#123) is not in mixedCase
+Parameter ConditionalPaymentInstructions.postBalance(address,uint256,bytes32)._statementRef (src/rails/ConditionalPaymentInstructions.sol#123) is not in mixedCase
+Parameter ConditionalPaymentInstructions.transferOperator(address)._to (src/rails/ConditionalPaymentInstructions.sol#128) is not in mixedCase
+Parameter ConditionalPaymentInstructions.balanceOf(address)._account (src/rails/ConditionalPaymentInstructions.sol#134) is not in mixedCase
+Parameter ConditionalPaymentInstructions.instructionOf(uint256)._id (src/rails/ConditionalPaymentInstructions.sol#140) is not in mixedCase
+Parameter ProductRegistry.list(address,uint8,bytes32)._product (src/rails/ProductRegistry.sol#30) is not in mixedCase
+Parameter ProductRegistry.list(address,uint8,bytes32)._riskClass (src/rails/ProductRegistry.sol#30) is not in mixedCase
+Parameter ProductRegistry.list(address,uint8,bytes32)._nameHash (src/rails/ProductRegistry.sol#30) is not in mixedCase
+Parameter ProductRegistry.delist(address)._product (src/rails/ProductRegistry.sol#38) is not in mixedCase
+Parameter ProductRegistry.productInfo(address)._product (src/rails/ProductRegistry.sol#44) is not in mixedCase
+Parameter ProtectedPayment.onTransferReceived(address,address,uint256,bytes)._from (src/rails/ProtectedPayment.sol#59) is not in mixedCase
+Parameter ProtectedPayment.onTransferReceived(address,address,uint256,bytes)._value (src/rails/ProtectedPayment.sol#59) is not in mixedCase
+Parameter ProtectedPayment.onTransferReceived(address,address,uint256,bytes)._data (src/rails/ProtectedPayment.sol#59) is not in mixedCase
+Parameter ProtectedPayment.release(uint256,bytes32)._escrowId (src/rails/ProtectedPayment.sol#87) is not in mixedCase
+Parameter ProtectedPayment.release(uint256,bytes32)._evidenceHash (src/rails/ProtectedPayment.sol#87) is not in mixedCase
+Parameter ProtectedPayment.refund(uint256)._escrowId (src/rails/ProtectedPayment.sol#97) is not in mixedCase
+Parameter ProtectedPayment.escrowOf(uint256)._escrowId (src/rails/ProtectedPayment.sol#106) is not in mixedCase
+Parameter SignedQuoteSettlement.depositLiquidity(address,uint256)._token (src/rails/SignedQuoteSettlement.sol#53) is not in mixedCase
+Parameter SignedQuoteSettlement.depositLiquidity(address,uint256)._amount (src/rails/SignedQuoteSettlement.sol#53-54) is not in mixedCase
+Parameter SignedQuoteSettlement.withdrawLiquidity(address,uint256)._token (src/rails/SignedQuoteSettlement.sol#57) is not in mixedCase
+Parameter SignedQuoteSettlement.withdrawLiquidity(address,uint256)._amount (src/rails/SignedQuoteSettlement.sol#57-60) is not in mixedCase
+Parameter SignedQuoteSettlement.quoteHash(SignedQuoteSettlement.Quote)._q (src/rails/SignedQuoteSettlement.sol#63) is not in mixedCase
+Parameter SignedQuoteSettlement.onTransferReceived(address,address,uint256,bytes)._from (src/rails/SignedQuoteSettlement.sol#72-73) is not in mixedCase
+Parameter SignedQuoteSettlement.onTransferReceived(address,address,uint256,bytes)._value (src/rails/SignedQuoteSettlement.sol#73-74) is not in mixedCase
+Parameter SignedQuoteSettlement.onTransferReceived(address,address,uint256,bytes)._data (src/rails/SignedQuoteSettlement.sol#74-76) is not in mixedCase
+Parameter TestMoneyMarketFund.onTransferReceived(address,address,uint256,bytes)._from (src/rails/TestMoneyMarketFund.sol#34) is not in mixedCase
+Parameter TestMoneyMarketFund.onTransferReceived(address,address,uint256,bytes)._value (src/rails/TestMoneyMarketFund.sol#34) is not in mixedCase
+Parameter TestMoneyMarketFund.onTransferReceived(address,address,uint256,bytes)._data (src/rails/TestMoneyMarketFund.sol#34) is not in mixedCase
+Parameter TestMoneyMarketFund.redeem(uint256)._shares (src/rails/TestMoneyMarketFund.sol#46) is not in mixedCase
+Parameter TestUnits.mint(address,uint256)._to (src/rails/TestUnits.sol#62) is not in mixedCase
+Parameter TestUnits.mint(address,uint256)._amount (src/rails/TestUnits.sol#62) is not in mixedCase
+Parameter TestUnits.transferMinter(address)._to (src/rails/TestUnits.sol#67) is not in mixedCase
+Parameter TestUnits.transferAndCall(address,uint256,bytes)._to (src/rails/TestUnits.sol#74) is not in mixedCase
+Parameter TestUnits.transferAndCall(address,uint256,bytes)._value (src/rails/TestUnits.sol#74) is not in mixedCase
+Parameter TestUnits.transferAndCall(address,uint256,bytes)._data (src/rails/TestUnits.sol#74) is not in mixedCase
+Parameter TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)._from (src/rails/TestUnits.sol#84) is not in mixedCase
+Parameter TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)._to (src/rails/TestUnits.sol#85) is not in mixedCase
+Parameter TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)._value (src/rails/TestUnits.sol#86) is not in mixedCase
+Parameter TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)._validAfter (src/rails/TestUnits.sol#87) is not in mixedCase
+Parameter TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)._validBefore (src/rails/TestUnits.sol#88) is not in mixedCase
+Parameter TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)._nonce (src/rails/TestUnits.sol#89) is not in mixedCase
+Parameter TestUnits.transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)._signature (src/rails/TestUnits.sol#90) is not in mixedCase
+Parameter AccountabilityLedger.setAnchorer(address,bool)._anchorer (src/registries/AccountabilityLedger.sol#64) is not in mixedCase
+Parameter AccountabilityLedger.setAnchorer(address,bool)._enabled (src/registries/AccountabilityLedger.sol#64) is not in mixedCase
+Parameter AccountabilityLedger.transferAdmin(address)._to (src/registries/AccountabilityLedger.sol#70) is not in mixedCase
+Parameter AccountabilityLedger.anchorBatch(bytes32,uint64,string)._root (src/registries/AccountabilityLedger.sol#77) is not in mixedCase
+Parameter AccountabilityLedger.anchorBatch(bytes32,uint64,string)._count (src/registries/AccountabilityLedger.sol#77) is not in mixedCase
+Parameter AccountabilityLedger.anchorBatch(bytes32,uint64,string)._uri (src/registries/AccountabilityLedger.sol#77) is not in mixedCase
+Parameter AccountabilityLedger.crossAnchor(uint256,uint256,bytes32,bytes32,uint256)._remoteChainId (src/registries/AccountabilityLedger.sol#91) is not in mixedCase
+Parameter AccountabilityLedger.crossAnchor(uint256,uint256,bytes32,bytes32,uint256)._remoteBlockNumber (src/registries/AccountabilityLedger.sol#92) is not in mixedCase
+Parameter AccountabilityLedger.crossAnchor(uint256,uint256,bytes32,bytes32,uint256)._remoteBlockHash (src/registries/AccountabilityLedger.sol#93) is not in mixedCase
+Parameter AccountabilityLedger.crossAnchor(uint256,uint256,bytes32,bytes32,uint256)._remoteRoot (src/registries/AccountabilityLedger.sol#94) is not in mixedCase
+Parameter AccountabilityLedger.crossAnchor(uint256,uint256,bytes32,bytes32,uint256)._remoteBatchId (src/registries/AccountabilityLedger.sol#95) is not in mixedCase
+Parameter AccountabilityLedger.logReceipt(bytes32,address,bytes32,uint8)._receiptHash (src/registries/AccountabilityLedger.sol#116) is not in mixedCase
+Parameter AccountabilityLedger.logReceipt(bytes32,address,bytes32,uint8)._agent (src/registries/AccountabilityLedger.sol#116) is not in mixedCase
+Parameter AccountabilityLedger.logReceipt(bytes32,address,bytes32,uint8)._mandateHash (src/registries/AccountabilityLedger.sol#116) is not in mixedCase
+Parameter AccountabilityLedger.logReceipt(bytes32,address,bytes32,uint8)._outcome (src/registries/AccountabilityLedger.sol#116) is not in mixedCase
+Parameter AccountabilityLedger.batchOf(uint256)._batchId (src/registries/AccountabilityLedger.sol#126) is not in mixedCase
+Parameter AccountabilityLedger.crossAnchorOf(uint256)._crossId (src/registries/AccountabilityLedger.sol#134) is not in mixedCase
+Parameter AccountabilityLedger.verifyReceipt(uint256,bytes32,bytes32[])._batchId (src/registries/AccountabilityLedger.sol#145) is not in mixedCase
+Parameter AccountabilityLedger.verifyReceipt(uint256,bytes32,bytes32[])._leaf (src/registries/AccountabilityLedger.sol#145) is not in mixedCase
+Parameter AccountabilityLedger.verifyReceipt(uint256,bytes32,bytes32[])._proof (src/registries/AccountabilityLedger.sol#145) is not in mixedCase
+Parameter KillSwitchRegistry.trip(address)._account (src/registries/KillSwitchRegistry.sol#56) is not in mixedCase
+Parameter KillSwitchRegistry.tripWithSig(address,uint256,uint256,bytes)._account (src/registries/KillSwitchRegistry.sol#67) is not in mixedCase
+Parameter KillSwitchRegistry.tripWithSig(address,uint256,uint256,bytes)._nonce (src/registries/KillSwitchRegistry.sol#67) is not in mixedCase
+Parameter KillSwitchRegistry.tripWithSig(address,uint256,uint256,bytes)._deadline (src/registries/KillSwitchRegistry.sol#67) is not in mixedCase
+Parameter KillSwitchRegistry.tripWithSig(address,uint256,uint256,bytes)._sig (src/registries/KillSwitchRegistry.sol#67) is not in mixedCase
+Parameter KillSwitchRegistry.tripIfStale(address)._account (src/registries/KillSwitchRegistry.sol#72) is not in mixedCase
+Parameter KillSwitchRegistry.untripWithSig(address,uint256,uint256,bytes)._account (src/registries/KillSwitchRegistry.sol#84) is not in mixedCase
+Parameter KillSwitchRegistry.untripWithSig(address,uint256,uint256,bytes)._nonce (src/registries/KillSwitchRegistry.sol#84) is not in mixedCase
+Parameter KillSwitchRegistry.untripWithSig(address,uint256,uint256,bytes)._deadline (src/registries/KillSwitchRegistry.sol#84) is not in mixedCase
+Parameter KillSwitchRegistry.untripWithSig(address,uint256,uint256,bytes)._sig (src/registries/KillSwitchRegistry.sol#84) is not in mixedCase
+Parameter KillSwitchRegistry.setGuardian(address,bool)._guardian (src/registries/KillSwitchRegistry.sol#91) is not in mixedCase
+Parameter KillSwitchRegistry.setGuardian(address,bool)._enabled (src/registries/KillSwitchRegistry.sol#91) is not in mixedCase
+Parameter KillSwitchRegistry.setDeadman(uint64)._interval (src/registries/KillSwitchRegistry.sol#96) is not in mixedCase
+Parameter KillSwitchRegistry.setAgentHalt(address,bool)._agent (src/registries/KillSwitchRegistry.sol#109) is not in mixedCase
+Parameter KillSwitchRegistry.setAgentHalt(address,bool)._halted (src/registries/KillSwitchRegistry.sol#109) is not in mixedCase
+Parameter KillSwitchRegistry.transferSupervisor(address)._to (src/registries/KillSwitchRegistry.sol#115) is not in mixedCase
+Parameter KillSwitchRegistry.isPaused(address,address)._account (src/registries/KillSwitchRegistry.sol#130) is not in mixedCase
+Parameter KillSwitchRegistry.isPaused(address,address)._agent (src/registries/KillSwitchRegistry.sol#130) is not in mixedCase
+Parameter KillSwitchRegistry.tripDigest(address,uint256,uint256)._account (src/registries/KillSwitchRegistry.sol#136) is not in mixedCase
+Parameter KillSwitchRegistry.tripDigest(address,uint256,uint256)._nonce (src/registries/KillSwitchRegistry.sol#136) is not in mixedCase
+Parameter KillSwitchRegistry.tripDigest(address,uint256,uint256)._deadline (src/registries/KillSwitchRegistry.sol#136) is not in mixedCase
+Parameter KillSwitchRegistry.untripDigest(address,uint256,uint256)._account (src/registries/KillSwitchRegistry.sol#140) is not in mixedCase
+Parameter KillSwitchRegistry.untripDigest(address,uint256,uint256)._nonce (src/registries/KillSwitchRegistry.sol#140) is not in mixedCase
+Parameter KillSwitchRegistry.untripDigest(address,uint256,uint256)._deadline (src/registries/KillSwitchRegistry.sol#140) is not in mixedCase
+Parameter MandateRegistry.publish(MandateRegistry.PublishParams)._p (src/registries/MandateRegistry.sol#102) is not in mixedCase
+Parameter MandateRegistry.supersede(bytes32,MandateRegistry.PublishParams)._oldMandateHash (src/registries/MandateRegistry.sol#107) is not in mixedCase
+Parameter MandateRegistry.supersede(bytes32,MandateRegistry.PublishParams)._p (src/registries/MandateRegistry.sol#107) is not in mixedCase
+Parameter MandateRegistry.revoke(bytes32)._mandateHash (src/registries/MandateRegistry.sol#116) is not in mixedCase
+Parameter MandateRegistry.mandateOf(bytes32)._mandateHash (src/registries/MandateRegistry.sol#126) is not in mixedCase
+Parameter MandateRegistry.delegationOf(bytes32)._mandateHash (src/registries/MandateRegistry.sol#130) is not in mixedCase
+Parameter MandateRegistry.isLive(bytes32)._mandateHash (src/registries/MandateRegistry.sol#135) is not in mixedCase
+Parameter MandateRegistry.historyOf(address)._account (src/registries/MandateRegistry.sol#140) is not in mixedCase
+Parameter MandateRegistry.computeDelegationHash(address,address,uint256,Caveat[])._account (src/registries/MandateRegistry.sol#145) is not in mixedCase
+Parameter MandateRegistry.computeDelegationHash(address,address,uint256,Caveat[])._agent (src/registries/MandateRegistry.sol#145) is not in mixedCase
+Parameter MandateRegistry.computeDelegationHash(address,address,uint256,Caveat[])._salt (src/registries/MandateRegistry.sol#145) is not in mixedCase
+Parameter MandateRegistry.computeDelegationHash(address,address,uint256,Caveat[])._caveats (src/registries/MandateRegistry.sol#145) is not in mixedCase
+Parameter MandateRegistry.canExecute(address,address,address,uint256)._account (src/registries/MandateRegistry.sol#165) is not in mixedCase
+Parameter MandateRegistry.canExecute(address,address,address,uint256)._agent (src/registries/MandateRegistry.sol#165) is not in mixedCase
+Parameter MandateRegistry.isFrozen(address,address)._account (src/registries/MandateRegistry.sol#176) is not in mixedCase
+Parameter MandateRegistry.isFrozen(address,address)._agent (src/registries/MandateRegistry.sol#176) is not in mixedCase
+Parameter PayeeBook.setPayee(address,uint32,bytes32)._payee (src/registries/PayeeBook.sol#26) is not in mixedCase
+Parameter PayeeBook.setPayee(address,uint32,bytes32)._categoryId (src/registries/PayeeBook.sol#26) is not in mixedCase
+Parameter PayeeBook.setPayee(address,uint32,bytes32)._labelHash (src/registries/PayeeBook.sol#26) is not in mixedCase
+Parameter PayeeBook.setPayees(address[],uint32[],bytes32[])._payeeList (src/registries/PayeeBook.sol#39) is not in mixedCase
+Parameter PayeeBook.setPayees(address[],uint32[],bytes32[])._categories (src/registries/PayeeBook.sol#39) is not in mixedCase
+Parameter PayeeBook.setPayees(address[],uint32[],bytes32[])._labels (src/registries/PayeeBook.sol#39) is not in mixedCase
+Parameter PayeeBook.removePayee(address)._payee (src/registries/PayeeBook.sol#46) is not in mixedCase
+Parameter PayeeBook.entryOf(address,address)._account (src/registries/PayeeBook.sol#51) is not in mixedCase
+Parameter PayeeBook.entryOf(address,address)._payee (src/registries/PayeeBook.sol#51) is not in mixedCase
+Parameter PayeeBook.lookup(address,address)._account (src/registries/PayeeBook.sol#57) is not in mixedCase
+Parameter PayeeBook.lookup(address,address)._payee (src/registries/PayeeBook.sol#57) is not in mixedCase
+Parameter PayeeBook.payeesOf(address)._account (src/registries/PayeeBook.sol#62) is not in mixedCase
+Parameter YinglongPassportRegistry.register(YinglongPassportRegistry.RegisterParams)._p (src/registries/YinglongPassportRegistry.sol#102-103) is not in mixedCase
+Parameter YinglongPassportRegistry.setAgentWallet(uint256,address,uint256,bytes)._agentId (src/registries/YinglongPassportRegistry.sol#127-128) is not in mixedCase
+Parameter YinglongPassportRegistry.setAgentWallet(uint256,address,uint256,bytes)._newWallet (src/registries/YinglongPassportRegistry.sol#128) is not in mixedCase
+Parameter YinglongPassportRegistry.setAgentWallet(uint256,address,uint256,bytes)._deadline (src/registries/YinglongPassportRegistry.sol#128) is not in mixedCase
+Parameter YinglongPassportRegistry.setAgentWallet(uint256,address,uint256,bytes)._walletSig (src/registries/YinglongPassportRegistry.sol#128) is not in mixedCase
+Parameter YinglongPassportRegistry.updateHashes(uint256,bytes32,bytes32,bytes32,bytes32,string)._agentId (src/registries/YinglongPassportRegistry.sol#139) is not in mixedCase
+Parameter YinglongPassportRegistry.updateHashes(uint256,bytes32,bytes32,bytes32,bytes32,string)._passportVcHash (src/registries/YinglongPassportRegistry.sol#139-140) is not in mixedCase
+Parameter YinglongPassportRegistry.updateHashes(uint256,bytes32,bytes32,bytes32,bytes32,string)._provenanceHash (src/registries/YinglongPassportRegistry.sol#140) is not in mixedCase
+Parameter YinglongPassportRegistry.updateHashes(uint256,bytes32,bytes32,bytes32,bytes32,string)._enforcerTableHash (src/registries/YinglongPassportRegistry.sol#140-143) is not in mixedCase
+Parameter YinglongPassportRegistry.updateHashes(uint256,bytes32,bytes32,bytes32,bytes32,string)._jwksHash (src/registries/YinglongPassportRegistry.sol#143-144) is not in mixedCase
+Parameter YinglongPassportRegistry.updateHashes(uint256,bytes32,bytes32,bytes32,bytes32,string)._kid (src/registries/YinglongPassportRegistry.sol#144-145) is not in mixedCase
+Parameter YinglongPassportRegistry.setErc8004AgentId(uint256,uint256)._agentId (src/registries/YinglongPassportRegistry.sol#159-160) is not in mixedCase
+Parameter YinglongPassportRegistry.setErc8004AgentId(uint256,uint256)._erc8004AgentId (src/registries/YinglongPassportRegistry.sol#160) is not in mixedCase
+Parameter YinglongPassportRegistry.revoke(uint256)._agentId (src/registries/YinglongPassportRegistry.sol#163-164) is not in mixedCase
+Parameter YinglongPassportRegistry.attest(uint256,bytes32,uint64)._agentId (src/registries/YinglongPassportRegistry.sol#173) is not in mixedCase
+Parameter YinglongPassportRegistry.attest(uint256,bytes32,uint64)._claimHash (src/registries/YinglongPassportRegistry.sol#173) is not in mixedCase
+Parameter YinglongPassportRegistry.attest(uint256,bytes32,uint64)._expiresAt (src/registries/YinglongPassportRegistry.sol#173-175) is not in mixedCase
+Parameter YinglongPassportRegistry.revokeAttestation(uint256)._agentId (src/registries/YinglongPassportRegistry.sol#181-182) is not in mixedCase
+Parameter YinglongPassportRegistry.isAttestedBy(uint256,address)._agentId (src/registries/YinglongPassportRegistry.sol#188-189) is not in mixedCase
+Parameter YinglongPassportRegistry.isAttestedBy(uint256,address)._issuer (src/registries/YinglongPassportRegistry.sol#189) is not in mixedCase
+Parameter YinglongPassportRegistry.isTrustedAgentWallet(address,address[])._wallet (src/registries/YinglongPassportRegistry.sol#195) is not in mixedCase
+Parameter YinglongPassportRegistry.isTrustedAgentWallet(address,address[])._trustedIssuers (src/registries/YinglongPassportRegistry.sol#195-198) is not in mixedCase
+Parameter YinglongPassportRegistry.attestationOf(uint256,address)._agentId (src/registries/YinglongPassportRegistry.sol#201-202) is not in mixedCase
+Parameter YinglongPassportRegistry.attestationOf(uint256,address)._issuer (src/registries/YinglongPassportRegistry.sol#202) is not in mixedCase
+Parameter YinglongPassportRegistry.issuersOf(uint256)._agentId (src/registries/YinglongPassportRegistry.sol#205-206) is not in mixedCase
+Parameter YinglongPassportRegistry.supervisorSetStatus(uint256,bool)._agentId (src/registries/YinglongPassportRegistry.sol#216) is not in mixedCase
+Parameter YinglongPassportRegistry.supervisorSetStatus(uint256,bool)._halted (src/registries/YinglongPassportRegistry.sol#216) is not in mixedCase
+Parameter YinglongPassportRegistry.transferSupervisor(address)._to (src/registries/YinglongPassportRegistry.sol#224) is not in mixedCase
+Parameter YinglongPassportRegistry.passportOf(uint256)._agentId (src/registries/YinglongPassportRegistry.sol#237) is not in mixedCase
+Parameter YinglongPassportRegistry.walletInfo(address)._wallet (src/registries/YinglongPassportRegistry.sol#244) is not in mixedCase
+Parameter YinglongPassportRegistry.erc8004IdOfWallet(address)._wallet (src/registries/YinglongPassportRegistry.sol#250) is not in mixedCase
+Parameter YinglongPassportRegistry.bindWalletDigest(uint256,address,address,uint256)._agentId (src/registries/YinglongPassportRegistry.sol#255) is not in mixedCase
+Parameter YinglongPassportRegistry.bindWalletDigest(uint256,address,address,uint256)._controller (src/registries/YinglongPassportRegistry.sol#255) is not in mixedCase
+Parameter YinglongPassportRegistry.bindWalletDigest(uint256,address,address,uint256)._wallet (src/registries/YinglongPassportRegistry.sol#255) is not in mixedCase
+Parameter YinglongPassportRegistry.bindWalletDigest(uint256,address,address,uint256)._deadline (src/registries/YinglongPassportRegistry.sol#255) is not in mixedCase
+Parameter YinglongCreate2Deployer.deploy(bytes32,bytes)._salt (src/utils/YinglongCreate2Deployer.sol#13) is not in mixedCase
+Parameter YinglongCreate2Deployer.deploy(bytes32,bytes)._initCode (src/utils/YinglongCreate2Deployer.sol#13) is not in mixedCase
+Parameter YinglongCreate2Deployer.computeAddress(bytes32,bytes32)._salt (src/utils/YinglongCreate2Deployer.sol#22) is not in mixedCase
+Parameter YinglongCreate2Deployer.computeAddress(bytes32,bytes32)._initCodeHash (src/utils/YinglongCreate2Deployer.sol#22) is not in mixedCase
+Parameter ZKMandateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._terms (src/zk/ZKMandateEnforcer.sol#101) is not in mixedCase
+Parameter ZKMandateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._args (src/zk/ZKMandateEnforcer.sol#102) is not in mixedCase
+Parameter ZKMandateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._mode (src/zk/ZKMandateEnforcer.sol#103) is not in mixedCase
+Parameter ZKMandateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._executionCallData (src/zk/ZKMandateEnforcer.sol#104) is not in mixedCase
+Parameter ZKMandateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._delegationHash (src/zk/ZKMandateEnforcer.sol#105) is not in mixedCase
+Parameter ZKMandateEnforcer.beforeHook(bytes,bytes,ModeCode,bytes,bytes32,address,address)._redeemer (src/zk/ZKMandateEnforcer.sol#107) is not in mixedCase
+Parameter ZKMandateEnforcer.runningCommitment(address,bytes32)._delegationManager (src/zk/ZKMandateEnforcer.sol#138) is not in mixedCase
+Parameter ZKMandateEnforcer.runningCommitment(address,bytes32)._delegationHash (src/zk/ZKMandateEnforcer.sol#138) is not in mixedCase
+Parameter ZKMandateEnforcer.getTermsInfo(bytes)._terms (src/zk/ZKMandateEnforcer.sol#144) is not in mixedCase
+Parameter ZKMandateEnforcer.getArgsInfo(bytes)._args (src/zk/ZKMandateEnforcer.sol#154) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+
+Detector: immutable-states
+MandateRegistry.killSwitch (src/registries/MandateRegistry.sol#65) should be immutable 
+ProductRegistry.admin (src/rails/ProductRegistry.sol#17) should be immutable 
+TestMoneyMarketFund.asset (src/rails/TestMoneyMarketFund.sol#20) should be immutable 
+TestUnits.railKind (src/rails/TestUnits.sol#28) should be immutable 
+YinglongEIP712.domainSalt (src/utils/YinglongEIP712.sol#14) should be immutable 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+. analyzed (64 contracts with 102 detectors), 351 result(s) found
+'forge clean' running (wd: D:\fintechatho_2026_china\YINGLONG\contracts)
+'forge config --json' running
+'forge build --build-info --deny never --skip ./test/** ./script/** --force' running (wd: D:\fintechatho_2026_china\YINGLONG\contracts)
