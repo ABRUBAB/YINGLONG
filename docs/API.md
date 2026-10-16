@@ -82,7 +82,7 @@ Returned by `ask`, `GET /v1/proposals/:id` and the attack route. The internal fi
 | `plan` | `{step, description}[]` | |
 | `tier` | string | `T0`, `T1`, `T2`, `T3`, `T4` or `ASK` |
 | `decision` | string | `execute` (T1), `needs_approval` (T2), `ask`, `refused` (T3, T4) or `answered` (T0) |
-| `scales` | `ScaleReport[]` | `{n, name, status, reason, typedError?, model?, ms?}`; `status` is `passed`, `stopped`, `escalated` or `skipped`; `n` is 1 to 9; `ms` is the wall-clock time the check ran, in milliseconds (checks run in order, each timed from the end of the previous one) |
+| `scales` | `ScaleReport[]` | `{n, name, status, reason, typedError?, model?, ms?, score?, threshold?}`; `status` is `passed`, `stopped`, `escalated` or `skipped`; `n` is 1 to 9; `ms` is the wall-clock time the check ran, in milliseconds (checks run in order, each timed from the end of the previous one); `score` and `threshold` are the sentinel's injection probability (0 to 1) and its escalation threshold |
 | `explanation` | object | `{text, aiGenerated, model?}` |
 | `payment` | object or absent | `{symbol, decimals, amount, payee: {id, label, address}, method}`; `method` is `transfer`, `transferAndCall` or `instruct` |
 | `simulation` | object or absent | `{ok, revert?: {name, args, message, raw}, block}` |

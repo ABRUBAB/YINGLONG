@@ -80,3 +80,6 @@ apps/agent/data/world.json
 apps/agent/data/visitors.json
 apps/agent/data/proposals.json
 apps/agent/data/receipts*.jsonl
+
+# local archive folder (never pushed)
+_archive/

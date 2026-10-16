@@ -8,6 +8,8 @@ export interface SentinelResult {
   label: "benign" | "injection";
   model: string;
   matched?: string[];
+  /** The service's decision threshold (absent for the rule fallback, which uses 0.5). */
+  threshold?: number;
 }
 
 const HEURISTICS: [string, RegExp][] = [
@@ -49,6 +51,7 @@ export async function sentinel(text: string): Promise<SentinelResult> {
           label,
           model: j.model ?? `M1 sentinel ${j.model_sha?.slice(0, 12) ?? ""}`.trim(),
           matched: h.matched,
+          ...(typeof j.threshold === "number" ? { threshold: j.threshold } : {}),
         };
       }
     } catch {

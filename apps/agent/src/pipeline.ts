@@ -33,6 +33,10 @@ export interface ScaleReport {
   model?: string;
   /** Wall-clock time this check ran, in milliseconds (the checks run one after another). */
   ms?: number;
+  /** The check's own numeric signal, where it has one: the sentinel's injection probability (0 to 1, highest over the request and its documents). */
+  score?: number;
+  /** The score at or above which the check escalates. */
+  threshold?: number;
 }
 
 export interface Proposal {
@@ -147,6 +151,8 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     status: injected.length ? "escalated" : "passed",
     reason: injected.length ? `possible prompt injection (score ${Math.max(...injected.map((s) => s.score)).toFixed(2)}${injected[0]?.matched?.length ? `: ${injected[0].matched.join(", ")}` : ""})` : "no injection signal",
     model: sRes[0]!.model,
+    score: Math.round(Math.max(...sRes.map((s) => s.score)) * 1000) / 1000,
+    ...(sRes[0]!.threshold !== undefined ? { threshold: sRes[0]!.threshold } : {}),
   });
   if (injected.length) aiFlags.push("possible prompt injection");
 
