@@ -6,7 +6,7 @@ import { useMotionOff } from "@/components/preferences";
 import { SectionHead } from "./sections";
 
 /**
- * The seven verbs as scroll storytelling (docs/MOTION.md, moment 2b). The ring on the left is the
+ * The seven verbs as scroll storytelling. The ring on the left is the
  * mandate's life cycle: one station per verb, the arc fills with scroll (GSAP ScrollTrigger, scrub),
  * the verb in view lights its station and draws its diagram in the ring (CSS, on the state change),
  * and each verb's name rises letter by letter as it enters (GSAP SplitText). GSAP is imported after

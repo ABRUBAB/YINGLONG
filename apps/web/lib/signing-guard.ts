@@ -1,5 +1,5 @@
 /**
- * Signing-domain guard (master plan 9.6): the only code path that may hand a challenge to the user's
+ * Signing-domain guard: the only code path that may hand a challenge to the user's
  * passkey. It accepts exactly the typed messages in the allowlist and only when the 32-byte digest it
  * is asked to sign equals hashTypedData(typedData) recomputed here. EIP-3009 transfers, ERC-2612
  * Permit, Permit2, raw personal_sign and unknown EIP-712 domains are refused with a typed reason.

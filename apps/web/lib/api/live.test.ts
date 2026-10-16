@@ -1,6 +1,6 @@
 /**
  * Live adapter against wire payloads shaped exactly like the agent service contract
- * (docs/api/AGENT_API.md). fetch is mocked; nothing leaves the process.
+ * (docs/API.md). fetch is mocked; nothing leaves the process.
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { keccak256, toHex } from "viem";

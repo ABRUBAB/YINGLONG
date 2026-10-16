@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Mandate Orbit: the landing hero's 3D scene (docs/DESIGN.md section 8). Every object is data:
+ * Mandate Orbit: the landing hero's 3D scene. Every object is data:
  *  - the chrome ring is the sealed mandate; its bright arc is the share of this period's budget left;
  *  - 64 ticks outside the ring are the Hash Ring of the live delegation hash (one nibble per tick);
  *  - the steel pearl on the ring is the agent's on-chain identity; it pulses when the batch lands;

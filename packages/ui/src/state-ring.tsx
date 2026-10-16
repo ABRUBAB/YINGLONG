@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cn, f3, shortHash } from "./cn.ts";
 
 /**
- * One semantic encoding for every state in the product (master plan 14.3).
+ * One semantic encoding for every state in the product.
  * Every state is a glyph plus a word; colour is never the only signal.
  */
 export type RingState =

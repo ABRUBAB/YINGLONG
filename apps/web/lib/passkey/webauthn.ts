@@ -3,7 +3,7 @@
  *
  * RP ID: the page's hostname, except that every host under the registrable domain
  * yinglong-agent.tech uses "yinglong-agent.tech", so a passkey made on app.yinglong-agent.tech also
- * works on any sibling subdomain and the RP ID never changes (master plan 20).
+ * works on any sibling subdomain and the RP ID never changes.
  */
 import type { Hex } from "viem";
 import { b64urlDecode, b64urlEncode, hexToBytes } from "./bytes";

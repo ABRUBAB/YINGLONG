@@ -27,8 +27,6 @@
   <a href="docs/JUDGES_GUIDE.md"><b>Judges' guide</b></a>
   &nbsp;&middot;&nbsp;
   <a href="https://api.yinglong-agent.tech/v1/health"><b>API</b></a>
-  &nbsp;&middot;&nbsp;
-  <a href="docs/deck/out/yinglong-deck.pdf"><b>Deck (PDF)</b></a>
   <br>
   <sub>60-second video: <!-- gen:links.video_60s -->not yet measured<!-- /gen --></sub>
 </p>
@@ -211,12 +209,12 @@ yinglong verify-tx <hash> --chain fisco --rpc https://api.yinglong-agent.tech/rp
 | `apps/agent` | Agent runtime: the nine scales, intent model, receipts, API |
 | `apps/signer` | Isolated signer with its own guard |
 | `apps/services`, `apps/ecny-sim`, `apps/indexer` | Agent City service agents (x402), e-CNY-style simulator, anchoring and breaker |
-| `apps/web` | The interface (ORBIT design system, [docs/DESIGN.md](docs/DESIGN.md)) |
+| `apps/web` | The interface |
 | `tools/verify-py` | `yinglong verify`, the independent Python verifier |
 | `ml/`, `bench/` | Injection sentinel, intent model, YINGLONG-Bench |
 | `infra/` | FISCO BCOS chain, edge, application stack |
 
-Read more: [Technical](docs/TECHNICAL.md) &middot; [Enforcers](docs/ENFORCERS.md) &middot; [API](docs/API.md) &middot; [Security self-assessment](docs/SECURITY_SELF_ASSESSMENT.md) &middot; [Threat model](docs/THREAT_MODEL.md) &middot; [Compliance matrix](docs/COMPLIANCE_MATRIX.md) &middot; [PIA](docs/PIA.md) &middot; [Incident response](docs/INCIDENT_RESPONSE.md) &middot; [Claims register](docs/CLAIMS.md)
+Read more: [Technical](docs/TECHNICAL.md) &middot; [Enforcers](docs/ENFORCERS.md) &middot; [API](docs/API.md) &middot; [Security self-assessment](docs/SECURITY_SELF_ASSESSMENT.md) &middot; [Threat model](docs/THREAT_MODEL.md) &middot; [Compliance matrix](docs/COMPLIANCE_MATRIX.md) &middot; [PIA](docs/PIA.md) &middot; [Incident response](docs/INCIDENT_RESPONSE.md) &middot; [Contributing](CONTRIBUTING.md)
 
 </details>
 

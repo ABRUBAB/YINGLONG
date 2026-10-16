@@ -2,7 +2,7 @@
  * Site shell, home and About styles (the global nav sheet, the landing sections, the About page).
  * Imported once by components/shell/site-nav.tsx, which renders on every route. Only transform,
  * opacity and SVG stroke properties animate; every moment has a still state under reduced motion
- * and the page-level Pause motion control (docs/MOTION.md).
+ * and the page-level Pause motion control.
  */
 
 /* ------------------------------------------------------------------ page guard */

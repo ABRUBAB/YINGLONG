@@ -54,7 +54,7 @@ export interface ReceiptPage {
 
 /**
  * Everything the pages need, in view-model shapes. The live adapter implements it against the agent
- * service (docs/api/AGENT_API.md); the fixture adapter against sample data.
+ * service (docs/API.md); the fixture adapter against sample data.
  * Signing flows are two-step: request (the service returns digest + typedData), then submit the
  * passkey signature over exactly that digest after the signing-domain guard has checked it.
  */

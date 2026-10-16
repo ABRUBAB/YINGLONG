@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Renders the Mandate Orbit posters (master plan 14.7, "poster first"):
+ * Renders the Mandate Orbit posters ("poster first"):
  *   public/posters/orbit-375.webp, orbit-768.webp, orbit-1440.webp  (hero fallback and LCP frame, 16:10, transparent)
  *   public/posters/og.webp                                              (Open Graph image, 1200x630)
  * from `/?poster=1` (fixed state, no events) of a running fixtures server.

@@ -10,7 +10,7 @@ Two independent implementations must agree bit for bit:
 |---|---|
 | TypeScript (reference) | `packages/ui/src/hash-ring/geometry.ts`, `hashRingGeometry(H)` |
 | Python twin | `tools/verify-py` (`yinglong verify` prints the ring as SVG and as an ASCII strip) |
-| Agent service | `hashRing` in every MandateView (`docs/api/AGENT_API.md`), cross-checked by the web app |
+| Agent service | `hashRing` in every MandateView (`docs/API.md`), cross-checked by the web app |
 
 ## Input
 

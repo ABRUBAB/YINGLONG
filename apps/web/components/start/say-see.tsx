@@ -119,7 +119,7 @@ const STATUS_GLYPH: Record<VisitorDraft["diff"][number]["status"], { ring: "veri
   "not enforced": { ring: "refused", word: "Not enforced" },
 };
 
-/** Lines arrive in caveat order (docs/MOTION.md, moment 15 rhythm): 180 ms apart; all at once when motion is off. */
+/** Lines arrive in caveat order: 180 ms apart; all at once when motion is off. */
 function useReveal(count: number, key: string) {
   const motionOff = useMotionOff();
   const [n, setN] = useState(motionOff ? count : 0);

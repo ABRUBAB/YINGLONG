@@ -95,7 +95,6 @@ function TwinGlyph() {
 }
 
 export function AboutPage() {
-  const novelty = SITE.novelty;
   const twin = SITE.twin;
   const equal = twin ? twin.enforcers.filter((e) => e.base && e.fisco && e.base.codeHash.toLowerCase() === e.fisco.codeHash.toLowerCase()).length : null;
   const stack = SITE.stack ?? [];
@@ -208,21 +207,17 @@ export function AboutPage() {
             <SectionHead index="02" eyebrow="What is new" id="new-title" title="Identity and mandate, unchanged across two kinds of chain" />
             <div className="mt-12 grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
               <figure className="m-0 lg:col-span-8">
-                {novelty ? (
-                  <>
-                    <blockquote className="type-display yl-reveal m-0 max-w-[30ch] text-[1.6rem] leading-[1.2] text-fg-0 sm:text-[2.1rem]">
-                      {novelty.text}
-                    </blockquote>
-                    <figcaption className="mt-6 grid gap-1 text-12 text-fg-muted">
-                      <span>
-                        Claim {novelty.id}, wording {novelty.decision}: the lead&apos;s decision after the rival check (docs/evidence/rival-check.md).
-                      </span>
-                      <span>Identity plus an on-chain mandate alone is not new; the claim rests on the same enforcement code running on a public chain and a consortium chain.</span>
-                    </figcaption>
-                  </>
-                ) : (
-                  <p className="m-0 text-15 text-fg-2">The novelty wording is generated from docs/CLAIMS.md at build time; this build had none.</p>
-                )}
+                <blockquote className="type-display yl-reveal m-0 max-w-[30ch] text-[1.6rem] leading-[1.2] text-fg-0 sm:text-[2.1rem]">
+                  To our knowledge, no other public system gives an AI agent both a checkable identity and spending rules enforced by code that run
+                  unchanged on a public blockchain and on a consortium blockchain.
+                </blockquote>
+                <figcaption className="mt-6 grid gap-1 text-12 text-fg-muted">
+                  <span>We compared public agent-wallet and agent-identity projects on 16 Oct 2026 and found no counterexample.</span>
+                  <span>
+                    An agent identity plus on-chain spending rules is not new on its own. What is new is the same rule code running, byte for byte, on
+                    both kinds of chain. The twin rings here are drawn from that code.
+                  </span>
+                </figcaption>
               </figure>
               <div className="grid justify-items-start gap-4 lg:col-span-4 lg:justify-items-end">
                 <TwinGlyph />

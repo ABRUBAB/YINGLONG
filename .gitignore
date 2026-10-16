@@ -57,11 +57,23 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 *.log
-.claude/worktrees/
 
-# demo video: rendered outputs and intermediate files (narration, clips, segments)
-video/out/
-video/work/
+# team working files: kept outside the repository (scripts/check-rules.mjs fails if one is tracked)
+CLAUDE.md
+AGENTS.md
+.claude/
+internal/
+video/
+docs/deck/
+docs/video/
+docs/api/
+docs/CLAIMS.md
+docs/DESIGN.md
+docs/MOTION.md
+docs/BRAND.md
+docs/VIDEO_SCRIPT.md
+docs/evidence/claims-input.json
+docs/evidence/rival-check.md
 
 # agent runtime state (evidence is exported by scripts/finalize)
 apps/agent/data/world.json

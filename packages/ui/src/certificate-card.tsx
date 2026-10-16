@@ -34,7 +34,7 @@ export interface CertificateCardProps {
 }
 
 /**
- * Certificate layout for receipts (master plan 14.6.6): a bank-statement grid, the Hash Ring
+ * Certificate layout for receipts: a bank-statement grid, the Hash Ring
  * top-right, explorer QR bottom-right, "Test units" and "AI-generated explanation" in the footer.
  * Prints from /proof on A4 in the light theme.
  */

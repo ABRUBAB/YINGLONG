@@ -5,8 +5,8 @@ import { formatUnits } from "@/lib/format";
 import { useMotionOff } from "@/components/preferences";
 
 /**
- * Animated amount for gauges only (never on approval screens, refusals or the drill: master plan
- * 14.8). The value is passed to Intl as an exact decimal string, so no float ever touches the money.
+ * Animated amount for gauges only (never on approval screens, refusals or the drill).
+ * The value is passed to Intl as an exact decimal string, so no float ever touches the money.
  */
 export function AmountFlow({ value, decimals, fractionDigits = 2, className }: { value: bigint; decimals: number; fractionDigits?: number; className?: string }) {
   const motionOff = useMotionOff();

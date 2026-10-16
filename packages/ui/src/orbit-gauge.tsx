@@ -29,7 +29,7 @@ export interface OrbitGaugeProps {
 }
 
 /**
- * Orbit gauge (master plan 14.6.4): a thin ring per budget lane. Chrome arc = spent (drawn clockwise
+ * Orbit gauge: a thin ring per budget lane. Chrome arc = spent (drawn clockwise
  * from 12 o'clock), ash ring = remaining, one tick for the reserve floor (brass only when a breach
  * is forecast).
  */

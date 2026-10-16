@@ -1,5 +1,5 @@
 /**
- * Mandate Orbit layout (the landing hero, docs/DESIGN.md section 8). Pure and deterministic: the 3D
+ * Mandate Orbit layout (the landing hero). Pure and deterministic: the 3D
  * scene, the poster and the hero's numbers all read the same slots.
  *
  * Grammar (one unit = the mandate ring's radius, the disc lies in the x/z plane):

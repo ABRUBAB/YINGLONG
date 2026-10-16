@@ -39,7 +39,6 @@ export interface SiteData {
   twin: { enforcers: TwinRow[]; allContracts: { compared: number; equal: number; differ: string[] } } | null;
   baseScenario: BaseStep[] | null;
   metrics: { generatedAt: string | null; values: Record<string, string> } | null;
-  novelty: { id: string; decision: string; text: string; reason: string | null } | null;
   stack: StackLayer[] | null;
   enforcerDocs: {
     enforcers: Record<string, { position: number | null; rule: string; detail: string | null }>;

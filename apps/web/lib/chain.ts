@@ -8,7 +8,7 @@ import type { Ledger, MerkleProof, TypedData } from "./api/view";
 
 export const CHAIN_ID: Record<Ledger, number> = {
   "base-sepolia": 84532,
-  // FISCO BCOS returns CHAINID 0 inside the EVM; EIP-712 domains on FISCO use 0 (master plan 9.6, KR-16).
+  // FISCO BCOS returns CHAINID 0 inside the EVM; EIP-712 domains on FISCO use 0 (KR-16).
   fisco: 0,
   "anvil-bench": 31337,
 };

@@ -1,7 +1,7 @@
 import { cn, f3 } from "./cn.ts";
 
 /**
- * Live status "O" (master plan 14.6.7, BRAND.md section 1): the wordmark's O as a 24 px indicator.
+ * Live status "O": the wordmark's O as a 24 px indicator.
  * ring = mandate active; pearl orbiting = acting; pearl stopped at the ring in brass = waiting for
  * you; pearl centred = asking; dashed ring = paused; no ring = no mandate.
  */

@@ -4,7 +4,7 @@ import type { Ledger, Narration } from "@/lib/api/view";
 import { LedgerChip, SampleBadge } from "./parts";
 
 /**
- * Page header pattern (docs/DESIGN.md section 2): where you are, the route title, one sentence on what
+ * Page header pattern: where you are, the route title, one sentence on what
  * the page proves, then the honest-label chips. Actions sit to the right on wide screens.
  */
 export function PageHeader({

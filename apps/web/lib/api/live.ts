@@ -2,7 +2,7 @@
  * Live adapter: the agent service at NEXT_PUBLIC_AGENT_API (default https://api.yinglong-agent.tech).
  * Every response is validated with the wire schemas in ./types and mapped into the view model in
  * ./view. A response that does not match the contract is an error, never silently rendered.
- * Endpoints marked "requested addition" in docs/api/AGENT_API.md degrade to a clear error when absent.
+ * Endpoints an older service build lacks degrade to a clear error when absent.
  */
 import { z } from "zod";
 import { ApiRequestError, CONSOLE_PRINCIPAL, type AgentApi } from "./client";

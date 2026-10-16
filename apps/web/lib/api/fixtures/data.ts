@@ -1,6 +1,6 @@
 /**
  * SAMPLE DATA, used only when NEXT_PUBLIC_DATA_MODE=fixtures. Every surface that renders it shows a
- * "Sample data" chip. The cast is fictional (master plan 6.1). Hashes are keccak256 of labels
+ * "Sample data" chip. The cast is fictional. Hashes are keccak256 of labels
  * (see ./util.ts); none of them is a real transaction, and no number here is evidence.
  */
 import { encodeAbiParameters, encodeFunctionData, keccak256, type Hex } from "viem";

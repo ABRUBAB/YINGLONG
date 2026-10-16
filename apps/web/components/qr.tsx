@@ -15,7 +15,7 @@ function loadEncoder(): Promise<Encode> {
 
 /**
  * QR code rendered as one SVG path (generated locally, no network). Error correction H so the orbit
- * glyph can sit in the centre (it covers well under 20 percent of the modules, BRAND.md section 2).
+ * glyph can sit in the centre (it covers well under 20 percent of the modules).
  * Until the encoder has loaded, a blank tile of the same size holds the place (same label).
  */
 export function Qr({ value, size = 160, label, glyph = true, className }: { value: string; size?: number; label: string; glyph?: boolean; className?: string }) {

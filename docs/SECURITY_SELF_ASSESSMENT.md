@@ -15,7 +15,7 @@
 | Commit assessed | <!-- gen:meta.commit -->99e8147edb8cfcd4467597907d46e586a34048ad (working tree had uncommitted changes)<!-- /gen --> |
 | Numbers generated at | <!-- gen:meta.generated_at -->2026-10-16T01:41:10.888Z<!-- /gen --> |
 | Owners | R4 (AI security) and R2 (contracts), per plan section 17 |
-| Companion documents | `docs/THREAT_MODEL.md`, `docs/PIA.md`, `docs/INCIDENT_RESPONSE.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/SECURITY_REVIEW.md`, `docs/CLAIMS.md` |
+| Companion documents | `docs/THREAT_MODEL.md`, `docs/PIA.md`, `docs/INCIDENT_RESPONSE.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/SECURITY_REVIEW.md` |
 
 ---
 
@@ -501,4 +501,3 @@ Columns: control ID, status (`tested`, `implemented`, `designed`, `not started`)
 | On-chain execution evidence | `docs/EXECUTION_EVIDENCE.md`, `docs/evidence/bundle.json` |
 | Bench report | `bench/` reports; per-family table in `docs/THREAT_MODEL.md` |
 | Security review | `docs/SECURITY_REVIEW.md` |
-| Claims and their fallbacks | `docs/CLAIMS.md` |

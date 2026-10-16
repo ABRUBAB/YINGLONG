@@ -2,7 +2,8 @@
 // Hard-rule gate. Fails if:
 //  1. any tracked or staged text file contains a CJK character (U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+FF00-FFEF);
 //  2. any commit message (or the message file passed with --msg) carries AI attribution;
-//  3. any tracked file looks like it holds a private key, mnemonic or API token.
+//  3. any tracked file looks like it holds a private key, mnemonic or API token;
+//  4. a team working file (assistant settings, presentation, video or design notes) is tracked or staged.
 // Usage: node scripts/check-rules.mjs [--staged] [--history] [--msg <file>]
 import { execFileSync } from "node:child_process";
 import { readFileSync, existsSync, statSync } from "node:fs";
@@ -36,6 +37,10 @@ function fail(msg) {
 const files = args.includes("--staged")
   ? git("diff", "--cached", "--name-only", "--diff-filter=ACMR").split("\n").filter(Boolean)
   : git("ls-files").split("\n").filter(Boolean);
+
+// Working files live outside the repository; .gitignore lists them too.
+const WORKING_FILES = /^(CLAUDE\.md|AGENTS\.md|\.claude\/|internal\/|video\/|docs\/(deck|video|api)\/|docs\/(CLAIMS|DESIGN|MOTION|BRAND|VIDEO_SCRIPT)\.md|docs\/evidence\/(claims-input\.json|rival-check\.md))/;
+for (const f of files) if (WORKING_FILES.test(f)) fail(`team working file is tracked: ${f} (keep it outside the repository)`);
 
 for (const f of files) {
   if (BINARY.test(f) || !existsSync(f) || statSync(f).isDirectory()) continue;

@@ -1,4 +1,4 @@
-/** The five pillars (master plan section 4). Shared by the landing page and /about. */
+/** The five pillars. Shared by the landing page and /about. */
 export interface Pillar {
   id: "pearl" | "seal" | "scales" | "vein" | "gate";
   name: string;

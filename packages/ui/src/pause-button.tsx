@@ -12,7 +12,7 @@ export interface PauseButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonEl
 }
 
 /**
- * The one inverted control in the product (master plan 14.5): always visible, bone on obsidian
+ * The one inverted control in the product: always visible, bone on obsidian
  * (ink on paper in light mode). One tap pauses every delegation in the next block; resuming is an
  * owner-only passkey action and is drawn as an outline button so the two are never confused.
  */

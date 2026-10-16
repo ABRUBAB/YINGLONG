@@ -3,7 +3,7 @@
  * the live adapter maps the agent service's wire format (./types.ts) into them.
  *
  * Conventions
- * - Amounts are integer strings in base units plus `decimals` (no floats for money, CLAUDE.md rule 4).
+ * - Amounts are integer strings in base units plus `decimals` (no floats for money, CONTRIBUTING.md rule 3).
  * - Hashes are 0x-prefixed 32-byte hex; addresses are 0x-prefixed 20-byte hex (any case).
  * - Text marked "code-filled" is produced by templates from reason codes, never free LLM text.
  *   AI-generated text always travels with an `aigc` label (null means the text is a template).

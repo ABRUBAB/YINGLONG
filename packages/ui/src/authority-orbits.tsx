@@ -78,7 +78,7 @@ function Ring({
 }
 
 /**
- * Authority Orbits (master plan 14.6.3): nested rings, user > agent > sub-agents. Every
+ * Authority Orbits: nested rings, user > agent > sub-agents. Every
  * re-delegation is drawn strictly inside its parent, which shows the narrowing-only rule without a
  * caption. A revoked ring collapses to a dashed arc with a gap at 12 o'clock.
  */

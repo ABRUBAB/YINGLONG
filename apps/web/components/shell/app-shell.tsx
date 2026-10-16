@@ -23,7 +23,7 @@ const PERSONA: Record<Persona, { name: string; sub: string }> = {
 };
 
 /**
- * App shell (master plan 14.5), the secondary in-app navigation under the global site nav: a 240 px
+ * App shell, the secondary in-app navigation under the global site nav: a 240 px
  * rail (72 px icon rail from 1024 to 1279 px) with the persona at the top and, for Nadia, the
  * inverted Pause always visible at the bottom. Below 1024 px the rail becomes a persona bar and a
  * bottom tab bar that still carries Pause.

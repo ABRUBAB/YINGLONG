@@ -10,7 +10,7 @@ import { OwnAgent } from "@/components/landing/own-agent";
 import { TryIt } from "@/components/landing/try-it";
 
 /**
- * Landing (docs/DESIGN.md section 8): the Mandate Orbit hero (poster first, 3D after load), the
+ * Landing: the Mandate Orbit hero (poster first, 3D after load), the
  * evidence ribbon of real hashes, the five pillars, the seven verbs as a scroll story, the nine
  * scales with the last attack stopped, one engine and two scenarios, the same enforcer bytecode on
  * both ledgers, the live proof wall, generated evidence, your own agent, and the Judge's Challenge.

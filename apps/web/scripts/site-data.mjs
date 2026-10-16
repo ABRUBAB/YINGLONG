@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 /**
- * Build-time data for the home and About pages (CLAUDE.md rule 5: nothing here is typed by hand).
+ * Build-time data for the home and About pages (CONTRIBUTING.md rule 4: nothing here is typed by hand).
  * Writes content/generated/site-data.json from files the code produced:
  *   - git log                                  -> the build timeline (dates, subjects, tracks)
  *   - contracts/deployments/{base-sepolia,fisco}.json -> runtime code hash per contract per ledger
  *   - docs/evidence/bundle.json                -> the 13 YINGLONG enforcers and generated metrics
  *   - apps/agent/data/e2e-base-sepolia.json    -> the recorded Base Sepolia scenario transactions
- *   - docs/evidence/claims-input.json + docs/CLAIMS.md -> the CL-17 wording the lead decided
  *   - package manifests                        -> the technology stack with pinned versions
  * When a source is missing (the web image copies apps/web only), the previous value in the existing
  * JSON is kept, so `next build` never depends on the repository around it.
@@ -73,14 +72,25 @@ const MILESTONE = [
   /^Private mandate on Base Sepolia/i,
 ];
 
+// Team working files that are no longer in the repository (presentation, video and design notes). A
+// commit that touched only these is not part of the product's build history, so the timeline skips it.
+const WORKING_FILES = /^(CLAUDE\.md|\.claude\/|video\/|docs\/(deck|video|api)\/|docs\/(CLAIMS|DESIGN|MOTION|BRAND|VIDEO_SCRIPT)\.md|docs\/evidence\/(claims-input\.json|rival-check\.md))/;
+
+// Commits whose main change was such a file, even if they touched a product file on the way.
+const WORKING_SUBJECTS = /^(Reading deck|Video|Rival check)/i;
+
 function gitTimeline() {
   try {
-    const raw = execFileSync("git", ["log", "--reverse", "--format=%h%x1f%aI%x1f%s"], { cwd: repo, encoding: "utf8", maxBuffer: 32 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] });
+    const raw = execFileSync("git", ["log", "--reverse", "--name-only", "--format=%x1e%h%x1f%aI%x1f%s"], { cwd: repo, encoding: "utf8", maxBuffer: 32 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] });
     const commits = raw
-      .split("\n")
+      .split("\x1e")
       .filter(Boolean)
-      .map((line) => {
-        const [hash, at, subject] = line.split("\x1f");
+      .map((block) => {
+        const [head, ...files] = block.split("\n").filter(Boolean);
+        return { fields: head.split("\x1f"), files };
+      })
+      .filter(({ fields: [, , subject], files }) => !WORKING_SUBJECTS.test(subject) && (!files.length || !files.every((f) => WORKING_FILES.test(f))))
+      .map(({ fields: [hash, at, subject] }) => {
         const track = (TRACKS.find(([, re]) => re.test(subject)) ?? ["infra"])[0];
         return { hash, at, subject, track, milestone: MILESTONE.some((re) => re.test(subject)) };
       });
@@ -169,21 +179,6 @@ function metrics(bundle) {
   for (const k of METRIC_KEYS) if (bundle.metrics[k] !== undefined) out[k] = String(bundle.metrics[k]);
   sources.metrics = "docs/evidence/bundle.json";
   return { generatedAt: bundle.generatedAt ?? bundle.metrics["meta.generated_at"] ?? null, values: out };
-}
-
-/* ------------------------------------------------------------------ CL-17 wording */
-
-function novelty() {
-  const input = readJson("docs/evidence/claims-input.json");
-  const claims = readText("docs/CLAIMS.md");
-  const decision = input?.decisions?.["CL-17"]?.decision;
-  if (!decision || !claims) return null;
-  const section = claims.split(/^### CL-17\.[^\n]*$/m)[1]?.split(/^### /m)[0] ?? "";
-  const line = section.split("\n").find((l) => l.startsWith(`- **${decision}**`));
-  const text = line?.match(/"([^"]+)"/)?.[1];
-  if (!text) return null;
-  sources.novelty = "docs/evidence/claims-input.json (CL-17 decision), docs/CLAIMS.md (wording)";
-  return { id: "CL-17", decision, text, reason: input.decisions["CL-17"].reason ?? null };
 }
 
 /* ------------------------------------------------------------------ enforcers and typed errors (docs/ENFORCERS.md) */
@@ -302,12 +297,11 @@ const next = {
   twin: twinChains(bundle) ?? previous.twin ?? null,
   baseScenario: baseScenario() ?? previous.baseScenario ?? null,
   metrics: metrics(bundle) ?? previous.metrics ?? null,
-  novelty: novelty() ?? previous.novelty ?? null,
   stack: stack(bundle) ?? previous.stack ?? null,
   enforcerDocs: enforcerDocs() ?? previous.enforcerDocs ?? null,
   scales: scales() ?? previous.scales ?? null,
 };
-next.sources = { ...(previous.sources ?? {}), ...sources };
+next.sources = { ...Object.fromEntries(Object.entries(previous.sources ?? {}).filter(([k]) => k in next)), ...sources };
 
 // Keep the file stable when nothing changed (the timestamp alone is not a change).
 const strip = (o) => JSON.stringify({ ...o, generatedAt: null });

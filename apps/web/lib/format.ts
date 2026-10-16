@@ -1,6 +1,6 @@
 /**
  * Formatting for amounts, hashes and times. Amounts are bigint base units end to end; nothing here
- * ever converts money to a float (CLAUDE.md rule 4).
+ * ever converts money to a float (CONTRIBUTING.md rule 3).
  */
 import type { Amount, Ledger, Jurisdiction, Tier } from "./api/view";
 

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "./cn.ts";
 
-/** Output-type chips (master plan 14.3): what kind of statement is the user reading? */
+/** Output-type chips: what kind of statement is the user reading? */
 export type OutputKind = "ai" | "rule" | "onchain" | "estimate";
 
 const OUTPUT_LABEL: Record<OutputKind, string> = {

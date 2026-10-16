@@ -202,32 +202,11 @@ For N = 1 to 5 (playbooks: 1 agent key leak, 2 device theft or passkey loss, 3 i
 | `ir.pb5.notify` | Playbook 5: time to status banner shown |
 | `ir.pb5.evidence` | Playbook 5: time to evidence bundle hash written |
 
-## claims, controls and documents
+## controls and documents
 
-A claim decision is written as "code: reason". Codes: `A`, `B`, `B1`, `B2` as defined per claim in `docs/CLAIMS.md`; `F` (or `A-F`, `B1-F`) for the honest variant used while Base Sepolia is not deployed and the evidence is on FISCO BCOS; `withheld` when neither wording is supported by measured data, so the claim is not made. The reason names the data that decided it. CL-17 and CL-18 come from `docs/evidence/claims-input.json` (lead decisions; defaults B).
 
 | Key | Definition | Producer | Used in |
 |---|---|---|---|
-| `claims.HL.decision` | Wording used for the headline primitive: A if CL-01, CL-03 and CL-06 are A; B if CL-01 is B2; F if CL-01 is F, CL-03 A or F and CL-06 A | FIN (claim conditions) | CL |
-| `claims.CL-01.decision` | A (all custom enforcers identical on Base Sepolia and FISCO, DelegationManager on FISCO), B1 (some differ), B2 (no DelegationManager on FISCO), F (all identical between Anvil and FISCO; Base not deployed) | FIN | CL |
-| `claims.CL-02.decision` | A or B from the bench out-of-mandate count; withheld without bench results | FIN | CL |
-| `claims.CL-03.decision` | A (WebAuthn seal on Base on an owner-less account), F (P-256 passkey seal on FISCO; account `owner()` read live as address(0)), B otherwise | FIN | CL |
-| `claims.CL-04.decision` | A (facilitator), B1 (seller-settled on Base), B1-F (seller-settled on FISCO), B2 (none) | FIN | CL |
-| `claims.CL-05.decision` | A or A-F (ZK-enforced payment on a live ledger and the invariant 8 unit tests passing), B1, B2 | FIN | CL |
-| `claims.CL-06.decision` | A if `verify.agreement` reports agreement in the most recent test run, else B | FIN | CL |
-| `claims.CL-07.decision` | A-F (regulator node running and a supervisor pause on FISCO; anchors on FISCO only) or B | FIN | CL |
-| `claims.CL-08.decision` | A (at least five confirmed timed pauses with inclusion blocks), B (drill time), withheld | FIN | CL |
-| `claims.CL-09.decision` | A if the guard tests pass and each refused type named in the claim (EIP-3009, Permit, Permit2, raw `personal_sign`) has a refusal test, else B with the uncovered types | FIN | CL |
-| `claims.CL-10.decision` | A if a bounded symbolic proof completed, else B | FIN | CL |
-| `claims.CL-11.decision` | A (reverts on Base and FISCO), F (FISCO only), withheld | FIN | CL |
-| `claims.CL-12.decision` | A if the within-mandate manipulation rate is measured, else B | FIN | CL |
-| `claims.CL-13.decision` | A or A-F if `lotus-hk` carries a sealed mandate for the same agentId as `lotus-sz` on a live ledger, else B | FIN | CL |
-| `claims.CL-14.decision` | A with identical enforcers on three or more ledgers, else B | FIN | CL |
-| `claims.CL-15.decision` | A or B from the bench baselines; withheld without them | FIN | CL |
-| `claims.CL-16.decision` | A (the A and B wordings are the same) | FIN | CL |
-| `claims.CL-17.decision` | From `docs/evidence/claims-input.json` (lead decision after the rival check) | FIN | CL |
-| `claims.CL-18.decision` | From `docs/evidence/claims-input.json` | FIN | CL |
-| `claims.CL-19.decision` | A (at least five confirmed timed revokes), B (drill time), withheld | FIN | CL |
 | `controls.status_table` | Per control ID (C-xx-nn) in the self-assessment: status, evidence paths, tests and notes. The map from control to paths and tests is hand-written in `docs/evidence/controls.json`; the status is derived: `tested` (every path exists and a listed test passed in the most recent test run), `implemented` (paths exist, no passing listed test), `designed` (no path, or a path missing). DC-nn rows are open design checks and are not counted | FIN | SA |
 | `controls.implemented` | Controls with status "implemented" or "tested", and how many of them are tested | FIN | SA |
 | `controls.total` | C-xx-nn controls listed in the self-assessment | FIN | SA |

@@ -37,7 +37,7 @@ function checksOf(v: CredentialVerification): Check[] {
   ];
 }
 
-/** Checks revealed in order, 140 ms apart (docs/MOTION.md, moment 14); all at once when motion is off. */
+/** Checks revealed in order, 140 ms apart; all at once when motion is off. */
 function VerifyResult({ v }: { v: CredentialVerification }) {
   const checks = checksOf(v);
   const motionOff = useMotionOff();

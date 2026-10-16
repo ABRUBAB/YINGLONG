@@ -1,7 +1,7 @@
 /**
  * YINGLONG agent service API: the wire contract (zod). The live adapter (./live.ts) parses every
- * response with these schemas and maps it to the front-end view model (./view.ts). Endpoints,
- * examples and the additions the front end requests are documented in docs/api/AGENT_API.md.
+ * response with these schemas and maps it to the front-end view model (./view.ts). Every route is
+ * documented in docs/API.md.
  *
  * Conventions (agreed with the agent service)
  * - Base URL: NEXT_PUBLIC_AGENT_API (default https://api.yinglong-agent.tech); JSON everywhere.

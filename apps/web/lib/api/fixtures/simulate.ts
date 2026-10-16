@@ -1,7 +1,7 @@
 /**
  * SAMPLE behaviour for fixtures mode only: a tiny keyword simulator standing in for the agent
  * runtime so the console, Mandate Studio and the Judge's Challenge can be exercised without a
- * backend. It follows the product's rules (master plan 4.1): AI signals (sentinel, anomaly) only
+ * backend. It follows the product's rules: AI signals (sentinel, anomaly) only
  * escalate; only deterministic scales (policy, counterparty, chain) refuse.
  */
 import { encodeAbiParameters, hashStruct, keccak256, toHex, type Hex } from "viem";

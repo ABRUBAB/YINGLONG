@@ -1,6 +1,6 @@
 /*
  * Agent City motion and states. Only opacity and transform animate; every moment is tied to a state
- * change (docs/MOTION.md #13 "City pulse"): hover highlight, a receipt arriving, a feed row arriving.
+ * change: hover highlight, a receipt arriving, a feed row arriving.
  * Reduced motion and the page's "Pause motion" control keep the final states and drop the movement.
  */
 

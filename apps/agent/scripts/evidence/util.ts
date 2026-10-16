@@ -72,7 +72,7 @@ export function table(head: string[], rows: unknown[][]): string {
   return [nl, `| ${head.join(" | ")} |`, `|${head.map(() => "---").join("|")}|`, ...rows.map((r) => `| ${r.map(cell).join(" | ")} |`), ""].join(nl);
 }
 
-// The repository is English only (CLAUDE.md rule 1): any generated text that would carry characters from the
+// The repository is English only (CONTRIBUTING.md rule 1): any generated text that would carry characters from the
 // forbidden ranges (for example a third-party package description) has them replaced. Built from code points so this
 // file stays plain ASCII.
 const cp = (n: number) => String.fromCodePoint(n);

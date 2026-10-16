@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   rules:
-    name: hard rules (English only, no AI attribution, no secrets)
+    name: repository rules (English only, no secrets, no working files)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4

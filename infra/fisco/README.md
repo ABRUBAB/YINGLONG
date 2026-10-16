@@ -311,7 +311,7 @@ These follow from the generated results above.
 
 1. **Chain ID is not 0.** On 3.17.1 the CHAINID opcode returns the genesis `[web3] chain_id` (the
    `build_chain.sh` default), equal to `eth_chainId`, and the DelegationManager's EIP-712 domain uses it.
-   The FISCO ledger profile and KR-16 in the master plan (chain ID 0) should be updated. The default value is
+   The FISCO ledger profile (chain ID 0) and KR-16 should be updated. The default value is
    shared by every FISCO chain built with defaults; a chain-specific id would need a new genesis (or a
    `web3_chain_id` system-config change, after which OpenZeppelin's EIP712 recomputes the domain and old
    signatures stop verifying). Not changed here.

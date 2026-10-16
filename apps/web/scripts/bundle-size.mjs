@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Sums the gzip size of the JavaScript a route loads before any lazy chunk (master plan 14.7:
+// Sums the gzip size of the JavaScript a route loads before any lazy chunk (budget:
 // home blocking JS < 180 kB gz). Usage: node scripts/bundle-size.mjs [baseUrl] [path...]
 import { gzipSync } from "node:zlib";
 

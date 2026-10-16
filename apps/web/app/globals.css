@@ -4,7 +4,7 @@
 
 @source "../../../packages/ui/src";
 
-/* ORBIT: no default palette, radius, shadow or blur can leak in (master plan 14.2, 14.9). */
+/* ORBIT: no default palette, radius, shadow or blur can leak in. */
 @theme {
   --color-*: initial;
   --radius-*: initial;
@@ -57,7 +57,7 @@
   --radius-pill: 999px;
 
   --ease-out-orbit: cubic-bezier(0.2, 0.7, 0.2, 1);
-  /* Motion tokens (docs/DESIGN.md section 7): strong curves, never ease-in for UI. */
+  /* Motion tokens: strong curves, never ease-in for UI. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
@@ -378,7 +378,7 @@ body:has([data-poster]) .yl-sitefooter {
   top: 12px;
 }
 
-/* Hairline data tables: dense, right-aligned mono amounts (master plan 14.5). */
+/* Hairline data tables: dense, right-aligned mono amounts. */
 .yl-table {
   width: 100%;
   font-size: 13px;
@@ -419,7 +419,7 @@ body:has([data-poster]) .yl-sitefooter {
   white-space: nowrap;
 }
 
-/* Landing: CSS scroll-driven reveals with a static fallback (docs/MOTION.md, moment 2). */
+/* Landing: CSS scroll-driven reveals with a static fallback. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     :root:not([data-motion="off"]) .yl-reveal {
@@ -518,7 +518,7 @@ body:has([data-poster]) .yl-sitefooter {
   transition: none;
 }
 
-/* Route changes: a short crossfade; the Hash Ring morphs between console and studio (docs/MOTION.md, moment 9). */
+/* Route changes: a short crossfade; the Hash Ring morphs between console and studio. */
 ::view-transition-group(*) {
   animation-duration: 260ms;
   animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -570,7 +570,7 @@ body:has([data-poster]) .yl-sitefooter {
   }
 }
 
-/* Landing hero entrance (docs/MOTION.md, moment 2a): one time, on load; lines rise out of a soft blur. */
+/* Landing hero entrance: one time, on load; lines rise out of a soft blur. */
 @media (prefers-reduced-motion: no-preference) {
   :root:not([data-motion="off"]) .yl-hero-in {
     animation: yl-rise 700ms var(--ease-out) both;
@@ -614,7 +614,7 @@ body:has([data-poster]) .yl-sitefooter {
   }
 }
 
-/* Seven verbs: the diagram in the ring swaps in when the verb in view changes (docs/MOTION.md, 2c). */
+/* Seven verbs: the diagram in the ring swaps in when the verb in view changes. */
 @media (prefers-reduced-motion: no-preference) {
   .yl-verb-diagram {
     transform-box: view-box;
@@ -629,7 +629,7 @@ body:has([data-poster]) .yl-sitefooter {
   }
 }
 
-/* Workspace panels (docs/MOTION.md, moment 16): a panel rises 8 px into place once when its data
+/* Workspace panels: a panel rises 8 px into place once when its data
    first arrives; bars and lines grow from zero to their value (moment 12); both stay still when
    motion is off. Only transform, opacity and SVG stroke animate. */
 @media (prefers-reduced-motion: no-preference) {

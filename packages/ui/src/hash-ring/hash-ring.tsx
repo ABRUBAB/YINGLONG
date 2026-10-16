@@ -27,7 +27,7 @@ export interface HashRingProps {
 }
 
 /**
- * The Hash Ring (master plan 14.6, spec docs/HASH_RING.md). Geometry comes only from
+ * The Hash Ring (spec: docs/HASH_RING.md). Geometry comes only from
  * hashRingGeometry(); this component never invents a tick. Each tick is a unit line transformed by
  * rotate(angle) translate(r0) scaleX(length), so a change of hash morphs tick lengths in place.
  */

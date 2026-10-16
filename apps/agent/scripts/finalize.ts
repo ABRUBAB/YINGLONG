@@ -721,9 +721,12 @@ const drillTxs: { what: string; ledger: string; tx: string }[] = [];
 for (const d of drillTxs) if (d.ledger !== "anvil") liveTx.add(d.tx.toLowerCase());
 metrics["evidence.tx_count"] = String(liveTx.size);
 
-// ---------------------------------------------------------------- claims (docs/CLAIMS.md conditions, computed)
-{
-  const input = readJson<{ decisions?: Record<string, { decision: string; reason: string }> }>(p("docs/evidence/claims-input.json"));
+// ---------------------------------------------------------------- claim wording decisions
+// A team working file kept outside the repository: with CLAIMS_DIR set, the decisions computed from the
+// evidence are written to CLAIMS_DIR/claims-decisions.json; they are not part of the public bundle.
+const CLAIMS_DIR = process.env.CLAIMS_DIR;
+if (CLAIMS_DIR) {
+  const input = readJson<{ decisions?: Record<string, { decision: string; reason: string }> }>(resolve(CLAIMS_DIR, "claims-input.json"));
   const dec: Record<string, string> = {};
   const has = (k: string) => metrics[k] !== undefined;
   const notBase = BASE ? "" : "; Base Sepolia not deployed";
@@ -801,7 +804,7 @@ metrics["evidence.tx_count"] = String(liveTx.size);
   dec["CL-16"] = "A: wording A and B are the same; no condition";
   for (const id of ["CL-17", "CL-18"]) {
     const d = input?.decisions?.[id];
-    dec[id] = d ? `${d.decision}: ${d.reason} (docs/evidence/claims-input.json)` : "B: no lead decision recorded";
+    dec[id] = d ? `${d.decision}: ${d.reason}` : "B: no decision recorded";
   }
   // CL-19 time-to-revoke
   if (tp && tp.revoke.confirmed >= 5) dec["CL-19"] = `A: ${tp.revoke.confirmed} confirmed revoke runs (one user operation each) on ${LEDGERS[timingLedger!].label}${timingLedger === "fisco" ? notBase : ""}`;
@@ -813,7 +816,7 @@ metrics["evidence.tx_count"] = String(liveTx.size);
   else if (code("CL-01") === "A" && code("CL-03") === "A" && code("CL-06") === "A") dec.HL = "A: CL-01, CL-03 and CL-06 are A";
   else if (code("CL-01") === "F" && ["A", "F"].includes(code("CL-03")) && code("CL-06") === "A") dec.HL = `F: CL-01 ${code("CL-01")}, CL-03 ${code("CL-03")}, CL-06 ${code("CL-06")}${notBase}`;
   else dec.HL = `B: CL-01 ${code("CL-01")}, CL-03 ${code("CL-03")}, CL-06 ${code("CL-06")}`;
-  for (const [id, v] of Object.entries(dec)) metrics[`claims.${id}.decision`] = v;
+  writeFileSync(resolve(CLAIMS_DIR, "claims-decisions.json"), JSON.stringify(dec, null, 2) + "\n");
 }
 
 // ---------------------------------------------------------------- write EXECUTION_EVIDENCE.md
@@ -956,7 +959,6 @@ const bundle = {
   final: FINAL,
   metrics,
   testRuns,
-  claims: Object.fromEntries(Object.entries(metrics).filter(([k]) => k.startsWith("claims."))),
   controls: controlRows,
   deployerRoles: roleScan,
   drills: { pb1: readJson(p("docs/evidence/drills/pb1.json")), supervisorPause: sup, transactions: drillTxs },

@@ -35,7 +35,7 @@ const WORD: Record<ScaleStatus, string> = {
 };
 
 /**
- * Trace (master plan 14.6.5): the nine scales as nine lines. The scale that stopped or escalated
+ * Trace: the nine scales as nine lines. The scale that stopped or escalated
  * the action is expanded with its reason, typed error and revert hash. Used by the inspector,
  * the Judge's Challenge verdict and the Merkle path.
  */

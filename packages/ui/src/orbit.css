@@ -1,5 +1,4 @@
-/* Component motion for @yinglong/ui. Every animation here is tied to a state change
-   (docs/MOTION.md). Reduced motion and the page-level "Pause motion" control turn all of it off. */
+/* Component motion for @yinglong/ui. Every animation here is tied to a state change. Reduced motion and the page-level "Pause motion" control turn all of it off. */
 
 @property --yl-len {
   syntax: "<number>";
