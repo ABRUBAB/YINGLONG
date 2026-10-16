@@ -2,7 +2,7 @@
  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:99136c98-d397-5941-829d-9fee87ce64e0",
+ "serialNumber": "urn:uuid:6789ec46-6e14-5ef1-8fbc-42561f96c3ae",
  "version": 1,
  "metadata": {
   "lifecycles": [
@@ -1432,6 +1432,60 @@
     {
      "type": "issue-tracker",
      "url": "https://github.com/oxc-project/oxc/issues"
+    }
+   ]
+  },
+  {
+   "type": "library",
+   "name": "shaders-react",
+   "version": "0.0.81",
+   "purl": "pkg:npm/%40paper-design/shaders-react@0.0.81",
+   "bom-ref": "pkg:npm/%40paper-design/shaders-react@0.0.81",
+   "group": "@paper-design",
+   "licenses": [
+    {
+     "license": {
+      "id": "Apache-2.0"
+     }
+    }
+   ],
+   "externalReferences": [
+    {
+     "type": "distribution",
+     "url": "https://registry.npmjs.org/@paper-design/shaders-react/-/shaders-react-0.0.81.tgz",
+     "hashes": [
+      {
+       "alg": "SHA-512",
+       "content": "dc5324799aa3f6c4af2bf5a481e906bb772b9ce41de11da21fc213fa3541b909aad66f29f3c545bf187adecf5b4add9ec41c2304d6917d2a3415209e371aa1df"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "library",
+   "name": "shaders",
+   "version": "0.0.81",
+   "purl": "pkg:npm/%40paper-design/shaders@0.0.81",
+   "bom-ref": "pkg:npm/%40paper-design/shaders@0.0.81",
+   "group": "@paper-design",
+   "licenses": [
+    {
+     "license": {
+      "id": "Apache-2.0"
+     }
+    }
+   ],
+   "externalReferences": [
+    {
+     "type": "distribution",
+     "url": "https://registry.npmjs.org/@paper-design/shaders/-/shaders-0.0.81.tgz",
+     "hashes": [
+      {
+       "alg": "SHA-512",
+       "content": "8de19dca332c719d9bc6641da3c961c14b9f1d47f88aadecd5aca387c3d753b1a8e36470f04dc8d08b7515975cdc7b96b7927cda6fff0d159ac6c46a45f0381a"
+      }
+     ]
     }
    ]
   },
@@ -28465,6 +28519,18 @@
    "dependsOn": []
   },
   {
+   "ref": "pkg:npm/%40paper-design/shaders-react@0.0.81",
+   "dependsOn": [
+    "pkg:npm/%40paper-design/shaders@0.0.81",
+    "pkg:npm/%40types/react@19.3.0",
+    "pkg:npm/react@19.3.1"
+   ]
+  },
+  {
+   "ref": "pkg:npm/%40paper-design/shaders@0.0.81",
+   "dependsOn": []
+  },
+  {
    "ref": "pkg:npm/%40playwright/test@1.64.1",
    "dependsOn": [
     "pkg:npm/playwright@1.64.1"
@@ -28716,15 +28782,7 @@
   },
   {
    "ref": "pkg:npm/%40yinglong/ui@0.1.0",
-   "dependsOn": [
-    "pkg:npm/%40noble/hashes@2.4.0",
-    "pkg:npm/%40types/node@24.19.2",
-    "pkg:npm/%40types/react@19.3.0",
-    "pkg:npm/react@19.3.1",
-    "pkg:npm/tsx@4.23.15",
-    "pkg:npm/typescript@5.9.3",
-    "pkg:npm/vitest@5.0.5"
-   ]
+   "dependsOn": []
   },
   {
    "ref": "pkg:npm/abitype@1.2.3",
@@ -29389,6 +29447,7 @@
     "pkg:npm/%40noble/curves@2.4.0",
     "pkg:npm/%40noble/hashes@2.4.0",
     "pkg:npm/%40number-flow/react@0.6.2",
+    "pkg:npm/%40paper-design/shaders-react@0.0.81",
     "pkg:npm/%40playwright/test@1.64.1",
     "pkg:npm/%40react-three/drei@10.7.9",
     "pkg:npm/%40react-three/fiber@9.8.2",

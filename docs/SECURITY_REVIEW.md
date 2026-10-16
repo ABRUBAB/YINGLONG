@@ -14,7 +14,7 @@
 |---|---|
 | Commit reviewed | <!-- gen:review.commit -->not yet measured<!-- /gen --> |
 | Review completed | <!-- gen:review.date -->not yet measured<!-- /gen --> |
-| Release | <!-- gen:meta.release_tag -->99e8147<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->9bcd8ee<!-- /gen --> |
 | Reviewers | YINGLONG team members (roles R2 contracts, R4 AI security; read-only reviewer sessions at the planned review gate) |
 | Tool versions used | <!-- gen:review.tools.versions -->Slither: 0.11.6; forge: forge 1.8.5; Halmos: halmos 0.3.3<!-- /gen --> |
 
@@ -118,8 +118,8 @@ Found during this review and accepted: <!-- gen:review.wontfix.table -->not yet 
 | Area | Result |
 |---|---|
 | Static analysis | Slither high open: <!-- gen:static.slither.high -->0 (raw high 0; Slither 0.11.6, 102 detectors over contracts/src)<!-- /gen -->; medium open: <!-- gen:static.slither.medium -->0 (raw medium 14, of which 14 triaged as false positives with reasons in contracts/reports/slither.json)<!-- /gen -->; Aderyn high open: <!-- gen:static.aderyn.high -->0 (Aderyn aderyn 0.6.8 (built from the v0.6.8 source release with the local Windows portability patch reports/aderyn-windows.patch))<!-- /gen --> |
-| Tests | <!-- gen:tests.total -->332<!-- /gen --> passing, <!-- gen:tests.failed -->3 (pytest tools/verify-py: 3)<!-- /gen --> failing |
-| Contract coverage | <!-- gen:coverage.contracts -->lines 63.79% (546/856), statements 63.45% (665/1048), branches 36.36% (72/198), functions 49.18% (90/183) of contracts/src (forge 1.8.5 coverage)<!-- /gen --> |
+| Tests | <!-- gen:tests.total -->795<!-- /gen --> passing, <!-- gen:tests.failed -->0<!-- /gen --> failing |
+| Contract coverage | <!-- gen:coverage.contracts -->lines 100% (856/856), statements 100% (1048/1048), branches 99.49% (197/198), functions 100% (183/183) of contracts/src (forge 1.8.5 coverage)<!-- /gen --> |
 | Invariants | <!-- gen:invariants.table -->Foundry campaign 128 runs x 64 calls; symbolic results from contracts/reports/symbolic.json:
 
 | # | Foundry invariant fuzzing | Halmos (bounded) | Medusa | Echidna | Kontrol |
@@ -135,7 +135,7 @@ Found during this review and accepted: <!-- gen:review.wontfix.table -->not yet 
 | 9 | no campaign | not run | not run | not run | not run |
 | 10 | no campaign | not run | not run | not run | not run |
 <!-- /gen --> |
-| Fuzz volume | <!-- gen:fuzz.calls -->8,208 (8,192 invariant handler calls in 128 runs, plus 16 fuzz-test runs; contracts/reports/fuzz.json)<!-- /gen --> calls |
+| Fuzz volume | <!-- gen:fuzz.calls -->14,352 (8,192 invariant handler calls in 128 runs, plus 6160 fuzz-test runs; contracts/reports/fuzz.json)<!-- /gen --> calls |
 | Symbolic execution | <!-- gen:proofs.symbolic.status -->6 of 6 properties proved within bounds for invariants 1, 2, 3, 4, 5 (halmos 0.3.3, loops unrolled to 4, solver timeout 300 s; enforcer hooks executed symbolically, the DelegationManager and the account are not; Kontrol not run)<!-- /gen --> |
 | Differential fuzzing split | <!-- gen:fuzz.differential.split -->not yet measured<!-- /gen --> |
 | Enforcer gas overhead vs stock | <!-- gen:gas.overhead.median -->433,180 gas per payment (p95 437,289, n = 20): the sealed 15-caveat mandate vs 4 stock caveats for the same 1 tHKD transfer, paired samples a day apart (contracts/reports/gas.json)<!-- /gen --> |

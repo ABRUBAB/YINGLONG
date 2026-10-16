@@ -38,7 +38,7 @@ Status labels: [V] verified in this repository or at the source; [S] secondary s
 
 Versions are pinned in the workspace catalog (plan Appendix A); licences are read from the installed packages at release, never typed.
 
-npm: <!-- gen:thirdparty.npm.table -->36 direct dependencies of 12 workspace packages (version and licence read from each installed package.json):
+npm: <!-- gen:thirdparty.npm.table -->37 direct dependencies of 12 workspace packages (version and licence read from each installed package.json):
 
 | Package | Version | Licence | Kind | Used by |
 |---|---|---|---|---|
@@ -51,6 +51,7 @@ npm: <!-- gen:thirdparty.npm.table -->36 direct dependencies of 12 workspace pac
 | `@noble/hashes` | 2.4.0 | MIT | dev, runtime | apps/web, packages/ui |
 | `@noir-lang/noir_js` | 1.0.0-rc.5 | (MIT OR Apache-2.0) | runtime | circuits |
 | `@number-flow/react` | 0.6.2 | MIT | runtime | apps/web |
+| `@paper-design/shaders-react` | 0.0.81 | Apache-2.0 | runtime | apps/web |
 | `@playwright/test` | 1.64.1 | Apache-2.0 | dev | apps/web |
 | `@react-three/drei` | 10.7.9 | MIT | runtime | apps/web |
 | `@react-three/fiber` | 9.8.2 | MIT | runtime | apps/web |

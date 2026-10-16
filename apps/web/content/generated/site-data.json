@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-16T12:01:54.501Z",
+  "generatedAt": "2026-10-16T12:16:08.754Z",
   "timeline": {
-    "head": "a9ff632",
-    "count": 79,
+    "head": "9bcd8ee",
+    "count": 81,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-16T17:45:08+06:00",
+    "last": "2026-10-16T18:08:11+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -557,6 +557,20 @@
         "hash": "a9ff632",
         "at": "2026-10-16T17:45:08+06:00",
         "subject": "Fallback parser reads everyday purchase words (buy, purchase, tip, order a ...) as a payment",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "0ebace1",
+        "at": "2026-10-16T18:07:20+06:00",
+        "subject": "Secret scan needs no recorded exceptions; build timeline regenerated",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "9bcd8ee",
+        "at": "2026-10-16T18:08:11+06:00",
+        "subject": "Deploy accepts a rewritten main (forced fetch of the bundle)",
         "track": "infra",
         "milestone": false
       }
