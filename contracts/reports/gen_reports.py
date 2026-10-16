@@ -637,10 +637,13 @@ def gen_fuzz():
     inv_calls = inv_reverts = inv_runs = fuzz_runs = 0
     n = {"unit": 0, "fuzz": 0, "invariant": 0}
     failed = []
+    skipped = []  # vm.skip(true): tests that document a reported finding without failing the suite
     per_campaign = []
     for suite, name, res in _iter_tests(raw):
         kind = res.get("kind", {})
-        if res.get("status") != "Success":
+        if res.get("status") == "Skipped":
+            skipped.append(f"{suite}::{name}")
+        elif res.get("status") != "Success":
             failed.append(f"{suite}::{name}")
         if "Invariant" in kind:
             k = kind["Invariant"]
@@ -669,7 +672,7 @@ def gen_fuzz():
                 "invariant.fail_on_revert": cfg.get("invariant", {}).get("fail_on_revert"),
                 "profile": os.environ.get("FOUNDRY_PROFILE", "default"),
             },
-            "tests": {"unit": n["unit"], "fuzz": n["fuzz"], "invariant": n["invariant"], "failed": failed},
+            "tests": {"unit": n["unit"], "fuzz": n["fuzz"], "invariant": n["invariant"], "failed": failed, "skipped": skipped},
             "notes": [
                 "Foundry runs the invariant_* functions of one contract in a single shared campaign; its calls are "
                 "counted once and every invariant is checked after each call",

@@ -2,14 +2,18 @@
   "tool": "forge test",
   "version": "forge Version: 1.8.5",
   "command": "forge test --json > reports/forge-test.raw.json   (cwd: contracts/)",
-  "generatedAt": "2026-10-16T01:40:39Z",
-  "commit": "99e8147edb8cfcd4467597907d46e586a34048ad",
+  "generatedAt": "2026-10-16T05:00:32Z",
+  "commit": "e3156c0a36661da6b86e9fbfc5d971cc9567bb7a",
   "srcTree": "b665c8d9696f51ab03ccb0ada697798e96399ee5",
   "srcHasUncommittedChanges": false,
   "uncommittedPathsUnderContracts": [
-    "contracts/reports/",
-    "contracts/test/GasOverhead.t.sol",
-    "contracts/test/symbolic/"
+    "ontracts/reports/coverage.json",
+    "contracts/reports/coverage.summary.txt",
+    "contracts/reports/forge-test.raw.json",
+    "contracts/reports/fuzz.json",
+    "contracts/reports/gen_reports.py",
+    "contracts/reports/lcov.info",
+    "contracts/test/unit/"
   ],
   "settings": {
     "fuzz.runs": 512,
@@ -19,10 +23,14 @@
     "profile": "default"
   },
   "tests": {
-    "unit": 91,
-    "fuzz": 1,
+    "unit": 378,
+    "fuzz": 13,
     "invariant": 5,
-    "failed": []
+    "failed": [],
+    "skipped": [
+      "test/unit/MandateRegistry.t.sol:MandateRegistryTest::test_finding_canExecuteAfterRevokingNewerOfTwoLiveMandates()",
+      "test/unit/TestRails.t.sol:TestRailsTest::test_finding_relistAfterDelistDuplicatesAllProducts()"
+    ]
   },
   "notes": [
     "Foundry runs the invariant_* functions of one contract in a single shared campaign; its calls are counted once and every invariant is checked after each call",
@@ -33,8 +41,8 @@
     "invariantHandlerCalls": 8192,
     "invariantReverts": 0,
     "invariantRuns": 128,
-    "fuzzRuns": 16,
-    "total": 8208,
+    "fuzzRuns": 6160,
+    "total": 14352,
     "definition": "total = invariant handler calls (all runs x depth) + fuzz-test runs (one call each)"
   },
   "campaigns": [
@@ -67,6 +75,78 @@
           "status": "Success"
         }
       ],
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/AccountabilityLedger.t.sol:AccountabilityLedgerTest::testFuzz_rootsStayHashLinked(bytes32[5])",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/CategoryBudgetEnforcer.t.sol:CategoryBudgetEnforcerTest::testFuzz_periodIndex(uint64,uint64,uint64)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/CategoryBudgetEnforcer.t.sol:CategoryBudgetEnforcerTest::testFuzz_spentNeverExceedsCap(uint256[8])",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/CoSignEnforcer.t.sol:CoSignEnforcerTest::testFuzz_withoutApproval_passesIffWithinTier(uint256,uint8)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/ConditionalPaymentInstructions.t.sol:ConditionalPaymentInstructionsTest::testFuzz_availableIsPostedMinusPending(uint64,uint64[4],uint8)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/ForbiddenTargetsEnforcer.t.sol:ForbiddenTargetsEnforcerTest::testFuzz_everyListedTargetIsRefused(uint8)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/PaymentDecoder.t.sol:PaymentDecoderTest::testFuzz_dirtyBeneficiaryBits_alwaysRefused(address,uint96)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/PaymentDecoder.t.sol:PaymentDecoderTest::testFuzz_nativeValue_alwaysRefused(uint256)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/PaymentDecoder.t.sol:PaymentDecoderTest::testFuzz_transfer_roundTrip(address,address,uint256)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/ReserveFloorEnforcer.t.sol:ReserveFloorEnforcerTest::testFuzz_floorHolds(uint256,uint256)",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/VelocityEnforcer.t.sol:VelocityEnforcerTest::testFuzz_windowNeverExceedsLimits(uint256[6],uint256[6])",
+      "kind": "fuzz",
+      "runs": 512,
+      "status": "Success"
+    },
+    {
+      "test": "test/unit/YinglongCreate2Deployer.t.sol:YinglongCreate2DeployerTest::testFuzz_computeAddressMatchesDeploy(bytes32)",
+      "kind": "fuzz",
+      "runs": 512,
       "status": "Success"
     },
     {

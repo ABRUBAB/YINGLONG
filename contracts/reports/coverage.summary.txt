@@ -1,8 +1,410 @@
-Compiling 164 files with Solc 0.8.23
-Solc 0.8.23 finished in 14.53s
-Compiler run successful!
+Warning: optimizer settings and `viaIR` have been disabled for accurate coverage reports.
+If you encounter "stack too deep" errors, consider using `--ir-minimum` which enables `viaIR` with minimum optimization resolving most of the errors.
+See more: https://book.getfoundry.sh/guides/best-practices/stack-too-deep
+Compiling 191 files with Solc 0.8.23
+Solc 0.8.23 finished in 40.86s
+Compiler run successful with warnings:
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/AgentLineageEnforcer.t.sol:36:5:
+   |
+36 |     function test_activePassportWithSealedDidPasses() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/ForbiddenTargetsEnforcer.t.sol:17:5:
+   |
+17 |     function _hook(bytes memory _terms, address _target) internal {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/GlobalPauseEnforcer.t.sol:17:5:
+   |
+17 |     function _hook(bytes memory _t, address _redeemer) internal {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/JurisdictionEnforcer.t.sol:93:5:
+   |
+93 |     function test_mainland_coinFreeInstructionRailPasses() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/ReserveFloorEnforcer.t.sol:49:5:
+   |
+49 |     function test_zeroFloorAlwaysPasses() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/SuitabilityEnforcer.t.sol:39:5:
+   |
+39 |     function test_unlistedPayeeIsNotAffected() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/VerifiedPayeeEnforcer.t.sol:65:5:
+   |
+65 |     function test_activePayeeOfTheDelegatorPasses() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/unit/VerifiedPayeeEnforcer.t.sol:86:5:
+   |
+86 |     function test_attestedAgentOfSealedIssuerPasses() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/unit/VerifiedPayeeEnforcer.t.sol:130:5:
+    |
+130 |     function test_sealedIntermediaryToVerifiedPayeePasses() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/unit/VerifiedPayeeEnforcer.t.sol:149:5:
+    |
+149 |     function test_directSubscriptionToBookedFundNeedsNoIntermediary() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
 Analysing contracts...
 Running tests...
+
+Ran 4 tests for test/unit/ZKDecoding.t.sol:ZKDecodingTest
+[PASS] test_beforeHook_shortExecution_reverts() (gas: 80849)
+[PASS] test_getArgsInfo_canonicalEncodingOnly() (gas: 79494)
+[PASS] test_getTermsInfo_validAndInvalid() (gas: 63601)
+[PASS] test_router_renounceOnlyByRegistrar() (gas: 33097)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 38.04ms (13.43ms CPU time)
+
+Ran 12 tests for test/unit/AgentLineageEnforcer.t.sol:AgentLineageEnforcerTest
+[PASS] test_activePassportWithSealedDidPasses() (gas: 32219)
+[PASS] test_getTermsInfo_decodesAndChecksLength() (gas: 48374)
+[PASS] test_haltedPassport_reverts() (gas: 76087)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 22936)
+[PASS] test_passportOfAnotherPrincipal_reverts() (gas: 36231)
+[PASS] test_pinnedFacilitatorPassesWithoutPassport_othersDoNot() (gas: 52323)
+[PASS] test_redeem_pinnedFacilitatorRedeemsThroughDelegationManager() (gas: 774338)
+[PASS] test_revokedPassport_reverts() (gas: 75136)
+[PASS] test_rotatedOutWallet_reverts() (gas: 160596)
+[PASS] test_subAgentOfSamePrincipalPasses() (gas: 437101)
+[PASS] test_wrongSealedDid_reverts() (gas: 34086)
+[PASS] test_zeroFacilitatorIsNotAWildcardForTheZeroAddress() (gas: 33918)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 273.37ms (141.58ms CPU time)
+
+Ran 16 tests for test/unit/VerifiedPayeeEnforcer.t.sol:VerifiedPayeeEnforcerTest
+[PASS] test_activePayeeOfTheDelegatorPasses() (gas: 51232)
+[PASS] test_anotherAccountsPayeeBookDoesNotCount() (gas: 62505)
+[PASS] test_attestationExpired_reverts() (gas: 167134)
+[PASS] test_attestationRevoked_reverts() (gas: 105129)
+[PASS] test_attestedAgentOfSealedIssuerPasses() (gas: 54811)
+[PASS] test_attestedAgent_byUnsealedIssuer_reverts() (gas: 58507)
+[PASS] test_attestedAgent_noTrustedIssuersSealed_reverts() (gas: 43265)
+[PASS] test_directSubscriptionToBookedFundNeedsNoIntermediary() (gas: 40630)
+[PASS] test_getTermsInfo_decodesAndChecksLength() (gas: 67529)
+[PASS] test_haltedAgent_reverts() (gas: 104622)
+[PASS] test_nativeValue_reverts() (gas: 43396)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 41145)
+[PASS] test_removedPayee_reverts() (gas: 95198)
+[PASS] test_sealedIntermediaryToUnverifiedPayee_revertsWithPayee() (gas: 66408)
+[PASS] test_sealedIntermediaryToVerifiedPayeePasses() (gas: 54829)
+[PASS] test_unsealedIntermediary_revertsWithIntermediary() (gas: 50023)
+Suite result: ok. 16 passed; 0 failed; 0 skipped; finished in 275.19ms (141.36ms CPU time)
+
+Ran 10 tests for test/unit/GlobalPauseEnforcer.t.sol:GlobalPauseEnforcerTest
+[PASS] test_accountTripped_reverts() (gas: 92678)
+[PASS] test_activeAgentOfUnpausedAccountPasses() (gas: 49171)
+[PASS] test_agentHaltedBySupervisor_reverts() (gas: 176599)
+[PASS] test_getTermsInfo_decodesAndChecksLength() (gas: 40615)
+[PASS] test_malformedTerms_reverts() (gas: 26918)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 47550)
+[PASS] test_passportHalted_reverts_unlessNoPassportRegistryIsSealed() (gas: 129241)
+[PASS] test_passportRevoked_reverts() (gas: 92687)
+[PASS] test_redeem_deadmanTimerExpiryPausesThenHeartbeatResumes() (gas: 3341961)
+[PASS] test_redeemerWithoutPassportIsNotPausedHere() (gas: 49166)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 300.78ms (169.74ms CPU time)
+
+Ran 7 tests for test/unit/ProtectedPayment.t.sol:ProtectedPaymentTest
+[PASS] test_create_malformedData_reverts_andMovesNothing() (gas: 353811)
+[PASS] test_create_recordsEscrowAndEmits() (gas: 320763)
+[PASS] test_escrowsAreIndependent() (gas: 630716)
+[PASS] test_forgedNotificationCannotMoveRealFunds() (gas: 609654)
+[PASS] test_refund_onlyFromRefundTime_byAnyone() (gas: 486213)
+[PASS] test_release_onlyByAttester_once() (gas: 499334)
+[PASS] test_unknownEscrow_reverts() (gas: 77263)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 345.56ms (179.28ms CPU time)
+
+Ran 10 tests for test/unit/SignedQuoteSettlement.t.sol:SignedQuoteSettlementTest
+[PASS] test_alteredQuoteBreaksTheSignature() (gas: 133174)
+[PASS] test_depositAndWithdrawLiquidity() (gas: 145423)
+[PASS] test_directNotificationByNonToken_isRefused() (gas: 80746)
+[PASS] test_expiryBoundary() (gas: 272316)
+[PASS] test_insufficientLiquidity_reverts() (gas: 130989)
+[PASS] test_mismatchedFields_revert() (gas: 446468)
+[PASS] test_quoteHash_isTheRecomputedEip712Digest() (gas: 47361)
+[PASS] test_settle_convertsAtSignedPrice_thenNonceIsSpent() (gas: 356020)
+[PASS] test_signatureByAnotherKey_reverts() (gas: 130904)
+[PASS] test_withdrawMoreThanOwnLiquidity_reverts() (gas: 79037)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 348.48ms (218.16ms CPU time)
+
+Ran 7 tests for test/unit/SuitabilityEnforcer.t.sol:SuitabilityEnforcerTest
+[PASS] test_delistedProductIsNotAffected() (gas: 69216)
+[PASS] test_getTermsInfo_decodesAndChecksLength() (gas: 50484)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 27727)
+[PASS] test_productAsBeneficiaryBehindARailIsChecked() (gas: 50475)
+[PASS] test_productAsRecipientIsChecked_whateverTheBeneficiary() (gas: 42837)
+[PASS] test_productAtSealedClassPasses_aboveReverts() (gas: 110703)
+[PASS] test_unlistedPayeeIsNotAffected() (gas: 34086)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 145.92ms (56.53ms CPU time)
+
+Ran 21 tests for test/unit/VetoTimelockEnforcer.t.sol:VetoTimelockEnforcerTest
+[PASS] test_delegatorMustMatchTheSchedule() (gas: 143118)
+[PASS] test_getTermsInfo_decodesAndChecksLength() (gas: 27061)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 135052)
+[PASS] test_onlyTheSchedulerMayRedeem() (gas: 142906)
+[PASS] test_openItem_thirdPartyCanOccupyAScheduleKey() (gas: 174650)
+[PASS] test_redeem_scheduleWaitRedeemOnce_thenPasskeyVeto() (gas: 1849068)
+[PASS] test_rescheduleAfterConsumptionOpensAFreshWindow() (gas: 258280)
+[PASS] test_scheduleIsBoundToTheExactExecution() (gas: 143715)
+[PASS] test_scheduleKeyAndVetoDigest_areRecomputable() (gas: 55067)
+[PASS] test_schedule_recordsAndEmits_secondScheduleReverts() (gas: 175081)
+[PASS] test_schedulesAreKeyedByDelegationManager() (gas: 179242)
+[PASS] test_unscheduledExecution_reverts() (gas: 60977)
+[PASS] test_vetoWithSig_expired_reverts() (gas: 153113)
+[PASS] test_vetoWithSig_relayedByAnyone() (gas: 229973)
+[PASS] test_vetoWithSig_unscheduled_reverts() (gas: 61585)
+[PASS] test_vetoWithSig_wrongSignerOrOtherExecution_reverts() (gas: 248291)
+[PASS] test_veto_byAnyoneElse_reverts() (gas: 132099)
+[PASS] test_veto_byDelegator_blocksRedemption() (gas: 215540)
+[PASS] test_veto_unscheduled_reverts() (gas: 41718)
+[PASS] test_windowBoundary_thenConsumedOnce() (gas: 300288)
+[PASS] test_zeroWindowRedeemsInTheSameBlock() (gas: 140804)
+Suite result: ok. 21 passed; 0 failed; 0 skipped; finished in 228.86ms (192.67ms CPU time)
+
+Ran 15 tests for test/unit/ReputationGateEnforcer.t.sol:ReputationGateEnforcerTest
+[PASS] test_agentBehindARailIsGated() (gas: 125465)
+[PASS] test_agentWithoutErc8004Id_reverts() (gas: 59041)
+[PASS] test_beneficiaryWithoutPassportIsNotAffected_registryNotRead() (gas: 56341)
+[PASS] test_decimalsAreScaledOnBothSides() (gas: 323083)
+[PASS] test_getTermsInfo_clientListBounds() (gas: 182888)
+[PASS] test_getTermsInfo_decodesFields() (gas: 34202)
+[PASS] test_getTermsInfo_minScoreDecimalsAtMost18() (gas: 58560)
+[PASS] test_getTermsInfo_shortTerms_reverts() (gas: 19751)
+[PASS] test_negativeScore_reverts_negativeMinimumCanPass() (gas: 189389)
+[PASS] test_noFeedback_reverts() (gas: 120580)
+[PASS] test_nonSingleDefaultModeOrUndecodable_reverts() (gas: 65404)
+[PASS] test_redeem_payAgentOnlyAboveReputationMinimum() (gas: 1312981)
+[PASS] test_registryDecimalsAbove18_failsClosed() (gas: 119082)
+[PASS] test_scoreExactlyAtMinimumPasses_readsSealedClientsAndTag() (gas: 123890)
+[PASS] test_scoreOneUnitBelow_reverts() (gas: 121538)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 505.52ms (349.83ms CPU time)
+
+Ran 14 tests for test/unit/JurisdictionEnforcer.t.sol:JurisdictionEnforcerTest
+[PASS] test_constants() (gas: 22551)
+[PASS] test_emptyAssetListRefusesEverything() (gas: 30398)
+[PASS] test_getTermsInfo_decodesEveryProfile() (gas: 61803)
+[PASS] test_getTermsInfo_shortTerms_reverts() (gas: 24470)
+[PASS] test_getTermsInfo_unknownProfile_reverts() (gas: 33072)
+[PASS] test_mainland_assetReportingOutOfRangeKindIsRefused() (gas: 182548)
+[PASS] test_mainland_coinFreeInstructionRailPasses() (gas: 32868)
+[PASS] test_mainland_mockCoinFreeAssetPasses() (gas: 178300)
+[PASS] test_mainland_valueTokenRefusedEvenWhenListed() (gas: 40752)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 25856)
+[PASS] test_railKindOf_everyAnswerShape() (gas: 485561)
+[PASS] test_redeem_mainlandMandateIssuesInstructionOnCoinFreeRail() (gas: 999806)
+[PASS] test_sealedAssetPasses_unsealedAssetRefused() (gas: 57096)
+[PASS] test_undecodableExecution_reverts() (gas: 30173)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 238.31ms (133.14ms CPU time)
+
+Ran 11 tests for test/unit/TestRails.t.sol:TestRailsTest
+[SKIP] test_finding_relistAfterDelistDuplicatesAllProducts() (gas: 0)
+[PASS] test_fund_refusesOtherSendersAndOtherTargets() (gas: 125132)
+[PASS] test_fund_subscribeAndRedeemOneToOne() (gas: 289014)
+[PASS] test_products_listDelistAndBounds() (gas: 348141)
+[PASS] test_transferAndCall_receiverMustBeAContractThatAccepts() (gas: 478939)
+[PASS] test_transferWithAuthorization_badSignatures() (gas: 196491)
+[PASS] test_transferWithAuthorization_eoaSignature() (gas: 190935)
+[PASS] test_transferWithAuthorization_insufficientBalance_reverts() (gas: 102745)
+[PASS] test_transferWithAuthorization_timeBoundsAreExclusive() (gas: 106456)
+[PASS] test_units_metadata() (gas: 46705)
+[PASS] test_units_onlyMinterMintsAndHandsOver() (gas: 183332)
+Suite result: ok. 10 passed; 0 failed; 1 skipped; finished in 39.24ms (35.66ms CPU time)
+
+Ran 9 tests for test/unit/KillSwitchRegistry.t.sol:KillSwitchRegistryTest
+[PASS] test_agentHalt_onlySupervisor_pausesEveryAccount() (gas: 189890)
+[PASS] test_deadman_boundaryAndHeartbeat() (gas: 388268)
+[PASS] test_digests_matchRecomputation() (gas: 86724)
+[PASS] test_signatureIsBoundToTheChain() (gas: 69732)
+[PASS] test_supervisorTransfer_isTwoStep() (gas: 208417)
+[PASS] test_tripWithSig_refusals() (gas: 271668)
+[PASS] test_tripWithSig_relayedThenNonceAdvances() (gas: 272020)
+[PASS] test_trip_selfGuardianOrNobody() (gas: 431211)
+[PASS] test_untrip_emitsAndRestartsHeartbeat() (gas: 121597)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 34.47ms (31.47ms CPU time)
+
+Ran 11 tests for test/unit/MandateBindingEnforcer.t.sol:MandateBindingEnforcerTest
+[PASS] test_argsOfAnyOtherLength_revert() (gas: 464159)
+[PASS] test_emptyArgs_logsZeroCommitments() (gas: 389317)
+[PASS] test_getTermsInfo_decodesAndChecksLength() (gas: 35252)
+[PASS] test_intentArgs_areLogged() (gas: 393700)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 370344)
+[PASS] test_otherDelegationOfPublishedMandate_reverts() (gas: 378599)
+[PASS] test_redeem_argsAreNotSignedButLogged() (gas: 1810102)
+[PASS] test_revokedMandate_notLive() (gas: 420820)
+[PASS] test_supersededMandate_notLive() (gas: 696622)
+[PASS] test_unpublishedMandate_mismatchAgainstZero() (gas: 53200)
+[PASS] test_validityWindowBoundaries() (gas: 512283)
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 159.24ms (118.87ms CPU time)
+
+Ran 6 tests for test/unit/YinglongCreate2Deployer.t.sol:YinglongCreate2DeployerTest
+[PASS] testFuzz_computeAddressMatchesDeploy(bytes32) (runs: 512, μ: 889506, ~: 889604)
+[PASS] test_addressDependsOnTheFactory() (gas: 25309)
+[PASS] test_deploy_constructorArgumentsArePartOfTheInitCode() (gas: 4252820)
+[PASS] test_deploy_landsAtTheComputedAddressAndEmits() (gas: 905242)
+[PASS] test_deploy_reusedSalt_reverts() (gas: 1040536367)
+[PASS] test_deploy_revertingConstructor_reverts() (gas: 63345)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 775.65ms (753.04ms CPU time)
+
+Ran 14 tests for test/unit/YinglongPassportRegistry.t.sol:YinglongPassportRegistryTest
+[PASS] test_attest_reattestRevokeAndExpiry() (gas: 718398)
+[PASS] test_attest_unknownAgent_reverts() (gas: 37326)
+[PASS] test_bindWalletDigest_matchesRecomputation() (gas: 39368)
+[PASS] test_controllerOnlyActions() (gas: 495318)
+[PASS] test_isTrustedAgentWallet_cases() (gas: 619197)
+[PASS] test_register_recordsPassportAndEmits() (gas: 509086)
+[PASS] test_register_refusals() (gas: 314756)
+[PASS] test_register_smartAccountWalletSignsWithPasskey() (gas: 619443)
+[PASS] test_revokeAttestationWithoutAttestation_isHarmless() (gas: 444688)
+[PASS] test_revoke_isTerminal() (gas: 662823)
+[PASS] test_setAgentWallet_rotatesBinding() (gas: 673719)
+[PASS] test_supervisorSetStatus_haltResume() (gas: 612271)
+[PASS] test_supervisorTransfer_isTwoStep() (gas: 200534)
+[PASS] test_updateHashesAndErc8004Id() (gas: 529336)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 177.86ms (117.44ms CPU time)
+
+Ran 9 tests for test/unit/AccountabilityLedger.t.sol:AccountabilityLedgerTest
+[PASS] testFuzz_rootsStayHashLinked(bytes32[5]) (runs: 512, μ: 795245, ~: 796079)
+[PASS] test_anchorBatch_emptyOrDuplicate_reverts() (gas: 196100)
+[PASS] test_anchorBatch_linksRootsAndEmits() (gas: 326093)
+[PASS] test_crossAnchor_recordsRemoteState() (gas: 226956)
+[PASS] test_logReceipt_emits() (gas: 45067)
+[PASS] test_onlyAnchorersWrite() (gas: 154466)
+[PASS] test_roles_onlyAdminManages() (gas: 240182)
+[PASS] test_unknownBatch_reverts() (gas: 42847)
+[PASS] test_verifyReceipt_sortedPairMerkleTree() (gas: 385856)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 1.21s (1.22s CPU time)
+
+Ran 8 tests for test/unit/PayeeBook.t.sol:PayeeBookTest
+[PASS] test_booksArePerAccount() (gas: 182099)
+[PASS] test_removeUnknownPayee_isHarmless() (gas: 54998)
+[PASS] test_remove_deactivatesThenReAddReactivates() (gas: 269543)
+[PASS] test_setPayee_addsOnceAndEmits() (gas: 192112)
+[PASS] test_setPayee_zeroAddress_reverts() (gas: 33659)
+[PASS] test_setPayees_batch() (gas: 275342)
+[PASS] test_setPayees_lengthMismatchOrZero_revertsWholeBatch() (gas: 197370)
+[PASS] test_update_keepsAddedAtAndDoesNotDuplicate() (gas: 215128)
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 10.77ms (8.42ms CPU time)
+
+Ran 8 tests for test/unit/ReserveFloorEnforcer.t.sol:ReserveFloorEnforcerTest
+[PASS] testFuzz_floorHolds(uint256,uint256) (runs: 512, μ: 89044, ~: 90499)
+[PASS] test_afterAllHook_malformedTerms_reverts() (gas: 20290)
+[PASS] test_beforeHook_checksModeAndTerms() (gas: 56513)
+[PASS] test_coinFreeRail_floorIsNetOfPendingInstructions() (gas: 328769)
+[PASS] test_exactlyAtFloorPasses_oneBelowReverts() (gas: 111790)
+[PASS] test_getTermsInfo_decodesAndChecksLength() (gas: 35917)
+[PASS] test_redeem_paymentLandingExactlyOnFloorPasses_nextUnitRefused() (gas: 2711479)
+[PASS] test_zeroFloorAlwaysPasses() (gas: 24312)
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 747.56ms (680.61ms CPU time)
+
+Ran 18 tests for test/unit/PaymentDecoder.t.sol:PaymentDecoderTest
+[PASS] testFuzz_dirtyBeneficiaryBits_alwaysRefused(address,uint96) (runs: 512, μ: 27466, ~: 27456)
+[PASS] testFuzz_nativeValue_alwaysRefused(uint256) (runs: 512, μ: 23882, ~: 23876)
+[PASS] testFuzz_transfer_roundTrip(address,address,uint256) (runs: 512, μ: 13907, ~: 13907)
+[PASS] test_emptyCalldata_reverts() (gas: 16839)
+[PASS] test_instruct_payeeIsRecipientAndBeneficiary() (gas: 23594)
+[PASS] test_instruct_wrongLength_reverts() (gas: 22327)
+[PASS] test_nativeValue_reverts() (gas: 19849)
+[PASS] test_selectorsMatchTheDocumentedValues() (gas: 504)
+[PASS] test_threeByteCalldata_reverts() (gas: 16933)
+[PASS] test_transferAndCall_dataShorterThanAWord_beneficiaryIsRecipient() (gas: 21443)
+[PASS] test_transferAndCall_dirtyBeneficiaryWord_reverts() (gas: 25294)
+[PASS] test_transferAndCall_emptyData_beneficiaryIsRecipient() (gas: 21112)
+[PASS] test_transferAndCall_exactlyOneWord_isBeneficiary() (gas: 23707)
+[PASS] test_transferAndCall_firstWordIsBeneficiary() (gas: 34069)
+[PASS] test_transfer_extraCalldata_reverts() (gas: 21187)
+[PASS] test_transfer_recipientAndBeneficiaryAreTo() (gas: 22109)
+[PASS] test_transfer_shortCalldata_reverts() (gas: 20430)
+[PASS] test_unknownSelector_reverts() (gas: 20336)
+Suite result: ok. 18 passed; 0 failed; 0 skipped; finished in 1.39s (1.39s CPU time)
+
+Ran 21 tests for test/unit/CoSignEnforcer.t.sol:CoSignEnforcerTest
+[PASS] testFuzz_withoutApproval_passesIffWithinTier(uint256,uint8) (runs: 512, μ: 75488, ~: 74864)
+[PASS] test_aboveCeiling_reverts_evenWithValidApproval() (gas: 87461)
+[PASS] test_approvalByAnotherKey_reverts() (gas: 112109)
+[PASS] test_approvalDigest_isTheRecomputedEip712Digest() (gas: 70231)
+[PASS] test_approvalExactlyAtCeilingPasses_andEmits() (gas: 139517)
+[PASS] test_approvalIsBoundToTheDelegation() (gas: 200213)
+[PASS] test_approvalIsBoundToTheExactExecution() (gas: 116621)
+[PASS] test_directCallCannotBurnTheManagersNonce() (gas: 243387)
+[PASS] test_escalatedApprovalBelowThreshold_isCheckedAndConsumed() (gas: 290484)
+[PASS] test_expiredApproval_reverts_expiryNowPasses() (gas: 212013)
+[PASS] test_expiryBeyondWindow_reverts_exactlyAtWindowPasses() (gas: 211554)
+[PASS] test_getTermsInfo_decodesAndValidates() (gas: 85340)
+[PASS] test_malformedArgs_revert() (gas: 72192)
+[PASS] test_noApproval_exactlyAtEachThresholdPasses() (gas: 177368)
+[PASS] test_noApproval_oneOverEachThreshold_requiresCoSign() (gas: 187428)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 57822)
+[PASS] test_nonceReplay_reverts() (gas: 185626)
+[PASS] test_noncesAreKeyedByDelegationManager() (gas: 314753)
+[PASS] test_otherAssetIsNotGoverned_argsNotEvenRead() (gas: 68227)
+[PASS] test_redeem_escalatedFoodPaymentWithPasskeyApproval() (gas: 2775330)
+[PASS] test_thresholdFor_eachPayeeClass() (gas: 175417)
+Suite result: ok. 21 passed; 0 failed; 0 skipped; finished in 1.64s (1.48s CPU time)
+
+Ran 15 tests for test/unit/MandateRegistry.t.sol:MandateRegistryTest
+[PASS] test_canExecute_reasonCodes() (gas: 611453)
+[SKIP] test_finding_canExecuteAfterRevokingNewerOfTwoLiveMandates() (gas: 0)
+[PASS] test_isFrozen_agentHaltAndNoKillSwitch() (gas: 133840)
+[PASS] test_isLive_windowBoundaries() (gas: 428493)
+[PASS] test_lineagesAreKeyedByAccount() (gas: 758061)
+[PASS] test_publish_existingMandateHash_reverts_evenFromAnotherAccountOrAfterRevoke() (gas: 524327)
+[PASS] test_publish_invalidValidity_reverts() (gas: 462756)
+[PASS] test_publish_jurisdictionMustBeAKnownProfile() (gas: 481607)
+[PASS] test_publish_oneLiveMandatePerLineage() (gas: 1128504)
+[PASS] test_publish_recordsEverythingAndEmits() (gas: 548645)
+[PASS] test_revoke_onlyByTheAccount_once() (gas: 532097)
+[PASS] test_revokingOlderLineageKeepsNewerAgentIndex() (gas: 771066)
+[PASS] test_supersede_failedPublishLeavesOldLive() (gas: 461815)
+[PASS] test_supersede_onlyByTheAccount() (gas: 474425)
+[PASS] test_supersede_retiresOldAndPublishesNewAtomically() (gas: 880982)
+Suite result: ok. 14 passed; 0 failed; 1 skipped; finished in 305.69ms (242.62ms CPU time)
+
+Ran 12 tests for test/unit/ForbiddenTargetsEnforcer.t.sol:ForbiddenTargetsEnforcerTest
+[PASS] testFuzz_everyListedTargetIsRefused(uint8) (runs: 512, μ: 109399, ~: 108835)
+[PASS] test_beforeHook_batchOrTryMode_reverts() (gas: 98170)
+[PASS] test_beforeHook_malformedTerms_reverts() (gas: 25949)
+[PASS] test_callingDelegationManagerIsAlwaysForbidden() (gas: 25445)
+[PASS] test_delegatorItselfIsAlwaysForbidden() (gas: 25400)
+[PASS] test_firstAndLastListedTargetsAreForbidden() (gas: 89723)
+[PASS] test_getTermsInfo_decodesPackedList() (gas: 55088)
+[PASS] test_getTermsInfo_emptyListIsValid() (gas: 7584)
+[PASS] test_getTermsInfo_notAMultipleOf20_reverts() (gas: 24333)
+[PASS] test_otherDelegationManagerIsOnlyForbiddenWhenListed() (gas: 55169)
+[PASS] test_redeem_listedRegistryIsUnreachable_paymentPasses() (gas: 785272)
+[PASS] test_unlistedTargetPasses() (gas: 59349)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 1.60s (1.53s CPU time)
+
+Ran 12 tests for test/zk/ZKVerifierRouter.t.sol:ZKVerifierRouterTest
+[PASS] test_eachPublicInputIsBound() (gas: 24012390)
+[PASS] test_malformedPublicInputs_reverts() (gas: 17684887)
+[PASS] test_onlyRegistrar() (gas: 39029)
+[PASS] test_proofForOtherInputs_false() (gas: 19607166)
+[PASS] test_publicInputAboveFieldModulus_false() (gas: 20888553)
+[PASS] test_registrationIsAppendOnly() (gas: 36171)
+[PASS] test_renounceFreezesRouter() (gas: 21551710)
+[PASS] test_truncatedProof_false() (gas: 19191402)
+[PASS] test_unknownProofType_reverts() (gas: 19149616)
+[PASS] test_validProof_true() (gas: 21507616)
+[PASS] test_verifierMustHaveCode() (gas: 41266)
+[PASS] test_wrongNumberOfPublicInputs_false() (gas: 19347957)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 1.91s (1.56s CPU time)
 
 Ran 30 tests for test/NadiaMandate.t.sol:NadiaMandateTest
 [PASS] test_T1_foodUnderT1Cap() (gas: 1543085)
@@ -35,22 +437,7 @@ Ran 30 tests for test/NadiaMandate.t.sol:NadiaMandateTest
 [PASS] test_resealNeverResetsBudgets() (gas: 3981322)
 [PASS] test_revokedMandateMovesNothing() (gas: 1106302)
 [PASS] test_supervisorHaltsAgentIdentity() (gas: 964119)
-Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 1.56s (1.14s CPU time)
-
-Ran 12 tests for test/zk/ZKVerifierRouter.t.sol:ZKVerifierRouterTest
-[PASS] test_eachPublicInputIsBound() (gas: 24012390)
-[PASS] test_malformedPublicInputs_reverts() (gas: 17684887)
-[PASS] test_onlyRegistrar() (gas: 39029)
-[PASS] test_proofForOtherInputs_false() (gas: 19607166)
-[PASS] test_publicInputAboveFieldModulus_false() (gas: 20888553)
-[PASS] test_registrationIsAppendOnly() (gas: 36171)
-[PASS] test_renounceFreezesRouter() (gas: 21551710)
-[PASS] test_truncatedProof_false() (gas: 19191402)
-[PASS] test_unknownProofType_reverts() (gas: 19149616)
-[PASS] test_validProof_true() (gas: 21507616)
-[PASS] test_verifierMustHaveCode() (gas: 41266)
-[PASS] test_wrongNumberOfPublicInputs_false() (gas: 19347957)
-Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 1.56s (758.99ms CPU time)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 2.69s (2.44s CPU time)
 
 Ran 6 tests for test/zk/ZKMandateEnforcerDM.t.sol:ZKMandateEnforcerDMTest
 [PASS] test_delegationHashMatchesProver() (gas: 17706203)
@@ -59,10 +446,27 @@ Ran 6 tests for test/zk/ZKMandateEnforcerDM.t.sol:ZKMandateEnforcerDMTest
 [PASS] test_redeem_replay_reverts() (gas: 47239000)
 [PASS] test_redeem_tamperedAmount_reverts() (gas: 22861055)
 [PASS] test_redeem_wrongPayee_reverts() (gas: 22865552)
-Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 1.56s (986.78ms CPU time)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 2.89s (2.56s CPU time)
+
+Ran 14 tests for test/unit/ConditionalPaymentInstructions.t.sol:ConditionalPaymentInstructionsTest
+[PASS] testFuzz_availableIsPostedMinusPending(uint64,uint64[4],uint8) (runs: 512, μ: 605618, ~: 583955)
+[PASS] test_balanceOf_saturatesAtZeroWhenStatementDropsBelowPending() (gas: 388952)
+[PASS] test_constants() (gas: 27513)
+[PASS] test_execute_movesPostedBalanceAndClearsPending() (gas: 412414)
+[PASS] test_expire_onlyAfterValidUntil_byAnyone() (gas: 341538)
+[PASS] test_finalStatesAreTerminal() (gas: 1025871)
+[PASS] test_instruct_exactlyAvailablePasses_oneMoreReverts() (gas: 487314)
+[PASS] test_instruct_recordsPendingAndEmits() (gas: 296774)
+[PASS] test_operatorOnlyFunctions_revertForOthers() (gas: 334550)
+[PASS] test_postBalance_emitsAndSets() (gas: 62450)
+[PASS] test_redeem_mainlandInstructionUnderReserveFloorOnCoinFreeRail() (gas: 2160085)
+[PASS] test_reject_releasesPendingOnly() (gas: 369414)
+[PASS] test_transferOperator_handsOverTheRole() (gas: 367547)
+[PASS] test_unknownInstruction_reverts() (gas: 43615)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 3.39s (2.64s CPU time)
 
 Ran 41 tests for test/zk/ZKMandateEnforcer.t.sol:ZKMandateEnforcerTest
-[PASS] testFuzz_tamperedAmount_reverts(uint128) (runs: 16, μ: 22682947, ~: 22682917)
+[PASS] testFuzz_tamperedAmount_reverts(uint128) (runs: 16, μ: 22682944, ~: 22682911)
 [PASS] test_amountAboveU128_reverts() (gas: 20755592)
 [PASS] test_badTerms_revert() (gas: 22539515)
 [PASS] test_batchCallType_reverts() (gas: 22195919)
@@ -103,13 +507,46 @@ Ran 41 tests for test/zk/ZKMandateEnforcer.t.sol:ZKMandateEnforcerTest
 [PASS] test_wrongPayee_notAllowlisted_reverts() (gas: 22680701)
 [PASS] test_wrongPayee_otherAllowlisted_reverts() (gas: 22680614)
 [PASS] test_zeroNewRunningCommitment_reverts() (gas: 23675950)
-Suite result: ok. 41 passed; 0 failed; 0 skipped; finished in 2.05s (7.58s CPU time)
+Suite result: ok. 41 passed; 0 failed; 0 skipped; finished in 4.99s (14.95s CPU time)
+
+Ran 10 tests for test/unit/VelocityEnforcer.t.sol:VelocityEnforcerTest
+[PASS] testFuzz_windowNeverExceedsLimits(uint256[6],uint256[6]) (runs: 512, μ: 684540, ~: 686390)
+[PASS] test_countLimit_exactlyMaxPasses_nextReverts() (gas: 268326)
+[PASS] test_countersAreKeyedByDelegationManagerAndDelegator() (gas: 399641)
+[PASS] test_fixedWindowsRollOver() (gas: 246103)
+[PASS] test_getTermsInfo_decodesAndValidates() (gas: 54823)
+[PASS] test_nonSingleDefaultModeOrUndecodable_reverts() (gas: 87658)
+[PASS] test_otherAssetCountsButAddsNoOutflow() (gas: 274283)
+[PASS] test_outflowLimit_exactlyMaxPasses_oneMoreReverts() (gas: 225231)
+[PASS] test_redeem_splitPaymentsHitTheCountAcrossTwoDelegations() (gas: 9256861)
+[PASS] test_usageKey_isTheDocumentedHash() (gas: 16707)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 5.03s (5.39s CPU time)
+
+Ran 17 tests for test/unit/CategoryBudgetEnforcer.t.sol:CategoryBudgetEnforcerTest
+[PASS] testFuzz_periodIndex(uint64,uint64,uint64) (runs: 512, μ: 19234, ~: 19422)
+[PASS] testFuzz_spentNeverExceedsCap(uint256[8]) (runs: 512, μ: 871359, ~: 877185)
+[PASS] test_categoryWithoutCapHasCapZero() (gas: 78023)
+[PASS] test_countersAreKeyedByDelegationManager() (gas: 298733)
+[PASS] test_countersAreKeyedByDelegator_notByDelegation() (gas: 252055)
+[PASS] test_exactlyAtCapPasses_oneOverReverts_andEmits() (gas: 268901)
+[PASS] test_getTermsInfo_decodesAndValidates() (gas: 119937)
+[PASS] test_newPeriodStartsFromZero_oldPeriodKept() (gas: 237960)
+[PASS] test_nonSingleDefaultMode_reverts() (gas: 61596)
+[PASS] test_otherAssetIsNotGoverned() (gas: 74763)
+[PASS] test_paymentsBeforePeriodStartCountInPeriodZero() (gas: 153869)
+[PASS] test_periodOf_boundaries() (gas: 55775)
+[PASS] test_redeem_tusdBudgetIsSeparateFromTheTHKDBudget() (gas: 2887282)
+[PASS] test_removedPayeeFallsIntoSealedCategory() (gas: 114966)
+[PASS] test_spentKey_isTheDocumentedHash() (gas: 22186)
+[PASS] test_unlistedBeneficiaryFallsIntoSealedCategory() (gas: 190164)
+[PASS] test_zeroAmountPassesAtCap() (gas: 175888)
+Suite result: ok. 17 passed; 0 failed; 0 skipped; finished in 5.30s (5.55s CPU time)
 
 Ran 3 tests for test/GasOverhead.t.sol:GasOverheadTest
 [PASS] test_gasMarginal_perCaveat() (gas: 862027765)
 [PASS] test_gasOverhead_fullVsStock_daily() (gas: 92092793)
 [PASS] test_gasOverhead_fullVsStock_intraday() (gas: 91507445)
-Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 11.23s (14.65s CPU time)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 14.52s (19.19s CPU time)
 
 Ran 1 test for test/invariants/MandateInvariants.t.sol:MandateInvariantsTest
 [PASS]
@@ -127,85 +564,89 @@ MandateInvariantsTest invariants:
 | MandateHandler | step     | 8192  | 0       | 0        |
 ╰----------------+----------+-------+---------+----------╯
 
-Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 97.33s (97.28s CPU time)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 145.61s (145.39s CPU time)
 
-Ran 6 test suites in 97.35s (115.29s CPU time): 93 tests passed, 0 failed, 0 skipped (93 total tests)
+Ran 31 test suites in 145.67s (197.13s CPU time): 390 tests passed, 0 failed, 2 skipped (392 total tests)
 
-╭----------------------------------------------+-------------------+-------------------+-----------------+------------------╮
-| File                                         | % Lines           | % Statements      | % Branches      | % Funcs          |
-+===========================================================================================================================+
-| script/DeployYinglong.s.sol                  | 0.00% (0/103)     | 0.00% (0/109)     | 0.00% (0/4)     | 0.00% (0/7)      |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/AgentLineageEnforcer.sol       | 88.89% (8/9)      | 83.33% (15/18)    | 33.33% (1/3)    | 50.00% (1/2)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/CategoryBudgetEnforcer.sol     | 84.38% (27/32)    | 89.13% (41/46)    | 50.00% (4/8)    | 20.00% (1/5)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/CoSignEnforcer.sol             | 93.94% (31/33)    | 91.49% (43/47)    | 66.67% (8/12)   | 66.67% (4/6)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/ForbiddenTargetsEnforcer.sol   | 57.14% (8/14)     | 55.56% (15/27)    | 25.00% (1/4)    | 50.00% (1/2)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/GlobalPauseEnforcer.sol        | 90.00% (9/10)     | 93.33% (14/15)    | 75.00% (3/4)    | 50.00% (1/2)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/JurisdictionEnforcer.sol       | 90.00% (18/20)    | 91.18% (31/34)    | 57.14% (4/7)    | 33.33% (1/3)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/MandateBindingEnforcer.sol     | 81.25% (13/16)    | 84.21% (16/19)    | 50.00% (3/6)    | 50.00% (1/2)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/ReputationGateEnforcer.sol     | 0.00% (0/17)      | 0.00% (0/32)      | 0.00% (0/7)     | 0.00% (0/2)      |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/ReserveFloorEnforcer.sol       | 90.00% (9/10)     | 90.91% (10/11)    | 50.00% (1/2)    | 66.67% (2/3)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/SuitabilityEnforcer.sol        | 91.67% (11/12)    | 93.75% (15/16)    | 66.67% (2/3)    | 66.67% (2/3)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/VelocityEnforcer.sol           | 88.89% (16/18)    | 92.31% (24/26)    | 60.00% (3/5)    | 33.33% (1/3)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/VerifiedPayeeEnforcer.sol      | 88.24% (15/17)    | 88.46% (23/26)    | 60.00% (3/5)    | 66.67% (2/3)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/VetoTimelockEnforcer.sol       | 2.27% (1/44)      | 0.00% (0/56)      | 0.00% (0/9)     | 10.00% (1/10)    |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/enforcers/YinglongEnforcer.sol           | 100.00% (3/3)     | 83.33% (5/6)      | 0.00% (0/1)     | 100.00% (1/1)    |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/libraries/PaymentDecoder.sol             | 78.12% (25/32)    | 67.50% (27/40)    | 38.46% (5/13)   | 100.00% (2/2)    |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/rails/ConditionalPaymentInstructions.sol | 4.17% (2/48)      | 2.22% (1/45)      | 0.00% (0/6)     | 8.33% (1/12)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/rails/ProductRegistry.sol                | 64.71% (11/17)    | 61.11% (11/18)    | 25.00% (1/4)    | 60.00% (3/5)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/rails/ProtectedPayment.sol               | 66.67% (18/27)    | 59.38% (19/32)    | 0.00% (0/6)     | 60.00% (3/5)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/rails/SignedQuoteSettlement.sol          | 85.71% (24/28)    | 80.00% (28/35)    | 20.00% (1/5)    | 83.33% (5/6)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/rails/TestMoneyMarketFund.sol            | 57.14% (8/14)     | 46.67% (7/15)     | 0.00% (0/2)     | 50.00% (2/4)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/rails/TestUnits.sol                      | 41.94% (13/31)    | 28.95% (11/38)    | 0.00% (0/8)     | 42.86% (3/7)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/registries/AccountabilityLedger.sol      | 5.00% (2/40)      | 2.86% (1/35)      | 0.00% (0/8)     | 7.69% (1/13)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/registries/KillSwitchRegistry.sol        | 61.54% (40/65)    | 50.79% (32/63)    | 25.00% (3/12)   | 68.42% (13/19)   |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/registries/MandateRegistry.sol           | 90.91% (60/66)    | 82.05% (64/78)    | 15.38% (2/13)   | 69.23% (9/13)    |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/registries/PayeeBook.sol                 | 54.17% (13/24)    | 45.83% (11/24)    | 33.33% (1/3)    | 33.33% (2/6)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/registries/YinglongPassportRegistry.sol  | 64.42% (67/104)   | 66.04% (70/106)   | 25.00% (4/16)   | 45.45% (10/22)   |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/utils/YinglongCreate2Deployer.sol        | 0.00% (0/7)       | 0.00% (0/6)       | 0.00% (0/1)     | 0.00% (0/2)      |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/utils/YinglongEIP712.sol                 | 87.50% (7/8)      | 100.00% (6/6)     | N/A (0/0)       | 75.00% (3/4)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/zk/ZKMandateEnforcer.sol                 | 95.59% (65/68)    | 97.87% (92/94)    | 89.47% (17/19)  | 83.33% (10/12)   |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| src/zk/ZKVerifierRouter.sol                  | 100.00% (22/22)   | 97.06% (33/34)    | 83.33% (5/6)    | 100.00% (4/4)    |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| test/YinglongBase.t.sol                      | 75.15% (124/165)  | 71.28% (134/188)  | 100.00% (1/1)   | 100.00% (11/11)  |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| test/invariants/MandateInvariants.t.sol      | 90.67% (68/75)    | 95.70% (89/93)    | 85.00% (17/20)  | 45.45% (5/11)    |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| test/symbolic/SymbolicEnforcers.t.sol        | 0.00% (0/166)     | 0.00% (0/185)     | 0.00% (0/26)    | 0.00% (0/24)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| test/zk/ZKMandateEnforcerDM.t.sol            | 60.00% (3/5)      | 50.00% (1/2)      | N/A (0/0)       | 66.67% (2/3)     |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| test/zk/ZKTestBase.sol                       | 100.00% (44/44)   | 100.00% (51/51)   | 50.00% (5/10)   | 100.00% (9/9)    |
-|----------------------------------------------+-------------------+-------------------+-----------------+------------------|
-| Total                                        | 55.52% (785/1414) | 56.09% (940/1676) | 36.68% (95/259) | 47.18% (117/248) |
-╰----------------------------------------------+-------------------+-------------------+-----------------+------------------╯
+╭----------------------------------------------+--------------------+--------------------+------------------+------------------╮
+| File                                         | % Lines            | % Statements       | % Branches       | % Funcs          |
++==============================================================================================================================+
+| script/DeployYinglong.s.sol                  | 0.00% (0/103)      | 0.00% (0/109)      | 0.00% (0/4)      | 0.00% (0/7)      |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/AgentLineageEnforcer.sol       | 100.00% (9/9)      | 100.00% (18/18)    | 100.00% (3/3)    | 100.00% (2/2)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/CategoryBudgetEnforcer.sol     | 100.00% (32/32)    | 100.00% (46/46)    | 100.00% (8/8)    | 100.00% (5/5)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/CoSignEnforcer.sol             | 100.00% (33/33)    | 100.00% (47/47)    | 100.00% (12/12)  | 100.00% (6/6)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/ForbiddenTargetsEnforcer.sol   | 100.00% (14/14)    | 100.00% (27/27)    | 100.00% (4/4)    | 100.00% (2/2)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/GlobalPauseEnforcer.sol        | 100.00% (10/10)    | 100.00% (15/15)    | 100.00% (4/4)    | 100.00% (2/2)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/JurisdictionEnforcer.sol       | 100.00% (20/20)    | 100.00% (34/34)    | 100.00% (7/7)    | 100.00% (3/3)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/MandateBindingEnforcer.sol     | 100.00% (16/16)    | 100.00% (19/19)    | 100.00% (6/6)    | 100.00% (2/2)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/ReputationGateEnforcer.sol     | 100.00% (17/17)    | 100.00% (32/32)    | 100.00% (7/7)    | 100.00% (2/2)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/ReserveFloorEnforcer.sol       | 100.00% (10/10)    | 100.00% (11/11)    | 100.00% (2/2)    | 100.00% (3/3)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/SuitabilityEnforcer.sol        | 100.00% (12/12)    | 100.00% (16/16)    | 100.00% (3/3)    | 100.00% (3/3)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/VelocityEnforcer.sol           | 100.00% (18/18)    | 100.00% (26/26)    | 100.00% (5/5)    | 100.00% (3/3)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/VerifiedPayeeEnforcer.sol      | 100.00% (17/17)    | 100.00% (26/26)    | 100.00% (5/5)    | 100.00% (3/3)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/VetoTimelockEnforcer.sol       | 100.00% (44/44)    | 100.00% (56/56)    | 100.00% (9/9)    | 100.00% (10/10)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/enforcers/YinglongEnforcer.sol           | 100.00% (3/3)      | 100.00% (6/6)      | 100.00% (1/1)    | 100.00% (1/1)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/libraries/PaymentDecoder.sol             | 100.00% (32/32)    | 100.00% (40/40)    | 100.00% (13/13)  | 100.00% (2/2)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/rails/ConditionalPaymentInstructions.sol | 100.00% (48/48)    | 100.00% (45/45)    | 100.00% (6/6)    | 100.00% (12/12)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/rails/ProductRegistry.sol                | 100.00% (17/17)    | 100.00% (18/18)    | 100.00% (4/4)    | 100.00% (5/5)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/rails/ProtectedPayment.sol               | 100.00% (27/27)    | 100.00% (32/32)    | 100.00% (6/6)    | 100.00% (5/5)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/rails/SignedQuoteSettlement.sol          | 100.00% (28/28)    | 100.00% (35/35)    | 100.00% (5/5)    | 100.00% (6/6)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/rails/TestMoneyMarketFund.sol            | 100.00% (14/14)    | 100.00% (15/15)    | 100.00% (2/2)    | 100.00% (4/4)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/rails/TestUnits.sol                      | 100.00% (31/31)    | 100.00% (38/38)    | 100.00% (8/8)    | 100.00% (7/7)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/registries/AccountabilityLedger.sol      | 100.00% (40/40)    | 100.00% (35/35)    | 100.00% (8/8)    | 100.00% (13/13)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/registries/KillSwitchRegistry.sol        | 100.00% (65/65)    | 100.00% (63/63)    | 100.00% (12/12)  | 100.00% (19/19)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/registries/MandateRegistry.sol           | 100.00% (66/66)    | 100.00% (78/78)    | 100.00% (13/13)  | 100.00% (13/13)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/registries/PayeeBook.sol                 | 100.00% (24/24)    | 100.00% (24/24)    | 100.00% (3/3)    | 100.00% (6/6)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/registries/YinglongPassportRegistry.sol  | 100.00% (104/104)  | 100.00% (106/106)  | 100.00% (16/16)  | 100.00% (22/22)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/utils/YinglongCreate2Deployer.sol        | 100.00% (7/7)      | 100.00% (6/6)      | 100.00% (1/1)    | 100.00% (2/2)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/utils/YinglongEIP712.sol                 | 100.00% (8/8)      | 100.00% (6/6)      | N/A (0/0)        | 100.00% (4/4)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/zk/ZKMandateEnforcer.sol                 | 100.00% (68/68)    | 100.00% (94/94)    | 94.74% (18/19)   | 100.00% (12/12)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| src/zk/ZKVerifierRouter.sol                  | 100.00% (22/22)    | 100.00% (34/34)    | 100.00% (6/6)    | 100.00% (4/4)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| test/YinglongBase.t.sol                      | 75.15% (124/165)   | 71.28% (134/188)   | 100.00% (1/1)    | 100.00% (11/11)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| test/invariants/MandateInvariants.t.sol      | 90.67% (68/75)     | 95.70% (89/93)     | 85.00% (17/20)   | 45.45% (5/11)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| test/symbolic/SymbolicEnforcers.t.sol        | 0.00% (0/166)      | 0.00% (0/185)      | 0.00% (0/26)     | 0.00% (0/24)     |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| test/unit/CoverageBase.sol                   | 100.00% (42/42)    | 100.00% (35/35)    | N/A (0/0)        | 100.00% (14/14)  |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| test/unit/CoverageMocks.sol                  | 100.00% (17/17)    | 100.00% (11/11)    | N/A (0/0)        | 100.00% (7/7)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| test/zk/ZKMandateEnforcerDM.t.sol            | 60.00% (3/5)       | 50.00% (1/2)       | N/A (0/0)        | 66.67% (2/3)     |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| test/zk/ZKTestBase.sol                       | 100.00% (44/44)    | 100.00% (51/51)    | 50.00% (5/10)    | 100.00% (9/9)    |
+|----------------------------------------------+--------------------+--------------------+------------------+------------------|
+| Total                                        | 78.34% (1154/1473) | 79.50% (1369/1722) | 84.94% (220/259) | 85.87% (231/269) |
+╰----------------------------------------------+--------------------+--------------------+------------------+------------------╯
 Wrote LCOV report.
