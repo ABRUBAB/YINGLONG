@@ -1,541 +1,562 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-16T11:29:17.271Z",
+  "generatedAt": "2026-10-16T12:01:54.501Z",
   "timeline": {
-    "head": "53402a5",
-    "count": 76,
+    "head": "a9ff632",
+    "count": 79,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-16T17:19:20+06:00",
+    "last": "2026-10-16T17:45:08+06:00",
     "commits": [
       {
-        "hash": "b9b6640",
+        "hash": "cc29b87",
         "at": "2026-10-16T02:39:27+06:00",
         "subject": "Bootstrap repository: workspace, hard-rule gates, delegation framework v1.3.0",
         "track": "infra",
         "milestone": true
       },
       {
-        "hash": "1baf3d7",
+        "hash": "0a8e62d",
         "at": "2026-10-16T02:59:32+06:00",
         "subject": "Contracts: mandate registries, thirteen caveat enforcers, test-unit rails, 30 scenario tests",
         "track": "contracts",
         "milestone": true
       },
       {
-        "hash": "3d83618",
+        "hash": "f3ac54d",
         "at": "2026-10-16T03:09:16+06:00",
         "subject": "SDK and mandate compiler: ABIs, ledger profiles, compile/decompile, round-trip verification, Hash Ring",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "cebd0aa",
+        "hash": "c2c7441",
         "at": "2026-10-16T03:10:45+06:00",
         "subject": "Receipts, Merkle anchoring helpers and golden mandate vectors",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "f2612fd",
+        "hash": "0609fdc",
         "at": "2026-10-16T03:18:33+06:00",
         "subject": "Agent chain layer: passkey accounts, self-bundled user operations, sealing, redemption; security and compliance docs",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "e1be3f3",
+        "hash": "f92c268",
         "at": "2026-10-16T03:24:50+06:00",
         "subject": "FISCO BCOS 3.17.1 ledger: framework go/no-go spike, full deployment, student scenario end to end on FISCO and Anvil",
         "track": "ledgers",
         "milestone": true
       },
       {
-        "hash": "71bfe3c",
+        "hash": "2c4dc72",
         "at": "2026-10-16T03:33:41+06:00",
         "subject": "Stateful ZK private mandate: Noir circuit, UltraHonk verifier, ERC-8262-style router, ZKMandateEnforcer, 59 tests with real proofs",
         "track": "ledgers",
         "milestone": true
       },
       {
-        "hash": "4334606",
+        "hash": "9de61a1",
         "at": "2026-10-16T03:39:52+06:00",
         "subject": "Agent runtime: nine-scale pipeline, intent model with payee enum, quarantined readers, policy mirror, receipts, isolated signer, HTTP API",
         "track": "agent",
         "milestone": true
       },
       {
-        "hash": "23121b6",
+        "hash": "aef6628",
         "at": "2026-10-16T03:42:09+06:00",
         "subject": "Infra: application image and compose stack; CNY symbol for the coin-free rail",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "0ad8f14",
+        "hash": "597df50",
         "at": "2026-10-16T03:45:25+06:00",
         "subject": "Agent API: rate limit and operator token for state-changing demo calls",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "b81fafc",
+        "hash": "eb908cd",
         "at": "2026-10-16T03:45:52+06:00",
         "subject": "Infra: public edge config and one-command VPS deploy",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "7521047",
+        "hash": "7967d4c",
         "at": "2026-10-16T03:46:13+06:00",
         "subject": "Fix deploy script paths",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "346bd55",
+        "hash": "2639999",
         "at": "2026-10-16T03:47:59+06:00",
         "subject": "Edge: explicit handle blocks; placeholder via handle_errors",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "d49d899",
+        "hash": "34af264",
         "at": "2026-10-16T03:48:38+06:00",
         "subject": "Edge: placeholder served with status 200",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "e188711",
+        "hash": "af43805",
         "at": "2026-10-16T03:51:10+06:00",
         "subject": "Deploy the ZK verifier stack to Anvil and FISCO; a real UltraHonk proof verifies on FISCO BCOS",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "5566a78",
+        "hash": "539c3df",
         "at": "2026-10-16T03:53:04+06:00",
         "subject": "Judge's Challenge: guest agent with tiny caps, attempts with per-scale attribution, on-chain bypass, quotas",
         "track": "agent",
         "milestone": true
       },
       {
-        "hash": "a07b0b0",
+        "hash": "df8bff5",
         "at": "2026-10-16T03:58:18+06:00",
         "subject": "Board 2-of-3 director proposals and circuit breaker; yinglong verify (independent Python verifier, 114 tests, byte parity with TypeScript)",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "50529d5",
+        "hash": "3d144e4",
         "at": "2026-10-16T03:59:27+06:00",
         "subject": "Mandate: round-trip hashes the parsed document; ZK private-mandate rule decodes; optional ZK contracts in deployments",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "fb99a76",
+        "hash": "fccf252",
         "at": "2026-10-16T03:59:49+06:00",
         "subject": "CI: hard-rule gate with gitleaks, Foundry, TypeScript and Python jobs",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "998863a",
+        "hash": "acce2b9",
         "at": "2026-10-16T04:02:37+06:00",
         "subject": "Pause and resume approvals; API demo driver; evidence generator (finalize)",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "81f974d",
+        "hash": "9643f69",
         "at": "2026-10-16T04:04:28+06:00",
         "subject": "Live stack: stable demo principals (run v1) and labelled one-day budget periods",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "66c4a21",
+        "hash": "4fae6d3",
         "at": "2026-10-16T04:05:37+06:00",
         "subject": "Agent City services (x402 v2 seller-settled through ERC-7710, signed agent cards, Mirage), e-CNY-style simulator, anchoring indexer with breaker and read-only FISCO RPC",
         "track": "agent",
         "milestone": true
       },
       {
-        "hash": "f876e0e",
+        "hash": "3dd9639",
         "at": "2026-10-16T04:06:17+06:00",
         "subject": "Stack: services, e-CNY-style simulator and indexer containers; read-only RPC proxied from the regulator node",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "eb5695d",
+        "hash": "eddb103",
         "at": "2026-10-16T04:11:22+06:00",
         "subject": "Demo setup: per-principal run ids, balance top-up, beats exercise the velocity limit without urgency wording",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "1c2d9e0",
+        "hash": "1b7eafe",
         "at": "2026-10-16T04:15:48+06:00",
         "subject": "README judge kit; evidence generator collects test counts from every suite",
         "track": "web",
         "milestone": false
       },
       {
-        "hash": "77950ce",
+        "hash": "fded6bc",
         "at": "2026-10-16T04:18:42+06:00",
         "subject": "Ledger: modest gas top-ups on Base Sepolia",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "5be847b",
+        "hash": "3d706d8",
         "at": "2026-10-16T04:21:40+06:00",
         "subject": "Lotus Lane HK: same treasurer re-sealed for Hong Kong; first sweep needs approval; suitability refusal; asks can be approved",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "1ce19f9",
+        "hash": "921db2a",
         "at": "2026-10-16T04:25:25+06:00",
         "subject": "API: supervisory halt, private-mandate view, receipt proofs from the indexer, contracts in evidence",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "dc468f1",
+        "hash": "92dcc8d",
         "at": "2026-10-16T04:28:29+06:00",
         "subject": "Vision readers for invoice photos (two model families); FISCO transaction explorer; API hardening; technical documentation",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "0b83298",
+        "hash": "23bdae9",
         "at": "2026-10-16T04:35:42+06:00",
         "subject": "Invariant campaign: caps, reserve floor, pause, verified payees, authority unchanged (stateful fuzzing)",
         "track": "contracts",
         "milestone": false
       },
       {
-        "hash": "c58a744",
+        "hash": "c0df919",
         "at": "2026-10-16T05:24:59+06:00",
         "subject": "Signer: per-execution child delegation (two-minute window, single use); docs aligned with the implementation",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "1da0e0e",
+        "hash": "46e475d",
         "at": "2026-10-16T05:26:41+06:00",
         "subject": "Live private mandate on FISCO and Anvil: real UltraHonk proofs at redemption; over-cap unprovable; forged and replayed proofs revert",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "42c0f42",
+        "hash": "fd439d5",
         "at": "2026-10-16T05:32:53+06:00",
         "subject": "Evidence: private-mandate rows in PROOF, test counts from all suites (223), explorer decodes child-delegation events",
         "track": "evidence",
         "milestone": false
       },
       {
-        "hash": "e4f94de",
+        "hash": "59a6627",
         "at": "2026-10-16T05:37:13+06:00",
         "subject": "Monotonic-safety property test; evidence generator: anchors, ZK, FISCO nodes, invariants, mainland reachability",
         "track": "contracts",
         "milestone": false
       },
       {
-        "hash": "24737d8",
+        "hash": "33dbb04",
         "at": "2026-10-16T05:47:02+06:00",
         "subject": "x402 client: seller-settled ERC-7710 fee payments signed by the isolated signer; FX conversion at a desk-signed quote; pinned facilitator in Nadia's mandate",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "b85beda",
+        "hash": "0539fb2",
         "at": "2026-10-16T05:49:10+06:00",
         "subject": "Label the pinned x402 facilitator in decoded mandates",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "e6d342f",
+        "hash": "2988bba",
+        "at": "2026-10-16T05:49:49+06:00",
+        "subject": "Evidence: the board-resolution row skips resume resolutions",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "06a8138",
         "at": "2026-10-16T05:55:10+06:00",
         "subject": "Evidence: count every live transaction in the bundle; document the transaction decoder and the evidence keys",
         "track": "evidence",
         "milestone": false
       },
       {
-        "hash": "25114c3",
+        "hash": "789cca5",
         "at": "2026-10-16T05:55:30+06:00",
         "subject": "Keep the FISCO deployment broadcast as deployment evidence; ignore fork rehearsals",
         "track": "evidence",
         "milestone": false
       },
       {
-        "hash": "4a98632",
+        "hash": "784a2cb",
         "at": "2026-10-16T06:07:37+06:00",
         "subject": "Passkey-signed revoke (one user operation: registry revoke + disableDelegation); timing drills for pause and revoke; confirmed receipts no longer carry a pre-approval simulation revert; demo amounts fit one day of rules",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "fd83215",
+        "hash": "9d9333d",
         "at": "2026-10-16T06:13:56+06:00",
         "subject": "Validity windows use the later of head block and wall clock (FISCO seals blocks only on demand); a request above the tier ceiling no longer trips the velocity breaker",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "f59e4c9",
+        "hash": "4983362",
         "at": "2026-10-16T06:17:58+06:00",
         "subject": "FISCO liveness tick: refresh the on-demand head block before time-sensitive steps so simulations see the time the transaction will",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "3d856d7",
+        "hash": "ce00df1",
         "at": "2026-10-16T06:25:12+06:00",
         "subject": "Coin-free rail: an instruction's condition is the invoice both readers agreed on (registered with the operator as matched) or zero when there is none; simulator admin routes require the operator token",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "fd3a544",
+        "hash": "a2686ae",
         "at": "2026-10-16T06:30:02+06:00",
         "subject": "Operator calls are not rate limited; resume receipts report their confirmation time; drills read each ledger once",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "bd18a50",
+        "hash": "d0b617d",
         "at": "2026-10-16T06:33:05+06:00",
         "subject": "Timing drills on FISCO: pause and revoke from signed message to receipt; live beats log",
         "track": "evidence",
         "milestone": false
       },
       {
-        "hash": "b66f1a9",
+        "hash": "11b1c4b",
         "at": "2026-10-16T06:33:07+06:00",
         "subject": "Web app (ORBIT design system): console, Mandate Studio, approvals with signing guard and passkey encoding, treasury, supervisor, Proof Center, Judge's Challenge, Agent City; UI package; served behind Caddy",
         "track": "web",
         "milestone": true
       },
       {
-        "hash": "cf205cd",
+        "hash": "20afef6",
         "at": "2026-10-16T06:43:53+06:00",
         "subject": "Visitors sign up with their own passkey: HybridDeleGator account with the passkey as its only key, own agent wallet and passport, mandate published and delegation signed by the passkey (both verified on-chain before anything is stored); session token valid only after the seal",
         "track": "agent",
         "milestone": true
       },
       {
-        "hash": "eaf56d0",
+        "hash": "b85df58",
         "at": "2026-10-16T06:45:20+06:00",
         "subject": "API reference: visitor sign-up with a passkey, revoke, visitor token",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "9f3296a",
+        "hash": "0aa991c",
         "at": "2026-10-16T06:48:11+06:00",
         "subject": "Breaker trips are recorded as receipts with their transaction; FISCO links open the web decoder; PROOF covers x402, budget and suitability reverts, revoke, visitor passkey seals, the HK re-seal and the anchor",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "5a634ea",
+        "hash": "0bb7df6",
         "at": "2026-10-16T06:54:52+06:00",
         "subject": "Services report the commit they run",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "bb820d8",
+        "hash": "17739f6",
         "at": "2026-10-16T06:56:00+06:00",
         "subject": "Registry lists demo agents and the most recent visitor agents, read in parallel",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "8d97f47",
+        "hash": "5a8f878",
         "at": "2026-10-16T07:00:52+06:00",
         "subject": "Base Sepolia go-live in one command once the deployer is funded",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "3c6e1ef",
+        "hash": "d7423d7",
         "at": "2026-10-16T07:42:09+06:00",
         "subject": "Contract analysis evidence: Slither and Aderyn with triage, coverage, gas overhead of the mandate caveats, bounded symbolic checks of invariants 1 to 5 (Halmos), fuzz call counts, tool versions",
         "track": "contracts",
         "milestone": false
       },
       {
-        "hash": "4f3f095",
+        "hash": "ed019d9",
         "at": "2026-10-16T07:43:40+06:00",
         "subject": "Evidence generator: per-suite test counts, timing and incident drill (playbook 1) on FISCO, supervisor pause, claim decisions with honest variants, bytecode, deployer-role scan, SBOM, third-party tables, controls map, scrubber recall; --final flag",
         "track": "evidence",
         "milestone": false
       },
       {
-        "hash": "5c87241",
+        "hash": "e328322",
         "at": "2026-10-16T07:48:52+06:00",
         "subject": "Passkey sign-up at /start (two passkey signatures, each checked in the browser against the decoded mandate before signing), visitor console with passkey approvals, revoke with its own guard checks, visitor agents grouped on /supervisor; state reports whether the mandate is live; separate read and write rate budgets; supervisor halts refused by the policy mirror",
         "track": "web",
         "milestone": true
       },
       {
-        "hash": "a302c60",
+        "hash": "d677455",
         "at": "2026-10-16T10:24:22+06:00",
         "subject": "Exact FISCO revert reasons from the native receipt (read-only proxy method yinglong_getRevertData), used by the agent, its decoder and verify-tx; verify reports a revoked or superseded mandate's status without failing integrity (--require-live to fail); Python decoder reads the ZK private-mandate caveat; receipt chain re-reads the log when another process appended; CL-17 wording A",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "f3b7bca",
+        "hash": "4edc95f",
         "at": "2026-10-16T10:31:35+06:00",
         "subject": "Python verifier tests read FISCO through the public read-only proxy by default",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "cd44031",
+        "hash": "e68e445",
         "at": "2026-10-16T11:01:25+06:00",
         "subject": "Contract tests: every enforcer's typed errors, boundaries and state isolation, rails and registries (access control, transitions, EIP-712, replay, events), 12 fuzz properties; coverage 100% lines, 99.5% branches; two low-severity view-only findings recorded as skipped tests",
         "track": "contracts",
         "milestone": false
       },
       {
-        "hash": "8f40ecd",
+        "hash": "e4d4bea",
         "at": "2026-10-16T11:12:25+06:00",
         "subject": "Base Sepolia top-ups sized to the measured gas price (configurable); go-live needs about 0.001 ETH",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "4edc628",
+        "hash": "c1b6537",
         "at": "2026-10-16T11:18:41+06:00",
         "subject": "Scenario capabilities: spending insights, suitability cards, payment-reliability credential (EIP-712, anchored), escrow claims and coverage gap, payroll and 30-day cash forecast; providers: Alibaba Cloud Model Studio (Qwen) first, free OpenRouter models, rule parser; DashScope key pattern in the secret scan",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "6987f4c",
+        "hash": "99b3502",
         "at": "2026-10-16T11:19:07+06:00",
         "subject": "Fix the sk- key pattern word boundaries",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "106b01f",
+        "hash": "13dc4b9",
         "at": "2026-10-16T11:23:24+06:00",
         "subject": "Restore web files deleted by mistake in the contract-tests commit (the redesign in progress removes them in its own commit)",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "12ab760",
+        "hash": "524e716",
         "at": "2026-10-16T11:23:46+06:00",
         "subject": "Deploy fails loudly when an image build fails",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "d4f147b",
+        "hash": "2db0005",
         "at": "2026-10-16T11:28:03+06:00",
         "subject": "Writes wait until the read head reaches their block (load-balanced public RPCs); passport registration waits until visible",
         "track": "ledgers",
         "milestone": false
       },
       {
-        "hash": "ded7c93",
+        "hash": "f21fb18",
         "at": "2026-10-16T11:28:05+06:00",
         "subject": "Redesign: one design system and global shell (nav with every page, footer), live-data Mandate Orbit hero (R3F, Paper Shaders dithering, poster first), seven-verb scroll story, About page, dragon mark removed (S glyph only); Agent City rebuilt as a collision-free 2D map from live data",
         "track": "web",
         "milestone": true
       },
       {
-        "hash": "1325c53",
+        "hash": "98ac1e5",
         "at": "2026-10-16T11:29:25+06:00",
         "subject": "Indexer read routes allow cross-origin reads from the web app",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "dee368f",
+        "hash": "4ddf037",
         "at": "2026-10-16T11:31:50+06:00",
         "subject": "Base Sepolia live: canonical-framework deployment with the ZK stack; scripted student scenario on Base (seal, T1 rent, attack reverted PayeeNotVerified, passkey-approved T2 escrow, pause, resume)",
         "track": "ledgers",
         "milestone": true
       },
       {
-        "hash": "90cda2d",
+        "hash": "e696232",
         "at": "2026-10-16T11:38:43+06:00",
         "subject": "Secret scan: reviewed false positives recorded by fingerprint, generated raw test output and public ZK vectors allowlisted by path; local visitor data no longer tracked",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "7b917d9",
+        "hash": "8b53d69",
         "at": "2026-10-16T11:45:38+06:00",
         "subject": "README: banner, badges, quick links, live screenshot gallery, grouped architecture diagram, pillars, scenarios, collapsible repo map and setup, honesty callouts; dragon coin retired",
         "track": "web",
         "milestone": false
       },
       {
-        "hash": "ce1be47",
+        "hash": "ab3befb",
         "at": "2026-10-16T11:48:42+06:00",
         "subject": "Private mandate on Base Sepolia (proof-verified payments, forged and replayed proofs revert); receipts anchored on both ledgers",
         "track": "ledgers",
         "milestone": true
       },
       {
-        "hash": "2539b53",
+        "hash": "60edbc3",
         "at": "2026-10-16T11:59:18+06:00",
         "subject": "Say, see, seal for visitors: plain-language mandate drafts (closed schema, bounds, decoded back into English with a said-vs-enforced diff), sign-up and re-seal with the visitor's own rules",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "52cc438",
+        "hash": "9264616",
         "at": "2026-10-16T13:28:20+06:00",
         "subject": "ML: sentinel (mmBERT, fine-tuned; served on CPU with pinned hashes), intent models (Qwen3.5-2B, Qwen3-4B, Qwen3-1.7B LoRA), behaviour anomaly and cash-flow forecaster, with generated results; attack bench (300 attacks, 13 families, held-out family hash pinned before training)",
         "track": "infra",
         "milestone": false
       },
       {
-        "hash": "40a5575",
+        "hash": "2bcca6a",
         "at": "2026-10-16T13:32:10+06:00",
         "subject": "Site: full-bleed hero with the orbit framed from its projected size, mobile nav sheet within the viewport, smoother rendering (on-demand frames, adaptive DPR, CSS scroll timelines, content-visibility), new home sections (nine scales, same rules on two chains, proof wall, your own agent), richer About with a generated build timeline; inner pages restyled with insights, coverage, escrows, credentials, cash forecast, payroll and the say-see-seal sign-up",
         "track": "web",
         "milestone": false
       },
       {
-        "hash": "8812f4e",
+        "hash": "2c9ee62",
         "at": "2026-10-16T13:52:00+06:00",
         "subject": "Base private-mandate record: received amounts and stored commitments re-derived from the chain (the first run read a lagging node); the script now waits for the head before reading",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "6f87530",
+        "hash": "d4e1a2a",
         "at": "2026-10-16T14:44:01+06:00",
         "subject": "Passkey sign-up: one tap per fingerprint prompt (Android's credential manager refused back-to-back requests), one retry on a passkey-service hiccup, plain-language wording on the sign-up page with technical details folded away; agent uses the sentinel's calibrated label",
         "track": "web",
         "milestone": false
       },
       {
-        "hash": "cbeeba6",
+        "hash": "a33dfe8",
         "at": "2026-10-16T14:44:03+06:00",
         "subject": "Sentinel served on the VPS (models fetched at start and verified against pinned SHA-256, token never in the image); attack bench runner and results on a local chain: 0 of 300 attacks moved value outside a mandate, stock caveats alone lost value in 90 of 105 hijacks",
         "track": "agent",
         "milestone": false
       },
       {
-        "hash": "53402a5",
+        "hash": "16dfd46",
         "at": "2026-10-16T17:19:20+06:00",
         "subject": "Secret-key sign-up and log in again, plain-English site copy",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "d5fee2b",
+        "at": "2026-10-16T17:36:44+06:00",
+        "subject": "Repository tidy: contributor rules, CI names, unused studio code",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "a9ff632",
+        "at": "2026-10-16T17:45:08+06:00",
+        "subject": "Fallback parser reads everyday purchase words (buy, purchase, tip, order a ...) as a payment",
         "track": "infra",
         "milestone": false
       }

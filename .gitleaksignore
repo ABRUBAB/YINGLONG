@@ -1,26 +1,3 @@
-# Reviewed gitleaks findings (16 Oct 2026): all generic-api-key false positives.
-# forge-test.raw.json = raw Foundry test output (hex values); zk fixtures = public test vectors;
-# visitors.json (one commit) = public passkey coordinates and hashes of session tokens from local test visitors, now untracked.
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cd44031b69ef08ea1eb65fb98203160bbf546e33:contracts/reports/forge-test.raw.json:generic-api-key:1
-cf205cd35b3b21f75885290b5a106ae4b439c5e1:apps/agent/data/visitors.json:generic-api-key:13
-cf205cd35b3b21f75885290b5a106ae4b439c5e1:apps/agent/data/visitors.json:generic-api-key:26
-cf205cd35b3b21f75885290b5a106ae4b439c5e1:apps/agent/data/visitors.json:generic-api-key:40
-71bfe3c6e7e94f21dd3fb32635d67efffc3fbdc7:contracts/test/vectors/zk/mandate_compliance.fixtures.json:generic-api-key:83
-52cc43808e52bb4490efc419247a7e7cfca937b2:ml/serving/models.lock.json:generic-api-key:38
+# Reviewed gitleaks findings, recorded by fingerprint (commit:file:rule:line). None are needed today:
+# raw Foundry test output, public ZK test vectors and the model SHA-256 lock file are allowlisted by
+# path in .gitleaks.toml.
