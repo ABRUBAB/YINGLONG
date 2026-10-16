@@ -31,6 +31,8 @@ export interface ScaleReport {
   reason: string;
   typedError?: string;
   model?: string;
+  /** Wall-clock time this check ran, in milliseconds (the checks run one after another). */
+  ms?: number;
 }
 
 export interface Proposal {
@@ -113,6 +115,13 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   await ctx.freshHead();
   const m = st.mandate as Mandate;
   const scales: ScaleReport[] = [];
+  // Each check is timed from the end of the previous one, so the trace shows real per-step timings.
+  let mark = performance.now();
+  const record = (s: ScaleReport) => {
+    const now = performance.now();
+    scales.push({ ...s, ms: Math.round((now - mark) * 10) / 10 });
+    mark = now;
+  };
   const handles = new HandleStore();
   const aiFlags: string[] = [];
 
@@ -121,7 +130,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   const images = attachments.filter((a) => a.kind === "invoice_image" && a.content.startsWith("data:image/"));
   const normAtt = attachments.filter((a) => a.kind !== "invoice_image").map((a) => ({ ...a, kind: a.kind as "invoice" | "email" | "quote", n: normalise(a.content) }));
   const nflags = [...norm.flags, ...normAtt.flatMap((a) => a.n.flags)];
-  scales.push({
+  record({
     n: 1,
     name: "Normalise",
     status: nflags.length ? "escalated" : "passed",
@@ -132,7 +141,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   // 2. Sentinel (escalates only).
   const sRes: SentinelResult[] = [await sentinel(norm.text), ...(await Promise.all(normAtt.map((a) => sentinel(a.n.text))))];
   const injected = sRes.filter((s) => s.label === "injection");
-  scales.push({
+  record({
     n: 2,
     name: "Sentinel",
     status: injected.length ? "escalated" : "passed",
@@ -147,7 +156,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   for (const a of normAtt) reads.push(await readDocument(handles, a.n.text, a.kind, payees));
   for (const img of images) reads.push(await readImage(handles, img.content, payees));
   const qflags = reads.flatMap((r) => r.flags);
-  scales.push({
+  record({
     n: 3,
     name: "Quarantine",
     status: reads.length === 0 ? "skipped" : qflags.length ? "escalated" : "passed",
@@ -236,7 +245,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     }
   }
   if (!payee && tier !== "T3") groundIssues.push("no verified payee");
-  scales.push({
+  record({
     n: 4,
     name: "Ground",
     status: groundIssues.length ? "escalated" : "passed",
@@ -314,7 +323,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     if (policy.tier === "T4" || policy.tier === "T3") tier = policy.tier;
     else if (policy.tier === "T2" && tier === "T1") tier = "T2";
   }
-  scales.push({
+  record({
     n: 5,
     name: "Policy",
     status: !policy ? "skipped" : policy.refusals.length ? "stopped" : "passed",
@@ -330,7 +339,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
       tier = "T4";
     }
   }
-  scales.push({
+  record({
     n: 6,
     name: "Counterparty",
     status: !cp ? "skipped" : cp.verdict === "verified-payee" || cp.verdict === "attested-agent" ? "passed" : "stopped",
@@ -350,14 +359,14 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
       (tier === "T2" && !sim.ok && sim.revert?.name === "CoSignRequired") ||
       ((tier === "T4" || tier === "T3") && !sim.ok);
     if (!consistent && tier === "T1") asked = asked ?? `The ledger disagrees with my rule check (${sim.revert?.message ?? "unexpected success"}).`;
-    scales.push({
+    record({
       n: 7,
       name: "Simulate",
       status: sim.ok ? "passed" : tier === "T2" ? "escalated" : "stopped",
       reason: sim.ok ? `succeeds at block ${sim.blockNumber}` : `reverts: ${sim.revert?.message}`,
       typedError: sim.revert?.name,
     });
-  } else scales.push({ n: 7, name: "Simulate", status: "skipped", reason: "nothing to simulate" });
+  } else record({ n: 7, name: "Simulate", status: "skipped", reason: "nothing to simulate" });
 
   // 8. Anomaly (escalates only).
   let anomaly = "within your usual pattern";
@@ -382,11 +391,11 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
       aiFlags.push(anomaly);
     }
   }
-  scales.push({ n: 8, name: "Anomaly", status: anomaly.startsWith("within") ? "passed" : "escalated", reason: anomaly });
+  record({ n: 8, name: "Anomaly", status: anomaly.startsWith("within") ? "passed" : "escalated", reason: anomaly });
 
   // Monotonic safety: AI signals can only raise the tier, never lower it, never produce T3 or T4.
   tier = finalTier(tier, aiFlags.length, !!asked);
-  scales.push({
+  record({
     n: 9,
     name: "Chain",
     status: tier === "T1" ? "passed" : tier === "T4" ? "stopped" : "skipped",

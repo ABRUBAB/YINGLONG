@@ -82,7 +82,7 @@ Returned by `ask`, `GET /v1/proposals/:id` and the attack route. The internal fi
 | `plan` | `{step, description}[]` | |
 | `tier` | string | `T0`, `T1`, `T2`, `T3`, `T4` or `ASK` |
 | `decision` | string | `execute` (T1), `needs_approval` (T2), `ask`, `refused` (T3, T4) or `answered` (T0) |
-| `scales` | `ScaleReport[]` | `{n, name, status, reason, typedError?, model?}`; `status` is `passed`, `stopped`, `escalated` or `skipped`; `n` is 1 to 9 |
+| `scales` | `ScaleReport[]` | `{n, name, status, reason, typedError?, model?, ms?}`; `status` is `passed`, `stopped`, `escalated` or `skipped`; `n` is 1 to 9; `ms` is the wall-clock time the check ran, in milliseconds (checks run in order, each timed from the end of the previous one) |
 | `explanation` | object | `{text, aiGenerated, model?}` |
 | `payment` | object or absent | `{symbol, decimals, amount, payee: {id, label, address}, method}`; `method` is `transfer`, `transferAndCall` or `instruct` |
 | `simulation` | object or absent | `{ok, revert?: {name, args, message, raw}, block}` |
@@ -378,6 +378,28 @@ Every receipt that carries a transaction. Response: `{generatedAt, items: [{titl
 
 ```sh
 curl -s https://api.yinglong-agent.tech/v1/evidence
+```
+
+#### `GET /v1/receipts/:id/audit`: public
+
+A downloadable audit file for one receipt (`Content-Disposition: attachment`). Response: `{schema: "yinglong.audit/1", generatedAt, service: {api, repo, commit}, receipt: ReceiptView, decision: {request, intent, understanding, tier, decision, plan, scales} or null, transaction: {ledger, hash, explorerUrl} or null, anchor, verify: string[]}`. `decision.scales` carries the per-check timings; `transaction` is null when the request was refused before signing.
+
+#### `GET /v1/proof`: public
+
+Everything needed to check that the service is real, in one response:
+
+| Field | Meaning |
+|---|---|
+| `build` | `{repo, commit, commitUrl}`: the GitHub repository and the commit this server runs |
+| `service` | `{startedAt, uptimeSeconds, health, evidence}`; measure response time on the client against `GET /v1/health` |
+| `chain` | `{ledgers: [{ledger, label, chainId, contractCount, contracts: [{name, address, codeHash, explorerUrl}]}], bytecode: {compared, identical, differ}}`: both ledgers and how many same-named contracts have identical runtime bytecode |
+| `transactions` | `{counts: {<ledger>: {<outcome>: n}}, latest: [{receiptId, ledger, outcome, tier, title, txHash, explorerUrl, revertError, at, auditUrl}]}` (newest 12) |
+| `ml` | `{sentinel, intent, anomaly, forecast}`: test metrics with 95% intervals, per-language results and a confusion matrix derived from recall and specificity (`sentinel.confusion`), copied from `ml/results/*.json` |
+| `bench` | `{generatedAt, commit, ledger, understanding, metrics, detail}` from `bench/reports/summary.json` |
+| `sources` | the result files the `ml` and `bench` fields were copied from (`apps/agent/scripts/proof-data.mjs`) |
+
+```sh
+curl -s https://api.yinglong-agent.tech/v1/proof
 ```
 
 #### `GET /v1/tx/:ledger/:hash`: public

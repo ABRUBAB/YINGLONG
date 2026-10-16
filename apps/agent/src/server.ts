@@ -22,6 +22,7 @@ import { insightsFor } from "./insights";
 import { coverageFor, listEscrows, NotFound, refundEscrow, releaseEscrow } from "./escrows";
 import { credentialsOf, credentialStore, issuePaymentReliability, parseMessage, verifyCredential } from "./credentials";
 import { forecastFor } from "./forecast";
+import { proofBundle, REPO_URL } from "./proof";
 import { formatUnits } from "@yinglong/mandate";
 
 const VERSION = "0.10.0";
@@ -404,18 +405,49 @@ app.get("/v1/receipts", (c) => {
   const rows = all.slice(since).filter((r) => !principal || r.principal === principal);
   return c.json(apiJson(rows.slice(-limit).map(receiptView)));
 });
-app.get("/v1/receipts/:id", async (c) => {
-  const r = receiptLog.all().find((x) => x.receipt.receiptId === c.req.param("id"));
-  if (!r) return c.json({ ok: false, error: "not found" }, 404);
-  let anchor: unknown;
+/** The receipt's Merkle path and anchors from the indexer, or undefined if not anchored yet or the indexer is down. */
+async function anchorOf(receiptId: string): Promise<unknown> {
   try {
-    const res = await fetch(`${process.env.INDEXER_URL ?? "http://127.0.0.1:8791"}/proof/${r.receipt.receiptId}`);
-    if (res.ok) anchor = await res.json();
+    const res = await fetch(`${process.env.INDEXER_URL ?? "http://127.0.0.1:8791"}/proof/${receiptId}`);
+    if (res.ok) return await res.json();
   } catch {
     /* not anchored yet or indexer down */
   }
-  return c.json(apiJson({ ...receiptView(r), anchor, proofPairing: "sorted" }));
+  return undefined;
+}
+
+app.get("/v1/receipts/:id", async (c) => {
+  const r = receiptLog.all().find((x) => x.receipt.receiptId === c.req.param("id"));
+  if (!r) return c.json({ ok: false, error: "not found" }, 404);
+  return c.json(apiJson({ ...receiptView(r), anchor: await anchorOf(r.receipt.receiptId), proofPairing: "sorted" }));
 });
+
+// A self-contained audit file for one receipt: the receipt, the decision trace with per-check timings, the
+// transaction with its explorer link, the anchor path, and how to re-verify it independently.
+app.get("/v1/receipts/:id/audit", async (c) => {
+  const r = receiptLog.all().find((x) => x.receipt.receiptId === c.req.param("id"));
+  if (!r) return c.json({ ok: false, error: "not found" }, 404);
+  const p = r.proposalId ? proposals.get().proposals[r.proposalId] : undefined;
+  const tx = r.receipt.txHash && !/^0x0{60}/.test(r.receipt.txHash) ? r.receipt.txHash : null;
+  const commit = process.env.GIT_COMMIT ?? "";
+  c.header("Content-Disposition", `attachment; filename="yinglong-audit-${r.receipt.receiptId.slice(2, 10)}.json"`);
+  return c.json(
+    apiJson({
+      schema: "yinglong.audit/1",
+      generatedAt: new Date().toISOString(),
+      service: { api: "https://api.yinglong-agent.tech", repo: REPO_URL, commit },
+      receipt: receiptView(r),
+      decision: p ? { request: p.request, intent: p.intent, understanding: p.understanding, tier: p.tier, decision: p.decision, plan: p.plan, scales: p.scales } : null,
+      transaction: tx ? { ledger: r.ledger, hash: tx, explorerUrl: r.explorerUrl ?? LEDGERS[r.ledger]?.explorerTx?.(tx as Hex) ?? null } : null,
+      anchor: (await anchorOf(r.receipt.receiptId)) ?? null,
+      verify: tx
+        ? [`Open the explorer link above and compare the hash, sender and outcome.`, `Independent check: uvx --from 'git+${REPO_URL}#subdirectory=tools/verify-py' yinglong verify-tx ${tx} --chain ${r.ledger}`]
+        : ["Refused before signing: nothing was sent to a ledger. The decision trace shows which check stopped it."],
+    }),
+  );
+});
+
+app.get("/v1/proof", (c) => c.json(apiJson(proofBundle())));
 
 app.post("/v1/mandates/compile", async (c) => {
   const body = z.object({ principal: z.string(), mandate: z.unknown() }).parse(await c.req.json());

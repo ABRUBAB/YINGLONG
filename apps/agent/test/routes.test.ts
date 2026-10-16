@@ -13,6 +13,19 @@ const req = (method: string, path: string, body?: unknown, headers: Record<strin
   app.request(path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
 const json = async (r: Response) => (await r.json()) as Record<string, unknown>;
 
+describe("proof routes (no ledger needed)", () => {
+  it("serves the proof bundle with real result files and an audit 404 for unknown receipts", async () => {
+    const r = await req("GET", "/v1/proof");
+    expect(r.status).toBe(200);
+    const p = await json(r);
+    expect(p).toMatchObject({ schema: "yinglong.proof/1", build: { repo: "https://github.com/ABRUBAB/YINGLONG" } });
+    const ml = p.ml as { sentinel: { confusion: { tp: number; fn: number; tn: number; fp: number }; test: { positives: number; negatives: number } } };
+    expect(ml.sentinel.confusion.tp + ml.sentinel.confusion.fn).toBe(ml.sentinel.test.positives);
+    expect(ml.sentinel.confusion.tn + ml.sentinel.confusion.fp).toBe(ml.sentinel.test.negatives);
+    expect((await req("GET", "/v1/receipts/0xnope/audit")).status).toBe(404);
+  });
+});
+
 describe("new routes: auth and validation (no ledger needed)", () => {
   it("unknown principals answer 404 on every new route", async () => {
     for (const [m, p] of [
