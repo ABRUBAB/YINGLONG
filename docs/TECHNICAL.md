@@ -321,7 +321,7 @@ The ten invariants of the design, and the evidence in the repository at this com
 | Issuers `issuer-hbu`, `issuer-harbour-digital-bank` | Attest passports | Anything else | `YinglongPassportRegistry.attest` |
 | Deployer `deployer` | Deploy; remains minter of the test units and admin of `ProductRegistry` | n/a | `DeployYinglong.s.sol` |
 
-Keys are testnet keys loaded at runtime from a file outside the repository (`packages/sdk/src/server.ts`, `YINGLONG_SECRETS`); deployer roles after setup: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 534); Base Sepolia not deployed<!-- /gen -->.
+Keys are testnet keys loaded at runtime from a file outside the repository (`packages/sdk/src/server.ts`, `YINGLONG_SECRETS`); deployer roles after setup: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 546); Base Sepolia not deployed<!-- /gen -->.
 
 ### 3.7 Pause, revoke, re-seal, rotate
 
@@ -627,7 +627,7 @@ Totals: vitest <!-- gen:tests.ts -->176<!-- /gen -->, pytest <!-- gen:tests.py -
 |---|---|---|
 | Mandate sealed and published with its full caveat array (base-sepolia) | base-sepolia | `0xc356baed1def52b262943d1e82a9f32dc9e204f7bdb6a9910ac03a9663531658` |
 | Mandate sealed and published with its full caveat array (fisco) | fisco | `0xc0e294dd54638c004a05d34e17f4df802f22af4e0e1e5ecc34c0dfbf0d2d4bc9` |
-| Allowed payment inside the mandate (T1) | FISCO BCOS (team-run consortium ledger) | [`0xa1c6dbe457...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xa1c6dbe457703e358994663a449ed5d777dbf41bf28660b86387019a01e7e87e) |
+| Allowed payment inside the mandate (T1) | FISCO BCOS (team-run consortium ledger) | [`0xce31b345c9...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xce31b345c9bb3db83aca2acf62c050c3a72b191d17b18d606af45d68500d41e9) |
 | Payment approved on the user's passkey (T2; the signature is checked on-chain through ERC-1271) | FISCO BCOS (team-run consortium ledger) | [`0xd5b0910681...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xd5b0910681a50d532435a9663865a4d6e10c1edb763acccf36fbc350b5dec845) |
 | Company payment approved by 2 of 3 directors (T2) | FISCO BCOS (team-run consortium ledger) | [`0x8f56db5b13...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x8f56db5b13093d807ecf076d163090d8306e3b05cac30b521b6df761a7d2febc) |
 | Service fee paid over x402: single-use, exact-amount ERC-7710 child delegation, settled by the seller | FISCO BCOS (team-run consortium ledger) | [`0x013f174786...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x013f17478632b332ba097c1f6f0bdfde95f0b21907c92f28d1402b62d9b746fd) |
@@ -653,7 +653,7 @@ Totals: vitest <!-- gen:tests.ts -->176<!-- /gen -->, pytest <!-- gen:tests.py -
 | One-tap pause, passkey signature relayed (fisco) | fisco | `0x0a95302cffbd30984e70ee998c83c47dc8279350f0186720e9ce470dce958a9d` |
 <!-- /gen -->
 
-Every row of every run is in `docs/EXECUTION_EVIDENCE.md`. Transactions with receipts on the public and consortium ledgers: <!-- gen:evidence.tx_count -->137<!-- /gen -->; reverted on-chain: <!-- gen:evidence.reverts -->11<!-- /gen -->; refused before signing: <!-- gen:evidence.refused_offchain -->37<!-- /gen -->. Bench (attacks against the full system): out-of-mandate movements <!-- gen:bench.oom.count -->not yet measured<!-- /gen --> in <!-- gen:bench.attacks.n -->not yet measured<!-- /gen --> runs.
+Every row of every run is in `docs/EXECUTION_EVIDENCE.md`. Transactions with receipts on the public and consortium ledgers: <!-- gen:evidence.tx_count -->140<!-- /gen -->; reverted on-chain: <!-- gen:evidence.reverts -->11<!-- /gen -->; refused before signing: <!-- gen:evidence.refused_offchain -->37<!-- /gen -->. Bench (attacks against the full system): out-of-mandate movements <!-- gen:bench.oom.count -->0<!-- /gen --> in <!-- gen:bench.attacks.n -->300<!-- /gen --> runs.
 
 ---
 

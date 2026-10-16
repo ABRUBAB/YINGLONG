@@ -2,7 +2,7 @@
  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:6789ec46-6e14-5ef1-8fbc-42561f96c3ae",
+ "serialNumber": "urn:uuid:1cf05eb1-a4a8-5ec5-876d-5100edeb399c",
  "version": 1,
  "metadata": {
   "lifecycles": [
@@ -28765,20 +28765,11 @@
   },
   {
    "ref": "pkg:npm/%40yinglong/provenance@0.1.0",
-   "dependsOn": [
-    "pkg:npm/%40types/node@24.19.2",
-    "pkg:npm/typescript@5.9.3",
-    "pkg:npm/vitest@5.0.5"
-   ]
+   "dependsOn": []
   },
   {
    "ref": "pkg:npm/%40yinglong/sdk@0.1.0",
-   "dependsOn": [
-    "pkg:npm/%40types/node@24.19.2",
-    "pkg:npm/ox@0.14.56",
-    "pkg:npm/typescript@5.9.3",
-    "pkg:npm/viem@2.57.7"
-   ]
+   "dependsOn": []
   },
   {
    "ref": "pkg:npm/%40yinglong/ui@0.1.0",
@@ -29465,6 +29456,7 @@
     "pkg:npm/hono@4.13.13",
     "pkg:npm/motion@14.2.0",
     "pkg:npm/next@16.4.1",
+    "pkg:npm/ox@0.14.56",
     "pkg:npm/postprocessing@6.39.5",
     "pkg:npm/react-dom@19.3.1",
     "pkg:npm/react@19.3.1",

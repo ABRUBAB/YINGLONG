@@ -14,7 +14,7 @@
 |---|---|
 | Commit reviewed | <!-- gen:review.commit -->not yet measured<!-- /gen --> |
 | Review completed | <!-- gen:review.date -->not yet measured<!-- /gen --> |
-| Release | <!-- gen:meta.release_tag -->9bcd8ee<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->dfb141e<!-- /gen --> |
 | Reviewers | YINGLONG team members (roles R2 contracts, R4 AI security; read-only reviewer sessions at the planned review gate) |
 | Tool versions used | <!-- gen:review.tools.versions -->Slither: 0.11.6; forge: forge 1.8.5; Halmos: halmos 0.3.3<!-- /gen --> |
 

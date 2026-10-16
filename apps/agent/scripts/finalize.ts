@@ -606,6 +606,17 @@ let sealAccount: string | undefined;
       Object.entries(man.attack_counts).map(([f, n]) => [`\`${f}\``, n, f === man.heldout_family ? "yes" : "no", "not run"]),
     )}`;
   }
+  // The bench run's own summary (bench/reports/summary.json, written by `bench.ts summarize`) carries its metrics
+  // already formatted with n and intervals; every bench.* key in it is defined in docs/GENERATED_KEYS.md.
+  // Bare counts stay bare (they sit inside sentences); descriptive values name their source run.
+  const benchSummary = readJson<{ generatedAt?: string; configuration?: { ledger?: { badge?: string } }; metrics?: Record<string, string> }>(p("bench/reports/summary.json"));
+  if (benchSummary?.metrics) {
+    const src = ` (bench run of ${benchSummary.generatedAt?.slice(0, 10) ?? "unknown date"}, ${benchSummary.configuration?.ledger?.badge ?? "bench"}; bench/reports/summary.json)`;
+    for (const [k, v] of Object.entries(benchSummary.metrics)) {
+      if (!k.startsWith("bench.") || typeof v !== "string") continue;
+      metrics[k] = k === "bench.family_table" || /^[\d,.]+$/.test(v) ? v : `${v}${src}`;
+    }
+  }
   const sent = readJson<{ hf_repo?: string; hf_revision?: string; at_selected_threshold?: { threshold: number; bench_heldout_family?: { n: number; positives: number; recall: number } } }>(p("ml/results/m1_sentinel_mmbert.json"));
   const h = sent?.at_selected_threshold?.bench_heldout_family;
   if (h && h.positives) {
