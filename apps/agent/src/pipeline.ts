@@ -7,6 +7,7 @@ import { HandleStore } from "@yinglong/provenance";
 import { buildUserOp, executeCallData, submitUserOp, userOpDigest, type PackedUserOp } from "@yinglong/sdk/account";
 import { ledgerContext, type LedgerContext } from "./chain/ledger";
 import { redeemCallData, replayRevert, simulateRedemption, singleExecution } from "./chain/mandates";
+import { userOpTypedData } from "./chain/principal";
 import { explain } from "./explain";
 import { recordReceipt, receiptLog, type ReceiptRecord } from "./receipts";
 import { checkCounterparty, type CounterpartyResult } from "./scales/counterparty";
@@ -691,34 +692,7 @@ export async function createRevokeApproval(id: PrincipalId): Promise<ApprovalReq
     proposalId: "",
     kind: "revoke",
     decoded: { target: ctx.addr("DelegationManager"), targetLabel: "MandateRegistry + DelegationManager", method: "revoke + disableDelegation", payeeLabel: "", payeeAddress: st.account, symbol: "", decimals: 0, amount: "0" },
-    typedData: {
-      domain: { name: config(id).kind === "company" ? "MultiSigDeleGator" : "HybridDeleGator", version: "1", chainId: ctx.profile.chainId, verifyingContract: st.account },
-      types: {
-        PackedUserOperation: [
-          { name: "sender", type: "address" },
-          { name: "nonce", type: "uint256" },
-          { name: "initCode", type: "bytes" },
-          { name: "callData", type: "bytes" },
-          { name: "accountGasLimits", type: "bytes32" },
-          { name: "preVerificationGas", type: "uint256" },
-          { name: "gasFees", type: "bytes32" },
-          { name: "paymasterAndData", type: "bytes" },
-          { name: "entryPoint", type: "address" },
-        ],
-      },
-      primaryType: "PackedUserOperation",
-      message: {
-        sender: op.sender,
-        nonce: op.nonce.toString(),
-        initCode: op.initCode,
-        callData: op.callData,
-        accountGasLimits: op.accountGasLimits,
-        preVerificationGas: op.preVerificationGas.toString(),
-        gasFees: op.gasFees,
-        paymasterAndData: op.paymasterAndData,
-        entryPoint: ctx.addr("EntryPoint"),
-      },
-    },
+    typedData: userOpTypedData(ctx, op, config(id).kind),
     digest,
     nonce: op.nonce,
     expiry: 0n,

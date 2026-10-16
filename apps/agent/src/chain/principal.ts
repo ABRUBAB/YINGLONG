@@ -10,6 +10,7 @@ import {
   submitUserOp,
   userOpDigest,
   type Call,
+  type PackedUserOp,
   type PasskeySigner,
 } from "@yinglong/sdk/account";
 import type { LedgerContext } from "./ledger";
@@ -101,4 +102,36 @@ export async function actAsPrincipal(ctx: LedgerContext, p: Principal, calls: Ca
 export async function delegationDigestOnChain(ctx: LedgerContext, delegationHash: Hex): Promise<Hex> {
   const domain = await ctx.read<Hex>({ address: ctx.addr("DelegationManager"), abi: abi.DelegationManagerAbi, functionName: "getDomainHash" });
   return keccak256(concat(["0x1901", domain, delegationHash]));
+}
+
+/** EIP-712 typed data of a user operation under the account's own DeleGatorCore domain (what the passkey signs). */
+export function userOpTypedData(ctx: LedgerContext, op: PackedUserOp, accountKind: "person" | "company") {
+  return {
+    domain: { name: accountKind === "company" ? "MultiSigDeleGator" : "HybridDeleGator", version: "1", chainId: ctx.profile.chainId, verifyingContract: op.sender },
+    types: {
+      PackedUserOperation: [
+        { name: "sender", type: "address" },
+        { name: "nonce", type: "uint256" },
+        { name: "initCode", type: "bytes" },
+        { name: "callData", type: "bytes" },
+        { name: "accountGasLimits", type: "bytes32" },
+        { name: "preVerificationGas", type: "uint256" },
+        { name: "gasFees", type: "bytes32" },
+        { name: "paymasterAndData", type: "bytes" },
+        { name: "entryPoint", type: "address" },
+      ],
+    },
+    primaryType: "PackedUserOperation",
+    message: {
+      sender: op.sender,
+      nonce: op.nonce.toString(),
+      initCode: op.initCode,
+      callData: op.callData,
+      accountGasLimits: op.accountGasLimits,
+      preVerificationGas: op.preVerificationGas.toString(),
+      gasFees: op.gasFees,
+      paymasterAndData: op.paymasterAndData,
+      entryPoint: ctx.addr("EntryPoint"),
+    },
+  };
 }

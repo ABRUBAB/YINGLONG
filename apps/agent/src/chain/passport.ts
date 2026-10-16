@@ -1,6 +1,6 @@
 import { keccak256, stringToBytes, type Address, type Hex } from "viem";
 import { abi } from "@yinglong/sdk";
-import { rolePrivateKey, type Role } from "@yinglong/sdk/server";
+import { agentAddress, agentPrivateKey, type AgentKeyRef, type Role } from "@yinglong/sdk/server";
 import { sign } from "viem/accounts";
 import type { LedgerContext } from "./ledger";
 
@@ -18,13 +18,13 @@ export interface PassportInfo {
  */
 export async function ensurePassport(
   ctx: LedgerContext,
-  walletRole: Role,
+  walletRole: AgentKeyRef,
   ownerDid: string,
   identityCode: string,
   issuers: { role: Role; claim: string }[],
 ): Promise<PassportInfo> {
   const registry = ctx.addr("YinglongPassportRegistry");
-  const wallet = ctx.roleAddress(walletRole);
+  const wallet = agentAddress(walletRole);
   let agentId = await ctx.read<bigint>({ address: registry, abi: abi.YinglongPassportRegistryAbi, functionName: "agentIdOf", args: [wallet] });
   let registerTx: Hex | undefined;
   if (agentId === 0n) {
@@ -38,7 +38,7 @@ export async function ensurePassport(
       functionName: "bindWalletDigest",
       args: [next, ctx.roleAddress("agent-owner"), wallet, deadline],
     });
-    const walletSig = (await sign({ hash: digest, privateKey: rolePrivateKey(walletRole), to: "hex" })) as Hex;
+    const walletSig = (await sign({ hash: digest, privateKey: agentPrivateKey(walletRole), to: "hex" })) as Hex;
     const res = await ctx.write("agent-owner", {
       address: registry,
       abi: abi.YinglongPassportRegistryAbi as never,
@@ -54,7 +54,7 @@ export async function ensurePassport(
           erc8004AgentId: 0n,
           identityCode,
           kid: `${walletRole}-card-1`,
-          registrationURI: `https://api.yinglong-agent.tech/agents/${walletRole}.json`,
+          registrationURI: `https://api.yinglong-agent.tech/agents/${walletRole.replace(":", "-")}.json`,
           deadline,
           walletSig,
         },

@@ -228,6 +228,68 @@ export function guestMandate(d: Deployment, p: GuestParties, opts: { now: number
   };
 }
 
+export interface VisitorParties {
+  account: Address;
+  agent: Address;
+  cafe: Address;
+  foodMart: Address;
+  bookshop: Address;
+  issuerBank: Address;
+}
+
+/**
+ * A visitor's own mandate, sealed with the visitor's passkey in the web app: small caps on test units, a co-sign
+ * path (above 20) so a passkey approval can be tried, a reserve floor and a daily budget. One lineage per visitor.
+ */
+export function visitorMandate(d: Deployment, p: VisitorParties, opts: { now: number; salt?: string; name: string }): Mandate {
+  const tHKD = addr(d, "TestHKD");
+  return {
+    schema: "yinglong.mandate/v1",
+    title: "Your mandate (sealed with your passkey)",
+    ledger: d.ledger,
+    jurisdiction: "hk",
+    principal: { kind: "person", name: opts.name, did: `did:pkh:eip155:${d.chainId}:${p.account.toLowerCase()}`, account: p.account },
+    agent: { wallet: p.agent, label: "Ying" },
+    lineageId: "visitor",
+    salt: opts.salt ?? "1",
+    validity: { from: opts.now - 60, until: opts.now + 30 * 86400 },
+    assets: [{ symbol: "tHKD", address: tHKD, decimals: 6 }],
+    methods: ["transfer"],
+    payees: [
+      { id: "arena_cafe", label: "Arena Cafe", address: p.cafe, category: "food" },
+      { id: "kowloon_food_mart", label: "Kowloon Food Mart", address: p.foodMart, category: "food" },
+      { id: "hbu_bookshop", label: "HBU Bookshop", address: p.bookshop, category: "tuition" },
+    ],
+    trustedIssuers: [{ label: "Harbour Digital Bank", address: p.issuerBank }],
+    intermediaries: [],
+    tiers: [{ asset: "tHKD", defaultT1Cap: U(20), newPayeeT1Cap: U(1), t2Ceiling: U(200), maxApprovalWindow: 600, categoryT1Caps: [] }],
+    budgets: [
+      {
+        asset: "tHKD",
+        periodStart: 0,
+        periodLength: 86400,
+        unlistedCategory: "services",
+        caps: [
+          { category: "food", amount: U(100) },
+          { category: "tuition", amount: U(300) },
+          { category: "services", amount: U(2) },
+        ],
+      },
+    ],
+    reserveFloors: [{ asset: "tHKD", amount: U(100) }],
+    velocity: { asset: "tHKD", window: 3600, maxCount: 10, maxOutflow: U(400) },
+    suitability: { maxRiskClass: 1 },
+    reputation: null,
+    facilitator: null,
+    sentences: [
+      "Pay Arena Cafe and Kowloon Food Mart up to 20 at a time and 100 a day; up to 200 with my passkey.",
+      "Pay HBU Bookshop for course materials, up to 300 a day, with my passkey above 20.",
+      "Never let the balance drop below 100.",
+      "Nothing else.",
+    ],
+  };
+}
+
 export interface LotusHkParties {
   account: Address;
   agent: Address;

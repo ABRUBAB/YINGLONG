@@ -1,7 +1,7 @@
 import { encodeFunctionData, keccak256, stringToBytes, type Address, type Hex } from "viem";
 import { abi, type LedgerName } from "@yinglong/sdk";
 import { seededPasskey, type PasskeySigner } from "@yinglong/sdk/account";
-import { rolePrivateKey, type Role } from "@yinglong/sdk/server";
+import { agentAddress, rolePrivateKey, type AgentKeyRef, type Role } from "@yinglong/sdk/server";
 import { guestMandate, lotusHkMandate, lotusShenzhenMandate, nadiaMandate, type Delegation, type Mandate } from "@yinglong/mandate";
 import { ledgerContext, type LedgerContext } from "./chain/ledger";
 import { companyPrincipal, personPrincipal, type Principal } from "./chain/principal";
@@ -10,14 +10,16 @@ import { guardianCalls, sealMandate } from "./chain/mandates";
 import { DATA_DIR, DocStore } from "./store";
 import { resolve } from "node:path";
 
-export type PrincipalId = "nadia" | "lotus-sz" | "lotus-hk" | "guest";
+export type DemoPrincipalId = "nadia" | "lotus-sz" | "lotus-hk" | "guest";
+/** Demo principals, or a visitor who signed up in the web app with their own passkey ("v-" + 10 hex). */
+export type PrincipalId = DemoPrincipalId | `v-${string}`;
 
 export interface PrincipalConfig {
   id: PrincipalId;
   kind: "person" | "company";
   name: string;
   ledger: LedgerName;
-  agentRole: Role;
+  agentRole: AgentKeyRef;
   agentLabel: string;
   identityCode: string;
   issuers: { role: Role; claim: string }[];
@@ -97,7 +99,39 @@ interface WorldDoc {
 
 export const world = new DocStore<WorldDoc>(resolve(DATA_DIR, "world.json"), { principals: {} });
 
+/** A visitor's passkey (public part only) and their sign-up record. Nothing here is a secret except tokenHash's preimage, which only the visitor holds. */
+export interface VisitorRecord {
+  id: `v-${string}`;
+  keyId: string;
+  x: Hex;
+  y: Hex;
+  account: Address;
+  agentWallet: Address;
+  agentId: bigint;
+  tokenHash: Hex;
+  createdAt: string;
+  sealedAt?: string;
+}
+export const visitorStore = new DocStore<{ visitors: Record<string, VisitorRecord> }>(resolve(DATA_DIR, "visitors.json"), { visitors: {} });
+
+export const isVisitorId = (id: string): id is `v-${string}` => /^v-[0-9a-f]{10}$/.test(id);
+
+export function visitorConfig(id: `v-${string}`): PrincipalConfig {
+  return {
+    id,
+    kind: "person",
+    name: `Visitor ${id.slice(2, 6).toUpperCase()}`,
+    ledger: env("VISITOR_LEDGER", env("GUEST_LEDGER", env("NADIA_LEDGER", "anvil"))) as LedgerName,
+    agentRole: `visitor:${id}`,
+    agentLabel: "Ying",
+    identityCode: `YL-TEST-V${id.slice(2, 8).toUpperCase()}`,
+    issuers: [{ role: "issuer-harbour-digital-bank", claim: "visitor sandbox agent (test units only)" }],
+    defaultUnit: "tHKD",
+  };
+}
+
 export function config(id: PrincipalId): PrincipalConfig {
+  if (isVisitorId(id)) return visitorConfig(id);
   const c = PRINCIPALS.find((p) => p.id === id);
   if (!c) throw new Error(`unknown principal ${id}`);
   return c;
@@ -113,6 +147,7 @@ export function demoPasskey(id: PrincipalId): PasskeySigner {
 }
 
 export async function principalHandle(id: PrincipalId): Promise<{ ctx: LedgerContext; p: Principal; cfg: PrincipalConfig }> {
+  if (isVisitorId(id)) throw new Error("a visitor signs with their own passkey in the browser; the server holds no key for them");
   const cfg = config(id);
   const ctx = ledgerContext(cfg.ledger);
   const run = runFor(id);
@@ -187,9 +222,10 @@ function mandateFor(id: PrincipalId, ctx: LedgerContext, p: Principal, now: numb
 export async function onboard(id: PrincipalId, opts: { reseal?: boolean } = {}): Promise<PrincipalState> {
   const cfg0 = config(id);
   const ctx0 = ledgerContext(cfg0.ledger);
-  for (const r of ["relayer", "deployer", cfg0.agentRole, "agent-owner", ...cfg0.issuers.map((i) => i.role)] as Role[]) {
+  for (const r of ["relayer", "deployer", "agent-owner", ...cfg0.issuers.map((i) => i.role)] as Role[]) {
     await ctx0.ensureGas(ctx0.roleAddress(r), 20_000_000_000_000_000n);
   }
+  await ctx0.ensureGas(agentAddress(cfg0.agentRole), 20_000_000_000_000_000n);
   const { ctx, p, cfg } = await principalHandle(id);
   const passport = await ensurePassport(ctx, cfg.agentRole, p.did, cfg.identityCode, cfg.issuers);
   const existing = world.get().principals[id];
@@ -232,7 +268,7 @@ export async function onboard(id: PrincipalId, opts: { reseal?: boolean } = {}):
     account: p.account,
     did: p.did,
     signerLabel: p.signerLabel,
-    agentWallet: ctx.roleAddress(cfg.agentRole),
+    agentWallet: agentAddress(cfg.agentRole),
     agentId: passport.agentId,
     mandate: doc,
     mandateHash: sealed.compiled.mandateHash,

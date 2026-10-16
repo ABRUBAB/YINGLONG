@@ -1,7 +1,8 @@
 // Server-only helpers: load testnet role keys and deployments from disk. Never import this in the browser.
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import type { Address, Hex } from "viem";
+import { concat, keccak256, stringToBytes, toHex, type Address, type Hex } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 import { parseDeployment, type Deployment } from "./deployments";
 import type { LedgerName } from "./ledgers";
 
@@ -66,6 +67,29 @@ export function rolePrivateKey(role: Role): Hex {
   const r = keyFile().roles[role];
   if (!r) throw new Error(`unknown role ${role}`);
   return (r.privateKey.startsWith("0x") ? r.privateKey : `0x${r.privateKey}`) as Hex;
+}
+
+/**
+ * Agent keys are named by a role, or by "visitor:v-<10 hex>" for the agent wallet of a visitor who signed up with
+ * their own passkey. A visitor's agent key is derived at runtime from the guest-arena testnet key and the visitor
+ * id (never stored), so the agent runtime and the isolated signer derive the same wallet independently.
+ */
+export type AgentKeyRef = Role | `visitor:${string}`;
+const SECP256K1_N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
+export const VISITOR_ID = /^v-[0-9a-f]{10}$/;
+
+export function agentPrivateKey(ref: AgentKeyRef | string): Hex {
+  if (ref.startsWith("visitor:")) {
+    const id = ref.slice("visitor:".length);
+    if (!VISITOR_ID.test(id)) throw new Error("malformed visitor id");
+    const k = BigInt(keccak256(concat([rolePrivateKey("guest-arena"), toHex(stringToBytes(`yinglong:visitor-agent:v1:${id}`))]))) % (SECP256K1_N - 1n);
+    return toHex(k + 1n, { size: 32 });
+  }
+  return rolePrivateKey(ref as Role);
+}
+
+export function agentAddress(ref: AgentKeyRef | string): Address {
+  return ref.startsWith("visitor:") ? privateKeyToAccount(agentPrivateKey(ref)).address : roleAddress(ref as Role);
 }
 
 export function loadDeployment(name: LedgerName): Deployment {

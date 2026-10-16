@@ -6,7 +6,7 @@ import { privateKeyToAccount, sign as signHash } from "viem/accounts";
 import { abi } from "@yinglong/sdk";
 import { delegationHash, type Delegation } from "@yinglong/mandate";
 import { decodeRevert, ledger as ledgerProfile, revertDataOf, type LedgerName } from "@yinglong/sdk";
-import { loadDeployment, rolePrivateKey } from "@yinglong/sdk/server";
+import { agentPrivateKey, loadDeployment } from "@yinglong/sdk/server";
 import { guardRedemption } from "./guard";
 import { windowNow, wrapWithChild } from "./child";
 
@@ -19,10 +19,12 @@ import { windowNow, wrapWithChild } from "./child";
  * When the signer refuses for a policy reason it asks the breaker watcher to pause the account.
  */
 const AGENT_ROLES = ["agent-ying", "agent-treasurer", "guest-arena"] as const;
+// A visitor's own agent wallet (key derived at runtime; see agentPrivateKey in @yinglong/sdk/server).
+const AgentRef = z.union([z.enum(AGENT_ROLES), z.string().regex(/^visitor:v-[0-9a-f]{10}$/)]);
 
 const Req = z.object({
   ledger: z.enum(["anvil", "base-sepolia", "fisco"]),
-  agentRole: z.enum(AGENT_ROLES),
+  agentRole: AgentRef,
   calldata: z.string().regex(/^0x[0-9a-fA-F]*$/),
   decision: z.object({ tier: z.enum(["T1", "T2", "T3", "T4", "ASK"]), proposalId: z.string(), approved: z.boolean().optional() }),
   mode: z.enum(["normal", "chain-test"]).default("normal"),
@@ -32,10 +34,10 @@ const Req = z.object({
 const app = new Hono();
 const log: { at: string; ledger: string; role: string; ok: boolean; reason?: string; txHash?: Hex; mode: string }[] = [];
 
-function clients(name: LedgerName, role: (typeof AGENT_ROLES)[number]) {
+function clients(name: LedgerName, role: string) {
   const p = ledgerProfile(name);
   const chain = defineChain({ id: p.chainId, name: p.label, nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: [p.rpcUrl] } } });
-  const account = privateKeyToAccount(rolePrivateKey(role));
+  const account = privateKeyToAccount(agentPrivateKey(role));
   return {
     p,
     chain,
@@ -79,7 +81,7 @@ app.post("/v1/redeem", async (c) => {
     const allowed = r.decision.tier === "T1" || (r.decision.tier === "T2" && r.decision.approved === true);
     if (!allowed) return refuse(`decision ${r.decision.tier} is not signable`, true);
     // Narrow the execution with a per-execution child delegation (two-minute window, single use).
-    ({ calldata, children } = await wrapWithChild({ calldata, deployment, agent: account.address, agentKey: rolePrivateKey(r.agentRole), pub, timeUnit: p.timeUnit }));
+    ({ calldata, children } = await wrapWithChild({ calldata, deployment, agent: account.address, agentKey: agentPrivateKey(r.agentRole), pub, timeUnit: p.timeUnit }));
     try {
       await pub.call({ account: account.address, to: deployment.contracts.DelegationManager.address, data: calldata });
     } catch (e) {
@@ -108,7 +110,7 @@ app.post("/v1/redeem", async (c) => {
  */
 const ChildReq = z.object({
   ledger: z.enum(["anvil", "base-sepolia", "fisco"]),
-  agentRole: z.enum(AGENT_ROLES),
+  agentRole: AgentRef,
   parentHash: z.string().regex(/^0x[0-9a-fA-F]{64}$/),
   seller: z.string().regex(/^0x[0-9a-fA-F]{40}$/),
   asset: z.string().regex(/^0x[0-9a-fA-F]{40}$/),
@@ -142,7 +144,7 @@ app.post("/v1/sign-x402-child", async (c) => {
   };
   const domainHash = (await pub.readContract({ address: deployment.contracts.DelegationManager.address, abi: abi.DelegationManagerAbi, functionName: "getDomainHash" })) as Hex;
   const digest = keccak256(concat(["0x1901", domainHash, delegationHash(child)]));
-  child.signature = (await signHash({ hash: digest, privateKey: rolePrivateKey(r.agentRole), to: "hex" })) as Hex;
+  child.signature = (await signHash({ hash: digest, privateKey: agentPrivateKey(r.agentRole), to: "hex" })) as Hex;
   log.push({ at: new Date().toISOString(), ledger: r.ledger, role: r.agentRole, ok: true, mode: `x402-child ${amount}` });
   return c.json({ ok: true, child: { ...child, salt: child.salt.toString() }, childHash: delegationHash(child) });
 });

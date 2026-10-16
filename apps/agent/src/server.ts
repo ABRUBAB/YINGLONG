@@ -15,11 +15,12 @@ import { attempt, challenge, session } from "./challenge";
 import { board, createBoardProposal, directorSign } from "./board";
 import { explainTx } from "./explorer";
 import { apiJson, DATA_DIR } from "./store";
-import { config, onboard, PRINCIPALS, world, type PrincipalId, type PrincipalState } from "./world";
+import { config, isVisitorId, onboard, PRINCIPALS, visitorStore, world, type PrincipalId, type PrincipalState } from "./world";
+import { registerVisitor, sealVisitor, visitorStatus, visitorTokenOk } from "./visitors";
 
 const VERSION = "0.9.0";
 const app = new Hono();
-app.use("*", cors({ origin: (o) => o ?? "*", allowMethods: ["GET", "POST"], allowHeaders: ["Content-Type"] }));
+app.use("*", cors({ origin: (o) => o ?? "*", allowMethods: ["GET", "POST"], allowHeaders: ["Content-Type", "x-visitor-token"] }));
 app.onError((err, c) => c.json({ ok: false, error: err.message }, 400));
 
 // Per-client rate limit (in memory) and an admin token for state-changing calls on the demo principals.
@@ -43,14 +44,31 @@ app.use("/v1/*", async (c, next) => {
   await next();
 });
 const PROTECTED = [/\/halt$/, /\/board-proposals$/, /\/sign$/, /\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
+// A visitor (signed up with their own passkey) may drive their own agent: execute, bypass and decline their own
+// proposals and approvals, and run the attack demonstration on their own account. Never anyone else's.
+const VISITOR_OK = [/^\/v1\/proposals\/([^/]+)\/(execute|bypass)$/, /^\/v1\/approvals\/([^/]+)\/decline$/, /^\/v1\/principals\/([^/]+)\/attack$/];
+function visitorMayCall(path: string, token: string | undefined): boolean {
+  for (const re of VISITOR_OK) {
+    const m = path.match(re);
+    if (!m) continue;
+    const ref = m[1]!;
+    const principal = path.startsWith("/v1/proposals/")
+      ? proposals.get().proposals[ref]?.principal
+      : path.startsWith("/v1/approvals/")
+        ? proposals.get().approvals[ref]?.principal
+        : ref;
+    return !!principal && isVisitorId(principal) && visitorTokenOk(principal, token);
+  }
+  return false;
+}
 app.use("/v1/*", async (c, next) => {
-  if (ADMIN && c.req.method === "POST" && PROTECTED.some((re) => re.test(c.req.path)) && c.req.header("x-admin-token") !== ADMIN) {
+  if (ADMIN && c.req.method === "POST" && PROTECTED.some((re) => re.test(c.req.path)) && c.req.header("x-admin-token") !== ADMIN && !visitorMayCall(c.req.path, c.req.header("x-visitor-token"))) {
     return c.json({ ok: false, error: "this action needs the operator token (judges: use the Judge's Challenge guest agent)" }, 403);
   }
   await next();
 });
 
-const isPid = (s: string): s is PrincipalId => PRINCIPALS.some((p) => p.id === s);
+const isPid = (s: string): s is PrincipalId => PRINCIPALS.some((p) => p.id === s) || (isVisitorId(s) && !!world.get().principals[s]);
 
 function mandateView(st: PrincipalState) {
   if (!st.mandate || !st.delegation) return null;
@@ -105,7 +123,7 @@ async function principalSummary(st: PrincipalState) {
     ledgerBadge: ctx.profile.badge,
     jurisdiction: (st.mandate as Mandate | undefined)?.jurisdiction,
     signer: st.signerLabel,
-    passkeyIds: [] as string[],
+    passkeyIds: isVisitorId(st.id) ? [visitorStore.get().visitors[st.id]?.keyId].filter((k): k is string => !!k) : ([] as string[]),
     agent: { label: cfg.agentLabel, wallet: st.agentWallet, agentId: st.agentId, passportStatus: ["none", "active", "halted", "revoked"][Number(info[1])], identityCode: cfg.identityCode },
     paused,
   };
@@ -231,11 +249,26 @@ const AskBody = z.object({
   autoExecute: z.boolean().optional(),
 });
 
+// ---------------------------------------------------------------- visitors (sign up with your own passkey)
+app.post("/v1/visitors", async (c) => {
+  const b = z.object({ credentialId: z.string(), publicKey: z.object({ x: z.string(), y: z.string() }) }).parse(await c.req.json());
+  return c.json(apiJson(await registerVisitor({ credentialId: b.credentialId, x: b.publicKey.x as Hex, y: b.publicKey.y as Hex })));
+});
+app.post("/v1/visitors/:id/seal", async (c) => {
+  const b = z.object({ userOpSignature: z.string().regex(/^0x[0-9a-fA-F]+$/), delegationSignature: z.string().regex(/^0x[0-9a-fA-F]+$/) }).parse(await c.req.json());
+  const st = await sealVisitor(c.req.param("id"), c.req.header("x-visitor-token"), { userOpSignature: b.userOpSignature as Hex, delegationSignature: b.delegationSignature as Hex });
+  return c.json(apiJson({ principal: await principalSummary(st), mandateHash: st.mandateHash, publishTx: st.publishTx }));
+});
+app.get("/v1/visitors/:id", (c) => {
+  const v = visitorStatus(c.req.param("id"));
+  return v ? c.json(apiJson(v)) : c.json({ ok: false, error: "unknown visitor" }, 404);
+});
+
 app.post("/v1/principals/:id/ask", async (c) => {
   const id = c.req.param("id");
   if (!isPid(id)) return c.json({ ok: false, error: "unknown principal" }, 404);
   const body = AskBody.parse(await c.req.json());
-  if (body.autoExecute && id !== "guest" && ADMIN && c.req.header("x-admin-token") !== ADMIN) {
+  if (body.autoExecute && id !== "guest" && ADMIN && c.req.header("x-admin-token") !== ADMIN && !(isVisitorId(id) && visitorTokenOk(id, c.req.header("x-visitor-token")))) {
     return c.json({ ok: false, error: "autoExecute on this principal needs the operator token (judges: use the Judge's Challenge)" }, 403);
   }
   const p = await ask(id, body.text, body.attachments ?? []);
