@@ -65,5 +65,6 @@ video/work/
 
 # agent runtime state (evidence is exported by scripts/finalize)
 apps/agent/data/world.json
+apps/agent/data/visitors.json
 apps/agent/data/proposals.json
 apps/agent/data/receipts*.jsonl

@@ -1,0 +1,10 @@
+# Default gitleaks rules, plus an allowlist for generated, public test material only.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Raw tool output (hex-heavy Foundry and Halmos dumps) and public ZK test vectors: no secrets by construction"
+paths = [
+  '''contracts/reports/[^/]+\.raw\.json$''',
+  '''contracts/test/vectors/''',
+]
