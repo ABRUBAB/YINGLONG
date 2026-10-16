@@ -6,7 +6,7 @@
 //   4. run the scripted student scenario end to end with real transactions (apps/agent/scripts/e2e.ts),
 //   5. run the private-mandate beat (apps/agent/scripts/zk-private-mandate.ts),
 //   6. print the bytecode comparison against FISCO BCOS.
-// Usage: node scripts/base-go-live.mjs [--min-eth 0.004] [--skip-deploy]
+// Usage: node scripts/base-go-live.mjs [--min-eth 0.0009] [--skip-deploy]
 // Everything moves test units only. Keys are read at runtime by the scripts it calls; nothing is printed.
 import { spawnSync } from "node:child_process";
 import { readFileSync, existsSync } from "node:fs";
@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
-const minEth = Number(args.includes("--min-eth") ? args[args.indexOf("--min-eth") + 1] : "0.004");
+const minEth = Number(args.includes("--min-eth") ? args[args.indexOf("--min-eth") + 1] : "0.0009");
 const RPC = process.env.BASE_SEPOLIA_RPC_URL ?? "https://sepolia.base.org";
 const DEPLOYER = "0x5C470480380dC2014898345aC6226c67cbF5E407";
 

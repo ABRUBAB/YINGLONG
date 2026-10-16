@@ -131,8 +131,9 @@ export class LedgerContext {
   /** Make sure `address` can pay gas (anvil: set balance; Base: top up from the deployer; FISCO: gas is free). */
   async ensureGas(address: Address, requestedWei: bigint): Promise<void> {
     if (this.name === "fisco") return;
-    // Base Sepolia gas is cheap (about 0.006 gwei): 0.0005 ETH per role covers hundreds of transactions.
-    const minWei = this.name === "base-sepolia" && requestedWei > 500_000_000_000_000n ? 500_000_000_000_000n : requestedWei;
+    // At about 0.006 gwei, 0.00003 ETH pays for about 5M gas: enough for one role's share of a run (BASE_TOPUP_WEI overrides).
+    const cap = BigInt(process.env.BASE_TOPUP_WEI ?? "30000000000000");
+    const minWei = this.name === "base-sepolia" && requestedWei > cap ? cap : requestedWei;
     const bal = await this.pub.getBalance({ address });
     if (bal >= minWei) return;
     if (this.name === "anvil") {
