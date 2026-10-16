@@ -33,7 +33,7 @@ from yinglong_verify.verify import caveats_abi_value
 
 REPO = HERE.parent.parent.parent
 SHARED_ANVIL = os.environ.get("YINGLONG_TEST_ANVIL", "http://127.0.0.1:8645")
-FISCO = os.environ.get("FISCO_RPC_URL", "http://127.0.0.1:8545")
+FISCO = os.environ.get("FISCO_RPC_URL", "https://api.yinglong-agent.tech/rpc/fisco")  # the public read-only proxy (exact revert data)
 
 
 def reachable(url: str, chain_id: int | None = None) -> bool:
