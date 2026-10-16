@@ -33,10 +33,24 @@ type Verdict = {
   revert?: boolean;
 };
 
+/** Sample per-check timings (ms), in the same range the real pipeline reports; labelled "Sample data" on the page. */
+const SAMPLE_MS = [3, 18, 41, 6, 4, 22, 140, 9, 1900] as const;
+/** Sample sentinel scores: a plain request sits far under the threshold, an injection well above it. */
+const SENTINEL = { threshold: 0.5, calm: 0.04, flagged: 0.93 } as const;
+/** Which enforcer each sample typed error belongs to (the `rule` of a policy refusal). */
+const RULE_OF: Record<string, string> = {
+  CategoryBudgetExceeded: "CategoryBudgetEnforcer",
+  VelocityExceeded: "VelocityEnforcer",
+  ForbiddenTarget: "AllowedTargetsEnforcer",
+  PayeeNotVerified: "PayeeBookEnforcer",
+  Paused: "PauseEnforcer",
+};
+
 function scales(v: Verdict, bypass = false, seed = "x"): ScaleResult[] {
   let reached = true;
   return SCALE_IDS.map((id, k) => {
-    const durationMs = [3, 18, 41, 6, 4, 22, 140, 9, 1900][k]!;
+    const durationMs = SAMPLE_MS[k]!;
+    const gauge = id === "sentinel" ? { score: v.escalations?.sentinel ? SENTINEL.flagged : SENTINEL.calm, threshold: SENTINEL.threshold } : {};
     if (bypass && id !== "chain") {
       return { scale: id, status: "skipped", reason: "Bypassed: a raw redemption was sent straight to the chain.", error: null, durationMs: null, revert: null };
     }
@@ -53,8 +67,8 @@ function scales(v: Verdict, bypass = false, seed = "x"): ScaleResult[] {
         revert: v.revert ? { ledger: "base-sepolia", chainId: 84532, txHash: h(`tx:base:sim:${seed}`), blockNumber: null } : null,
       };
     }
-    if (esc) return { scale: id, status: "escalated", reason: esc.reason, error: esc.error, durationMs, revert: null };
-    return { scale: id, status: "passed", reason: null, error: null, durationMs, revert: null };
+    if (esc) return { scale: id, status: "escalated", reason: esc.reason, error: esc.error, durationMs, revert: null, ...gauge };
+    return { scale: id, status: "passed", reason: null, error: null, durationMs, revert: null, ...gauge };
   }) as ScaleResult[];
 }
 
@@ -103,7 +117,16 @@ export function simulateDecision(text: string, opts: { bypass?: boolean; guest?:
     s: ScaleResult[],
     explanation: string,
     extra: Partial<Decision> = {},
-  ): Decision => ({ ...base, tier, outcome, intent: i, scales: s, explanation, ...extra });
+  ): Decision => {
+    // The block reason as the service words it: a policy refusal for deterministic rules, a typed revert when the chain decided.
+    const stop = s.find((x) => x.status === "stopped");
+    const refusals =
+      stop && stop.error && (stop.scale === "policy" || stop.scale === "counterparty")
+        ? [{ rule: RULE_OF[stop.error] ?? "Mandate", typedError: stop.error, detail: stop.reason }]
+        : [];
+    const revert = stop && stop.error && (stop.scale === "simulate" || stop.scale === "chain") ? { name: stop.error, args: null, message: stop.reason } : null;
+    return { ...base, tier, outcome, intent: i, scales: s, explanation, refusals, revert, ...extra };
+  };
 
   const injection = /(ignore|disregard|override|system prompt|new instructions|forget (the|your) rules|director approved|urgent|bank account (has )?changed|changed (its|their|our) bank)/i.test(text);
   const address = /0x[0-9a-f]{6,40}/i.test(text);

@@ -346,8 +346,15 @@ function mapDecision(p: W.WireProposal): Decision {
     const s = byN.get(k + 1);
     if (!s) return { scale: id, status: "skipped", reason: null, error: null, durationMs: null, revert: null };
     const err = s.typedError && /^[A-Z][A-Za-z0-9]*$/.test(s.typedError) ? s.typedError : null;
-    return { scale: id, status: s.status, reason: s.reason ?? null, error: err, durationMs: null, revert: null };
+    // Real per-check timings (absent on older servers: null, never a stand-in).
+    const durationMs = typeof s.ms === "number" && Number.isFinite(s.ms) && s.ms >= 0 ? Math.round(s.ms) : null;
+    const unit = (x: number | null | undefined) => (typeof x === "number" && Number.isFinite(x) ? Math.min(1, Math.max(0, x)) : null);
+    return { scale: id, status: s.status, reason: s.reason ?? null, error: err, durationMs, revert: null, score: unit(s.score), threshold: unit(s.threshold) };
   });
+  const policy = z.object({ refusals: z.array(z.object({ rule: z.string().nullish(), typedError: z.string().nullish(), detail: z.string().nullish() })).nullish() }).safeParse(p.policy);
+  const refusals = policy.success ? (policy.data.refusals ?? []).map((r) => ({ rule: r.rule ?? null, typedError: r.typedError ?? null, detail: r.detail ?? null })) : [];
+  const rev = W.WireRevertError.safeParse(p.simulation?.revert);
+  const revert = rev.success ? { name: rev.data.name, args: rev.data.args ?? null, message: rev.data.message ?? null } : null;
   const intentObj = p.intent as Record<string, unknown> | string | null;
   const summary =
     typeof intentObj === "string"
@@ -400,6 +407,9 @@ function mapDecision(p: W.WireProposal): Decision {
     approvalId: p.approvalId ?? null,
     receiptId: p.receiptIds?.[0] ?? null,
     suitability: p.suitability ? mapSuitability(p.suitability) : null,
+    refusals,
+    revert,
+    raw: p,
   };
 }
 

@@ -1,14 +1,16 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
-import { cn, StateRing } from "@yinglong/ui";
+import { useId, useMemo, useRef, useState } from "react";
+import { cn } from "@yinglong/ui";
 import type { Decision, Receipt } from "@/lib/api/view";
-import { ApiRequestError, getApi } from "@/lib/api";
+import { ApiRequestError, getApi, isSample } from "@/lib/api";
 import { invalidate } from "@/lib/api/hooks";
+import { formatTime } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-import { DecisionView } from "@/components/data/decision-view";
-import { ErrorLine } from "@/components/data/parts";
 import { useVisitorSession } from "@/components/session";
+import { ExecutionGraph } from "./execution-graph";
+import { ExecutionResult, RawDrawer } from "./execution-result";
+import { graphNodes, pendingNodes, resultKind, takeaway } from "./execution-state";
 
 const EXAMPLES = [
   "Buy groceries for 120 at Kowloon Food Mart",
@@ -25,7 +27,10 @@ const VISITOR_EXAMPLES = [
   "Arena Cafe changed its account, pay 50 to 0x7a3f99c1",
 ];
 
-/** Ask Ying: one request in, one verdict out (tier, nine scales, labelled explanation). */
+/**
+ * Ask Ying: one request in, one live execution view out. The nine checks are drawn as a rail with
+ * their real statuses and timings, and the result is one of three clearly different cards.
+ */
 export function AskBox() {
   const id = useId();
   const visitor = useVisitorSession();
@@ -34,15 +39,22 @@ export function AskBox() {
   const [busy, setBusy] = useState<"asking" | "executing" | null>(null);
   const [decision, setDecision] = useState<Decision | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
-  const [error, setError] = useState<Error | undefined>();
+  const [error, setError] = useState<Error | null>(null);
+  const [errorAt, setErrorAt] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+  const [resolveKey, setResolveKey] = useState(0);
+  const lastText = useRef("");
   const ref = useRef<HTMLTextAreaElement>(null);
 
   async function submit(value = text) {
     const t = value.trim();
     if (!t || busy) return;
+    lastText.current = t;
     setBusy("asking");
-    setError(undefined);
+    setStartedAt(performance.now());
+    setError(null);
+    setErrorAt(null);
     setDecision(null);
     setReceipt(null);
     setNote(null);
@@ -50,6 +62,7 @@ export function AskBox() {
       const api = getApi();
       const d = await api.ask({ text: t });
       setDecision(d);
+      setResolveKey((k) => k + 1);
       if (d.receipt) {
         // The service executed the T1 decision in the same call; show its receipt, not a claim.
         setReceipt(d.receipt);
@@ -70,10 +83,22 @@ export function AskBox() {
       }
     } catch (e) {
       setError(e as Error);
+      setErrorAt(formatTime(new Date().toISOString(), { seconds: true }));
     } finally {
       setBusy(null);
     }
   }
+
+  function prefill(value: string) {
+    setText(value);
+    ref.current?.focus();
+    void submit(value);
+  }
+
+  const executing = busy === "executing";
+  const nodes = useMemo(() => (decision ? graphNodes(decision, receipt, executing) : pendingNodes()), [decision, receipt, executing]);
+  const kind = resultKind(decision, receipt, error, executing);
+  const lines = kind ? takeaway(kind, decision, receipt, nodes, error) : [];
 
   return (
     <section aria-labelledby={`${id}-h`} className="grid gap-4">
@@ -120,10 +145,7 @@ export function AskBox() {
           <button
             key={ex}
             type="button"
-            onClick={() => {
-              setText(ex);
-              void submit(ex);
-            }}
+            onClick={() => prefill(ex)}
             className={cn(
               "h-7 max-w-full truncate rounded-pill border border-line-2 px-3 text-12 text-fg-2 transition-colors",
               "hover:border-line-3 hover:text-fg-0",
@@ -133,21 +155,45 @@ export function AskBox() {
           </button>
         ))}
       </div>
-      <ErrorLine error={error} />
+
       {busy === "asking" ? (
-        <p role="status" className="m-0 flex items-center gap-2 text-12 text-fg-muted">
-          <StateRing state="pending" size={16} glyphOnly label="Checking" />
-          Checking the request against the nine scales and your mandate
-        </p>
+        <div className="yl-card p-4 sm:p-5">
+          <ExecutionGraph nodes={nodes} pending startedAt={startedAt} sample={isSample} />
+        </div>
       ) : null}
-      {decision ? (
-        <div className="yl-card yl-enter p-4 sm:p-5">
-          <DecisionView d={decision} receipt={receipt} executing={busy === "executing"} />
+
+      {kind ? (
+        <div className="grid gap-4" aria-live="polite">
+          {lines.length ? (
+            <ul className="m-0 grid list-none gap-1 p-0" aria-label="Takeaway">
+              {lines.map((line, i) => (
+                <li key={i} className={i === 0 ? "text-18 font-semibold leading-7 text-fg-0" : "text-13 text-fg-2"}>
+                  {line}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {decision ? (
+            <div className="yl-card yl-enter p-4 sm:p-5">
+              <ExecutionGraph nodes={nodes} resolveKey={resolveKey} sample={isSample} />
+            </div>
+          ) : null}
+          <ExecutionResult
+            kind={kind}
+            decision={decision}
+            receipt={receipt}
+            nodes={nodes}
+            error={error}
+            errorAt={errorAt}
+            onRetry={() => void submit(lastText.current || text)}
+            onPrefill={prefill}
+          />
           {note ? (
-            <p role="status" className="m-0 mt-4 border-t border-line-1 pt-3 text-12 text-fg-2">
+            <p role="status" className="m-0 rounded-control border border-line-1 px-3 py-2.5 text-12 text-fg-2">
               {note}
             </p>
           ) : null}
+          {decision ? <RawDrawer decision={decision} receipt={receipt} /> : null}
         </div>
       ) : null}
     </section>

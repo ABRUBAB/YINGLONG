@@ -192,11 +192,19 @@ export const WireProposal = z.object({
       reason: z.string().nullish(),
       typedError: z.string().nullish(),
       model: z.string().nullish(),
+      /** Wall-clock time the check ran, in milliseconds (absent on older servers: show no time, never a fake one). */
+      ms: z.number().nullish(),
+      /** Sentinel only: injection probability (0 to 1) and the escalation threshold. */
+      score: z.number().nullish(),
+      threshold: z.number().nullish(),
     }),
   ),
   explanation: WireExplanation,
   payment: WirePayment.nullish(),
   simulation: z.object({ ok: z.boolean(), revert: z.unknown().nullish(), block: IntLike.nullish() }).nullish(),
+  /** `{refusals: {rule, typedError, detail}[], ...}`; kept loose and narrowed when mapped so an unexpected shape never fails the whole ask. */
+  policy: z.unknown().nullish(),
+  counterparty: z.unknown().nullish(),
   approvalId: z.string().nullish(),
   createdAt: Time,
   /** Present with autoExecute when a T1 decision was executed in the same call. */

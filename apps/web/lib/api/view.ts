@@ -305,8 +305,19 @@ export const ScaleResult = z.object({
   error: TypedError.nullable(),
   durationMs: z.number().int().nonnegative().nullable(),
   revert: TxRef.nullable(),
+  /** Sentinel only: the model's injection probability (0 to 1) and the escalation threshold, when the service reports them. */
+  score: z.number().min(0).max(1).nullish(),
+  threshold: z.number().min(0).max(1).nullish(),
 });
 export type ScaleResult = z.infer<typeof ScaleResult>;
+
+/** One policy refusal as the service words it: the rule, its typed error and the detail (numbers in words). */
+export const Refusal = z.object({ rule: z.string().nullable(), typedError: z.string().nullable(), detail: z.string().nullable() });
+export type Refusal = z.infer<typeof Refusal>;
+
+/** The typed revert the simulation hit before anything was signed. */
+export const SimulationRevert = z.object({ name: z.string(), args: z.unknown().nullable(), message: z.string().nullable() });
+export type SimulationRevert = z.infer<typeof SimulationRevert>;
 
 export const Intent = z.object({
   action: z.enum(["pay", "convert", "sweep", "escrow", "observe", "change-mandate", "other"]),
@@ -340,6 +351,12 @@ export const Decision = z.object({
   receipt: z.lazy(() => Receipt).nullable().optional(),
   /** Sweeps into a product: the suitability explanation card (read from the ProductRegistry and the sealed caveat). */
   suitability: z.lazy(() => Suitability).nullable().optional(),
+  /** Policy refusals, when the service reports them (the block reason line). */
+  refusals: z.array(Refusal).nullish(),
+  /** The simulation's typed revert, when the service reports one. */
+  revert: SimulationRevert.nullish(),
+  /** The proposal as the service returned it (after the contract check), for the "Inspect the raw response" drawer. */
+  raw: z.unknown().optional(),
 });
 export type Decision = z.infer<typeof Decision>;
 

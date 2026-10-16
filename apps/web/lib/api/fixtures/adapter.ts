@@ -163,6 +163,8 @@ export function createFixtureApi(): AgentApi {
           ),
           explanation: "Ying is paused, so the request was refused before anything was signed.",
           aigc: null,
+          refusals: [{ rule: "PauseEnforcer", typedError: "Paused", detail: "Ying is paused. Nothing moves until you resume with your passkey." }],
+          revert: null,
         };
       }
       state.decisions.set(d.proposalId, d);

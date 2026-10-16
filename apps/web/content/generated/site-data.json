@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-16T19:34:14.451Z",
+  "generatedAt": "2026-10-16T20:42:52.101Z",
   "timeline": {
-    "head": "4d402b6",
-    "count": 87,
+    "head": "30ee250",
+    "count": 89,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-17T01:22:34+06:00",
+    "last": "2026-10-17T02:28:57+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -614,6 +614,20 @@
         "at": "2026-10-17T01:22:34+06:00",
         "subject": "Visitor security: a sign-up started with an existing account's public key no longer resets it; login is bound to the issued challenge",
         "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "0530674",
+        "at": "2026-10-17T02:19:58+06:00",
+        "subject": "Real light theme and a richer palette; proof page rebuilt on GET /v1/proof",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "30ee250",
+        "at": "2026-10-17T02:28:57+06:00",
+        "subject": "No co-sign approval for a redemption the ledger refuses for another reason; proof lists payments and refusals before drills",
+        "track": "evidence",
         "milestone": false
       }
     ]
