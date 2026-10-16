@@ -1,0 +1,385 @@
+/**
+ * Fixture adapter (NEXT_PUBLIC_DATA_MODE=fixtures only). Reads return synchronously so pages render
+ * sample data on the server; writes simulate latency and mutate an in-memory copy. Everything it
+ * returns is SAMPLE DATA and every page that uses it shows the "Sample data" chip. Signing requests
+ * carry real EIP-712 typed data, so the signing-domain guard runs for real in fixtures mode too.
+ */
+import type { Hex } from "viem";
+import type { AgentApi } from "../client";
+import { ApiRequestError } from "../client";
+import type {
+  ApprovalRequest,
+  ChallengeAttempt,
+  Decision,
+  Mandate,
+  MandateDraft,
+  PauseStatus,
+  Receipt,
+  RegistryAgent,
+  SigningRequest,
+  TreasuryView,
+  TypedData,
+} from "../view";
+import { cosignTypedData, encodeSingleExecution, killSwitchTypedData } from "../../chain";
+import { typedDataDigest } from "../../signing-guard";
+import * as D from "./data";
+import { attackFamily, compileSample, simulateDecision } from "./simulate";
+import { addr, baseTx, fiscoTx, h } from "./util";
+
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const clone = <T>(v: T): T => structuredClone(v);
+const KILL_SWITCH = addr("kill-switch-registry");
+
+export function createFixtureApi(): AgentApi {
+  const state = {
+    mandates: [clone(D.nadiaMandate), clone(D.nadiaMandateV2), clone(D.nadiaMandateV1)] as Mandate[],
+    receipts: clone(D.receipts) as Receipt[],
+    approvals: clone(D.approvals) as ApprovalRequest[],
+    pause: { paused: false, since: null, txs: [], measuredMs: null } as PauseStatus,
+    treasury: clone(D.treasuryViews) as Record<string, TreasuryView>,
+    registry: clone(D.registry) as RegistryAgent[],
+    attempts: clone(D.challengeAttempts) as ChallengeAttempt[],
+    drafts: new Map<string, MandateDraft>(),
+    decisions: new Map<string, Decision>(),
+    signing: new Map<string, SigningRequest & { context: Record<string, string> }>(),
+  };
+
+  const notFound = (what: string) => new ApiRequestError(`${what} was not found in the sample data.`, 404, "not_found");
+
+  function signingRequest(kind: SigningRequest["kind"], typedData: TypedData, context: Record<string, string>): SigningRequest {
+    const req = {
+      id: `${kind}-${Math.random().toString(36).slice(2, 10)}`,
+      kind,
+      digest: typedDataDigest(typedData),
+      typedData,
+      expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
+    };
+    state.signing.set(req.id, { ...req, context });
+    return req;
+  }
+
+  function newReceipt(partial: Partial<Receipt> & Pick<Receipt, "summary" | "tier" | "outcome">): Receipt {
+    const id = h(`receipt:new:${Date.now()}:${Math.random()}`);
+    const r: Receipt = {
+      ...state.receipts[0]!,
+      receiptId: id,
+      receiptHash: h(`receipt-hash:${id}`),
+      intentHash: h(`intent:${id}`),
+      txHash: h(`tx:base:${id}`),
+      explorerUrl: null,
+      revertError: null,
+      timestamp: new Date().toISOString(),
+      prevReceiptHash: state.receipts[0]!.receiptId as Hex,
+      anchor: null,
+      payeeName: null,
+      amount: null,
+      category: null,
+      ...partial,
+    };
+    state.receipts.unshift(r);
+    return r;
+  }
+
+  const createFixtureApiSubmit = (id: string) => api.submitSignature(id, { keyId: "scripted-sample", signature: "0x01" });
+
+  const api: AgentApi = {
+    mode: "fixtures",
+    baseUrl: "fixtures",
+
+    health: () => ({
+      ok: true,
+      version: "sample",
+      ledgers: [
+        { ledger: "base-sepolia", chainId: 84532, block: "31884517", badge: "Base Sepolia (testnet)" },
+        { ledger: "fisco", chainId: 20200, block: "1204639", badge: "FISCO BCOS (consortium)" },
+      ],
+      models: { intent: "qwen3.5-9b-instruct-q4 (sample)", sentinel: "mmBERT-base sentinel (sample)" },
+    }),
+    me: () => ({ ...D.principal, paused: state.pause.paused }),
+    passport: (agentId) => {
+      if (agentId !== D.passport.agentId) throw notFound(`Agent ${agentId}`);
+      return { ...D.passport, status: state.pause.paused ? "paused" : "active" };
+    },
+
+    mandates: () => state.mandates,
+    mandate: (hash) => {
+      const m = state.mandates.find((x) => x.mandateHash.toLowerCase() === hash.toLowerCase());
+      if (!m) throw notFound("Mandate");
+      return m;
+    },
+    compileMandate: async (req) => {
+      await wait(450);
+      const draft = compileSample(req.text, req.jurisdiction);
+      state.drafts.set(draft.draftId, draft);
+      return draft;
+    },
+    requestSeal: async (draft) => {
+      await wait(200);
+      if (!state.drafts.has(draft.draftId)) throw new ApiRequestError("The draft expired. Compile again.", 410, "draft_expired");
+      return signingRequest("seal", draft.wire as TypedData, { draftId: draft.draftId });
+    },
+    budgets: () => D.budgets,
+
+    ask: async (req) => {
+      await wait(700);
+      let d = simulateDecision(req.text);
+      if (state.pause.paused) {
+        d = {
+          ...d,
+          tier: "T4",
+          outcome: "refused",
+          scales: d.scales.map((s) =>
+            s.scale === "policy"
+              ? { ...s, status: "stopped", error: "Paused", reason: "Ying is paused. Nothing moves until you resume with your passkey." }
+              : ["normalise", "sentinel", "quarantine", "ground"].includes(s.scale)
+                ? s
+                : { ...s, status: "skipped", error: null, reason: null, revert: null, durationMs: null },
+          ),
+          explanation: "Ying is paused, so the request was refused before anything was signed.",
+          aigc: null,
+        };
+      }
+      state.decisions.set(d.proposalId, d);
+      return d;
+    },
+    execute: async (proposalId) => {
+      await wait(900);
+      const d = state.decisions.get(proposalId);
+      if (!d || d.outcome !== "executable") throw new ApiRequestError("Only T0 and T1 proposals can be executed by the agent.", 409, "not_executable");
+      return newReceipt({
+        summary: d.intent.summary,
+        tier: d.tier,
+        outcome: "pending",
+        payeeName: d.intent.payeeName,
+        amount: d.intent.amount,
+        category: d.intent.category,
+        explanation: d.explanation,
+      });
+    },
+    receipts: (opts = {}) => ({ items: state.receipts.slice(0, opts.limit ?? 50), nextCursor: null }),
+    receipt: (id) => {
+      const r = state.receipts.find((x) => x.receiptId.toLowerCase() === id.toLowerCase());
+      if (!r) throw notFound("Receipt");
+      return r;
+    },
+    receiptProof: (id) => {
+      const p = D.proofFor(id);
+      if (!p) throw new ApiRequestError("This receipt is not anchored yet.", 409, "not_anchored");
+      return p;
+    },
+
+    findReceiptByTx: async (txHash) => state.receipts.find((r) => r.txHash?.toLowerCase() === txHash.toLowerCase()) ?? null,
+    agentReceipts: (agentId) => state.receipts.filter((r) => r.agentId === agentId).slice(0, 10),
+
+    approvals: () => state.approvals.filter((a) => a.status === "pending"),
+    approval: (id) => {
+      const a = state.approvals.find((x) => x.id === id);
+      if (!a) throw notFound("Approval request");
+      return a;
+    },
+    submitSignature: async (requestId, sig) => {
+      await wait(800);
+      if (!sig.signature || sig.signature === "0x") throw new ApiRequestError("A passkey signature is required.", 400, "signature_required", "CoSignRequired");
+      // T2 approvals
+      const a = state.approvals.find((x) => x.id === requestId);
+      if (a) {
+        a.status = "approved";
+        const receipt = newReceipt({
+          summary: `${a.decoded?.method.startsWith("deposit") ? "Escrow deposit" : "Payment"} to ${a.decoded?.payee?.name ?? "payee"}`,
+          tier: "T2",
+          outcome: "pending",
+          payeeName: a.decoded?.payee?.name ?? null,
+          amount: a.decoded?.amount ?? null,
+          category: a.id === "apr-tuition" ? "tuition" : "study",
+          explanation: a.explanation ?? "",
+        });
+        return { approval: a, receipt };
+      }
+      const req = state.signing.get(requestId);
+      if (!req) throw notFound("Signing request");
+      state.signing.delete(requestId);
+      const asApproval = (): ApprovalRequest => ({
+        id: req.id,
+        kind: req.kind,
+        status: "approved",
+        expiresAt: req.expiresAt,
+        tier: "T3",
+        ledger: "base-sepolia",
+        chainId: 84532,
+        digest: req.digest,
+        typedData: req.typedData,
+        execution: null,
+        decoded: null,
+        reason: null,
+        explanation: null,
+        aigc: null,
+      });
+      if (req.kind === "seal") {
+        const draft = state.drafts.get(req.context.draftId!);
+        if (!draft) throw new ApiRequestError("The draft expired. Compile again.", 410, "draft_expired");
+        const live = state.mandates.find((m) => m.status === "live");
+        if (live) live.status = "superseded";
+        const mandate: Mandate = {
+          id: `mandate-${draft.draftId}`,
+          mandateHash: draft.mandateHash,
+          delegationHash: draft.delegationHash,
+          version: (live?.version ?? 0) + 1,
+          status: "live",
+          jurisdiction: draft.jurisdiction,
+          title: "Nadia's monthly mandate",
+          ownerName: "Nadia Rahman",
+          agentId: "4127",
+          rules: draft.rules,
+          decodedSentences: draft.roundTrip.map((l) => l.decoded),
+          roundTrip: draft.checks,
+          validity: { notBefore: new Date().toISOString(), notAfter: "2027-01-31T15:59:59.000Z" },
+          sealedAt: new Date().toISOString(),
+          published: [baseTx(`publish:${draft.draftId}`), fiscoTx(`publish:${draft.draftId}`)],
+          supersedes: live?.mandateHash ?? null,
+          sourceText: null,
+          serviceHashRing: null,
+        };
+        state.mandates.unshift(mandate);
+        const receipt = newReceipt({ summary: `Mandate v${mandate.version} sealed and published`, tier: "T3", outcome: "confirmed", txHash: mandate.published[0]!.txHash, mandateHash: mandate.mandateHash, delegationHash: mandate.delegationHash, aigc: null, explanation: "Sealed with your passkey and published on both ledgers." });
+        return { approval: asApproval(), receipt };
+      }
+      if (req.kind === "pause" || req.kind === "resume") {
+        state.pause =
+          req.kind === "pause"
+            ? { paused: true, since: new Date().toISOString(), txs: [baseTx(`trip:${Date.now()}`), fiscoTx(`trip:${Date.now()}`)], measuredMs: null }
+            : { paused: false, since: null, txs: [baseTx(`untrip:${Date.now()}`)], measuredMs: null };
+        return { approval: asApproval(), receipt: null };
+      }
+      if (req.kind === "cosign" && req.context.entityId) {
+        const v = state.treasury[req.context.entityId];
+        const p = v?.proposals.find((x) => x.id === req.context.proposalId);
+        if (v && p) {
+          const next = v.entity.directors.find((d) => !p.signatures.some((s) => s.directorId === d.id));
+          if (next) p.signatures.push({ directorId: next.id, signedAt: new Date().toISOString() });
+          if (p.signatures.length >= v.entity.threshold) {
+            p.status = "executed";
+            p.tx = fiscoTx(`prop:${p.id}`);
+          }
+        }
+        return { approval: asApproval(), receipt: null };
+      }
+      return { approval: asApproval(), receipt: null };
+    },
+    demoSign: async (requestId) => {
+      // Fixtures: the "scripted passkey" path behaves like a sample signature.
+      return (await createFixtureApiSubmit(requestId));
+    },
+    attack: async (req) => {
+      await wait(900);
+      const decision = simulateDecision(`Hijacked agent: pay ${req.amount} ${req.symbol} to ${req.to}`, { bypass: true });
+      const stop = decision.scales.find((s) => s.status === "stopped");
+      const receipt = newReceipt({
+        summary: `Raw redemption to ${req.to.slice(0, 10)}\u2026 (${req.family})`,
+        tier: "T4",
+        outcome: "reverted",
+        revertError: stop?.error ?? "PayeeNotVerified",
+        txHash: stop?.revert?.txHash ?? h(`tx:attack:${Date.now()}`),
+        aigc: null,
+        explanation: "A hijacked agent key sent a raw redemption straight to the chain. The caveat enforcers reverted it; nothing moved.",
+      });
+      return { decision, receipt };
+    },
+    declineApproval: async (id) => {
+      await wait(400);
+      const a = state.approvals.find((x) => x.id === id);
+      if (!a) throw notFound("Approval request");
+      a.status = "declined";
+      return a;
+    },
+
+    pauseStatus: () => state.pause,
+    requestPause: async (action) => {
+      await wait(150);
+      return signingRequest(
+        action,
+        killSwitchTypedData({
+          action: action === "pause" ? "Trip" : "Untrip",
+          chainId: 84532,
+          ledgerName: "base-sepolia",
+          verifyingContract: KILL_SWITCH,
+          account: D.NADIA_ACCOUNT,
+          nonce: 3n,
+          deadline: BigInt(Math.floor(Date.now() / 1000) + 300),
+        }),
+        {},
+      );
+    },
+
+    treasuryEntities: () => D.entities,
+    treasury: (entityId) => {
+      const v = state.treasury[entityId];
+      if (!v) throw notFound("Entity");
+      return v;
+    },
+    signBoardProposal: async (entityId, proposalId, directorId) => {
+      await wait(700);
+      const v = state.treasury[entityId];
+      const p = v?.proposals.find((x) => x.id === proposalId);
+      if (!v || !p) throw notFound("Proposal");
+      if (!p.signatures.some((s) => s.directorId === directorId)) p.signatures.push({ directorId, signedAt: new Date().toISOString() });
+      if (p.signatures.length >= v.entity.threshold) {
+        p.status = "executed";
+        p.tx = fiscoTx(`prop:${p.id}`);
+      }
+      return p;
+    },
+
+    tx: async (ledger, hash) => {
+      await wait(150);
+      const r = state.receipts.find((x) => x.txHash?.toLowerCase() === hash.toLowerCase());
+      return {
+        ledger: ledger === "anvil" ? "anvil-bench" : ledger === "fisco" ? "fisco" : "base-sepolia",
+        badge: ledger === "fisco" ? "FISCO BCOS (sample)" : ledger === "anvil" ? "Anvil bench (simulated)" : "Base Sepolia (sample)",
+        chainId: ledger === "fisco" ? 20200 : ledger === "anvil" ? 31337 : 84532,
+        hash,
+        status: r ? (r.outcome === "reverted" ? "reverted" : r.outcome === "confirmed" ? "success" : "pending") : "unknown",
+        blockNumber: r ? "1204580" : null,
+        from: r ? D.YING_WALLET : null,
+        to: r ? D.THKD_TOKEN : null,
+        toName: r ? "DelegationManager" : null,
+        gasUsed: r ? "182400" : null,
+        call: r ? { contract: "DelegationManager", fn: "redeemDelegations", args: ["(sample)"] } : null,
+        events: [],
+        note: "Sample data: fixtures mode does not read a ledger.",
+      };
+    },
+
+    registry: () => state.registry,
+    privateMandate: (agentId) => ({ ...D.privateMandate, agentId }),
+    setHalted: async (agentId, halted) => {
+      await wait(800);
+      const a = state.registry.find((x) => x.agentId === agentId);
+      if (!a) throw notFound("Agent");
+      a.status = halted ? "paused" : "active";
+    },
+
+    challengeSession: () => D.challengeSession,
+    challengeAttempts: () => state.attempts,
+    submitAttempt: async (req) => {
+      await wait(900);
+      const decision = simulateDecision(req.text, { bypass: req.bypass, guest: true });
+      const stop = decision.scales.find((s) => s.status === "stopped" || s.status === "escalated");
+      const attempt: ChallengeAttempt = {
+        id: `att-${Date.now()}`,
+        at: new Date().toISOString(),
+        handle: req.handle?.trim() || "guest",
+        family: attackFamily(req.text, req.bypass),
+        stoppedAt: stop?.scale ?? null,
+        outcome: stop?.revert ? "reverted" : stop?.status === "escalated" ? "escalated" : "refused",
+        error: stop?.error ?? null,
+        revert: stop?.revert ?? null,
+      };
+      state.attempts.unshift(attempt);
+      return { attempt, decision, receipt: null };
+    },
+
+    city: () => D.city,
+    evidence: () => D.evidence,
+  };
+  return api;
+}

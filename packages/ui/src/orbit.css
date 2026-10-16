@@ -1,0 +1,102 @@
+/* Component motion for @yinglong/ui. Every animation here is tied to a state change
+   (docs/MOTION.md). Reduced motion and the page-level "Pause motion" control turn all of it off. */
+
+@property --yl-len {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* Hash Ring: each tick is a unit line; length morphs in place when the hash changes (moment 8, 9). */
+.yl-hr-tick {
+  transform: rotate(var(--yl-a)) translateX(var(--yl-r0)) scaleX(var(--yl-len));
+  transition: --yl-len 420ms cubic-bezier(0.2, 0.7, 0.2, 1), stroke 300ms ease-out;
+}
+.yl-hr-arc {
+  transition:
+    transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    stroke-dasharray 520ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    stroke 300ms ease-out;
+}
+.yl-hr-base {
+  transition: stroke 300ms ease-out;
+}
+.yl-hash-ring--draw .yl-hr-tick {
+  animation: yl-tick-in 640ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 7ms);
+}
+.yl-hash-ring--draw .yl-hr-arc {
+  animation: yl-fade-in 420ms ease-out both;
+  animation-delay: calc(360ms + var(--j) * 32ms);
+}
+@keyframes yl-tick-in {
+  from {
+    --yl-len: 0;
+    opacity: 0;
+  }
+}
+@keyframes yl-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Orbit gauge: the spent arc eases to its new length (moment 12, gauge change). */
+.yl-gauge-arc {
+  transition: stroke-dasharray 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Live status O: the pearl orbits only while the agent is acting. */
+.yl-orbit {
+  animation: yl-orbit 2.4s linear infinite;
+}
+.yl-spin-slow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: yl-orbit 1.6s linear infinite;
+}
+@keyframes yl-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Trace: rows arrive in pipeline order when a new decision lands (moment 15, verdict). */
+.yl-trace--animate .yl-trace-row {
+  animation: yl-row-in 220ms ease-out both;
+  animation-delay: calc(var(--k) * 70ms);
+}
+@keyframes yl-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yl-hr-tick,
+  .yl-hr-arc,
+  .yl-hr-base,
+  .yl-gauge-arc {
+    transition: none;
+  }
+  .yl-hash-ring--draw .yl-hr-tick,
+  .yl-hash-ring--draw .yl-hr-arc,
+  .yl-orbit,
+  .yl-spin-slow,
+  .yl-trace--animate .yl-trace-row {
+    animation: none;
+  }
+}
+:root[data-motion="off"] .yl-hr-tick,
+:root[data-motion="off"] .yl-hr-arc,
+:root[data-motion="off"] .yl-gauge-arc {
+  transition: none;
+}
+:root[data-motion="off"] .yl-hash-ring--draw .yl-hr-tick,
+:root[data-motion="off"] .yl-hash-ring--draw .yl-hr-arc,
+:root[data-motion="off"] .yl-orbit,
+:root[data-motion="off"] .yl-spin-slow,
+:root[data-motion="off"] .yl-trace--animate .yl-trace-row {
+  animation: none;
+}

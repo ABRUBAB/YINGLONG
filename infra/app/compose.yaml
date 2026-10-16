@@ -74,3 +74,8 @@ services:
       - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
       - /opt/yinglong/data/indexer:/data
     depends_on: [agent]
+  web:
+    image: yinglong/web:latest
+    build: { context: ../.., dockerfile: infra/web/Dockerfile }
+    network_mode: host
+    restart: unless-stopped

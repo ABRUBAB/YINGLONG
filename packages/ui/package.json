@@ -1,0 +1,33 @@
+{
+  "name": "@yinglong/ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ORBIT design system for YINGLONG: StateRing, HashRing, OrbitGauge, AuthorityOrbits, CertificateCard, Trace",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./hash-ring": "./src/hash-ring/geometry.ts",
+    "./orbit.css": "./src/orbit.css"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "golden": "tsx test/write-golden.ts"
+  },
+  "dependencies": {
+    "@noble/hashes": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

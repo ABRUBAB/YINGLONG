@@ -1,0 +1,414 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "@yinglong/ui/orbit.css";
+
+@source "../../../packages/ui/src";
+
+/* ORBIT: no default palette, radius, shadow or blur can leak in (master plan 14.2, 14.9). */
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
+  --text-*: initial;
+  --font-*: initial;
+  --animate-*: initial;
+
+  --font-sans: "Geist", "Anek Bangla", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-mono--font-feature-settings: "tnum" 1, "zero" 1;
+  --font-display: "Hubot Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
+
+  /* App scale 11/12/13/15/18/22/26/32 px; display sizes for the landing only. */
+  --text-11: 11px;
+  --text-11--line-height: 16px;
+  --text-12: 12px;
+  --text-12--line-height: 16px;
+  --text-13: 13px;
+  --text-13--line-height: 20px;
+  --text-15: 15px;
+  --text-15--line-height: 22px;
+  --text-18: 18px;
+  --text-18--line-height: 26px;
+  --text-22: 22px;
+  --text-22--line-height: 28px;
+  --text-26: 26px;
+  --text-26--line-height: 32px;
+  --text-32: 32px;
+  --text-32--line-height: 38px;
+  --text-h1: clamp(2.75rem, 1.6rem + 4.5vw, 6rem);
+  --text-h1--line-height: 0.98;
+  --text-h2: clamp(1.75rem, 1.2rem + 2.2vw, 3rem);
+  --text-h2--line-height: 1.05;
+
+  --radius-control: 6px;
+  --radius-card: 10px;
+  --radius-sheet: 14px;
+  --radius-pill: 999px;
+
+  --ease-out-orbit: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@theme inline {
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-line-1: var(--line-1);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
+  --color-fg-faint: var(--fg-faint);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-2: var(--fg-2);
+  --color-fg-1: var(--fg-1);
+  --color-fg-0: var(--fg-0);
+  --color-chrome-0: var(--chrome-0);
+  --color-chrome-1: var(--chrome-1);
+  --color-chrome-2: var(--chrome-2);
+  --color-steel: var(--steel);
+  --color-steel-tint: var(--steel-tint);
+  --color-brass: var(--brass);
+  --color-brass-tint: var(--brass-tint);
+  --color-refused-bg: var(--refused-bg);
+  --color-refused-fg: var(--refused-fg);
+  --color-focus: var(--focus);
+  --color-signature: var(--signature);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+}
+
+/* Fonts: self-hosted, Latin subsets (scripts/build-fonts.py); Anek Bangla only for echoed Bangla input. */
+@font-face {
+  font-family: "Hubot Sans";
+  src: url("/fonts/HubotSans-Latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-stretch: 100% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/Geist-Latin.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Anek Bangla";
+  src: url("/fonts/AnekBangla-Bengali.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0-1CF9, U+200C-200D, U+20B9, U+25CC, U+A8F1;
+}
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-stretch: 120%;
+  font-weight: 560;
+  letter-spacing: -0.012em;
+  font-variant-numeric: normal;
+}
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-stretch: 115%;
+  font-weight: 560;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+@utility measure {
+  max-width: 72ch;
+}
+@utility hairline {
+  border-color: var(--line-1);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    background-color: var(--bg-0);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    min-height: 100dvh;
+    background-color: var(--bg-0);
+    color: var(--fg-1);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 22px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background: var(--fg-1);
+    color: var(--bg-0);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  a {
+    color: inherit;
+  }
+  button,
+  [role="button"],
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  table {
+    border-collapse: collapse;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  /* Grid items may shrink below their content (tables scroll inside their own wrappers). */
+  :where(.grid) > * {
+    min-width: 0;
+  }
+  /* Scroll wrappers contain their absolutely positioned descendants (sr-only captions). */
+  :where(.overflow-x-auto) {
+    position: relative;
+  }
+}
+
+/* Skip link */
+.yl-skip {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  z-index: 100;
+  padding: 8px 12px;
+  border-radius: var(--radius-control);
+  background: var(--fg-1);
+  color: var(--bg-0);
+  font-weight: 500;
+}
+.yl-skip:focus {
+  top: 12px;
+}
+
+/* Hairline data tables: dense, right-aligned mono amounts (master plan 14.5). */
+.yl-table {
+  width: 100%;
+  font-size: 13px;
+  line-height: 20px;
+}
+.yl-table th {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-2);
+  color: var(--fg-muted);
+  font-weight: 500;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+.yl-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line-1);
+  vertical-align: middle;
+}
+.yl-table th:first-child,
+.yl-table td:first-child {
+  padding-left: 0;
+}
+.yl-table th:last-child,
+.yl-table td:last-child {
+  padding-right: 0;
+}
+.yl-table tbody tr {
+  transition: background-color 120ms ease-out;
+}
+.yl-table tbody tr:hover {
+  background: color-mix(in oklab, var(--bg-3) 55%, transparent);
+}
+.yl-table .num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
+  white-space: nowrap;
+}
+
+/* Landing: CSS scroll-driven reveals with a static fallback (docs/MOTION.md, moment 2). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion="off"]) .yl-reveal {
+      animation: yl-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 28%;
+    }
+    :root:not([data-motion="off"]) .yl-verbs-ring-progress {
+      animation: yl-ring-progress linear both;
+      animation-timeline: --yl-verbs;
+      animation-range: contain 0% contain 100%;
+    }
+    :root:not([data-motion="off"]) .yl-verb {
+      animation: yl-verb linear both;
+      animation-timeline: view();
+      animation-range: cover 30% cover 70%;
+    }
+  }
+}
+.yl-verbs-scope {
+  view-timeline-name: --yl-verbs;
+}
+@keyframes yl-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@keyframes yl-ring-progress {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes yl-verb {
+  0% {
+    color: var(--fg-muted);
+  }
+  35%,
+  65% {
+    color: var(--fg-0);
+  }
+  100% {
+    color: var(--fg-muted);
+  }
+}
+
+/* Sheets and drawers (Base UI) */
+.yl-backdrop {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in oklab, var(--bg-0) 72%, transparent);
+  transition: opacity 200ms ease-out;
+}
+.yl-backdrop[data-starting-style],
+.yl-backdrop[data-ending-style] {
+  opacity: 0;
+}
+.yl-drawer {
+  transition:
+    transform 260ms var(--ease-out-orbit),
+    opacity 200ms ease-out;
+}
+.yl-drawer[data-starting-style],
+.yl-drawer[data-ending-style] {
+  transform: translateX(24px);
+  opacity: 0;
+}
+.yl-dialog {
+  transition:
+    transform 220ms var(--ease-out-orbit),
+    opacity 180ms ease-out;
+}
+.yl-dialog[data-starting-style],
+.yl-dialog[data-ending-style] {
+  transform: scale(0.98);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+  .yl-drawer,
+  .yl-dialog,
+  .yl-backdrop {
+    transition: none;
+  }
+}
+:root[data-motion="off"] .yl-drawer,
+:root[data-motion="off"] .yl-dialog {
+  transition: none;
+}
+
+/* Route changes: a short crossfade; the Hash Ring morphs between console and studio (docs/MOTION.md, moment 9). */
+::view-transition-group(*) {
+  animation-duration: 260ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 200ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+:root[data-motion="off"]::view-transition-group(*),
+:root[data-motion="off"]::view-transition-old(*),
+:root[data-motion="off"]::view-transition-new(*) {
+  animation: none !important;
+}
+
+/* Print: /proof prints A4 in the light theme (tokens.css switches the palette under @media print). */
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    color: var(--fg-1);
+    font-size: 10.5pt;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-break {
+    break-before: page;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--fg-muted);
+    word-break: break-all;
+  }
+  .yl-certificate {
+    break-inside: avoid;
+  }
+}
