@@ -206,6 +206,8 @@ async function main() {
     if (!sim.ok) throw new Error(`${p.label}: simulation reverted ${sim.revert.message}`);
     const tx = await send(data);
     if (!tx.ok) throw new Error(`${p.label}: transaction ${tx.hash} reverted: ${(await replay(tx.hash))?.message}`);
+    // Read balances and the commitment only once the node we read from has the block (load-balanced public RPCs).
+    await ctx.awaitHead(BigInt(tx.block));
     const after = await ctx.read<bigint>({ address: tHKD, abi: abi.TestUnitsAbi, functionName: "balanceOf", args: [p.payee] });
     const stored = await ctx.read<Hex>({ address: enforcer, abi: ZKMandateEnforcerAbi, functionName: "runningCommitment", args: [dm, dh] });
     running = proof.newRunning;

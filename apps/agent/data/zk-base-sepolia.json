@@ -143,11 +143,12 @@
       "gasUsed": "4117616",
       "gasLimit": "5396901",
       "block": "48180694",
-      "received": "0",
+      "received": "4000000000",
       "oldRunningCommitment": "0x0b63a53787021a4a962a452c2921b3663aff1ffd8d5510540f8e659e782956f1",
       "newRunningCommitment": "0x292bacfb86ea657b2eb815ce2029043a16e071126db40773d57d3a30b9f7301c",
-      "storedCommitmentMatches": false,
-      "explorer": "https://sepolia.basescan.org/tx/0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f"
+      "storedCommitmentMatches": true,
+      "explorer": "https://sepolia.basescan.org/tx/0xea27417745a05233ef384b6a5aff3e4705fc63dcbcc62bb2591510264b66089f",
+      "rereadFromChain": "received from the receipt's Transfer event; commitment read at the payment's block"
     },
     {
       "label": "course fee to the HBU bursar",
@@ -162,11 +163,12 @@
       "gasUsed": "4117650",
       "gasLimit": "5396946",
       "block": "48180697",
-      "received": "0",
+      "received": "3500000000",
       "oldRunningCommitment": "0x292bacfb86ea657b2eb815ce2029043a16e071126db40773d57d3a30b9f7301c",
       "newRunningCommitment": "0x2c1a608838e7258d28932e2a315f1313630ef1c5764bb03e48c4419d5a62a251",
-      "storedCommitmentMatches": false,
-      "explorer": "https://sepolia.basescan.org/tx/0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df"
+      "storedCommitmentMatches": true,
+      "explorer": "https://sepolia.basescan.org/tx/0xdd6ddd4cacd1b49bffe39a69f9d24ff2a64440942e1b8584281deb22bb21a5df",
+      "rereadFromChain": "received from the receipt's Transfer event; commitment read at the payment's block"
     }
   ],
   "overCap": {
