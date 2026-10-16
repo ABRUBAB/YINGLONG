@@ -103,6 +103,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
   const st = stateOf(id);
   const cfg = config(id);
   const ctx = ledgerContext(st.ledger);
+  await ctx.freshHead();
   const m = st.mandate as Mandate;
   const scales: ScaleReport[] = [];
   const handles = new HandleStore();
@@ -759,6 +760,7 @@ export function declineApproval(approvalId: string): ApprovalRequest {
 export async function hijack(id: PrincipalId, args: { to: Address; amount: bigint; symbol: "tHKD" | "tUSD" | "CNY"; family: string }): Promise<{ proposal: Proposal; receipt?: ReceiptRecord }> {
   const st = stateOf(id);
   const ctx = ledgerContext(st.ledger);
+  await ctx.freshHead();
   const m = st.mandate as Mandate;
   const contract = SYMBOL_TO_CONTRACT[args.symbol]!;
   const asset = ctx.addr(contract);
@@ -837,6 +839,7 @@ export async function execute(proposalId: string, opts: { delegation?: Delegatio
   if (!allowed) throw new Error(`a ${p.tier} proposal cannot be executed by the agent`);
   const st = stateOf(p.principal);
   const ctx = ledgerContext(st.ledger);
+  await ctx.freshHead();
   const calldata = redeemCallData([opts.delegation ?? st.delegation!], p.execution!);
   const txHash = await signerRedeem(st.ledger, config(p.principal).agentRole, calldata, { tier: p.tier === "ASK" ? "T2" : p.tier, proposalId, approved: !!opts.approvalSig }, "normal", st.account);
   const rcpt = await ctx.pub.waitForTransactionReceipt({ hash: txHash, timeout: 120_000 });
@@ -858,6 +861,7 @@ export async function bypass(proposalId: string): Promise<ReceiptRecord> {
   if (p.tier !== "T4") throw new Error("bypass only demonstrates refusals (T4)");
   const st = stateOf(p.principal);
   const ctx = ledgerContext(st.ledger);
+  await ctx.freshHead();
   const txHash = await signerRedeem(st.ledger, config(p.principal).agentRole, p.calldata, { tier: "T4", proposalId }, "chain-test", st.account);
   const rcpt = await ctx.pub.waitForTransactionReceipt({ hash: txHash, timeout: 120_000 });
   const revert = rcpt.status === "success" ? undefined : await replayRevert(ctx, txHash);

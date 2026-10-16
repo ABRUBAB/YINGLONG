@@ -47,9 +47,35 @@ export class LedgerContext {
    * minutes old; an expiry computed from it alone could already be in the past when the transaction is mined.
    */
   async now(): Promise<bigint> {
+    await this.freshHead();
     const head = (await this.pub.getBlock()).timestamp;
     const wall = this.profile.timeUnit === "ms" ? BigInt(Date.now()) : BigInt(Math.floor(Date.now() / 1000));
     return head > wall ? head : wall;
+  }
+
+  private ticking?: Promise<void>;
+
+  /**
+   * FISCO BCOS seals blocks only on demand, and its eth_call runs at the head block's timestamp. Before a
+   * time-sensitive step (an approval expiry, a child delegation's two-minute window, a simulation), make sure the
+   * head block is at most `maxAgeSeconds` old by sending a zero-value liveness transaction (gas is free on FISCO)
+   * from the guardian role, which never moves value. Other ledgers produce blocks on their own: no-op there.
+   */
+  async freshHead(maxAgeSeconds = 20): Promise<void> {
+    if (this.name !== "fisco") return;
+    if (this.ticking) return this.ticking;
+    this.ticking = (async () => {
+      const unit = this.profile.timeUnit === "ms" ? 1000n : 1n;
+      const head = (await this.pub.getBlock()).timestamp;
+      const wall = this.profile.timeUnit === "ms" ? BigInt(Date.now()) : BigInt(Math.floor(Date.now() / 1000));
+      if (wall - head <= BigInt(maxAgeSeconds) * unit) return;
+      const w = this.wallet("guardian");
+      const hash = await w.sendTransaction({ to: w.account!.address, value: 0n, chain: this.chain, account: w.account!, ...this.txOpts() } as never);
+      await this.pub.waitForTransactionReceipt({ hash, timeout: 60_000 });
+    })().finally(() => {
+      this.ticking = undefined;
+    });
+    return this.ticking;
   }
 
   addr(name: keyof Deployment["contracts"]): Address {
