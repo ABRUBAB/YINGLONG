@@ -18,11 +18,12 @@
 | Base URL | `https://api.yinglong-agent.tech`; locally `http://127.0.0.1:8787` (`AGENT_PORT`, `AGENT_HOST`) |
 | Format | JSON in and out. Responses pass through `apiJson` (`apps/agent/src/store.ts`): bigints become decimal strings |
 | Version | `GET /v1/health` returns the service version string |
-| Principal ids | The ids in `PRINCIPALS` (`apps/agent/src/world.ts`), for example `nadia` (person), `lotus-sz` (company, coin-free rail) and `guest` (Judge's Challenge); routes with `:id` answer 404 `{"ok": false, "error": "unknown principal"}` for any other id |
+| Principal ids | The ids in `PRINCIPALS` (`apps/agent/src/world.ts`), for example `nadia` (person), `lotus-sz` (company, coin-free rail) and `guest` (Judge's Challenge), plus `v-<10 hex>` for each visitor who signed up with their own passkey (section 3.8); routes with `:id` answer 404 `{"ok": false, "error": "unknown principal"}` for any other id |
 | Ledger names | `anvil` (local bench, simulated), `base-sepolia` (public testnet), `fisco` (team-run FISCO BCOS); every hash-bearing object carries `ledger` and, where shown, `ledgerBadge` |
-| Operator token | Header `x-admin-token`, compared with `AGENT_ADMIN_TOKEN` or the file named by `AGENT_ADMIN_TOKEN_FILE`. It is required for POST requests whose path ends in `/board-proposals`, `/sign`, `/onboard`, `/execute`, `/demo-sign`, `/attack`, `/bypass` or `/decline`. If no token is configured, these routes are open (development only); the VM deployment mounts one (`infra/app/compose.yaml`) |
-| Rate limit | Per client IP (first `X-Forwarded-For` entry), `RATE_LIMIT_PER_MIN` requests per minute (default 60); over the limit: 429 `{"ok": false, "error": "rate limit"}` |
-| CORS | Any origin is reflected; methods GET and POST; only the `Content-Type` request header is allowed cross-origin, so browsers cannot send the operator token |
+| Operator token | Header `x-admin-token`, compared with `AGENT_ADMIN_TOKEN` or the file named by `AGENT_ADMIN_TOKEN_FILE`. It is required for POST requests whose path ends in `/board-proposals`, `/sign`, `/onboard`, `/execute`, `/demo-sign`, `/attack`, `/bypass` or `/decline`, except that a visitor's session token (below) opens `execute`, `bypass`, `decline` and `attack` for that visitor's own proposals, approvals and account. If no token is configured, these routes are open (development only); the VM deployment mounts one (`infra/app/compose.yaml`) |
+| Visitor token | Header `x-visitor-token`: returned by `POST /v1/visitors`, valid only after the visitor's passkey has sealed the mandate (`POST /v1/visitors/:id/seal`); it also allows `autoExecute` on that visitor's `ask` |
+| Rate limit | Per client IP (first `X-Forwarded-For` entry), `RATE_LIMIT_PER_MIN` requests per minute (default 60); over the limit: 429 `{"ok": false, "error": "rate limit"}`. Requests with a valid operator token are not limited. Visitor sign-ups: at most `VISITORS_PER_HOUR` (default 30) per hour in total |
+| CORS | Any origin is reflected; methods GET and POST; request headers `Content-Type` and `x-visitor-token` are allowed cross-origin, so browsers cannot send the operator token |
 | Errors | Any thrown error: HTTP 400 `{"ok": false, "error": "<message>"}`; zod validation failures put the issue list in `error` |
 
 Auth column below: **public**, **operator** (needs `x-admin-token`), or **public, passkey-gated** (anyone may call, but nothing happens on-chain without a valid signature from the principal's account).
@@ -287,6 +288,14 @@ Same as pause with `Untrip`; only the account itself can resume. Response: `{app
 curl -s -X POST https://api.yinglong-agent.tech/v1/principals/nadia/resume
 ```
 
+#### `POST /v1/principals/:id/revoke`: public, passkey-gated
+
+Builds one user operation from the principal's own account that calls `MandateRegistry.revoke(mandateHash)` and `DelegationManager.disableDelegation(rootDelegation)`. Response: `{approvalId, approval}` with `approval.kind = "revoke"`, `approval.typedData` the `PackedUserOperation` under the account's DeleGatorCore EIP-712 domain (`HybridDeleGator` or `MultiSigDeleGator`, version `1`, the account as verifying contract) and `approval.digest` its hash. Submitting the signature through `POST /v1/approvals/:id/signature` sends the operation straight to the EntryPoint and writes a T3 receipt with the confirmation time. After a revoke every redemption fails (`MandateNotLive` in the mirror, `CannotUseADisabledDelegation` on-chain) until a new mandate is sealed. 400 if no mandate is live.
+
+```sh
+curl -s -X POST https://api.yinglong-agent.tech/v1/principals/guest/revoke
+```
+
 #### `POST /v1/approvals/:id/decline`: operator
 
 Marks a pending approval declined, marks its proposal refused and writes a `rejected_policy` receipt. Body: none. Response: `ApprovalRequest`.
@@ -362,6 +371,25 @@ Every receipt that carries a transaction. Response: `{generatedAt, items: [{titl
 
 ```sh
 curl -s https://api.yinglong-agent.tech/v1/evidence
+```
+
+#### `GET /v1/tx/:ledger/:hash`: public
+
+A read-only transaction decoder for ledgers without a public explorer (FISCO BCOS is team-run; every FISCO link in `PROOF.md` points here). `:ledger` is `fisco`, `base-sepolia` or `anvil`; `:hash` is a 32-byte transaction hash. Response:
+
+| Field | Meaning |
+|---|---|
+| `ledger`, `ledgerBadge`, `chainId` | Which ledger answered, with its honest label |
+| `hash`, `status`, `blockNumber`, `from`, `to`, `toName`, `gasUsed` | From the transaction and its receipt; `toName` is the YINGLONG contract name when `to` is one of ours |
+| `call` | `{contract, function, args}` decoded against every exported ABI (for `redeemDelegations` the arguments are summarised) |
+| `events` | Each log decoded against every exported ABI: `{address, addressName, contract, event, args}` (includes child-delegation, budget and pause events) |
+| `revert` | For a failed transaction, the typed error recovered by replay (`{name, message}`) |
+| `note` | On FISCO: reverted transactions carry no revert data, so the reason is recovered by replaying the call against the latest state |
+
+400 on a malformed ledger or hash; 500 if the ledger does not know the hash.
+
+```sh
+curl -s https://api.yinglong-agent.tech/v1/tx/fisco/0x<txHash>
 ```
 
 ### 3.6 Company board (2-of-3 directors)
@@ -447,23 +475,29 @@ curl -s -X POST https://api.yinglong-agent.tech/v1/challenge/attempt \
 
 ---
 
-#### `GET /v1/tx/:ledger/:hash`: public
+### 3.8 Visitors (sign up with your own passkey)
 
-A read-only transaction decoder for ledgers without a public explorer (FISCO BCOS is team-run; every FISCO link in `PROOF.md` points here). `:ledger` is `fisco`, `base-sepolia` or `anvil`; `:hash` is a 32-byte transaction hash. Response:
+A visitor creates a passkey in the browser (WebAuthn, P-256). The server deploys a `HybridDeleGator` account whose only signer is that passkey (owner `address(0)`, no seed phrase), registers a passport for the visitor's own agent wallet (derived at runtime from a testnet key and the visitor id; never stored), mints 1,000 tHKD test units and compiles a small mandate (`visitorMandate` in `packages/mandate/src/scenarios.ts`). Nothing is sealed until the passkey has signed both messages and they verify on-chain. Source: `apps/agent/src/visitors.ts`; end-to-end check: `apps/agent/scripts/visitor-e2e.ts`.
 
-| Field | Meaning |
-|---|---|
-| `ledger`, `ledgerBadge`, `chainId` | Which ledger answered, with its honest label |
-| `hash`, `status`, `blockNumber`, `from`, `to`, `toName`, `gasUsed` | From the transaction and its receipt; `toName` is the YINGLONG contract name when `to` is one of ours |
-| `call` | `{contract, function, args}` decoded against every exported ABI (for `redeemDelegations` the arguments are summarised) |
-| `events` | Each log decoded against every exported ABI: `{address, addressName, contract, event, args}` (includes child-delegation, budget and pause events) |
-| `revert` | For a failed transaction, the typed error recovered by replay (`{name, message}`) |
-| `note` | On FISCO: reverted transactions carry no revert data, so the reason is recovered by replaying the call against the latest state |
+#### `POST /v1/visitors`: public, quota-limited
 
-400 on a malformed ledger or hash; 500 if the ledger does not know the hash.
+| Body field | Type | Rule |
+|---|---|---|
+| `credentialId` | string | The passkey's raw id in base64url (16 to 512 characters); it is the account's key id |
+| `publicKey.x`, `publicKey.y` | hex | The P-256 public key coordinates, 32 bytes each |
+
+Response: `{visitorId, token, account, did, ledger, ledgerBadge, agent: {label, wallet, agentId, identityCode}, mandate: {title, sentences, mandateHash, delegationHash}, requests}`. `requests` holds two signing requests, each `{kind: "seal", step, title, digest, typedData}`: `step: "publish"` is the user operation that writes the payee book, adds the guardians (pause only) and publishes the mandate with its full caveat array; `step: "delegation"` is the root delegation under the DelegationManager domain. The same passkey signing up again gets the same `visitorId`, a new token and new requests (the old mandate is retired in the same operation). The `visitorId` is `v-` plus 10 hex characters of `keccak256(credentialId:x:y)`.
+
+#### `POST /v1/visitors/:id/seal`: visitor token, passkey-gated
+
+Header `x-visitor-token`. Body `{userOpSignature, delegationSignature}`: the account's signatures over the two digests (WebAuthn-encoded, or raw 96-byte P-256 from a software key in scripted runs). The delegation signature is checked through the account's ERC-1271 first; then the user operation is sent to the EntryPoint. Response: `{principal: PrincipalSummary, mandateHash, publishTx}`; `principal.signer` is `passkey (WebAuthn)` or `scripted passkey (software P-256 key)` according to the signature format the account verified. Errors: wrong token, expired sign-up (15 minutes), or a signature that does not verify.
+
+#### `GET /v1/visitors/:id`: public
+
+Response: `{visitorId, account, agentWallet, agentId, createdAt, sealedAt, pending}`.
 
 ```sh
-curl -s https://api.yinglong-agent.tech/v1/tx/fisco/0x<txHash>
+curl -s https://api.yinglong-agent.tech/v1/visitors/v-0123456789
 ```
 
 ## 4. Other paths on the same host
