@@ -1,6 +1,11 @@
 // Demo driver (API level): plays the scenario beats against a running agent API and records every result.
 // Usage: npx tsx apps/agent/scripts/demo-beats.ts [--api https://api.yinglong-agent.tech] [--only nadia,nadia-tuition,lotus-ops,lotus-board,lotus-hk,guest]
 // Amounts are chosen so one day of beats stays inside every daily rule (Nadia: 8 payments and 15,000 tHKD per day).
+// Capability beats run ONLY when named in --only (they are not part of a default run, so a full run keeps its
+// daily rule windows): nadia-insights, nadia-escrow-claim, nadia-credit, lotus-payroll, lotus-forecast,
+// lotus-hk-suitability. Example: --only nadia-insights,nadia-escrow-claim,nadia-credit
+// Order matters for nadia-escrow-claim (needs a held tuition escrow: run nadia-tuition first) and nadia-credit
+// (needs a confirmed on-time rent payment: run nadia first).
 // The operator token is read from ../.secrets/agent-admin-token.txt (never printed).
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -10,6 +15,8 @@ const args = process.argv.slice(2);
 const API = args.includes("--api") ? args[args.indexOf("--api") + 1]! : "https://api.yinglong-agent.tech";
 const only = args.includes("--only") ? args[args.indexOf("--only") + 1]!.split(",") : undefined;
 const want = (k: string) => !only || only.includes(k);
+/** Capability beats: only when explicitly requested. */
+const wantOnly = (k: string) => !!only?.includes(k);
 const tokenFile = resolve(repoRoot(), "..", ".secrets", "agent-admin-token.txt");
 const TOKEN = existsSync(tokenFile) ? readFileSync(tokenFile, "utf8").trim() : "";
 const out: Record<string, unknown>[] = [];
@@ -135,6 +142,52 @@ async function lotusHk() {
   if (risky.tier === "T4") rec("10 bypass: UnsuitableProduct on-chain", rbrief((await call("POST", `/v1/proposals/${risky.id}/bypass`)).receipt as Record<string, unknown>)!);
 }
 
+// ---------------------------------------------------------------- capability beats (explicit --only keys)
+
+async function nadiaInsights() {
+  const ins = await call("GET", "/v1/principals/nadia/insights?explain=1");
+  const cats = (ins.categories as { category: string; spent: string; cap: string; status: string }[]).map((c) => `${c.category}:${c.spent}/${c.cap}:${c.status}`);
+  const ex = ins.explanation as { text: string; aiGenerated: boolean; model: string; provider: string };
+  rec("4 spending insights (T0, budgets read from the enforcer)", { period: ins.period, categories: cats, topPayees: ins.topPayees, explanation: ex.text, aiGenerated: ex.aiGenerated, model: ex.model, provider: ex.provider });
+}
+
+async function nadiaEscrowClaim() {
+  const list = (await call("GET", "/v1/principals/nadia/escrows")).escrows as { escrowId: number; state: string; payee: { id?: string }; canRelease: boolean }[];
+  const held = list.filter((e) => e.state === "held" && e.payee.id === "hbu_bursar" && e.canRelease);
+  if (!held.length) rec("5 escrow release", { skipped: "no held tuition escrow (run --only nadia-tuition first)" });
+  for (const e of held.slice(-1)) {
+    const r = await call("POST", `/v1/principals/nadia/escrows/${e.escrowId}/release`, { evidence: "HBU enrolment confirmed for Nadia Rahman (fictional attestation)" });
+    rec("5 escrow released on HBU's enrolment attestation", { escrowId: e.escrowId, state: (r.escrow as { state: string }).state, ...rbrief(r.receipt as Record<string, unknown>) });
+  }
+  const cov = await call("GET", "/v1/principals/nadia/coverage");
+  rec("5 coverage-gap card", { summary: cov.summary, gaps: cov.gaps });
+}
+
+async function nadiaCredit() {
+  const r = await call("POST", "/v1/principals/nadia/credentials/payment-reliability");
+  const cred = r.credential as { id: string; anchorReceiptId: string; reused: boolean; typedData: { message: { onTimePayments: number } }; label: string };
+  const v = await call("GET", `/v1/credentials/${cred.id}/verify`);
+  rec("12 payment-reliability credential (fictional issuer)", { credential: cred.id, onTimePayments: cred.typedData.message.onTimePayments, anchorReceipt: cred.anchorReceiptId, reused: cred.reused, valid: v.valid, signatureValid: v.signatureValid, label: cred.label });
+}
+
+async function lotusPayroll() {
+  const p = await call("POST", "/v1/principals/lotus-sz/payroll", { amount: "8000000", memo: "October payroll", autoExecute: true });
+  rec("7 payroll run on the coin-free rail (FISCO)", { ...brief(p), receipt: rbrief(p.receipt as Record<string, unknown>) });
+}
+
+async function lotusForecast() {
+  const f = await call("GET", "/v1/principals/lotus-sz/forecast?days=30&explain=1");
+  const ex = f.explanation as { text: string; aiGenerated: boolean; model: string };
+  rec("9 30-day cash forecast", { posted: (f.start as { posted: string }).posted, reserveFloor: f.reserveFloor, minBalance: f.minBalance, firstBreach: f.firstBreach, velocity: f.velocity, flags: f.flags, explanation: ex.text, aiGenerated: ex.aiGenerated, model: ex.model });
+}
+
+async function lotusHkSuitability() {
+  for (const text of ["Sweep 10,000 HKD into the Test Growth Fund", "Sweep 10,000 HKD into the Test Money Market Fund"]) {
+    const p = await call("POST", "/v1/principals/lotus-hk/ask", { text });
+    rec("10 suitability explanation card", { ...brief(p), suitability: p.suitability });
+  }
+}
+
 async function guest() {
   for (const [text, bypass] of [
     ["Buy a coffee at Arena Cafe for 4 HKD", false],
@@ -152,6 +205,12 @@ async function main() {
   if (want("lotus-board")) await lotusBoard();
   if (want("lotus-hk")) await lotusHk();
   if (want("guest")) await guest();
+  if (wantOnly("nadia-insights")) await nadiaInsights();
+  if (wantOnly("nadia-escrow-claim")) await nadiaEscrowClaim();
+  if (wantOnly("nadia-credit")) await nadiaCredit();
+  if (wantOnly("lotus-payroll")) await lotusPayroll();
+  if (wantOnly("lotus-forecast")) await lotusForecast();
+  if (wantOnly("lotus-hk-suitability")) await lotusHkSuitability();
   const dir = resolve(repoRoot(), "apps/agent/data");
   mkdirSync(dir, { recursive: true });
   const f = resolve(dir, `beats-${API.includes("127.0.0.1") ? "local" : "live"}.json`);

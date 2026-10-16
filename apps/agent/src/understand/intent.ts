@@ -98,6 +98,8 @@ export interface UnderstandResult {
   provider: string;
   latencyMs: number;
   promptSha256: string;
+  /** Fields the model left empty that deterministic code filled from the user's own words. */
+  filledByRules?: string[];
 }
 
 // ---------------------------------------------------------------- language detection (script ranges)
@@ -175,14 +177,12 @@ export function ruleParse(text: string, payees: PayeeRef[], defaultUnit: Intent[
   const amount = amt ? { value: `${amt[1]!.replace(/,/g, "")}${amt[2] ? `.${amt[2]}` : ""}`, unit } : null;
 
   const norm = ` ${normaliseName(t)} `;
-  let payee: string | null = null;
-  for (const p of payees) {
-    const label = normaliseName(p.label);
-    const firstWord = label.split(" ")[0]!;
-    if (norm.includes(` ${label} `) || norm.includes(` ${p.id.replace(/_/g, " ")} `) || (firstWord.length > 3 && norm.includes(` ${firstWord} `))) {
-      payee = p.id;
-      break;
-    }
+  // Full label or id first; a first-word match ("Harbour" for Harbour Homes) only when no other payee shares that
+  // word (otherwise "Test Growth Fund" would match "Test Money Market Fund").
+  let payee: string | null = payees.find((p) => norm.includes(` ${normaliseName(p.label)} `) || norm.includes(` ${p.id.replace(/_/g, " ")} `))?.id ?? null;
+  if (!payee) {
+    const first = (p: PayeeRef) => normaliseName(p.label).split(" ")[0]!;
+    payee = payees.find((p) => first(p).length > 3 && norm.includes(` ${first(p)} `) && payees.filter((q) => first(q) === first(p)).length === 1)?.id ?? null;
   }
   let category: Intent["category"] = null;
   for (const [c, re] of CATEGORY_WORDS) {
@@ -215,6 +215,19 @@ export function ruleParse(text: string, payees: PayeeRef[], defaultUnit: Intent[
   };
 }
 
+/**
+ * Small free models sometimes leave the amount empty although the user stated exactly one. Deterministic code may
+ * fill it from the user's own words (the same digits the Ground scale later checks), never from a document and
+ * never when the text holds more than one number or the parser reads a different payee.
+ */
+export function fillFromWords(intent: Intent, text: string, payees: PayeeRef[], defaultUnit: "tHKD" | "tUSD" | "USDC" | "CNY"): { intent: Intent; fields: string[] } {
+  if (intent.amount || !intent.ambiguities.includes("missing_amount")) return { intent, fields: [] };
+  const numbers = text.match(/(?<![\w.])(\d{1,3}(?:,\d{3})+|\d+)(?:\.\d{1,6})?(?![\w])/g) ?? [];
+  const rules = ruleParse(text, payees, defaultUnit);
+  if (numbers.length !== 1 || !rules.amount || (intent.payee && rules.payee && intent.payee !== rules.payee)) return { intent, fields: [] };
+  return { intent: { ...intent, amount: rules.amount, ambiguities: intent.ambiguities.filter((a) => a !== "missing_amount") }, fields: ["amount"] };
+}
+
 /** Understand: grammar-constrained LLM first; deterministic parser if no model answers. */
 export async function understand(text: string, payees: PayeeRef[], defaultUnit: "tHKD" | "tUSD" | "USDC" | "CNY"): Promise<UnderstandResult> {
   const ids = payees.map((p) => p.id);
@@ -237,7 +250,10 @@ export async function understand(text: string, payees: PayeeRef[], defaultUnit: 
       },
     ],
   });
-  if (res) return { intent: res.value, via: "llm", model: res.model, provider: res.provider, latencyMs: res.latencyMs, promptSha256: INTENT_PROMPT_SHA256 };
+  if (res) {
+    const filled = fillFromWords(res.value, text, payees, defaultUnit);
+    return { intent: filled.intent, via: "llm", model: res.model, provider: res.provider, latencyMs: res.latencyMs, promptSha256: INTENT_PROMPT_SHA256, ...(filled.fields.length ? { filledByRules: filled.fields } : {}) };
+  }
   return {
     intent: ruleParse(text, payees, defaultUnit),
     via: "rules",

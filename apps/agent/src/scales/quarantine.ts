@@ -95,7 +95,7 @@ export async function readDocument(
       { role: "user", content: JSON.stringify({ payees: payees.map((p) => ({ id: p.id, label: p.label })), document: text }) },
     ],
   });
-  if (llm) readers.unshift({ name: `LLM reader (${llm.model})`, output: llm.value });
+  if (llm) readers.unshift({ name: `LLM reader (${llm.provider} ${llm.model})`, output: llm.value });
 
   const a = readers[0]!.output;
   const b = readers[readers.length - 1]!.output;
@@ -139,17 +139,18 @@ export async function readImage(store: HandleStore, dataUrl: string, payees: { i
   const readers: { name: string; output: ReaderOutput }[] = [];
   const first = await structured({ schema: ReaderOutput, jsonSchema: READER_SCHEMA, schemaName: "document_fields", messages, models: visionModels(), timeoutMs: 45_000 });
   if (first) {
-    readers.push({ name: `vision reader A (${first.model})`, output: first.value });
-    const family = first.model.split("/")[0];
+    readers.push({ name: `vision reader A (${first.provider} ${first.model})`, output: first.value });
+    // The second reader must come from a different model family (the agreement check is meaningless otherwise).
     const second = await structured({
       schema: ReaderOutput,
       jsonSchema: READER_SCHEMA,
       schemaName: "document_fields",
       messages,
-      models: visionModels().filter((m) => m.split("/")[0] !== family),
+      models: visionModels(),
+      excludeFamilies: [first.family],
       timeoutMs: 45_000,
     });
-    if (second) readers.push({ name: `vision reader B (${second.model})`, output: second.value });
+    if (second) readers.push({ name: `vision reader B (${second.provider} ${second.model})`, output: second.value });
   }
   const flags: string[] = [];
   if (readers.length === 0) flags.push("no vision reader available: the image was not read");

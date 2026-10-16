@@ -19,6 +19,7 @@ import { sentinel, type SentinelResult } from "./scales/sentinel";
 import { DATA_DIR, DocStore } from "./store";
 import { understand, type Intent, type UnderstandResult } from "./understand/intent";
 import { finalTier } from "./tiers";
+import { suitabilityCard, type SuitabilityCard } from "./suitability";
 import { config, nextCosignNonce, principalHandle, stateOf, type PrincipalId, type PrincipalState } from "./world";
 import { resolve } from "node:path";
 
@@ -49,6 +50,8 @@ export interface Proposal {
   simulation?: { ok: boolean; revert?: DecodedRevert; block: string };
   policy?: PolicyDecision;
   counterparty?: CounterpartyResult;
+  /** Sweeps into a product: what the suitability rule checks, read from the ProductRegistry and the sealed caveat. */
+  suitability?: SuitabilityCard;
   answer?: unknown;
   approvalId?: string;
   breaker?: { tripped: boolean; txHash?: Hex; reason: string };
@@ -178,7 +181,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     ledger: st.ledger,
     request: text,
     intent,
-    understanding: { via: u.via, model: u.model, provider: u.provider, latencyMs: u.latencyMs, promptSha256: u.promptSha256 },
+    understanding: { via: u.via, model: u.model, provider: u.provider, latencyMs: u.latencyMs, promptSha256: u.promptSha256, ...(u.filledByRules ? { filledByRules: u.filledByRules } : {}) },
     language: intent.language,
     receiptIds: [] as Hex[],
     createdAt: new Date().toISOString(),
@@ -272,7 +275,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
       const now = Number((await ctx.pub.getBlock()).timestamp);
       const data = encodeAbiParameters(
         [{ type: "address" }, { type: "bytes32" }, { type: "address" }, { type: "uint64" }],
-        [payee.address, keccak256(stringToBytes(`condition:${payee.id}:${intent.conditions.join(",") || "delivery"}`)), attester, BigInt(now + 30 * 86400)],
+        [payee.address, keccak256(stringToBytes(`condition:${payee.id}:${intent.conditions.join(",") || "delivery"}`)), attester, BigInt(now + Number(process.env.ESCROW_REFUND_AFTER_SECONDS ?? 30 * 86400))],
       );
       payment = { asset, recipient: ctx.addr("ProtectedPayment"), beneficiary: payee.address, amount, method: "transferAndCall" };
       execution = singleExecution({ to: asset, data: encodeFunctionData({ abi: abi.TestUnitsAbi, functionName: "transferAndCall", args: [ctx.addr("ProtectedPayment"), amount, data] }) });
@@ -407,6 +410,16 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     question: asked,
   });
 
+  // Suitability explanation card for a sweep into a product (deterministic reads; shown whether approved or refused).
+  let suitability: SuitabilityCard | undefined;
+  if (payment && payee && (intent.kind === "sweep" || payee.category === "treasury")) {
+    try {
+      suitability = await suitabilityCard(ctx, st.delegation!, { id: payee.id, label: payee.label, address: payee.address }, decision);
+    } catch {
+      /* registry unreadable on this ledger: no card */
+    }
+  }
+
   const p: Proposal = {
     ...base,
     plan: buildPlan(intent, method, tier),
@@ -421,6 +434,7 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     simulation,
     policy,
     counterparty: cp,
+    suitability,
     execution,
     calldata,
     status: decision === "execute" ? "open" : decision === "needs_approval" ? "awaiting_approval" : decision === "ask" ? "asked" : "refused",

@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { getAddress, type Address } from "viem";
+import { getAddress, keccak256, stringToBytes, type Address } from "viem";
 import type { LedgerName } from "@yinglong/sdk";
 import { roleAddress, type Role } from "@yinglong/sdk/server";
 import type { Condition, KnownAccount } from "./simulator";
@@ -22,6 +22,9 @@ export interface EcnySimConfig {
 const appRoot = resolve(import.meta.dirname, "..");
 const FEN = (n: number) => (BigInt(n) * 100n).toString(); // 2-decimal CNY instruction units
 
+/** Address of the fictional staff payroll account in the Lotus Lane (Shenzhen) mandate: a label-derived address, no key. */
+export const STAFF_PAYROLL = getAddress(`0x${keccak256(stringToBytes("lotus-lane-payroll")).slice(26)}`) as Address;
+
 function int(v: string | undefined, d: number): number {
   if (!v) return d;
   const n = Number(v);
@@ -42,6 +45,8 @@ export function defaultAccounts(treasurerRole: Role = "agent-treasurer"): KnownA
     { address: roleAddress("svc-shenzhen-components"), label: "Shenzhen Components (fictional supplier)", isPayee: true },
     { address: roleAddress("svc-kowloon-forwarders"), label: "Kowloon Forwarders (fictional)", isPayee: true },
     { address: roleAddress("director-1"), label: "Staff payroll account (fictional)", isPayee: true },
+    // The payroll payee sealed in Lotus Lane's mandate (apps/agent/src/world.ts derives the same address).
+    { address: STAFF_PAYROLL, label: "Staff payroll account (fictional)", isPayee: true },
   ];
 }
 

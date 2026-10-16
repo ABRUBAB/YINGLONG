@@ -15,6 +15,8 @@ const SECRET_PATTERNS = [
   { name: "private key hex", re: /(?:private[_-]?key|PRIVATE_KEY)\s*[:=]\s*["']?0x[0-9a-fA-F]{64}/ },
   { name: "PEM private key", re: /-----BEGIN (?:EC |RSA |OPENSSH )?PRIVATE KEY-----/ },
   { name: "OpenRouter key", re: /sk-or-v1-[0-9a-f]{40,}/ },
+  { name: "Alibaba Cloud DashScope key", re: /sk-ws-[0-9A-Za-z_-]{20,}/ },
+  { name: "API key (sk- prefix)", re: /bsk-[0-9a-f]{32,}b/ },
   { name: "HuggingFace token", re: /\bhf_[A-Za-z0-9]{30,}/ },
   { name: "GitHub token", re: /\bgh[pousr]_[A-Za-z0-9]{36,}/ },
   { name: "mnemonic", re: /\bmnemonic\b\s*[:=]\s*["']\w+(?: \w+){11,23}["']/i },

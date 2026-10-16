@@ -17,8 +17,13 @@ import { explainTx } from "./explorer";
 import { apiJson, DATA_DIR } from "./store";
 import { config, isVisitorId, onboard, PRINCIPALS, visitorStore, world, type PrincipalId, type PrincipalState } from "./world";
 import { registerVisitor, sealVisitor, visitorStatus, visitorTokenOk } from "./visitors";
+import { insightsFor } from "./insights";
+import { coverageFor, listEscrows, NotFound, refundEscrow, releaseEscrow } from "./escrows";
+import { credentialsOf, credentialStore, issuePaymentReliability, parseMessage, verifyCredential } from "./credentials";
+import { forecastFor } from "./forecast";
+import { formatUnits } from "@yinglong/mandate";
 
-const VERSION = "0.9.0";
+const VERSION = "0.10.0";
 const app = new Hono();
 app.use("*", cors({ origin: (o) => o ?? "*", allowMethods: ["GET", "POST"], allowHeaders: ["Content-Type", "x-visitor-token"] }));
 app.onError((err, c) => c.json({ ok: false, error: err.message }, 400));
@@ -47,10 +52,29 @@ app.use("/v1/*", async (c, next) => {
   else if (++h.n > limit) return c.json({ ok: false, error: "rate limit" }, 429);
   await next();
 });
-const PROTECTED = [/\/halt$/, /\/board-proposals$/, /\/sign$/, /\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
+const PROTECTED = [
+  /\/halt$/,
+  /\/board-proposals$/,
+  /\/sign$/,
+  /\/onboard$/,
+  /\/execute$/,
+  /\/demo-sign$/,
+  /\/attack$/,
+  /\/bypass$/,
+  /\/decline$/,
+  /\/escrows\/[^/]+\/(release|refund)$/,
+  /\/credentials\/payment-reliability$/,
+  /\/payroll$/,
+];
 // A visitor (signed up with their own passkey) may drive their own agent: execute, bypass and decline their own
 // proposals and approvals, and run the attack demonstration on their own account. Never anyone else's.
-const VISITOR_OK = [/^\/v1\/proposals\/([^/]+)\/(execute|bypass)$/, /^\/v1\/approvals\/([^/]+)\/decline$/, /^\/v1\/principals\/([^/]+)\/attack$/];
+const VISITOR_OK = [
+  /^\/v1\/proposals\/([^/]+)\/(execute|bypass)$/,
+  /^\/v1\/approvals\/([^/]+)\/decline$/,
+  /^\/v1\/principals\/([^/]+)\/attack$/,
+  /^\/v1\/principals\/([^/]+)\/credentials\/payment-reliability$/,
+  /^\/v1\/principals\/([^/]+)\/escrows\/[^/]+\/refund$/,
+];
 function visitorMayCall(path: string, token: string | undefined): boolean {
   for (const re of VISITOR_OK) {
     const m = path.match(re);
@@ -175,7 +199,8 @@ app.get("/v1/health", async (c) => {
       }
     }),
   );
-  return c.json({ ok: true, version: VERSION, ledgers, models: { intent: providerStatus(), sentinel: { url: !!process.env.SENTINEL_URL } } });
+  const llm = providerStatus();
+  return c.json({ ok: true, version: VERSION, ledgers, providers: { order: llm.order, list: llm.providers }, models: { intent: llm, sentinel: { url: !!process.env.SENTINEL_URL } } });
 });
 
 app.get("/v1/principals", async (c) => {
@@ -486,6 +511,126 @@ app.get("/v1/evidence", (c) => {
   return c.json(apiJson({ generatedAt: new Date().toISOString(), commit: process.env.GIT_COMMIT ?? "", items, contracts }));
 });
 
-const port = Number(process.env.AGENT_PORT ?? 8787);
-serve({ fetch: app.fetch, port, hostname: process.env.AGENT_HOST ?? "127.0.0.1" });
-console.log(`agent API on ${process.env.AGENT_HOST ?? "127.0.0.1"}:${port} (ledgers: ${PRINCIPALS.map((p) => `${p.id}=${p.ledger as LedgerName}`).join(", ")})`);
+// ---------------------------------------------------------------- insights, protection, credentials, treasury
+
+/** A principal id that is known and onboarded (has a sealed mandate), or the 404 error to return. */
+function onboarded(c: { req: { param(k: string): string } }): PrincipalId | { error: string } {
+  const id = c.req.param("id");
+  if (!isPid(id)) return { error: "unknown principal" };
+  if (!world.get().principals[id]?.mandate) return { error: "not onboarded" };
+  return id;
+}
+const flag = (v: string | undefined, d: boolean) => (v === undefined ? d : !["0", "false", "no"].includes(v));
+
+app.get("/v1/principals/:id/insights", async (c) => {
+  const id = onboarded(c);
+  if (typeof id !== "string") return c.json({ ok: false, error: id.error }, 404);
+  return c.json(apiJson(await insightsFor(id, { name: config(id).name, explain: flag(c.req.query("explain"), true) })));
+});
+
+app.get("/v1/principals/:id/escrows", async (c) => {
+  const id = onboarded(c);
+  if (typeof id !== "string") return c.json({ ok: false, error: id.error }, 404);
+  return c.json(apiJson(await listEscrows(id)));
+});
+app.get("/v1/principals/:id/coverage", async (c) => {
+  const id = onboarded(c);
+  if (typeof id !== "string") return c.json({ ok: false, error: id.error }, 404);
+  return c.json(apiJson(await coverageFor(id)));
+});
+for (const kind of ["release", "refund"] as const) {
+  app.post(`/v1/principals/:id/escrows/:escrowId/${kind}`, async (c) => {
+    const id = onboarded(c);
+    if (typeof id !== "string") return c.json({ ok: false, error: id.error }, 404);
+    const escrowId = z.coerce.number().int().min(0).parse(c.req.param("escrowId"));
+    const body = z.object({ evidence: z.string().min(1).max(200).optional() }).parse(await c.req.json().catch(() => ({})));
+    try {
+      const r = kind === "release" ? await releaseEscrow(id, escrowId, body.evidence) : await refundEscrow(id, escrowId);
+      return c.json(apiJson({ escrow: r.escrow, receipt: receiptView(r.receipt) }));
+    } catch (e) {
+      if (e instanceof NotFound) return c.json({ ok: false, error: e.message }, 404);
+      throw e;
+    }
+  });
+}
+
+app.post("/v1/principals/:id/credentials/payment-reliability", async (c) => {
+  const id = onboarded(c);
+  if (typeof id !== "string") return c.json({ ok: false, error: id.error }, 404);
+  const cred = await issuePaymentReliability(id);
+  const verification = await verifyCredential({ chainId: cred.typedData.domain.chainId, message: cred.typedData.message, signature: cred.signature });
+  return c.json(apiJson({ credential: cred, verification }));
+});
+app.get("/v1/principals/:id/credentials", (c) => {
+  const id = c.req.param("id");
+  if (!isPid(id)) return c.json({ ok: false, error: "unknown principal" }, 404);
+  return c.json(apiJson(credentialsOf(id)));
+});
+app.get("/v1/credentials/:hash/verify", async (c) => {
+  const hash = z.string().regex(/^0x[0-9a-fA-F]{64}$/).parse(c.req.param("hash")).toLowerCase();
+  const cred = Object.values(credentialStore.get().credentials).find((x) => x.id.toLowerCase() === hash);
+  if (!cred) return c.json({ ok: false, error: "unknown credential" }, 404);
+  return c.json(apiJson(await verifyCredential({ chainId: cred.typedData.domain.chainId, message: cred.typedData.message, signature: cred.signature })));
+});
+const Num = z.union([z.number().int().nonnegative(), z.string().regex(/^[0-9]{1,20}$/)]);
+app.post("/v1/credentials/verify", async (c) => {
+  const b = z
+    .object({
+      chainId: z.number().int().positive(),
+      message: z.object({
+        subject: z.string().max(200),
+        onTimePayments: Num,
+        periodStart: Num,
+        periodEnd: Num,
+        receiptIds: z.array(z.string().regex(/^0x[0-9a-fA-F]{64}$/)).max(120),
+        issuedAt: Num,
+        statement: z.string().max(200),
+      }),
+      signature: z.string().regex(/^0x[0-9a-fA-F]{130}$/),
+    })
+    .parse(await c.req.json());
+  return c.json(apiJson(await verifyCredential({ chainId: b.chainId, message: parseMessage(b.message), signature: b.signature as Hex })));
+});
+
+app.get("/v1/principals/:id/forecast", async (c) => {
+  const id = onboarded(c);
+  if (typeof id !== "string") return c.json({ ok: false, error: id.error }, 404);
+  const days = z.coerce.number().int().min(1).max(90).parse(c.req.query("days") ?? "30");
+  return c.json(apiJson(await forecastFor(id, { name: config(id).name, days, explain: flag(c.req.query("explain"), false) })));
+});
+
+/** Payroll run on the principal's rail: a canonical request through the same nine scales, signer and receipt. */
+app.post("/v1/principals/:id/payroll", async (c) => {
+  const id = onboarded(c);
+  if (typeof id !== "string") return c.json({ ok: false, error: id.error }, 404);
+  const b = z
+    .object({
+      amount: z.string().regex(/^[1-9][0-9]{0,20}$/),
+      memo: z.string().max(60).regex(/^[A-Za-z ._-]*$/).optional(),
+      autoExecute: z.boolean().optional(),
+    })
+    .parse(await c.req.json());
+  const m = world.get().principals[id]!.mandate as Mandate;
+  const payee = m.payees.find((p) => p.category === "payroll");
+  if (!payee) return c.json({ ok: false, error: "this principal's mandate has no payroll payee" }, 400);
+  const asset = m.assets.find((a) => m.budgets.some((bu) => bu.asset === a.symbol && bu.caps.some((cap) => cap.category === "payroll"))) ?? m.assets[0]!;
+  // The unit word the parser and the model know ("CNY" for a "CNY-instr" style symbol).
+  const unit = asset.symbol.match(/^[A-Za-z]+/)?.[0] ?? asset.symbol;
+  const text = `Pay the ${payee.label} ${formatUnits(BigInt(b.amount), asset.decimals)} ${unit} for payroll${b.memo?.trim() ? ` (${b.memo.trim()})` : ""}`;
+  const p = await ask(id, text);
+  if (b.autoExecute && p.decision === "execute") {
+    const rec = await execute(p.id);
+    return c.json(apiJson({ ...stripInternal(proposals.get().proposals[p.id]!), receipt: receiptView(rec) }));
+  }
+  return c.json(apiJson(stripInternal(p)));
+});
+
+export { app };
+
+// Tests import the app without opening a port.
+if (!process.env.VITEST) {
+  const port = Number(process.env.AGENT_PORT ?? 8787);
+  serve({ fetch: app.fetch, port, hostname: process.env.AGENT_HOST ?? "127.0.0.1" });
+  console.log(`agent API on ${process.env.AGENT_HOST ?? "127.0.0.1"}:${port} (ledgers: ${PRINCIPALS.map((p) => `${p.id}=${p.ledger as LedgerName}`).join(", ")})`);
+}
+
