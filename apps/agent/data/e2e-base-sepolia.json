@@ -1,0 +1,84 @@
+[
+  {
+    "step": "account",
+    "ledger": "base-sepolia",
+    "account": "0x34CF10B03B9E50e80Ff1C45645B3cE24b939437f",
+    "signer": "scripted passkey (software P-256 key)"
+  },
+  {
+    "step": "passport",
+    "ledger": "base-sepolia",
+    "agentId": "1",
+    "attestTxs": [
+      "0xbb43e837d63b20620fb0a9d1db6606b1c88345e762dcb5c62620a96415fc0292"
+    ]
+  },
+  {
+    "step": "mint",
+    "ledger": "base-sepolia",
+    "tx": "0xf48533a600869a3ac0af83c94db18ecbcdae0428b18f0c3519adc39ff2c0fa99",
+    "amount": "20000000000"
+  },
+  {
+    "step": "seal",
+    "ledger": "base-sepolia",
+    "publishTx": "0xc356baed1def52b262943d1e82a9f32dc9e204f7bdb6a9910ac03a9663531658",
+    "mandateHash": "0xd57a2fa90d16b33161a922992a02dcaab00f74cfe310a1b5e5bfc04c2de0b0f8",
+    "delegationHash": "0xf89f65837b1664094845d18f2efa2fe3dd1d5e20a92c7dcc320e11998d9a0b9c",
+    "sealedBy": "scripted passkey (software P-256 key)"
+  },
+  {
+    "step": "T1 rent 9,500 tHKD to Harbour Homes",
+    "ledger": "base-sepolia",
+    "tx": "0x0c1e78fe116f64f58e4cfd7ac3edeaf69d3829f5736c70b6c6824c899e837e66",
+    "ok": true,
+    "explorer": "https://sepolia.basescan.org/tx/0x0c1e78fe116f64f58e4cfd7ac3edeaf69d3829f5736c70b6c6824c899e837e66"
+  },
+  {
+    "step": "T4 simulation",
+    "ledger": "base-sepolia",
+    "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)"
+  },
+  {
+    "step": "T4 raw attack to Mirage reverted on-chain",
+    "ledger": "base-sepolia",
+    "tx": "0x638e6dba2c85d6c2e667f0ffdb4bebb1937f66293a4c7961944a373e25901358",
+    "ok": false,
+    "explorer": "https://sepolia.basescan.org/tx/0x638e6dba2c85d6c2e667f0ffdb4bebb1937f66293a4c7961944a373e25901358"
+  },
+  {
+    "step": "T2 without approval",
+    "ledger": "base-sepolia",
+    "revert": "CoSignRequired(5000000000, 2000000000)"
+  },
+  {
+    "step": "T2 tuition escrow 5,000 tHKD co-signed by passkey",
+    "ledger": "base-sepolia",
+    "tx": "0x94f64cef1b9d2d64cc717cda421185917368292eb36a68c9137008e30db247b8",
+    "ok": true,
+    "explorer": "https://sepolia.basescan.org/tx/0x94f64cef1b9d2d64cc717cda421185917368292eb36a68c9137008e30db247b8"
+  },
+  {
+    "step": "pause (passkey signature relayed)",
+    "ledger": "base-sepolia",
+    "tx": "0x101bf8f49da1382fd8795ef3d58acb5b486515c621faabb52b9c579fb696a865",
+    "ok": true,
+    "msToConfirmed": 2364,
+    "block": "48180063"
+  },
+  {
+    "step": "agent blocked while paused",
+    "ledger": "base-sepolia",
+    "isPaused": true,
+    "block": "48180179",
+    "note": "KillSwitchRegistry.isPaused(account, agent) read at the head; GlobalPauseEnforcer refuses every redemption while it is true"
+  },
+  {
+    "step": "resume (passkey)",
+    "ledger": "base-sepolia",
+    "tx": "0x99dd29c9117abc9dc474294ea3713b8f9a9fba5ca03bb8012711858d333260dc",
+    "ok": true,
+    "msToConfirmed": 5499,
+    "explorer": "https://sepolia.basescan.org/tx/0x99dd29c9117abc9dc474294ea3713b8f9a9fba5ca03bb8012711858d333260dc"
+  }
+]

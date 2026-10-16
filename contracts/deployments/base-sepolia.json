@@ -1,0 +1,198 @@
+{
+  "AccountabilityLedger": {
+    "address": "0xe8ab47FCAeDaa1d709C3591d3a58043545d2Ce71",
+    "codeHash": "0xd6e5a44cd0504c4d3dd27eae1564175e67329c5b7dac7984d727415a526efe79"
+  },
+  "AgentLineageEnforcer": {
+    "address": "0xE42990C2308C71ea3c53907Bf312075028Fbb2E0",
+    "codeHash": "0xd3807e7a283bf4bdb905f47da33c382a590ca158a9d1807cba34d577d879303e"
+  },
+  "AllowedCalldataEnforcer": {
+    "address": "0xE1498aDc6b3b40dfB8321e9C99A75153800c1525",
+    "codeHash": "0x5de09977a5a275de0e101e666dbf87c6ebe2480d67867b6b234d92deabec66fd"
+  },
+  "AllowedMethodsEnforcer": {
+    "address": "0x5025bd3A74C7773da5A9866fCF3d0a2f585f5704",
+    "codeHash": "0x17344b881b76d2434975c15a034670182ce7045df1c1bdea41fec700e85e54c2"
+  },
+  "AllowedTargetsEnforcer": {
+    "address": "0xc810d0CA070909c3FdeDD3a7b162015cD606b51f",
+    "codeHash": "0xe4d2f0b66f717eb1e965e3b1c9fab141892bac911231a55e5420d2cbb7c741f3"
+  },
+  "CategoryBudgetEnforcer": {
+    "address": "0x401fF9f822D1b1475272c090cea964a119F6fd23",
+    "codeHash": "0xe2b29ed37b400d5763f4a06b45a77fd1f356dfa56a0fa0c1b7c606b8eb1e1072"
+  },
+  "CoSignEnforcer": {
+    "address": "0xAfC2bC04bB16DBc42d04c6b4BD99675b163ef2a8",
+    "codeHash": "0xcac545a2bef4f4427b42e53eee1718c36d9688233a0d4870663c43aaddf7ab85"
+  },
+  "ConditionalPaymentInstructions": {
+    "address": "0x2ee94183aD4cE72aee14F83bD15033A698AdBF0C",
+    "codeHash": "0xcb3f598fd0a384b6eaf39fa6332dc8af308b0ca7b32d5f5d82d3b3bbf52f3a3d"
+  },
+  "DelegationManager": {
+    "address": "0xdb9B1e94B5b69Df7e401DDbedE43491141047dB3",
+    "codeHash": "0xa6f025f7bb23ddc0e2546eec56400672c3dfac88c12963bfeb2b5e1121aeee4a"
+  },
+  "ERC20TransferAmountEnforcer": {
+    "address": "0xe23b2b669351Bd7fa2A73d515D0305Fe3114C6c3",
+    "codeHash": "0xf8dfb11de07d9a9e48b4737fca579f67638c482c43c31c6f4daf084d6d727677"
+  },
+  "EntryPoint": {
+    "address": "0x0000000071727De22E5E9d8BAf0edAc6f37da032",
+    "codeHash": "0x8db5ff695839d655407cc8490bb7a5d82337a86a6b39c3f0258aa6c3b582fc58"
+  },
+  "ForbiddenTargetsEnforcer": {
+    "address": "0x28734131bF29Be297C59352C2b23c08932F315A8",
+    "codeHash": "0x9011c8455ef546ba751012ceea833382cd55958125c921824d8e1c12fd7157e0"
+  },
+  "GlobalPauseEnforcer": {
+    "address": "0x8Bd87Eeca3FB1011421a2B8A3445426a23BedC85",
+    "codeHash": "0x146eab35ecd379b884ee3a8738fd137642123c313714ae50409b2d4b882ab9d6"
+  },
+  "HybridDeleGatorImpl": {
+    "address": "0x48dBe696A4D990079e039489bA2053B36E8FFEC4",
+    "codeHash": "0x5c3c6720860eb4ebf2f71bac72c0156d6a41ebf45b4c8323069b6f9f1c6d85d5"
+  },
+  "JurisdictionEnforcer": {
+    "address": "0x565f3eC5983a67a6d207709F6BCf88105e37257E",
+    "codeHash": "0x3c18ad73f732e746093718eea6520b80e311063f7adc6114397c6fb4cd46154c"
+  },
+  "KillSwitchRegistry": {
+    "address": "0x37dC4E452Ade815a8473156811563379eEbea3CF",
+    "codeHash": "0xb35b73d46606b2430a7482a13b80e64a35940711ec43f6400f15a16e3d5eec60"
+  },
+  "LimitedCallsEnforcer": {
+    "address": "0x36B7b16E61bD2976Db2bFe7015D3ec9236374662",
+    "codeHash": "0x3c72628386641c1a7ffc1f8e305251643ac65aa76030ffafea86b38d35862f7a"
+  },
+  "MandateBindingEnforcer": {
+    "address": "0x39D289d8572F07a3f64F4E4d80208CE650766476",
+    "codeHash": "0x20d077292dac232c197e3b90a67f780ed88cb3db7d55c6fe29897c1603ceec7d"
+  },
+  "MandateRegistry": {
+    "address": "0xEEE6c38f9A2bDc58F1cC97Ee5f33746CA959912a",
+    "codeHash": "0xa19baa91fc846b90b32633092ca7e1b911ca5afe38866c57d16a348ae6968805"
+  },
+  "MultiSigDeleGatorImpl": {
+    "address": "0x56a9EdB16a0105eb5a4C54f4C062e2868844f3A7",
+    "codeHash": "0x32549dfc5785741af5c81095c2b1db5ac976658b2ff316477d0a3426d25da4fd"
+  },
+  "NonceEnforcer": {
+    "address": "0x4E0085530E3FE41B183Ca1dcd042399dec7A4DFB",
+    "codeHash": "0x627f5544b6cbf9f4e418f8e6f8b21b0a0017bad203b2bc728719eb9bbb9b49cf"
+  },
+  "PayeeBook": {
+    "address": "0x586B8032Db3b29287D205862C78dC14C69CFdC30",
+    "codeHash": "0xc89074307612cf3598767fe69e7a76efffd89922e85c6fea51c50f144d6eb1b0"
+  },
+  "ProductRegistry": {
+    "address": "0xe9909B519f9F5963422C1650a88A738777d0EAaF",
+    "codeHash": "0xa7af81b390d4ae4ceb35a7983a42cbd530ec9c545b5151c3ed1b38de7d3ee147"
+  },
+  "ProtectedPayment": {
+    "address": "0xF86370F739e571a0F4Afb432e1C12bE6A76fC05b",
+    "codeHash": "0x83ec2ad387318d511b554b798210bcbde77a6206f19be8ccf5fa8de649da15dc"
+  },
+  "RedeemerEnforcer": {
+    "address": "0x1CF85Ef7198B68864431Aec3EFE8F6c54A18947C",
+    "codeHash": "0xc3610e7dee46a9fd9a12a495c16f76fcf54c023110ed81abfd84cc0d0aa1a220"
+  },
+  "ReputationGateEnforcer": {
+    "address": "0xDb48F57DEF3B0faeb4D790479EED2D8eb43755E7",
+    "codeHash": "0xeee353be492a0ceda0ac5caa86293b8c7e8b0049d126cafc27c7a7d1072c7466"
+  },
+  "ReserveFloorEnforcer": {
+    "address": "0xCe848804Adb705b3B4709e048a3Ab101770fa642",
+    "codeHash": "0x5d7aef15a922b63649f6315524ea063b7f340c5884da95919f37a7224d6c826c"
+  },
+  "SignedQuoteSettlement": {
+    "address": "0x7ac856d4257CC0a9A3be8606912e9853b84a97c8",
+    "codeHash": "0x5f349ae3ea4bf7f5aec3385eb30988da0f32a5c6a4b2f1daa598585cc04f8485"
+  },
+  "SimpleFactory": {
+    "address": "0x69Aa2f9fe1572F1B640E1bbc512f5c3a734fc77c",
+    "codeHash": "0x82c94f0735e1e8ea2ffc1df4186cf5d3e28877459f9ff330289b99ea851e5ae9"
+  },
+  "SuitabilityEnforcer": {
+    "address": "0x7D1bb83c30816847CD7ef4436c9a2492468A2125",
+    "codeHash": "0x38732451a588e925d2cda59c0618647586cd0fa41d154f6a357edbde6e9df333"
+  },
+  "TestGrowthFund": {
+    "address": "0xf3792671423A1ef50a45c7d68F86768F0AA040F3",
+    "codeHash": "0x186478b25bec430d5278614579ed449cf24c34a1f152777de9a4541f4073f098"
+  },
+  "TestHKD": {
+    "address": "0xA77e5C328A29b29dB6df21d0C479E0B01A53e558",
+    "codeHash": "0x77ef8498fa74a7cbb1ea71ab1cb105a5e0d415fb2ddaa75c8fcd90db8d7b541a"
+  },
+  "TestMoneyMarketFund": {
+    "address": "0xCD901317f70459f4bCc8FAE0d0d4503bb9D53629",
+    "codeHash": "0x186478b25bec430d5278614579ed449cf24c34a1f152777de9a4541f4073f098"
+  },
+  "TestUSD": {
+    "address": "0xC313B762639e6492549F55D2fD1B5079fcCD65b6",
+    "codeHash": "0x77ef8498fa74a7cbb1ea71ab1cb105a5e0d415fb2ddaa75c8fcd90db8d7b541a"
+  },
+  "TimestampEnforcer": {
+    "address": "0xdD08Ffa06fDCCf17b3E3Be6bd3cEe55ce46b89F7",
+    "codeHash": "0xfca9d56e17358a33cfd86a7ee397301b3779716a8d0945467f7855dff7945324"
+  },
+  "ValueLteEnforcer": {
+    "address": "0x05282A658456a1444CE458d9F8bcb6D884E69f26",
+    "codeHash": "0x8b8a23e180523c303f6f9c7344b8b749f5eec647a2f7d654ec1b158b9768018e"
+  },
+  "VelocityEnforcer": {
+    "address": "0xf936387f3aA038fEd260a0F701A7209961a47b68",
+    "codeHash": "0x57816b708ba6b0414e9f2f2430f40bc241ea2fccf7c449a6be10fe253816a707"
+  },
+  "VerifiedPayeeEnforcer": {
+    "address": "0x1ee0B76ed92a5d176B1d5512C36bF4AC192aF21E",
+    "codeHash": "0x96dcfc1e152bd1ca0e9397ddd9618f573ef9eee83e34ce550a322660c23b004d"
+  },
+  "VetoTimelockEnforcer": {
+    "address": "0x2226D5508f5c6D3A24cD15Be35d4F5Df43583846",
+    "codeHash": "0xdf2c8aa906f46a6648de08e53fd51da93f7d8318156c5ae3bd6279badec69941"
+  },
+  "YinglongCreate2Deployer": {
+    "address": "0xaBc4B99D759A06781BAFB096c65c2dB30beb073c",
+    "codeHash": "0x091792f1c4eb33338a1e6bf2fefa2e053c3407145b1c979307fa1acf6a4c3cae"
+  },
+  "YinglongPassportRegistry": {
+    "address": "0x7294e099207EB8139f25e7fcFFAba9287EcE4Dd2",
+    "codeHash": "0x19328c627f7baf92f2a890d76443e09d0d87b7fcddef3724400c84b850932e1c"
+  },
+  "chainId": 84532,
+  "deployedAtBlock": 48179906,
+  "deployer": "0x5C470480380dC2014898345aC6226c67cbF5E407",
+  "domainSalt": "0x840a9ca58674da63ba833d1b6eedce0faca86ef17c6bcf82200fa6562d08b76c",
+  "frameworkMode": "existing",
+  "ledger": "base-sepolia",
+  "ZKRelationsLib": {
+    "address": "0x9c3991417507f236e77469b6513ad45f8df36549",
+    "codeHash": "0x08ce30efbb4d7d2cb642e98205aba6925877e3b23b58d18c1d40d2637842d9d5",
+    "txHash": "0xa8096cbe05b6e9268930f05efd79dfed9d24c130d9af8b76cb3e2b46e2ce3edc"
+  },
+  "ZKTranscriptLib": {
+    "address": "0xf0183445ddee055a2d66b96191295567e90a536d",
+    "codeHash": "0x48c2d78616f52811f1328432cf0ad4b2e2e86f53b107c37c642ba690de13ce33",
+    "txHash": "0x6921813e687e6a4a4bbdc99d0a51bef7240557b12cba8c88fd0d047e0c2556c8"
+  },
+  "HonkVerifier": {
+    "address": "0x281f32486d69fe6a5c38906430965c73238f55c6",
+    "codeHash": "0xca8be9c0fcac68fd4bb3f882433b51d3db0d0440573d578c025d085aa88334df",
+    "txHash": "0x10082a2bba42dc638f19f5269de0a1671b7e802de70ddbc7a076ee97d0e73ba6"
+  },
+  "ZKVerifierRouter": {
+    "address": "0x3f8f6975e51c638161ca1d88d89d878129d6e080",
+    "codeHash": "0x2fdd97fd3156db1895dac164f978144ba67c44277b9e8a3927b2303ba8872a82",
+    "txHash": "0xbef854b5bbee15aa45af1bd81977c4987f9124b15a819721689462cfe54c022e"
+  },
+  "ZKMandateEnforcer": {
+    "address": "0xf5175d7755c009702069c7eef85fc0c41bc8c423",
+    "codeHash": "0x6967465c90c35cb3dd6a2b47ee6a6c6e33b19e46dc271f35472b516fc3cc1fe6",
+    "txHash": "0xf25fe04bbe9602d82d72d9234fe3cf20d0a3a8a3a71f6c4b76804bfde3184c7d"
+  },
+  "zkRegisterVerifierTx": "0xe6241bc7eed2d3bcc71d51adac3958e6ed5dcf5160f6091ba4bf7376ea630579"
+}
