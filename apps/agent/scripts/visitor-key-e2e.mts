@@ -20,6 +20,9 @@ const pub = reg.requests.find((r: { step: string }) => r.step === "publish");
 const del = reg.requests.find((r: { step: string }) => r.step === "delegation");
 const sealed = await post(`/v1/visitors/${reg.visitorId}/seal`, { userOpSignature: await sig(pub.digest), delegationSignature: await sig(del.digest) }, reg.token);
 console.log("sealed", sealed.principal.signer, sealed.publishTx.slice(0, 12));
+// Anyone can start a sign-up with a public owner address: it must not reset the sealed account.
+const hijack = await post("/v1/visitors", { owner: acct.address });
+console.log("re-registration by a stranger leaves the account sealed", hijack.visitorId === reg.visitorId);
 const ch = await post("/v1/visitors/login/challenge", {});
 const td = { ...ch.typedData, message: { nonce: ch.typedData.message.nonce, issuedAt: BigInt(ch.typedData.message.issuedAt) } };
 const digest = hashTypedData(td);

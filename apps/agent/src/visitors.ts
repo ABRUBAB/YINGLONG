@@ -34,6 +34,8 @@ interface PendingSeal {
   opDigest: Hex;
   delegationDigest: Hex;
   expires: number;
+  /** The record this sign-up writes once its seal verifies (held here so a sealed account is never reset early). */
+  record: VisitorRecord;
 }
 const pending = new Map<string, PendingSeal>();
 const created: number[] = [];
@@ -155,11 +157,15 @@ export async function registerVisitor(args: { credentialId?: string; x?: Hex; y?
     createdAt: new Date().toISOString(),
     sealedAt: visitorStore.get().visitors[id]?.sealedAt,
   };
-  // A re-registration (same passkey) gets a new token, valid only after it seals again with that passkey.
-  visitorStore.update((d) => {
-    d.visitors[id] = { ...rec, sealedAt: undefined };
-  });
-  pending.set(id, { op, mandate, compiled, delegation, opDigest, delegationDigest, expires: Date.now() + 15 * 60_000 });
+  // A re-registration (same key) gets a new token, valid only after it seals again with that key. The key's public
+  // half is public, so anyone could start one: a sealed account's stored record and session stay untouched until
+  // the new seal verifies on the account itself; only a never-sealed record is replaced at once.
+  if (!visitorStore.get().visitors[id]?.sealedAt) {
+    visitorStore.update((d) => {
+      d.visitors[id] = { ...rec, sealedAt: undefined };
+    });
+  }
+  pending.set(id, { op, mandate, compiled, delegation, opDigest, delegationDigest, expires: Date.now() + 15 * 60_000, record: { ...rec, sealedAt: undefined } });
   created.push(now0);
 
   return {
@@ -189,10 +195,11 @@ export async function registerVisitor(args: { credentialId?: string; x?: Hex; y?
 }
 
 export async function sealVisitor(id: string, token: string | undefined, sigs: { userOpSignature: Hex; delegationSignature: Hex }): Promise<PrincipalState> {
-  const v = visitorStore.get().visitors[id] as VisitorRecord | undefined;
-  if (!v || !token || keccak256(stringToBytes(token)) !== v.tokenHash) throw new Error("unknown visitor or wrong session token");
   const pend = pending.get(id);
-  if (!pend || pend.expires < Date.now()) throw new Error("this sign-up expired; start again");
+  // The token of the sign-up in progress (held in the pending record until its seal verifies).
+  const v = pend?.record;
+  if (!v || !token || keccak256(stringToBytes(token)) !== v.tokenHash) throw new Error("unknown visitor or wrong session token");
+  if (pend.expires < Date.now()) throw new Error("this sign-up expired; start again");
   const cfg = visitorConfig(v.id);
   const ctx = ledgerContext(cfg.ledger);
   await ctx.freshHead();
@@ -235,7 +242,7 @@ export async function sealVisitor(id: string, token: string | undefined, sigs: {
     w.principals[v.id] = state;
   });
   visitorStore.update((d) => {
-    d.visitors[v.id]!.sealedAt = state.sealedAt;
+    d.visitors[v.id] = { ...v, sealedAt: state.sealedAt };
   });
   pending.delete(v.id);
   recordReceipt({
@@ -273,7 +280,8 @@ export async function resealVisitor(id: string, token: string | undefined, manda
 
 // ---------------------------------------------------------------- log in again (passkey or secret key)
 
-const challenges = new Map<string, number>();
+/** Open login challenges: what was issued, so the signed message is rebuilt from the server's own values. */
+const challenges = new Map<string, { expires: number; issuedAt: bigint; chainId: number }>();
 
 /** The login message, built the same way here and in the browser (which refuses to sign anything else for login). */
 export function loginTypedData(chainId: number, nonce: Hex, issuedAt: bigint) {
@@ -289,24 +297,26 @@ export async function loginChallenge() {
   const ctx = ledgerContext(visitorConfig("v-0000000000").ledger);
   const nonce = `0x${randomBytes(32).toString("hex")}` as Hex;
   const issuedAt = BigInt(Math.floor(Date.now() / 1000));
-  challenges.set(nonce, Date.now() + 5 * 60_000);
-  for (const [k, exp] of challenges) if (exp < Date.now()) challenges.delete(k);
+  challenges.set(nonce, { expires: Date.now() + 5 * 60_000, issuedAt, chainId: ctx.profile.chainId });
+  for (const [k, c] of challenges) if (c.expires < Date.now()) challenges.delete(k);
   const td = loginTypedData(ctx.profile.chainId, nonce, issuedAt);
   return { nonce, issuedAt: issuedAt.toString(), typedData: { ...td, message: { nonce, issuedAt: issuedAt.toString() } }, digest: hashTypedData(td) };
 }
 
 /** Prove you hold the passkey or secret key of an existing account; returns a new session token. */
 export async function loginVisitor(args: { nonce: Hex; issuedAt: string; signature: Hex; credentialId?: string; owner?: Address }) {
-  const exp = challenges.get(args.nonce);
-  if (!exp || exp < Date.now()) throw new Error("this login request expired; try again");
+  const ch = challenges.get(args.nonce);
+  if (!ch || ch.expires < Date.now()) throw new Error("this login request expired; try again");
   challenges.delete(args.nonce);
+  if (BigInt(args.issuedAt) !== ch.issuedAt) throw new Error("this login request does not match the one issued; try again");
   const all = Object.values(visitorStore.get().visitors);
   const v = args.owner
     ? all.find((x) => x.owner && x.owner.toLowerCase() === args.owner!.toLowerCase())
     : all.find((x) => x.keyId && x.keyId === args.credentialId);
   if (!v || !v.sealedAt) throw new Error("no account found for this key on this site; sign up first");
   const ctx = ledgerContext(visitorConfig(v.id).ledger);
-  const digest = hashTypedData(loginTypedData(ctx.profile.chainId, args.nonce, BigInt(args.issuedAt)));
+  if (ctx.profile.chainId !== ch.chainId) throw new Error("this account lives on another ledger; start the login again");
+  const digest = hashTypedData(loginTypedData(ch.chainId, args.nonce, ch.issuedAt));
   const magic = await ctx.pub
     .readContract({ address: v.account, abi: abi.HybridDeleGatorAbi, functionName: "isValidSignature", args: [digest, args.signature] })
     .catch(() => "0x");
