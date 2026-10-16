@@ -9,6 +9,8 @@ import { ensurePassport } from "./chain/passport";
 import { guardianCalls, payeeBookCalls } from "./chain/mandates";
 import { delegationDigestOnChain, userOpTypedData } from "./chain/principal";
 import { recordReceipt } from "./receipts";
+import { decompile, namesFor, normaliseVisitorRules, type Adjustment } from "@yinglong/mandate";
+import { DraftInput, mandateFromDraft } from "./understand/draft";
 import { visitorConfig, visitorStore, world, type PrincipalState, type VisitorRecord } from "./world";
 
 /**
@@ -47,7 +49,11 @@ export function visitorTokenOk(id: string, token: string | undefined): boolean {
   return !!v && !!v.sealedAt && !!token && keccak256(stringToBytes(token)) === v.tokenHash;
 }
 
-export async function registerVisitor(args: { credentialId: string; x: Hex; y: Hex }) {
+export async function registerVisitor(args: { credentialId: string; x: Hex; y: Hex; mandate?: unknown }) {
+  // A draft from POST /v1/mandates/draft is re-validated here (closed schema, then the same bounds): nothing the
+  // client sends can widen the visitor's authority beyond the bounds.
+  const draft = args.mandate === undefined ? undefined : DraftInput.parse(args.mandate);
+  if (draft) normaliseVisitorRules(draft.rules);
   if (!WEBAUTHN_ID.test(args.credentialId)) throw new Error("credentialId must be the passkey's raw id in base64url");
   if (!COORD.test(args.x) || !COORD.test(args.y)) throw new Error("publicKey.x and publicKey.y must be 32-byte hex coordinates");
   const now0 = Date.now();
@@ -83,7 +89,14 @@ export async function registerVisitor(args: { credentialId: string; x: Hex; y: H
 
   // 4. The mandate and the two messages the passkey signs.
   const now = Number(await ctx.now());
-  const mandate = visitorMandate(
+  let adjustments: Adjustment[] = [];
+  const mandate = draft
+    ? (() => {
+        const built = mandateFromDraft(cfg.ledger, { rules: draft.rules, userSentences: draft.userSentences }, { account, agent: agentAddress(cfg.agentRole), name: cfg.name, did, now, salt: String(now) });
+        adjustments = built.adjustments;
+        return built.mandate;
+      })()
+    : visitorMandate(
     ctx.deployment,
     {
       account,
@@ -96,6 +109,7 @@ export async function registerVisitor(args: { credentialId: string; x: Hex; y: H
     { now, salt: String(now), name: cfg.name },
   );
   const compiled = compileMandate(mandate, ctx.deployment);
+  const decodedSentences = decompile(compiled.caveats, ctx.deployment, namesFor(ctx.deployment, mandate), ctx.profile.timeUnit).sentences;
   const live = await ctx.read<Hex>({ address: ctx.addr("MandateRegistry"), abi: abi.MandateRegistryAbi, functionName: "liveMandateOfLineage", args: [account, compiled.lineageIdHash] });
   const retire = BigInt(live) !== 0n ? [{ to: ctx.addr("MandateRegistry"), data: encodeFunctionData({ abi: abi.MandateRegistryAbi, functionName: "revoke", args: [live] }) }] : [];
   const calls = [
@@ -143,7 +157,16 @@ export async function registerVisitor(args: { credentialId: string; x: Hex; y: H
     ledgerBadge: ctx.profile.badge,
     contracts: ctx.signingContracts(),
     agent: { label: cfg.agentLabel, wallet: passport.wallet, agentId: passport.agentId, identityCode: cfg.identityCode },
-    mandate: { title: mandate.title, sentences: mandate.sentences, mandateHash: compiled.mandateHash, delegationHash: compiled.delegationHash },
+    mandate: {
+      title: mandate.title,
+      source: draft ? "your own rules (draft re-validated against the visitor bounds)" : "standard visitor mandate",
+      sentences: mandate.sentences,
+      decodedSentences,
+      payees: mandate.payees.map((p) => ({ id: p.id, label: p.label, category: p.category })),
+      adjustments,
+      mandateHash: compiled.mandateHash,
+      delegationHash: compiled.delegationHash,
+    },
     requests: [
       { kind: "seal", step: "publish", title: "Publish your mandate", digest: opDigest, typedData: userOpTypedData(ctx, op, "person") },
       { kind: "seal", step: "delegation", title: "Give your agent this mandate", digest: delegationDigest, typedData: delegationTypedData(delegation, ctx.addr("DelegationManager"), ctx.profile.chainId) },
@@ -216,4 +239,15 @@ export function visitorStatus(id: string) {
   const v = visitorStore.get().visitors[id];
   if (!v) return undefined;
   return { visitorId: v.id, account: v.account, agentWallet: v.agentWallet, agentId: v.agentId, createdAt: v.createdAt, sealedAt: v.sealedAt, pending: pending.has(v.id) };
+}
+
+/**
+ * Re-seal for an existing visitor: the same passkey account receives a new mandate (a draft, or the standard one)
+ * and two new signing requests; the old mandate is retired in the same user operation. Needs the visitor's
+ * current session token; as with a repeated sign-up, a new token is issued and becomes valid once sealed.
+ */
+export async function resealVisitor(id: string, token: string | undefined, mandate?: unknown) {
+  if (!visitorTokenOk(id, token)) throw new Error("unknown visitor or wrong session token");
+  const v = visitorStore.get().visitors[id]!;
+  return registerVisitor({ credentialId: v.keyId, x: v.x, y: v.y, mandate });
 }

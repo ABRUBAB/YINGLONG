@@ -492,6 +492,7 @@ A visitor creates a passkey in the browser (WebAuthn, P-256). The server deploys
 |---|---|---|
 | `credentialId` | string | The passkey's raw id in base64url (16 to 512 characters); it is the account's key id |
 | `publicKey.x`, `publicKey.y` | hex | The P-256 public key coordinates, 32 bytes each |
+| `mandate` | object, optional | A draft from `POST /v1/mandates/draft` (`{template: "visitor", rules, userSentences}`): re-validated against the closed schema and the visitor bounds before anything is deployed, then compiled for this visitor's account instead of the standard visitor mandate. `mandate` in the response then also carries `source`, `decodedSentences`, `payees` and `adjustments` |
 
 Response: `{visitorId, token, account, did, ledger, ledgerBadge, contracts, agent: {label, wallet, agentId, identityCode}, mandate: {title, sentences, mandateHash, delegationHash}, requests}`. `contracts` gives the `EntryPoint`, `DelegationManager`, `MandateRegistry`, `PayeeBook` and `KillSwitchRegistry` addresses the browser checks both messages against before the passkey signs. `requests` holds two signing requests, each `{kind: "seal", step, title, digest, typedData}`: `step: "publish"` is the user operation that writes the payee book, adds the guardians (pause only) and publishes the mandate with its full caveat array; `step: "delegation"` is the root delegation under the DelegationManager domain. The same passkey signing up again gets the same `visitorId`, a new token and new requests (the old mandate is retired in the same operation). The `visitorId` is `v-` plus 10 hex characters of `keccak256(credentialId:x:y)`.
 
@@ -505,6 +506,54 @@ Response: `{visitorId, account, agentWallet, agentId, createdAt, sealedAt, pendi
 
 ```sh
 curl -s https://api.yinglong-agent.tech/v1/visitors/v-0123456789
+```
+
+#### `POST /v1/mandates/draft`: public ("say, see, seal")
+
+A visitor says their own rules in plain language; the service returns what the chain would enforce, decoded from the compiled caveats (source: `apps/agent/src/understand/draft.ts`, `packages/mandate/src/visitorRules.ts`).
+
+1. **Say.** A model (DashScope Qwen if it answers, else an OpenRouter free model, else the deterministic rule parser) fills ONLY a closed schema: `payees` from the fixed visitor catalogue (`arena_cafe` Arena Cafe, `kowloon_food_mart` Kowloon Food Mart, `hbu_bookshop` HBU Bookshop, `harbour_homes` Harbour Homes, `victoria_fx` Victoria FX), daily `budgets` per category (`food`, `tuition`, `rent`, `services`, `transport`, `other`), `t1Cap` (ask me above), `t2Ceiling` (never above), `reserveFloor`, `velocity` (`{window: hour|day, maxCount, maxOutflow}`), `validityDays`, and `unmapped` (phrases that fit nowhere). Every number a model returns must appear in the visitor's own words, or it is dropped and listed as unmapped. At most `DRAFTS_LLM_PER_HOUR` (default 60) drafts per hour use a model; beyond that the rule parser answers.
+2. **Bounds.** Deterministic code clamps to the visitor bounds (tHKD test units; the faucet holds 1,000): daily budget at most 1,000 and at least 1, T1 cap at most 200 and never above the T2 ceiling, T2 ceiling at most 1,000, reserve floor at most 900, velocity 1 to 50 payments and at most 1,000 per window, validity 1 to 30 days. Unstated values take the standard visitor values (the result then compiles to the same caveats as the standard visitor mandate). Payments outside the payee book (attested agents) fall in `services`, kept at 2 unless the visitor sets it.
+3. **See.** The mandate is built and compiled; the decompiler turns the caveats back into English (`decodedSentences`); `diff` compares each stated rule with the decoded value.
+
+| Body field | Type | Rule |
+|---|---|---|
+| `text` | string | 1 to 2,000 characters, the visitor's own words |
+| `principal` | string, optional | `visitor` (the only template) |
+| `ledger` | string, optional | `anvil`, `base-sepolia` or `fisco`; default: the visitor ledger |
+
+Response:
+
+| Field | Meaning |
+|---|---|
+| `draft` | `{template: "visitor", rules, userSentences}`: the normalised rules (amounts in whole tHKD as decimal strings). Send it unchanged as `mandate` to `POST /v1/visitors` or `POST /v1/visitors/:id/reseal` |
+| `extracted` | What the model or parser returned, before the bounds |
+| `adjustments[]` | `{field, said, enforced, kind, reason}`; `kind` is `clamped`, `default` or `adjusted` |
+| `compiled` | `{mandateHash, delegationHash, caveatCount, preview: true}`; preview hashes use placeholder account and agent addresses |
+| `decodedSentences` | One English sentence per compiled caveat (`decompile`); this is what will be enforced |
+| `payeeBook` | `{id, label, category, address}[]` written to the payee book by the same signed operation |
+| `userSentences` | The visitor's sentences (kept in the mandate document; never enforced) |
+| `diff[]` | `{rule, said, enforced, source, status, flagged, note?}`; `status` is `as you said`, `clamped`, `default`, `adjusted` or `not enforced` (an unmapped phrase); `source` names the caveat, the payee book or the mandate registry validity |
+| `flagged` | Number of rows that differ from what was said or are not enforced |
+| `roundTrip` | `{ok, checks}` from `verifyRoundTrip` on the compiled caveats |
+| `hashRing` | `hashRingGeometry` of the delegation hash |
+| `bounds` | The bounds applied |
+| `aigc` | `{label, model, provider, via: "llm" or "rules", latencyMs, promptSha256}` |
+
+```sh
+curl -s -X POST https://api.yinglong-agent.tech/v1/mandates/draft \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"Only Arena Cafe and Kowloon Food Mart. Food at most 120 a day. Ask me above 25, never more than 300 in one payment. Keep 150 in the account."}'
+```
+
+#### `POST /v1/visitors/:id/reseal`: visitor token, passkey-gated
+
+Header `x-visitor-token` (the current, sealed session). Body: `{mandate?}`, a draft as returned by `POST /v1/mandates/draft` (re-validated: closed schema, then the same bounds), or none for the standard visitor mandate. The same passkey account gets a new mandate and two new signing requests; the live mandate is retired in the same user operation once signed. Response: as `POST /v1/visitors` (a new token, valid once `POST /v1/visitors/:id/seal` succeeds). Errors: wrong token (400), a draft outside the schema (400).
+
+```sh
+curl -s -X POST https://api.yinglong-agent.tech/v1/visitors/v-0123456789/reseal \
+  -H 'Content-Type: application/json' -H "x-visitor-token: $VISITOR_TOKEN" \
+  -d '{"mandate":{"template":"visitor","rules":{"payees":["kowloon_food_mart"],"budgets":[{"category":"food","amount":"60"}],"t1Cap":"10","t2Ceiling":"100","reserveFloor":"100","velocity":{"window":"hour","maxCount":5,"maxOutflow":"200"},"validityDays":7,"unmapped":[]},"userSentences":["Food 60 a day at Kowloon Food Mart."]}}'
 ```
 
 ### 3.9 Supervisor (pause only; the role is played by the team)

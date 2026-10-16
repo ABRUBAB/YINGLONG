@@ -15,8 +15,9 @@ import { attempt, challenge, session } from "./challenge";
 import { board, createBoardProposal, directorSign } from "./board";
 import { explainTx } from "./explorer";
 import { apiJson, DATA_DIR } from "./store";
-import { config, isVisitorId, onboard, PRINCIPALS, visitorStore, world, type PrincipalId, type PrincipalState } from "./world";
-import { registerVisitor, sealVisitor, visitorStatus, visitorTokenOk } from "./visitors";
+import { config, isVisitorId, onboard, PRINCIPALS, visitorConfig, visitorStore, world, type PrincipalId, type PrincipalState } from "./world";
+import { registerVisitor, resealVisitor, sealVisitor, visitorStatus, visitorTokenOk } from "./visitors";
+import { draftMandate } from "./understand/draft";
 import { insightsFor } from "./insights";
 import { coverageFor, listEscrows, NotFound, refundEscrow, releaseEscrow } from "./escrows";
 import { credentialsOf, credentialStore, issuePaymentReliability, parseMessage, verifyCredential } from "./credentials";
@@ -283,8 +284,20 @@ const AskBody = z.object({
 
 // ---------------------------------------------------------------- visitors (sign up with your own passkey)
 app.post("/v1/visitors", async (c) => {
-  const b = z.object({ credentialId: z.string(), publicKey: z.object({ x: z.string(), y: z.string() }) }).parse(await c.req.json());
-  return c.json(apiJson(await registerVisitor({ credentialId: b.credentialId, x: b.publicKey.x as Hex, y: b.publicKey.y as Hex })));
+  const b = z.object({ credentialId: z.string(), publicKey: z.object({ x: z.string(), y: z.string() }), mandate: z.unknown().optional() }).parse(await c.req.json());
+  return c.json(apiJson(await registerVisitor({ credentialId: b.credentialId, x: b.publicKey.x as Hex, y: b.publicKey.y as Hex, mandate: b.mandate })));
+});
+app.post("/v1/visitors/:id/reseal", async (c) => {
+  const b = z.object({ mandate: z.unknown().optional() }).parse(await c.req.json().catch(() => ({})));
+  return c.json(apiJson(await resealVisitor(c.req.param("id"), c.req.header("x-visitor-token"), b.mandate)));
+});
+/** Say, see, seal: plain-language rules -> closed schema -> bounds -> compiled caveats -> decoded English. */
+app.post("/v1/mandates/draft", async (c) => {
+  const b = z
+    .object({ text: z.string().min(1).max(2000), principal: z.literal("visitor").default("visitor"), ledger: z.enum(["anvil", "base-sepolia", "fisco"]).optional() })
+    .parse(await c.req.json());
+  const ledger = b.ledger ?? visitorConfig("v-0000000000").ledger;
+  return c.json(apiJson(await draftMandate({ text: b.text, ledger })));
 });
 app.post("/v1/visitors/:id/seal", async (c) => {
   const b = z.object({ userOpSignature: z.string().regex(/^0x[0-9a-fA-F]+$/), delegationSignature: z.string().regex(/^0x[0-9a-fA-F]+$/) }).parse(await c.req.json());

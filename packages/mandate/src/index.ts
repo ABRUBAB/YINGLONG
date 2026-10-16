@@ -8,3 +8,4 @@ export * from "./names";
 export * from "./hashring";
 export * from "./roundtrip";
 export * from "./scenarios";
+export * from "./visitorRules";
