@@ -64,6 +64,6 @@ if (process.argv.includes("--edge")) {
   ssh("set -e; mkdir -p /opt/yinglong/edge && cp -r /opt/yinglong/src/infra/edge/. /opt/yinglong/edge/ && cd /opt/yinglong/edge && docker compose up -d --force-recreate 2>&1 | tail -2");
 }
 // The services report the commit they run (the Proof Center shows it next to the evidence).
-ssh("set -e; cd /opt/yinglong/src/infra/app && GIT_COMMIT=$(git -C /opt/yinglong/src rev-parse --short HEAD) docker compose up -d --build 2>&1 | tail -3");
+ssh("set -e; set -o pipefail; cd /opt/yinglong/src/infra/app && GIT_COMMIT=$(git -C /opt/yinglong/src rev-parse --short HEAD) docker compose up -d --build 2>&1 | tail -3");
 rmSync(tmp, { recursive: true, force: true });
 console.log("deployed");
