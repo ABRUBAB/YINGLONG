@@ -20,7 +20,7 @@ test.setTimeout(240_000);
 test("live visitor: passkey sign-up, seal on FISCO, act, revoke", async ({ page, context }) => {
   const passkey = await addVirtualPasskey(context, page);
   await page.goto("/start", { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Create a passkey" }).click();
+  await page.getByRole("button", { name: "Use the standard visitor mandate" }).click();
 
   // Account deployment, passport and test units take 5 to 15 s on FISCO.
   await expect(page.getByRole("heading", { name: "The two messages your passkey signs" })).toBeVisible({ timeout: 90_000 });

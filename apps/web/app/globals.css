@@ -628,3 +628,41 @@ body:has([data-poster]) .yl-sitefooter {
     transform: scale(0.94);
   }
 }
+
+/* Workspace panels (docs/MOTION.md, moment 16): a panel rises 8 px into place once when its data
+   first arrives; bars and lines grow from zero to their value (moment 12); both stay still when
+   motion is off. Only transform, opacity and SVG stroke animate. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-enter {
+    animation: yl-enter 260ms var(--ease-out) both;
+    animation-delay: var(--d, 0ms);
+  }
+  :root:not([data-motion="off"]) .yl-bar {
+    transition: transform 600ms var(--ease-out-orbit);
+  }
+  :root:not([data-motion="off"]) .yl-draw {
+    transition: stroke-dashoffset 900ms var(--ease-out);
+  }
+  @starting-style {
+    :root:not([data-motion="off"]) .yl-bar {
+      transform: scaleX(0);
+    }
+    :root:not([data-motion="off"]) .yl-draw {
+      stroke-dashoffset: 1;
+    }
+  }
+}
+@keyframes yl-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.yl-bar {
+  transform-origin: left center;
+  transform: scaleX(var(--p, 0));
+}
+.yl-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}

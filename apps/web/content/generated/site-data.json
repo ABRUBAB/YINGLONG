@@ -1,0 +1,1122 @@
+{
+  "schema": "yinglong.site-data/1",
+  "generatedAt": "2026-10-16T06:16:48.254Z",
+  "timeline": {
+    "head": "2539b53",
+    "count": 73,
+    "first": "2026-10-16T02:39:27+06:00",
+    "last": "2026-10-16T11:59:18+06:00",
+    "commits": [
+      {
+        "hash": "b9b6640",
+        "at": "2026-10-16T02:39:27+06:00",
+        "subject": "Bootstrap repository: workspace, hard-rule gates, delegation framework v1.3.0",
+        "track": "infra",
+        "milestone": true
+      },
+      {
+        "hash": "1baf3d7",
+        "at": "2026-10-16T02:59:32+06:00",
+        "subject": "Contracts: mandate registries, thirteen caveat enforcers, test-unit rails, 30 scenario tests",
+        "track": "contracts",
+        "milestone": true
+      },
+      {
+        "hash": "3d83618",
+        "at": "2026-10-16T03:09:16+06:00",
+        "subject": "SDK and mandate compiler: ABIs, ledger profiles, compile/decompile, round-trip verification, Hash Ring",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "cebd0aa",
+        "at": "2026-10-16T03:10:45+06:00",
+        "subject": "Receipts, Merkle anchoring helpers and golden mandate vectors",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "f2612fd",
+        "at": "2026-10-16T03:18:33+06:00",
+        "subject": "Agent chain layer: passkey accounts, self-bundled user operations, sealing, redemption; security and compliance docs",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "e1be3f3",
+        "at": "2026-10-16T03:24:50+06:00",
+        "subject": "FISCO BCOS 3.17.1 ledger: framework go/no-go spike, full deployment, student scenario end to end on FISCO and Anvil",
+        "track": "ledgers",
+        "milestone": true
+      },
+      {
+        "hash": "71bfe3c",
+        "at": "2026-10-16T03:33:41+06:00",
+        "subject": "Stateful ZK private mandate: Noir circuit, UltraHonk verifier, ERC-8262-style router, ZKMandateEnforcer, 59 tests with real proofs",
+        "track": "ledgers",
+        "milestone": true
+      },
+      {
+        "hash": "4334606",
+        "at": "2026-10-16T03:39:52+06:00",
+        "subject": "Agent runtime: nine-scale pipeline, intent model with payee enum, quarantined readers, policy mirror, receipts, isolated signer, HTTP API",
+        "track": "agent",
+        "milestone": true
+      },
+      {
+        "hash": "23121b6",
+        "at": "2026-10-16T03:42:09+06:00",
+        "subject": "Infra: application image and compose stack; CNY symbol for the coin-free rail",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "0ad8f14",
+        "at": "2026-10-16T03:45:25+06:00",
+        "subject": "Agent API: rate limit and operator token for state-changing demo calls",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "b81fafc",
+        "at": "2026-10-16T03:45:52+06:00",
+        "subject": "Infra: public edge config and one-command VPS deploy",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "7521047",
+        "at": "2026-10-16T03:46:13+06:00",
+        "subject": "Fix deploy script paths",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "346bd55",
+        "at": "2026-10-16T03:47:59+06:00",
+        "subject": "Edge: explicit handle blocks; placeholder via handle_errors",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "d49d899",
+        "at": "2026-10-16T03:48:38+06:00",
+        "subject": "Edge: placeholder served with status 200",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "e188711",
+        "at": "2026-10-16T03:51:10+06:00",
+        "subject": "Deploy the ZK verifier stack to Anvil and FISCO; a real UltraHonk proof verifies on FISCO BCOS",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "5566a78",
+        "at": "2026-10-16T03:53:04+06:00",
+        "subject": "Judge's Challenge: guest agent with tiny caps, attempts with per-scale attribution, on-chain bypass, quotas",
+        "track": "agent",
+        "milestone": true
+      },
+      {
+        "hash": "a07b0b0",
+        "at": "2026-10-16T03:58:18+06:00",
+        "subject": "Board 2-of-3 director proposals and circuit breaker; yinglong verify (independent Python verifier, 114 tests, byte parity with TypeScript)",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "50529d5",
+        "at": "2026-10-16T03:59:27+06:00",
+        "subject": "Mandate: round-trip hashes the parsed document; ZK private-mandate rule decodes; optional ZK contracts in deployments",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "fb99a76",
+        "at": "2026-10-16T03:59:49+06:00",
+        "subject": "CI: hard-rule gate with gitleaks, Foundry, TypeScript and Python jobs",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "998863a",
+        "at": "2026-10-16T04:02:37+06:00",
+        "subject": "Pause and resume approvals; API demo driver; evidence generator (finalize)",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "81f974d",
+        "at": "2026-10-16T04:04:28+06:00",
+        "subject": "Live stack: stable demo principals (run v1) and labelled one-day budget periods",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "66c4a21",
+        "at": "2026-10-16T04:05:37+06:00",
+        "subject": "Agent City services (x402 v2 seller-settled through ERC-7710, signed agent cards, Mirage), e-CNY-style simulator, anchoring indexer with breaker and read-only FISCO RPC",
+        "track": "agent",
+        "milestone": true
+      },
+      {
+        "hash": "f876e0e",
+        "at": "2026-10-16T04:06:17+06:00",
+        "subject": "Stack: services, e-CNY-style simulator and indexer containers; read-only RPC proxied from the regulator node",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "eb5695d",
+        "at": "2026-10-16T04:11:22+06:00",
+        "subject": "Demo setup: per-principal run ids, balance top-up, beats exercise the velocity limit without urgency wording",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "1c2d9e0",
+        "at": "2026-10-16T04:15:48+06:00",
+        "subject": "README judge kit; evidence generator collects test counts from every suite",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "77950ce",
+        "at": "2026-10-16T04:18:42+06:00",
+        "subject": "Ledger: modest gas top-ups on Base Sepolia",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "5be847b",
+        "at": "2026-10-16T04:21:40+06:00",
+        "subject": "Lotus Lane HK: same treasurer re-sealed for Hong Kong; first sweep needs approval; suitability refusal; asks can be approved",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "1ce19f9",
+        "at": "2026-10-16T04:25:25+06:00",
+        "subject": "API: supervisory halt, private-mandate view, receipt proofs from the indexer, contracts in evidence",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "dc468f1",
+        "at": "2026-10-16T04:28:29+06:00",
+        "subject": "Vision readers for invoice photos (two model families); FISCO transaction explorer; API hardening; technical documentation",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "0b83298",
+        "at": "2026-10-16T04:35:42+06:00",
+        "subject": "Invariant campaign: caps, reserve floor, pause, verified payees, authority unchanged (stateful fuzzing)",
+        "track": "contracts",
+        "milestone": false
+      },
+      {
+        "hash": "c58a744",
+        "at": "2026-10-16T05:24:59+06:00",
+        "subject": "Signer: per-execution child delegation (two-minute window, single use); docs aligned with the implementation",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "1da0e0e",
+        "at": "2026-10-16T05:26:41+06:00",
+        "subject": "Live private mandate on FISCO and Anvil: real UltraHonk proofs at redemption; over-cap unprovable; forged and replayed proofs revert",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "42c0f42",
+        "at": "2026-10-16T05:32:53+06:00",
+        "subject": "Evidence: private-mandate rows in PROOF, test counts from all suites (223), explorer decodes child-delegation events",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "e4f94de",
+        "at": "2026-10-16T05:37:13+06:00",
+        "subject": "Monotonic-safety property test; evidence generator: anchors, ZK, FISCO nodes, invariants, mainland reachability",
+        "track": "contracts",
+        "milestone": false
+      },
+      {
+        "hash": "24737d8",
+        "at": "2026-10-16T05:47:02+06:00",
+        "subject": "x402 client: seller-settled ERC-7710 fee payments signed by the isolated signer; FX conversion at a desk-signed quote; pinned facilitator in Nadia's mandate",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "b85beda",
+        "at": "2026-10-16T05:49:10+06:00",
+        "subject": "Label the pinned x402 facilitator in decoded mandates",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "b1164c1",
+        "at": "2026-10-16T05:49:49+06:00",
+        "subject": "Reading deck (Marp, ORBIT theme, 14 slides, PDF and PPTX) and video script",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "e6d342f",
+        "at": "2026-10-16T05:55:10+06:00",
+        "subject": "Evidence: count every live transaction in the bundle; document the transaction decoder and the evidence keys",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "25114c3",
+        "at": "2026-10-16T05:55:30+06:00",
+        "subject": "Keep the FISCO deployment broadcast as deployment evidence; ignore fork rehearsals",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "4a98632",
+        "at": "2026-10-16T06:07:37+06:00",
+        "subject": "Passkey-signed revoke (one user operation: registry revoke + disableDelegation); timing drills for pause and revoke; confirmed receipts no longer carry a pre-approval simulation revert; demo amounts fit one day of rules",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "fd83215",
+        "at": "2026-10-16T06:13:56+06:00",
+        "subject": "Validity windows use the later of head block and wall clock (FISCO seals blocks only on demand); a request above the tier ceiling no longer trips the velocity breaker",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "f59e4c9",
+        "at": "2026-10-16T06:17:58+06:00",
+        "subject": "FISCO liveness tick: refresh the on-demand head block before time-sensitive steps so simulations see the time the transaction will",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "3d856d7",
+        "at": "2026-10-16T06:25:12+06:00",
+        "subject": "Coin-free rail: an instruction's condition is the invoice both readers agreed on (registered with the operator as matched) or zero when there is none; simulator admin routes require the operator token",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "fd3a544",
+        "at": "2026-10-16T06:30:02+06:00",
+        "subject": "Operator calls are not rate limited; resume receipts report their confirmation time; drills read each ledger once",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "bd18a50",
+        "at": "2026-10-16T06:33:05+06:00",
+        "subject": "Timing drills on FISCO: pause and revoke from signed message to receipt; live beats log",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "b66f1a9",
+        "at": "2026-10-16T06:33:07+06:00",
+        "subject": "Web app (ORBIT design system): console, Mandate Studio, approvals with signing guard and passkey encoding, treasury, supervisor, Proof Center, Judge's Challenge, Agent City; UI package; served behind Caddy",
+        "track": "web",
+        "milestone": true
+      },
+      {
+        "hash": "cf205cd",
+        "at": "2026-10-16T06:43:53+06:00",
+        "subject": "Visitors sign up with their own passkey: HybridDeleGator account with the passkey as its only key, own agent wallet and passport, mandate published and delegation signed by the passkey (both verified on-chain before anything is stored); session token valid only after the seal",
+        "track": "agent",
+        "milestone": true
+      },
+      {
+        "hash": "eaf56d0",
+        "at": "2026-10-16T06:45:20+06:00",
+        "subject": "API reference: visitor sign-up with a passkey, revoke, visitor token",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "9f3296a",
+        "at": "2026-10-16T06:48:11+06:00",
+        "subject": "Breaker trips are recorded as receipts with their transaction; FISCO links open the web decoder; PROOF covers x402, budget and suitability reverts, revoke, visitor passkey seals, the HK re-seal and the anchor",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "5a634ea",
+        "at": "2026-10-16T06:54:52+06:00",
+        "subject": "Services report the commit they run",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "bb820d8",
+        "at": "2026-10-16T06:56:00+06:00",
+        "subject": "Registry lists demo agents and the most recent visitor agents, read in parallel",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "8d97f47",
+        "at": "2026-10-16T07:00:52+06:00",
+        "subject": "Base Sepolia go-live in one command once the deployer is funded",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "99e8147",
+        "at": "2026-10-16T07:07:33+06:00",
+        "subject": "Rival check for the novelty claim (CL-17): sources and recommendation for the lead",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "3c6e1ef",
+        "at": "2026-10-16T07:42:09+06:00",
+        "subject": "Contract analysis evidence: Slither and Aderyn with triage, coverage, gas overhead of the mandate caveats, bounded symbolic checks of invariants 1 to 5 (Halmos), fuzz call counts, tool versions",
+        "track": "contracts",
+        "milestone": false
+      },
+      {
+        "hash": "4f3f095",
+        "at": "2026-10-16T07:43:40+06:00",
+        "subject": "Evidence generator: per-suite test counts, timing and incident drill (playbook 1) on FISCO, supervisor pause, claim decisions with honest variants, bytecode, deployer-role scan, SBOM, third-party tables, controls map, scrubber recall; --final flag",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "5c87241",
+        "at": "2026-10-16T07:48:52+06:00",
+        "subject": "Passkey sign-up at /start (two passkey signatures, each checked in the browser against the decoded mandate before signing), visitor console with passkey approvals, revoke with its own guard checks, visitor agents grouped on /supervisor; state reports whether the mandate is live; separate read and write rate budgets; supervisor halts refused by the policy mirror",
+        "track": "web",
+        "milestone": true
+      },
+      {
+        "hash": "a302c60",
+        "at": "2026-10-16T10:24:22+06:00",
+        "subject": "Exact FISCO revert reasons from the native receipt (read-only proxy method yinglong_getRevertData), used by the agent, its decoder and verify-tx; verify reports a revoked or superseded mandate's status without failing integrity (--require-live to fail); Python decoder reads the ZK private-mandate caveat; receipt chain re-reads the log when another process appended; CL-17 wording A",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "f3b7bca",
+        "at": "2026-10-16T10:31:35+06:00",
+        "subject": "Python verifier tests read FISCO through the public read-only proxy by default",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "e3156c0",
+        "at": "2026-10-16T10:35:21+06:00",
+        "subject": "Video pipeline: shot list from the script, offline narration and captions, Playwright recorder with dry-run and live modes, composer for the master and 60-second cuts",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "cd44031",
+        "at": "2026-10-16T11:01:25+06:00",
+        "subject": "Contract tests: every enforcer's typed errors, boundaries and state isolation, rails and registries (access control, transitions, EIP-712, replay, events), 12 fuzz properties; coverage 100% lines, 99.5% branches; two low-severity view-only findings recorded as skipped tests",
+        "track": "contracts",
+        "milestone": false
+      },
+      {
+        "hash": "8f40ecd",
+        "at": "2026-10-16T11:12:25+06:00",
+        "subject": "Base Sepolia top-ups sized to the measured gas price (configurable); go-live needs about 0.001 ETH",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "4edc628",
+        "at": "2026-10-16T11:18:41+06:00",
+        "subject": "Scenario capabilities: spending insights, suitability cards, payment-reliability credential (EIP-712, anchored), escrow claims and coverage gap, payroll and 30-day cash forecast; providers: Alibaba Cloud Model Studio (Qwen) first, free OpenRouter models, rule parser; DashScope key pattern in the secret scan",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "6987f4c",
+        "at": "2026-10-16T11:19:07+06:00",
+        "subject": "Fix the sk- key pattern word boundaries",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "106b01f",
+        "at": "2026-10-16T11:23:24+06:00",
+        "subject": "Restore web files deleted by mistake in the contract-tests commit (the redesign in progress removes them in its own commit)",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "12ab760",
+        "at": "2026-10-16T11:23:46+06:00",
+        "subject": "Deploy fails loudly when an image build fails",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "d4f147b",
+        "at": "2026-10-16T11:28:03+06:00",
+        "subject": "Writes wait until the read head reaches their block (load-balanced public RPCs); passport registration waits until visible",
+        "track": "ledgers",
+        "milestone": false
+      },
+      {
+        "hash": "ded7c93",
+        "at": "2026-10-16T11:28:05+06:00",
+        "subject": "Redesign: one design system and global shell (nav with every page, footer), live-data Mandate Orbit hero (R3F, Paper Shaders dithering, poster first), seven-verb scroll story, About page, dragon mark removed (S glyph only); Agent City rebuilt as a collision-free 2D map from live data",
+        "track": "web",
+        "milestone": true
+      },
+      {
+        "hash": "1325c53",
+        "at": "2026-10-16T11:29:25+06:00",
+        "subject": "Indexer read routes allow cross-origin reads from the web app",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "dee368f",
+        "at": "2026-10-16T11:31:50+06:00",
+        "subject": "Base Sepolia live: canonical-framework deployment with the ZK stack; scripted student scenario on Base (seal, T1 rent, attack reverted PayeeNotVerified, passkey-approved T2 escrow, pause, resume)",
+        "track": "ledgers",
+        "milestone": true
+      },
+      {
+        "hash": "90cda2d",
+        "at": "2026-10-16T11:38:43+06:00",
+        "subject": "Secret scan: reviewed false positives recorded by fingerprint, generated raw test output and public ZK vectors allowlisted by path; local visitor data no longer tracked",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "7b917d9",
+        "at": "2026-10-16T11:45:38+06:00",
+        "subject": "README: banner, badges, quick links, live screenshot gallery, grouped architecture diagram, pillars, scenarios, collapsible repo map and setup, honesty callouts; dragon coin retired",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "ce1be47",
+        "at": "2026-10-16T11:48:42+06:00",
+        "subject": "Private mandate on Base Sepolia (proof-verified payments, forged and replayed proofs revert); receipts anchored on both ledgers",
+        "track": "ledgers",
+        "milestone": true
+      },
+      {
+        "hash": "2539b53",
+        "at": "2026-10-16T11:59:18+06:00",
+        "subject": "Say, see, seal for visitors: plain-language mandate drafts (closed schema, bounds, decoded back into English with a said-vs-enforced diff), sign-up and re-seal with the visitor's own rules",
+        "track": "agent",
+        "milestone": false
+      }
+    ]
+  },
+  "twin": {
+    "enforcers": [
+      {
+        "name": "AgentLineageEnforcer",
+        "base": {
+          "address": "0xE42990C2308C71ea3c53907Bf312075028Fbb2E0",
+          "codeHash": "0xd3807e7a283bf4bdb905f47da33c382a590ca158a9d1807cba34d577d879303e"
+        },
+        "fisco": {
+          "address": "0x2ee94183aD4cE72aee14F83bD15033A698AdBF0C",
+          "codeHash": "0xd3807e7a283bf4bdb905f47da33c382a590ca158a9d1807cba34d577d879303e"
+        }
+      },
+      {
+        "name": "CategoryBudgetEnforcer",
+        "base": {
+          "address": "0x401fF9f822D1b1475272c090cea964a119F6fd23",
+          "codeHash": "0xe2b29ed37b400d5763f4a06b45a77fd1f356dfa56a0fa0c1b7c606b8eb1e1072"
+        },
+        "fisco": {
+          "address": "0x0FBA56325B5c59F0E5cF589D25bFe6818850ae97",
+          "codeHash": "0xe2b29ed37b400d5763f4a06b45a77fd1f356dfa56a0fa0c1b7c606b8eb1e1072"
+        }
+      },
+      {
+        "name": "CoSignEnforcer",
+        "base": {
+          "address": "0xAfC2bC04bB16DBc42d04c6b4BD99675b163ef2a8",
+          "codeHash": "0xcac545a2bef4f4427b42e53eee1718c36d9688233a0d4870663c43aaddf7ab85"
+        },
+        "fisco": {
+          "address": "0x8b143D8a816F309C7426E620E4540F686b12A853",
+          "codeHash": "0xcac545a2bef4f4427b42e53eee1718c36d9688233a0d4870663c43aaddf7ab85"
+        }
+      },
+      {
+        "name": "ForbiddenTargetsEnforcer",
+        "base": {
+          "address": "0x28734131bF29Be297C59352C2b23c08932F315A8",
+          "codeHash": "0x9011c8455ef546ba751012ceea833382cd55958125c921824d8e1c12fd7157e0"
+        },
+        "fisco": {
+          "address": "0x7ac856d4257CC0a9A3be8606912e9853b84a97c8",
+          "codeHash": "0x9011c8455ef546ba751012ceea833382cd55958125c921824d8e1c12fd7157e0"
+        }
+      },
+      {
+        "name": "GlobalPauseEnforcer",
+        "base": {
+          "address": "0x8Bd87Eeca3FB1011421a2B8A3445426a23BedC85",
+          "codeHash": "0x146eab35ecd379b884ee3a8738fd137642123c313714ae50409b2d4b882ab9d6"
+        },
+        "fisco": {
+          "address": "0x66E0dF12E1F2bFC6ed96903c4383973F5386A784",
+          "codeHash": "0x146eab35ecd379b884ee3a8738fd137642123c313714ae50409b2d4b882ab9d6"
+        }
+      },
+      {
+        "name": "JurisdictionEnforcer",
+        "base": {
+          "address": "0x565f3eC5983a67a6d207709F6BCf88105e37257E",
+          "codeHash": "0x3c18ad73f732e746093718eea6520b80e311063f7adc6114397c6fb4cd46154c"
+        },
+        "fisco": {
+          "address": "0x6AfAd65A0cF138f52C4E00b07A96B59e77E0c21E",
+          "codeHash": "0x3c18ad73f732e746093718eea6520b80e311063f7adc6114397c6fb4cd46154c"
+        }
+      },
+      {
+        "name": "MandateBindingEnforcer",
+        "base": {
+          "address": "0x39D289d8572F07a3f64F4E4d80208CE650766476",
+          "codeHash": "0x20d077292dac232c197e3b90a67f780ed88cb3db7d55c6fe29897c1603ceec7d"
+        },
+        "fisco": {
+          "address": "0xF86370F739e571a0F4Afb432e1C12bE6A76fC05b",
+          "codeHash": "0x20d077292dac232c197e3b90a67f780ed88cb3db7d55c6fe29897c1603ceec7d"
+        }
+      },
+      {
+        "name": "ReputationGateEnforcer",
+        "base": {
+          "address": "0xDb48F57DEF3B0faeb4D790479EED2D8eb43755E7",
+          "codeHash": "0xeee353be492a0ceda0ac5caa86293b8c7e8b0049d126cafc27c7a7d1072c7466"
+        },
+        "fisco": {
+          "address": "0x4681E89F8f61f0a1c78D9a8a0df2b1dBd29CB07C",
+          "codeHash": "0xeee353be492a0ceda0ac5caa86293b8c7e8b0049d126cafc27c7a7d1072c7466"
+        }
+      },
+      {
+        "name": "ReserveFloorEnforcer",
+        "base": {
+          "address": "0xCe848804Adb705b3B4709e048a3Ab101770fa642",
+          "codeHash": "0x5d7aef15a922b63649f6315524ea063b7f340c5884da95919f37a7224d6c826c"
+        },
+        "fisco": {
+          "address": "0x3A50F926300c42b8304711Bdc8eb35dF4fB56617",
+          "codeHash": "0x5d7aef15a922b63649f6315524ea063b7f340c5884da95919f37a7224d6c826c"
+        }
+      },
+      {
+        "name": "SuitabilityEnforcer",
+        "base": {
+          "address": "0x7D1bb83c30816847CD7ef4436c9a2492468A2125",
+          "codeHash": "0x38732451a588e925d2cda59c0618647586cd0fa41d154f6a357edbde6e9df333"
+        },
+        "fisco": {
+          "address": "0x5f5d5A8f0e740f52BC1Ce2CeB4B554EbE0f091c8",
+          "codeHash": "0x38732451a588e925d2cda59c0618647586cd0fa41d154f6a357edbde6e9df333"
+        }
+      },
+      {
+        "name": "VelocityEnforcer",
+        "base": {
+          "address": "0xf936387f3aA038fEd260a0F701A7209961a47b68",
+          "codeHash": "0x57816b708ba6b0414e9f2f2430f40bc241ea2fccf7c449a6be10fe253816a707"
+        },
+        "fisco": {
+          "address": "0x659458ca15dcd1AC7493513a37fD36063642f8E6",
+          "codeHash": "0x57816b708ba6b0414e9f2f2430f40bc241ea2fccf7c449a6be10fe253816a707"
+        }
+      },
+      {
+        "name": "VerifiedPayeeEnforcer",
+        "base": {
+          "address": "0x1ee0B76ed92a5d176B1d5512C36bF4AC192aF21E",
+          "codeHash": "0x96dcfc1e152bd1ca0e9397ddd9618f573ef9eee83e34ce550a322660c23b004d"
+        },
+        "fisco": {
+          "address": "0xaBc4B99D759A06781BAFB096c65c2dB30beb073c",
+          "codeHash": "0x96dcfc1e152bd1ca0e9397ddd9618f573ef9eee83e34ce550a322660c23b004d"
+        }
+      },
+      {
+        "name": "VetoTimelockEnforcer",
+        "base": {
+          "address": "0x2226D5508f5c6D3A24cD15Be35d4F5Df43583846",
+          "codeHash": "0xdf2c8aa906f46a6648de08e53fd51da93f7d8318156c5ae3bd6279badec69941"
+        },
+        "fisco": {
+          "address": "0xFae68Be7B69B1dF2d09Ec1258dbb6f2A620AB58B",
+          "codeHash": "0xdf2c8aa906f46a6648de08e53fd51da93f7d8318156c5ae3bd6279badec69941"
+        }
+      }
+    ],
+    "allContracts": {
+      "compared": 46,
+      "equal": 38,
+      "differ": [
+        "DelegationManager",
+        "EntryPoint",
+        "HybridDeleGatorImpl",
+        "MultiSigDeleGatorImpl",
+        "SimpleFactory",
+        "ZKRelationsLib",
+        "ZKTranscriptLib",
+        "HonkVerifier"
+      ]
+    }
+  },
+  "baseScenario": [
+    {
+      "index": 2,
+      "step": "passport",
+      "tx": "0xbb43e837d63b20620fb0a9d1db6606b1c88345e762dcb5c62620a96415fc0292",
+      "ok": true,
+      "revert": null,
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 3,
+      "step": "mint",
+      "tx": "0xf48533a600869a3ac0af83c94db18ecbcdae0428b18f0c3519adc39ff2c0fa99",
+      "ok": true,
+      "revert": null,
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 4,
+      "step": "seal",
+      "tx": "0xc356baed1def52b262943d1e82a9f32dc9e204f7bdb6a9910ac03a9663531658",
+      "ok": true,
+      "revert": null,
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 5,
+      "step": "T1 rent 9,500 tHKD to Harbour Homes",
+      "tx": "0x0c1e78fe116f64f58e4cfd7ac3edeaf69d3829f5736c70b6c6824c899e837e66",
+      "ok": true,
+      "revert": null,
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 6,
+      "step": "T4 simulation",
+      "tx": null,
+      "ok": false,
+      "revert": "PayeeNotVerified(0x3705eee97764b06c20Ce15594214168cA462C977)",
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 7,
+      "step": "T4 raw attack to Mirage reverted on-chain",
+      "tx": "0x638e6dba2c85d6c2e667f0ffdb4bebb1937f66293a4c7961944a373e25901358",
+      "ok": false,
+      "revert": null,
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 8,
+      "step": "T2 without approval",
+      "tx": null,
+      "ok": false,
+      "revert": "CoSignRequired(5000000000, 2000000000)",
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 9,
+      "step": "T2 tuition escrow 5,000 tHKD co-signed by passkey",
+      "tx": "0x94f64cef1b9d2d64cc717cda421185917368292eb36a68c9137008e30db247b8",
+      "ok": true,
+      "revert": null,
+      "msToConfirmed": null,
+      "block": null
+    },
+    {
+      "index": 10,
+      "step": "pause (passkey signature relayed)",
+      "tx": "0x101bf8f49da1382fd8795ef3d58acb5b486515c621faabb52b9c579fb696a865",
+      "ok": true,
+      "revert": null,
+      "msToConfirmed": 2364,
+      "block": "48180063"
+    },
+    {
+      "index": 12,
+      "step": "resume (passkey)",
+      "tx": "0x99dd29c9117abc9dc474294ea3713b8f9a9fba5ca03bb8012711858d333260dc",
+      "ok": true,
+      "revert": null,
+      "msToConfirmed": 5499,
+      "block": null
+    }
+  ],
+  "metrics": {
+    "generatedAt": "2026-10-16T01:41:10.888Z",
+    "values": {
+      "tests.total": "332",
+      "tests.contracts": "93",
+      "tests.failed": "3 (pytest tools/verify-py: 3)",
+      "evidence.receipts": "134",
+      "evidence.anchored_receipts": "134",
+      "evidence.reverts": "10",
+      "evidence.refused_offchain": "34",
+      "evidence.tx_count": "116",
+      "bytecode.equal": "13",
+      "bytecode.total": "13",
+      "time.pause.p50": "0.222",
+      "time.pause.n": "7",
+      "time.revoke.p50": "0.213",
+      "time.ledger": "FISCO BCOS (team-run consortium ledger)",
+      "controls.total": "72",
+      "fisco.nodes": "4 consensus nodes (PBFT) + 1 observer node, FISCO BCOS 3.17.1 standard (non-SM) build (infra/fisco/chain-facts.json)",
+      "chain.ledgers": "FISCO BCOS 3.17.1 (consortium ledger)"
+    }
+  },
+  "novelty": {
+    "id": "CL-17",
+    "decision": "A",
+    "text": "To our knowledge, no public system gives an AI agent both a verifiable identity and a machine-enforced mandate that runs unchanged on a public chain and on a consortium chain.",
+    "reason": "lead decision 16 Oct 2026 after the rival check (docs/evidence/rival-check.md): no counterexample found; the claim keeps \"to our knowledge\" and rests on the public-plus-consortium limb"
+  },
+  "stack": [
+    {
+      "layer": "Ledgers and contracts",
+      "items": [
+        {
+          "name": "Solidity",
+          "version": "0.8.23",
+          "note": "Foundry; caveat enforcers on the MetaMask Delegation Framework"
+        },
+        {
+          "name": "FISCO BCOS",
+          "version": "3.17.1",
+          "note": "consortium ledger the team runs (PBFT)"
+        },
+        {
+          "name": "Base Sepolia",
+          "version": null,
+          "note": "public testnet"
+        },
+        {
+          "name": "Noir and UltraHonk",
+          "version": null,
+          "note": "the private-mandate proof"
+        }
+      ]
+    },
+    {
+      "layer": "Agent service",
+      "items": [
+        {
+          "name": "TypeScript",
+          "version": "5.9.3",
+          "note": "agent, signer, indexer, services"
+        },
+        {
+          "name": "Hono",
+          "version": "4.13.13",
+          "note": "HTTP API"
+        },
+        {
+          "name": "viem",
+          "version": "2.57.7",
+          "note": "chain reads, user operations, EIP-712"
+        },
+        {
+          "name": "zod",
+          "version": "4.6.7",
+          "note": "every wire format is parsed, never trusted"
+        }
+      ]
+    },
+    {
+      "layer": "Web",
+      "items": [
+        {
+          "name": "Next.js",
+          "version": "16.4.1",
+          "note": "App Router"
+        },
+        {
+          "name": "React",
+          "version": "19.3.1",
+          "note": "view transitions between routes"
+        },
+        {
+          "name": "three.js",
+          "version": "0.186.1",
+          "note": "with React Three Fiber 9.8.2"
+        },
+        {
+          "name": "GSAP",
+          "version": "3.15.0",
+          "note": "the seal and the seven verbs"
+        },
+        {
+          "name": "Paper Shaders",
+          "version": "0.0.81",
+          "note": "the hero atmosphere"
+        },
+        {
+          "name": "Tailwind CSS",
+          "version": "4.3.3",
+          "note": "on the ORBIT tokens"
+        }
+      ]
+    },
+    {
+      "layer": "Verification",
+      "items": [
+        {
+          "name": "TypeScript verifier",
+          "version": null,
+          "note": "packages/mandate"
+        },
+        {
+          "name": "Python verifier",
+          "version": null,
+          "note": "tools/verify-py, independent of the TypeScript code"
+        },
+        {
+          "name": "Playwright and axe",
+          "version": "1.64.1",
+          "note": "every route, three widths"
+        }
+      ]
+    }
+  ],
+  "enforcerDocs": {
+    "enforcers": {
+      "AllowedTargetsEnforcer": {
+        "position": null,
+        "rule": "The execution target must be one of the listed addresses",
+        "detail": null
+      },
+      "AllowedMethodsEnforcer": {
+        "position": null,
+        "rule": "The execution's 4-byte selector must be listed",
+        "detail": "transfer, transferAndCall and/or instruct"
+      },
+      "ValueLteEnforcer": {
+        "position": null,
+        "rule": "Caps the native value of the execution; compiled as 0",
+        "detail": null
+      },
+      "AllowedCalldataEnforcer": {
+        "position": null,
+        "rule": "A byte range of the execution calldata must equal a sealed value",
+        "detail": null
+      },
+      "LimitedCallsEnforcer": {
+        "position": null,
+        "rule": "At most limit redemptions of this delegation",
+        "detail": null
+      },
+      "TimestampEnforcer": {
+        "position": null,
+        "rule": "Redemption only strictly after after and strictly before before (0 disables a bound)",
+        "detail": null
+      },
+      "NonceEnforcer": {
+        "position": null,
+        "rule": "Revocation epoch",
+        "detail": "the delegation is valid only while currentNonce[DM][delegator] equals the sealed nonce; incrementNonce(dm) from the account invalidates every delegation carrying the old nonce"
+      },
+      "RedeemerEnforcer": {
+        "position": null,
+        "rule": "Only listed addresses may redeem",
+        "detail": null
+      },
+      "ERC20TransferAmountEnforcer": {
+        "position": null,
+        "rule": "Cumulative cap on ERC-20 transfer amount for one token",
+        "detail": null
+      },
+      "ForbiddenTargetsEnforcer": {
+        "position": 4,
+        "rule": "Keeps every T3 action out of reach of any delegation",
+        "detail": "the target may never be the delegator itself (signer changes, upgrades, deposits), the DelegationManager (msg.sender), or any address listed in the terms"
+      },
+      "GlobalPauseEnforcer": {
+        "position": 5,
+        "rule": "One tap stops everything",
+        "detail": "refuses every redemption while the account's kill switch is tripped (passkey pause, guardian, breaker watcher, dead-man timer), while the redeeming agent is halted by the supervisor in KillSwitchRegistry, or while the redeemer's passport exists and is not active"
+      },
+      "AgentLineageEnforcer": {
+        "position": 6,
+        "rule": "Identity-bound delegation",
+        "detail": "the redeemer must be the wallet of an ACTIVE passport whose owner DID hash equals the DID sealed in the mandate, or the x402 facilitator pinned in the mandate"
+      },
+      "MandateBindingEnforcer": {
+        "position": 7,
+        "rule": "Binds the delegation to a published, live mandate",
+        "detail": "MandateRegistry.delegationOf(mandateHash) must equal the redeemed delegation's hash and isLive(mandateHash) must be true (status Live, inside [validFrom, validUntil])"
+      },
+      "JurisdictionEnforcer": {
+        "position": 8,
+        "rule": "Rails as code",
+        "detail": "the paid asset must be one of the assets sealed for the mandate's jurisdiction profile; under the mainland profile only coin-free instruction rails (railKind() == 3) are permitted, whatever the asset list says"
+      },
+      "VerifiedPayeeEnforcer": {
+        "position": 9,
+        "rule": "Only verified payees receive funds",
+        "detail": null
+      },
+      "CoSignEnforcer": {
+        "position": 10,
+        "rule": "Tier T2 on-chain",
+        "detail": "above the T2 ceiling always reverts (T3); above the T1 threshold needs the user's own approval, checked as the delegator account's ERC-1271 signature (the passkey) over an Approval bound to this delegation, this exact execution, a nonce and an expiry"
+      },
+      "CategoryBudgetEnforcer": {
+        "position": 11,
+        "rule": "Budgets that bite",
+        "detail": "per-period caps per spending category for one asset"
+      },
+      "ReserveFloorEnforcer": {
+        "position": 12,
+        "rule": "\"Never below the floor\"",
+        "detail": "after the whole redemption, the delegator's balanceOf of the asset must be at least the floor"
+      },
+      "VelocityEnforcer": {
+        "position": 13,
+        "rule": "Limits how often and how much the agent moves per window",
+        "detail": "at most maxCount payments (any asset) and at most maxOutflow of asset per fixed window of window seconds"
+      },
+      "SuitabilityEnforcer": {
+        "position": 14,
+        "rule": "Suitability as code",
+        "detail": "when money flows into a listed test investment product, the product's risk class (1 to 5, ProductRegistry) must not exceed the class sealed in the mandate"
+      },
+      "ReputationGateEnforcer": {
+        "position": null,
+        "rule": "When the beneficiary holds a passport, its ERC-8004 reputation summarised over the sealed client list (1 to 10 clients) must reach the sealed minimum",
+        "detail": null
+      },
+      "VetoTimelockEnforcer": {
+        "position": null,
+        "rule": "Scheduled payments with a veto window",
+        "detail": "the redeemer first announces the exact execution with schedule(dm, delegationHash, delegator, executionCallData); redemption succeeds only after window seconds, only by the address that scheduled it, only if not vetoed, and consumes the schedule"
+      },
+      "ZKMandateEnforcer": {
+        "position": null,
+        "rule": "Private, stateful mandate for ERC-20 payments",
+        "detail": null
+      }
+    },
+    "errors": {
+      "PayeeNotVerified": "VerifiedPayeeEnforcer",
+      "CategoryBudgetExceeded": "CategoryBudgetEnforcer",
+      "ReserveFloorBreached": "ReserveFloorEnforcer",
+      "VelocityExceeded": "VelocityEnforcer",
+      "UnsuitableProduct": "SuitabilityEnforcer",
+      "RailNotPermitted": "JurisdictionEnforcer",
+      "Paused": "GlobalPauseEnforcer",
+      "CoSignRequired": "CoSignEnforcer",
+      "AboveTierCeiling": "CoSignEnforcer",
+      "VetoWindowOpen": "VetoTimelockEnforcer",
+      "Vetoed": "VetoTimelockEnforcer",
+      "NotScheduled": "VetoTimelockEnforcer",
+      "ForbiddenTarget": "ForbiddenTargetsEnforcer",
+      "LineageViolation": "AgentLineageEnforcer",
+      "MandateNotLive": "MandateBindingEnforcer",
+      "MandateDelegationMismatch": "MandateBindingEnforcer",
+      "ReputationTooLow": "ReputationGateEnforcer",
+      "InvalidMandateProof": "ZKMandateEnforcer",
+      "InvalidArgs": "MandateBindingEnforcer",
+      "UndecodableExecution": "PaymentDecoder",
+      "NativeValueNotAllowed": "PaymentDecoder",
+      "SignatureExpired": "CoSignEnforcer",
+      "NonceAlreadyUsed": "CoSignEnforcer",
+      "QuoteExpired": "SignedQuoteSettlement"
+    }
+  },
+  "scales": [
+    {
+      "n": 1,
+      "name": "Normalise",
+      "what": "NFKC; strips zero-width and bidi control characters",
+      "refuses": "No, escalates"
+    },
+    {
+      "n": 2,
+      "name": "Sentinel",
+      "what": "Calls the M1 injection classifier at SENTINEL_URL/sentinel (ONNX int8, ml/serving/app.py) with a 4 s timeout",
+      "refuses": "No, escalates"
+    },
+    {
+      "n": 3,
+      "name": "Quarantine",
+      "what": "Untrusted attachments (invoice, email, quote) go into an opaque HandleStore",
+      "refuses": "No, escalates"
+    },
+    {
+      "n": 4,
+      "name": "Ground",
+      "what": "Amount digits must appear in the user's words or come from an agreed reader field (then flagged)",
+      "refuses": "No, asks"
+    },
+    {
+      "n": 5,
+      "name": "Policy",
+      "what": "A deterministic TypeScript mirror of the enforcers, decoding the same caveat bytes and reading the same on-chain counters (spentNow, usage, isPaused, isLive, lookup, isTrustedAgentWallet, productInfo, railKindOf, balances)",
+      "refuses": "Yes (T4, T3)"
+    },
+    {
+      "n": 6,
+      "name": "Counterparty",
+      "what": "PayeeBook entry, passport and trusted-issuer attestation, a look-alike check against the payee book (same first and last four hex characters) and a small local demo sanctions list",
+      "refuses": "Yes (sanctioned, look-alike give T4)"
+    },
+    {
+      "n": 7,
+      "name": "Simulate",
+      "what": "eth_call of DelegationManager.redeemDelegations from the agent address at the latest block",
+      "refuses": "No, asks"
+    },
+    {
+      "n": 8,
+      "name": "Anomaly",
+      "what": "Rules over the receipt log: an amount above three times the largest past confirmed payment to the same payee (with at least two past payments) is flagged, and so is the first sweep into a product (\"you decide once, later sweeps can run alone\")",
+      "refuses": "No, escalates"
+    },
+    {
+      "n": 9,
+      "name": "Chain",
+      "what": "At redemption every caveat runs again",
+      "refuses": "Yes (final)"
+    }
+  ],
+  "sources": {
+    "timeline": "git log",
+    "twin": "contracts/deployments/base-sepolia.json, contracts/deployments/fisco.json, docs/evidence/bundle.json (bytecode.table)",
+    "baseScenario": "apps/agent/data/e2e-base-sepolia.json",
+    "metrics": "docs/evidence/bundle.json",
+    "novelty": "docs/evidence/claims-input.json (CL-17 decision), docs/CLAIMS.md (wording)",
+    "stack": "apps/web/package.json, pnpm-workspace.yaml, contracts/foundry.toml, docs/evidence/bundle.json (chain.ledgers)",
+    "enforcerDocs": "docs/ENFORCERS.md (sections 3 and 4)",
+    "scales": "docs/TECHNICAL.md (the nine scales table)"
+  }
+}

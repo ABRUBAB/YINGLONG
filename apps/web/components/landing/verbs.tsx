@@ -117,7 +117,9 @@ export function Verbs() {
           if (ring) gsap.set(ring, { attr: { "stroke-dasharray": "1 0" } });
           return;
         }
-        if (ring) {
+        // The ring fills on the compositor (CSS scroll-driven animation, components/shell/site.css);
+        // GSAP scrubs it only where animation-timeline is not supported.
+        if (ring && !CSS.supports("animation-timeline: view()")) {
           gsap.fromTo(
             ring,
             { attr: { "stroke-dasharray": "0 2" } },
@@ -146,7 +148,7 @@ export function Verbs() {
   }, [motionOff]);
 
   return (
-    <section ref={root} aria-labelledby="verbs-title" className="yl-section relative border-y border-line-1 bg-bg-1">
+    <section ref={root} aria-labelledby="verbs-title" className="yl-section yl-verbs-scope-root relative border-y border-line-1 bg-bg-1">
       <div className="yl-container">
         <SectionHead
           index="02"
@@ -162,6 +164,7 @@ export function Verbs() {
                 <circle r={R} fill="none" stroke="var(--line-2)" strokeWidth="0.006" />
                 <circle
                   ref={progress}
+                  className="yl-verbs-progress"
                   r={R}
                   fill="none"
                   stroke="var(--chrome-1)"
@@ -200,7 +203,7 @@ export function Verbs() {
               </svg>
             </div>
           </div>
-          <ol ref={list} className="m-0 grid list-none gap-0 p-0 lg:col-span-7">
+          <ol ref={list} className="yl-verbs-timeline m-0 grid list-none gap-0 p-0 lg:col-span-7">
             {VERBS.map(({ v, d, fact }, i) => (
               <li
                 key={v}

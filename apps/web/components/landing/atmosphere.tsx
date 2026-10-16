@@ -7,6 +7,11 @@ import { Dithering } from "@paper-design/shaders-react";
  * bg-2), so the stage reads as a lit room and never as colour. aria-hidden, no pointer events.
  * `moving` is false under reduced motion, the Pause motion control and while off-screen: the shader
  * then holds a single frame.
+ *
+ * Internal resolution: at most 0.9 megapixels whatever the screen (about two thirds of a 1440 x 900
+ * hero at DPR 1, less on larger or denser screens), scaled up by the browser. The two greys are 3%
+ * apart, so the coarser grain is invisible, while the fragment cost per frame drops by half or more
+ * next to the 3D canvas it shares the GPU with.
  */
 export default function Atmosphere({ moving }: { moving: boolean }) {
   return (
@@ -20,7 +25,7 @@ export default function Atmosphere({ moving }: { moving: boolean }) {
       scale={0.9}
       speed={moving ? 0.18 : 0}
       frame={4200}
-      maxPixelCount={1920 * 1080}
+      maxPixelCount={900_000}
       minPixelRatio={1}
       style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
     />

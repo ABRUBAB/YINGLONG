@@ -82,3 +82,32 @@ test("keyboard: skip link, rail and pause are reachable", async ({ page }) => {
   await pause.focus();
   await expect(pause).toBeFocused();
 });
+
+test("console: insights are labelled, the credential verifies, and an escrow past its refund time returns to the payer", async ({ page }) => {
+  await page.goto("/app", { waitUntil: "networkidle" });
+  const insights = page.getByRole("region", { name: /days? left in this budget period/ });
+  await expect(insights.getByText("AI-generated")).toBeVisible();
+  await expect(insights.getByText("Would reach the cap").first()).toBeVisible();
+  const cred = page.getByRole("region", { name: "Payment-reliability credential" });
+  await expect(cred.getByText("test credential issued by a fictional bank; not a credit score").first()).toBeVisible();
+  await cred.getByRole("button", { name: "Verify credential" }).click();
+  await expect(cred.getByText("Valid: every check passed")).toBeVisible();
+  const escrows = page.getByRole("region", { name: /held for you/ });
+  await escrows.getByRole("button", { name: "Refund", disabled: false }).first().click();
+  await page.getByRole("dialog").getByRole("button", { name: "Refund" }).click();
+  await expect(escrows.getByText(/returned to your account/)).toBeVisible();
+});
+
+test("treasury: the forecast marks the breach and a sweep above the sealed risk class is refused with its suitability card", async ({ page }) => {
+  await page.goto("/treasury", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { name: /Reserve floor breached on day \d+/ })).toBeVisible();
+  const chart = page.getByRole("slider", { name: /Projected balance by day/ });
+  await chart.focus();
+  await page.keyboard.press("End");
+  await expect(chart).toHaveAttribute("aria-valuenow", "30");
+  await page.getByRole("button", { name: "Hong Kong", exact: true }).click();
+  await page.getByRole("button", { name: /Sweep 10,000 HKD into the Test Growth Fund/ }).click();
+  const card = page.getByRole("region", { name: "Suitability explanation" });
+  await expect(card.getByText("UnsuitableProduct").first()).toBeVisible();
+  await expect(card.getByText(/risk class 5/).first()).toBeVisible();
+});

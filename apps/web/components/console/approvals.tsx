@@ -16,7 +16,7 @@ export function Approvals() {
     <section aria-labelledby="approvals-h" className="grid gap-3">
       <SectionHead id="approvals-h" eyebrow="Waiting for you" title={`${items.length} approval${items.length === 1 ? "" : "s"}`} />
       <ErrorLine error={q.error} />
-      <ul className="m-0 grid list-none divide-y divide-line-1 rounded-card border border-brass/40 bg-bg-1 p-0">
+      <ul className="yl-card yl-enter m-0 grid list-none divide-y divide-line-1 border-brass/50 p-0">
         {items.map((a) => (
           <li key={a.id} className="grid grid-cols-[auto_1fr] items-start gap-x-3 gap-y-2 px-4 py-3.5 sm:grid-cols-[auto_1fr_auto_auto] sm:items-center">
             <StateRing state="waiting" size={20} glyphOnly label="Needs you" className="mt-0.5 sm:mt-0" />

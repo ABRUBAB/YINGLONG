@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Renders the Mandate Orbit posters (master plan 14.7, "poster first"):
- *   public/posters/orbit-375.webp, orbit-768.webp, orbit-1440.webp  (hero fallback and LCP frame, 16:10)
+ *   public/posters/orbit-375.webp, orbit-768.webp, orbit-1440.webp  (hero fallback and LCP frame, 16:10, transparent)
  *   public/posters/og.webp                                              (Open Graph image, 1200x630)
  * from `/?poster=1` (fixed state, no events) of a running fixtures server.
  * Usage: node scripts/posters.mjs [baseUrl]   (default http://localhost:3210)
@@ -30,12 +30,14 @@ async function capture(width, height, target) {
   await page.goto(`${base}/?poster=1`, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.__posterReady === true, null, { timeout: 120_000 });
   await page.waitForTimeout(1500);
+  // Transparent posters: the hero's atmosphere shows through them exactly as it does through the canvas.
+  await page.addStyleTag({ content: "html,body,main,section{background:transparent!important}" });
   const el = page.locator("[data-hero-canvas]");
-  const png = await el.screenshot({ omitBackground: false });
+  const png = await el.screenshot({ omitBackground: true });
   const meta = await sharp(png).metadata();
   const w = Math.min(target, meta.width ?? target);
   const h = Math.round((w * 10) / 16);
-  await sharp(png).resize(w, h, { fit: "cover" }).flatten({ background: "#0B0C0F" }).webp({ quality: 84, effort: 6 }).toFile(join(out, `orbit-${width}.webp`));
+  await sharp(png).resize(w, h, { fit: "cover" }).webp({ quality: 84, alphaQuality: 90, effort: 6 }).toFile(join(out, `orbit-${width}.webp`));
   console.log(`orbit-${width}.webp ${w}x${h}px`);
   await ctx.close();
 }

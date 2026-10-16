@@ -4,18 +4,21 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HashRing, LabelChip, shortHash, StateRing } from "@yinglong/ui";
-import type { VisitorSealResult, VisitorSignUp } from "@/lib/api/view";
-import { getApi, isSample } from "@/lib/api";
-import { invalidate } from "@/lib/api/hooks";
+import type { VisitorDraft, VisitorSealResult, VisitorSignUp } from "@/lib/api/view";
+import { ApiRequestError, getApi, isSample } from "@/lib/api";
+import { invalidate, useAgent } from "@/lib/api/hooks";
 import { clearVisitorSession } from "@/lib/api/session";
 import { passkeysSupported, PasskeyCancelledError } from "@/lib/passkey";
 import { completeSignUp, createVisitorPasskey, reviewSignUp, signSignUp, SignUpRefusedError, type SignUpReview, type VisitorKey } from "@/lib/visitor";
 import { useVisitorSession } from "@/components/session";
 import { Button, buttonClass } from "@/components/ui/button";
 import { SampleBadge, TxLink } from "@/components/data/parts";
+import { SayStep, SeeStep } from "./say-see";
 
 type Phase =
   | { at: "intro" }
+  | { at: "drafting" }
+  | { at: "see"; draft: VisitorDraft }
   | { at: "creating" }
   | { at: "registering"; key: VisitorKey }
   | { at: "review"; key: VisitorKey; signUp: VisitorSignUp; review: SignUpReview }
@@ -31,13 +34,13 @@ function describe(e: unknown): string {
 }
 
 const STEPS = [
-  { n: 1, label: "Create a passkey", hint: "on this device" },
-  { n: 2, label: "Read what you sign", hint: "decoded here" },
-  { n: 3, label: "Seal", hint: "two passkey prompts" },
+  { n: 1, label: "Say", hint: "your rules, your words" },
+  { n: 2, label: "See", hint: "what the code enforces" },
+  { n: 3, label: "Seal", hint: "with a passkey on this device" },
 ];
 
 function Stepper({ phase }: { phase: Phase["at"] }) {
-  const current = phase === "intro" || phase === "creating" || phase === "error" ? 1 : phase === "registering" || phase === "review" ? 2 : 3;
+  const current = phase === "intro" || phase === "drafting" || phase === "error" ? 1 : phase === "see" ? 2 : 3;
   return (
     <ol className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0" aria-label="Steps">
       {STEPS.map((s) => (
@@ -54,6 +57,9 @@ function Stepper({ phase }: { phase: Phase["at"] }) {
 
 /** /start: try YINGLONG with your own passkey. Test units only; the passkey never leaves this device. */
 export function Start() {
+  // The ledger the visitor's account lives on, as the service labels it (never typed here).
+  const health = useAgent("health", (api) => api.health(), ["health"]);
+  const ledgers = health.data?.ledgers.length ? health.data.ledgers.map((l) => l.badge).join(" and ") : null;
   const router = useRouter();
   const params = useSearchParams();
   const session = useVisitorSession();
@@ -63,11 +69,28 @@ export function Start() {
 
   useEffect(() => setSupported(passkeysSupported()), []);
 
-  async function register(key: VisitorKey) {
+  const [text, setText] = useState("");
+  const [draftError, setDraftError] = useState<Error | undefined>();
+  // The mandate chosen for this sign-up: a draft the visitor saw, or undefined for the standard visitor mandate.
+  const [chosen, setChosen] = useState<unknown>(undefined);
+  const resealing = Boolean(session && again);
+
+  async function register(key: VisitorKey, mandate: unknown = chosen) {
     setPhase({ at: "registering", key });
     try {
       const api = getApi();
-      const signUp = await api.visitorSignUp({ credentialId: key.credentialId, publicKey: key.publicKey });
+      let signUp: VisitorSignUp;
+      if (resealing && session && session.credentialId === key.credentialId) {
+        try {
+          signUp = await api.visitorReseal(session.visitorId, session.token, mandate);
+        } catch (e) {
+          // An older session token: the same passkey signing up again reaches the same account.
+          if (!(e instanceof ApiRequestError) || e.status !== 400 || !/token/i.test(e.message)) throw e;
+          signUp = await api.visitorSignUp({ credentialId: key.credentialId, publicKey: key.publicKey, mandate });
+        }
+      } else {
+        signUp = await api.visitorSignUp({ credentialId: key.credentialId, publicKey: key.publicKey, mandate });
+      }
       const directory = await api.contractDirectory(signUp.ledger);
       setPhase({ at: "review", key, signUp, review: reviewSignUp(signUp, directory) });
     } catch (e) {
@@ -75,23 +98,43 @@ export function Start() {
     }
   }
 
-  async function create() {
+  async function create(mandate: unknown = chosen) {
     setPhase({ at: "creating" });
     try {
       const key = await createVisitorPasskey();
-      await register(key);
+      await register(key, mandate);
     } catch (e) {
       setPhase({ at: "error", message: describe(e) });
     }
   }
 
   /** After a revoke: the same passkey seals a new mandate (same visitor id, new messages). */
-  async function reseal() {
+  async function reseal(mandate: unknown = chosen) {
     if (!session?.publicKey) {
       setPhase({ at: "error", message: "This device does not remember the passkey's public key. Create a new passkey instead." });
       return;
     }
-    await register({ credentialId: session.credentialId, publicKey: { x: session.publicKey.x as `0x${string}`, y: session.publicKey.y as `0x${string}` } });
+    await register({ credentialId: session.credentialId, publicKey: { x: session.publicKey.x as `0x${string}`, y: session.publicKey.y as `0x${string}` } }, mandate);
+  }
+
+  /** Say -> see: compile the visitor's words; nothing is created or signed. */
+  async function see() {
+    setDraftError(undefined);
+    setPhase({ at: "drafting" });
+    try {
+      const draft = await getApi().draftVisitorMandate(text.trim());
+      setPhase({ at: "see", draft });
+    } catch (e) {
+      setDraftError(e as Error);
+      setPhase({ at: "intro" });
+    }
+  }
+
+  /** See -> seal (or skip straight to the standard mandate). */
+  function sealWith(mandate: unknown) {
+    setChosen(mandate);
+    if (resealing) void reseal(mandate);
+    else void create(mandate);
   }
 
   async function seal() {
@@ -109,7 +152,7 @@ export function Start() {
     }
   }
 
-  const busy = phase.at === "creating" || phase.at === "registering" || phase.at === "signing";
+  const busy = phase.at === "creating" || phase.at === "registering" || phase.at === "signing" || phase.at === "drafting";
   // The delegation's Hash Ring: draft while you read, holding while the passkey signs, sealed after.
   const ring =
     phase.at === "review" || phase.at === "signing" || phase.at === "done"
@@ -131,70 +174,68 @@ export function Start() {
           </div>
           <SampleBadge />
         </div>
-        <p className="measure m-0 text-15 text-fg-2">
-          Create a passkey on this device. YINGLONG deploys an account whose only signer is that passkey, gives you an agent with a small
-          mandate, and asks your passkey to seal it. You read every message before you sign it.
+        <p className="measure m-0 text-lead text-fg-2">
+          Say what your agent may do. See what the code will enforce, decoded from the compiled caveats. Seal it with a passkey created on
+          this device: the account&apos;s only signer, and you read both messages before it signs.
         </p>
         <Stepper phase={phase.at} />
       </header>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
         <div className="grid content-start gap-8" aria-live="polite">
-          {phase.at === "intro" ? (
-            <section aria-labelledby="start-create" className="grid gap-4">
+          {phase.at === "intro" && session && !again ? (
+            <section aria-labelledby="start-create" className="yl-card grid gap-4 p-5 sm:p-6">
               <h2 id="start-create" className="m-0 text-18 font-semibold text-fg-0">
-                {session && !again ? "This device already has your account" : again ? "Seal a new mandate with your passkey" : "Create your passkey"}
+                This device already has your account
               </h2>
+              <p className="m-0 text-13 text-fg-2">
+                Visitor <span className="font-mono">{session.visitorId}</span>, sealed with passkey{" "}
+                <span className="font-mono">{shortHash(session.credentialId, 6, 4)}</span>.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/app" className={buttonClass("primary", "lg")}>
+                  Open your console
+                </Link>
+                <Button variant="secondary" size="lg" disabled={!supported} onClick={() => clearVisitorSession()}>
+                  Start over with a new passkey
+                </Button>
+              </div>
+            </section>
+          ) : null}
+
+          {(phase.at === "intro" || phase.at === "drafting") && !(session && !again) ? (
+            <>
               {!supported ? (
                 <p role="alert" className="m-0 text-13 text-fg-1">
                   This browser cannot create passkeys. Open this page on a phone or a browser with passkey support.
                 </p>
               ) : null}
-              {session && !again ? (
-                <>
-                  <p className="m-0 text-13 text-fg-2">
-                    Visitor <span className="font-mono">{session.visitorId}</span>, sealed with passkey{" "}
-                    <span className="font-mono">{shortHash(session.credentialId, 6, 4)}</span>.
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <Link href="/app" className={buttonClass("primary", "lg")}>
-                      Open your console
-                    </Link>
-                    <Button
-                      variant="secondary"
-                      size="lg"
-                      disabled={!supported}
-                      onClick={() => {
-                        clearVisitorSession();
-                        void create();
-                      }}
-                    >
-                      Start over with a new passkey
-                    </Button>
-                  </div>
-                </>
-              ) : session && again ? (
-                <>
-                  <p className="m-0 text-13 text-fg-2">
-                    Your previous mandate is revoked. The same passkey seals a new one: same account, same agent, new rules on chain.
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <Button size="lg" disabled={!supported} onClick={() => void reseal()}>
-                      Prepare a new mandate
-                    </Button>
-                    <Link href="/app" className={buttonClass("secondary", "lg")}>
-                      Back to the console
-                    </Link>
-                  </div>
-                </>
-              ) : (
-                <div>
-                  <Button size="lg" disabled={!supported} onClick={() => void create()}>
-                    Create a passkey
-                  </Button>
-                </div>
-              )}
-            </section>
+              {resealing ? (
+                <p className="m-0 text-13 text-fg-2">
+                  Your previous mandate is revoked. The same passkey seals a new one: same account, same agent, new rules on chain.
+                </p>
+              ) : null}
+              <SayStep
+                text={text}
+                onText={setText}
+                onSee={() => void see()}
+                onStandard={() => sealWith(undefined)}
+                busy={phase.at === "drafting"}
+                error={draftError}
+                standardLabel="Use the standard visitor mandate"
+                disabled={!supported}
+              />
+            </>
+          ) : null}
+
+          {phase.at === "see" ? (
+            <SeeStep
+              d={phase.draft}
+              busy={busy}
+              onEdit={() => setPhase({ at: "intro" })}
+              onSeal={() => sealWith(phase.draft.draft)}
+              sealLabel="Seal with my passkey"
+            />
           ) : null}
 
           {phase.at === "creating" ? (
@@ -270,7 +311,9 @@ export function Start() {
           <ul className="m-0 grid list-none gap-3 p-0">
             <li>Your passkey never leaves this device. YINGLONG receives only its public key; the service never holds a key for you.</li>
             <li>Your account is a smart account whose only signer is this passkey: no seed phrase, no operator key.</li>
-            <li>Test units only, on a team-run FISCO BCOS chain. Nothing here has monetary value or reaches a bank.</li>
+            <li>
+              Test units only, on {ledgers ?? "a test ledger"}. Nothing here has monetary value or reaches a bank.
+            </li>
             <li>Your agent can pay three sample merchants, small amounts alone and up to 200 with your passkey. Everything else is refused on chain.</li>
           </ul>
           <div className="flex flex-wrap gap-1.5">

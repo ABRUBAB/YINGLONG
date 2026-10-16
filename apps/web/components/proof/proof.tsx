@@ -20,10 +20,39 @@ const SOURCE: Record<string, string> = {
   ci: "CI",
 };
 
+const SECTIONS = [
+  "What a receipt proves, and what it does not",
+  "Transactions, each on its ledger",
+  "Generated numbers",
+  "Same bytecode on two ledgers",
+  "One receipt, as a certificate",
+  "Verify it yourself",
+  "Honest labels",
+] as const;
+
+/** On this page: a plain anchor list beside the document on wide screens (never printed, never animated). */
+function Contents() {
+  return (
+    <nav aria-label="On this page" className="no-print sticky top-[calc(var(--nav-h)+40px)] hidden self-start xl:block">
+      <p className="eyebrow m-0 text-fg-muted">On this page</p>
+      <ol className="m-0 mt-3 grid list-none gap-0.5 border-l border-line-1 p-0">
+        {SECTIONS.map((t, i) => (
+          <li key={t}>
+            <a href={`#s${i + 1}`} className="-ml-px flex gap-2 border-l border-transparent py-1.5 pl-3 text-12 text-fg-2 hover:border-fg-1 hover:text-fg-0">
+              <span className="font-mono text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
+              {t}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
 function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={`s${n}`} className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4 border-t border-line-2 pt-8 print:break-inside-avoid">
-      <h2 id={`s${n}`} className="m-0 flex items-baseline gap-4 text-18 font-semibold text-fg-0">
+    <section id={`s${n}`.replace("s", "sec")} aria-labelledby={`s${n}`} className="grid min-w-0 scroll-mt-[calc(var(--nav-h)+24px)] grid-cols-[minmax(0,1fr)] gap-4 border-t border-line-2 pt-8 print:break-inside-avoid">
+      <h2 id={`s${n}`} className="m-0 flex scroll-mt-[calc(var(--nav-h)+24px)] items-baseline gap-4 text-18 font-semibold text-fg-0">
         <span className="font-mono text-13 text-fg-muted">{String(n).padStart(2, "0")}</span>
         {title}
       </h2>
@@ -56,7 +85,9 @@ export function ProofDocument() {
   const shownGroups = allContracts ? groups : groups.slice(0, CONTRACTS_SHOWN);
 
   return (
-    <article className="mx-auto w-full max-w-[880px] px-4 pt-10 pb-20 sm:px-6">
+    <div className="mx-auto grid w-full max-w-[1200px] gap-12 px-4 pt-10 pb-20 sm:px-6 xl:grid-cols-[220px_minmax(0,880px)] xl:px-8">
+    <Contents />
+    <article className="min-w-0">
       <header className="grid gap-4">
         <p className="eyebrow m-0 text-fg-muted">Proof Center</p>
         <h1 className="type-display m-0 text-32 leading-tight text-fg-0 sm:text-[2.6rem]">What is proven, and how to check it</h1>
@@ -64,6 +95,12 @@ export function ProofDocument() {
           Every hash on this page opens on a block explorer or on our read-only ledger page. Every number carries its source and sample size. Nothing
           here is typed by hand: it is generated from the code and the ledgers.
         </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <LabelChip>Test units</LabelChip>
+          <LabelChip>Base Sepolia (testnet)</LabelChip>
+          <LabelChip>FISCO BCOS (team-run consortium ledger)</LabelChip>
+          <LabelChip dotted>Anvil bench (simulated)</LabelChip>
+        </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
           {e ? <span>Generated {formatTime(e.generatedAt, { seconds: true })} HKT</span> : null}
           {e ? <span className="font-mono">commit {e.commit}</span> : null}
@@ -311,5 +348,6 @@ export function ProofDocument() {
         </section>
       </div>
     </article>
+    </div>
   );
 }

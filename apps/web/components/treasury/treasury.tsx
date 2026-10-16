@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { cn, LabelChip, OutputChip, StateRing } from "@yinglong/ui";
+import { cn, LabelChip, StateRing } from "@yinglong/ui";
 import type { DirectorProposal, TreasuryEntity, TreasuryView } from "@/lib/api/view";
 import { ApiRequestError, getApi, isSample } from "@/lib/api";
 import { invalidate, useAgent } from "@/lib/api/hooks";
 import { formatAmount, formatDay, formatTime } from "@/lib/format";
 import { Segmented } from "@/components/ui/controls";
 import { Button } from "@/components/ui/button";
-import { ErrorLine, LedgerChip, Loading, SampleBadge, TierBadge, TxLink } from "@/components/data/parts";
+import { ErrorLine, LedgerChip, Loading, TierBadge, TxLink } from "@/components/data/parts";
+import { PageHeader, Panel, TestUnitsChip } from "@/components/data/panel";
 import { LaneGauge } from "@/components/console/authority-panel";
+import { ForecastPanel } from "./forecast-panel";
+import { PayrollPanel, TreasurerRequests } from "./requests";
 
 function DirectorRings({ p, entity }: { p: DirectorProposal; entity: TreasuryEntity }) {
   const signed = new Set(p.signatures.map((s) => s.directorId));
@@ -58,21 +61,24 @@ function Queue({ view }: { view: TreasuryView }) {
     }
   }
   return (
-    <section aria-labelledby="queue-h" className="grid content-start gap-4">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 id="queue-h" className="m-0 text-15 font-semibold text-fg-0">
-          Director queue
-        </h2>
-        <span className="text-12 text-fg-muted">
-          {view.entity.threshold} of {view.entity.directors.length} directors
+    <Panel
+      id="queue-h"
+      eyebrow="Board"
+      title={open.length ? `${open.length} waiting for directors` : "Director queue"}
+      meta={
+        <span>
+          {view.entity.threshold} of {view.entity.directors.length} directors sign one user operation from the company account.
         </span>
-      </div>
-      {open.length === 0 && closed.length === 0 ? <p className="m-0 text-13 text-fg-muted">Nothing outside the lanes. The agent works alone inside them.</p> : null}
+      }
+      tone={open.length ? "brass" : undefined}
+      bodyClassName="py-1"
+    >
+      {open.length === 0 && closed.length === 0 ? <p className="m-0 py-3 text-13 text-fg-muted">Nothing outside the lanes. The agent works alone inside them.</p> : null}
       <ul className="m-0 grid list-none gap-0 p-0">
         {[...open, ...shownClosed].map((p) => {
           const next = view.entity.directors.find((d) => !p.signatures.some((s) => s.directorId === d.id));
           return (
-            <li key={p.id} className={cn("grid gap-2.5 border-t border-line-2 py-4", p.status !== "open" && "text-fg-2")}>
+            <li key={p.id} className={cn("grid gap-2.5 border-t border-line-1 py-4 first:border-t-0", p.status !== "open" && "text-fg-2")}>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="m-0 flex flex-wrap items-center gap-2 text-13 font-medium text-fg-0">
@@ -105,32 +111,40 @@ function Queue({ view }: { view: TreasuryView }) {
         })}
       </ul>
       {closed.length > CLOSED_SHOWN ? (
-        <div>
+        <div className="pb-3">
           <Button size="sm" variant="quiet" aria-expanded={allClosed} onClick={() => setAllClosed((v) => !v)}>
             {allClosed ? "Show only the latest" : `Show ${closed.length - CLOSED_SHOWN} earlier resolution${closed.length - CLOSED_SHOWN === 1 ? "" : "s"}`}
           </Button>
         </div>
       ) : null}
       {msg ? (
-        <p role="status" className="m-0 text-12 text-fg-2">
+        <p role="status" className="m-0 pb-3 text-12 text-fg-2">
           {msg}
         </p>
       ) : null}
-    </section>
+    </Panel>
   );
 }
 
 function Ledger({ view }: { view: TreasuryView }) {
   const sym = view.lanes[0]?.cap.symbol;
+  const [all, setAll] = useState(false);
+  const SHOWN = 12;
+  const rows = all ? view.instructions : view.instructions.slice(0, SHOWN);
+  const fisco = view.entity.rail.ledger === "fisco";
   return (
-    <section aria-labelledby="ledger-h" className="grid content-start gap-4">
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 id="ledger-h" className="m-0 text-15 font-semibold text-fg-0">
-          {view.entity.rail.ledger === "fisco" ? "Instruction ledger" : "Ledger"}
-        </h2>
-        <LedgerChip ledger={view.entity.rail.ledger} />
-      </div>
-      <div className="-mx-1 overflow-x-auto px-1" tabIndex={0} role="region" aria-label="Table (scrolls sideways on small screens)">
+    <Panel
+      id="ledger-h"
+      eyebrow={fisco ? "FISCO BCOS" : "Ledger"}
+      title={fisco ? "Instruction ledger" : "Payments ledger"}
+      actions={<LedgerChip ledger={view.entity.rail.ledger} />}
+      footer={
+        fisco
+          ? "Coin-free rail: nothing on this ledger has value. Instructions are settled by an e-CNY-style simulator, not the PBoC sandbox and not any bank. FISCO BCOS here is a consortium chain run by the team."
+          : "Test units on a test ledger; no monetary value."
+      }
+    >
+      <div className="-mx-1 overflow-x-auto px-1" tabIndex={0} role="region" aria-label="Instructions (scrolls sideways on small screens)">
         <table className="yl-table min-w-[640px]">
           <caption className="sr-only">Payment instructions with status and anchoring</caption>
           <thead>
@@ -146,7 +160,7 @@ function Ledger({ view }: { view: TreasuryView }) {
             </tr>
           </thead>
           <tbody>
-            {view.instructions.map((i) => (
+            {rows.map((i) => (
               <tr key={i.id}>
                 <td className="font-mono text-12 whitespace-nowrap text-fg-muted">
                   <span className="block text-fg-2">{formatTime(i.createdAt, { date: false })}</span>
@@ -184,15 +198,29 @@ function Ledger({ view }: { view: TreasuryView }) {
           </tbody>
         </table>
       </div>
-      {view.entity.rail.ledger === "fisco" ? (
-        <p className="m-0 text-12 text-fg-muted">
-          Coin-free rail: nothing on this ledger has value. Instructions are settled by an e-CNY-style simulator, not the PBoC sandbox and not any
-          bank.
-        </p>
+      {view.instructions.length > SHOWN ? (
+        <div className="pt-3">
+          <Button size="sm" variant="quiet" aria-expanded={all} onClick={() => setAll((v) => !v)}>
+            {all ? `Show the latest ${SHOWN}` : `Show ${view.instructions.length - SHOWN} earlier instruction${view.instructions.length - SHOWN === 1 ? "" : "s"}`}
+          </Button>
+        </div>
       ) : null}
-    </section>
+    </Panel>
   );
 }
+
+function SectionLabel({ id, index, title }: { id: string; index: string; title: string }) {
+  return (
+    <div className="flex items-baseline gap-3 border-b border-line-1 pb-2">
+      <span className="kicker">{index}</span>
+      <h2 id={id} className="m-0 text-13 font-semibold tracking-wide text-fg-1 uppercase">
+        {title}
+      </h2>
+    </div>
+  );
+}
+
+const SHORT: Record<TreasuryEntity["jurisdiction"], string> = { mainland: "Shenzhen", hk: "Hong Kong", international: "International" };
 
 export function Treasury() {
   const entities = useAgent("treasury-entities", (api) => api.treasuryEntities(), ["treasury"]);
@@ -202,87 +230,106 @@ export function Treasury() {
   }, [entities.data, id]);
   const current = id ?? entities.data?.[0]?.id ?? null;
   const view = useAgent(`treasury:${current}`, (api) => (current ? api.treasury(current) : Promise.reject(new Error("No entity"))), ["treasury"]);
+  const forecast = useAgent(`forecast:${current}`, (api) => (current ? api.forecast(current, 30) : Promise.reject(new Error("No entity"))), ["treasury", "forecast"]);
   const v = view.data;
+  const nextPayroll = forecast.data?.events.find((e) => e.kind === "payroll") ?? null;
 
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 pt-6 pb-16 sm:px-6 lg:px-8 lg:pt-8">
-      <header className="grid gap-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="eyebrow m-0 text-fg-muted">Programmable treasury</p>
-            <h1 className="m-0 mt-1 text-22 font-semibold text-fg-0 sm:text-26">{v?.entity.name ?? "Treasury"}</h1>
-          </div>
-          <SampleBadge />
-        </div>
-        <ErrorLine error={entities.error} />
-        {entities.data && entities.data.length > 1 ? (
-          <div className="grid gap-2">
+      <PageHeader
+        eyebrow="Treasury"
+        title={v?.entity.name ?? "Lotus Lane treasury"}
+        lead="A treasurer agent runs the company's lanes alone; anything outside them goes to the board. Every instruction is anchored, and the forecast shows what is coming."
+        chips={
+          v ? (
+            <>
+              <TestUnitsChip />
+              <LabelChip>{v.entity.rail.label}</LabelChip>
+              <LedgerChip ledger={v.entity.rail.ledger} />
+              {v.entity.jurisdiction === "mainland" ? <LabelChip dotted>e-CNY-style simulator, not the PBoC sandbox</LabelChip> : null}
+              <LabelChip dotted>Fictional company</LabelChip>
+            </>
+          ) : null
+        }
+        actions={
+          entities.data && entities.data.length > 1 ? (
             <Segmented<string>
               label="Entity"
               value={current ?? ""}
               onChange={setId}
-              options={entities.data.map((e) => ({ value: e.id, label: e.jurisdiction === "mainland" ? "Lotus Lane Shenzhen" : e.jurisdiction === "hk" ? "Lotus Lane HK" : e.name }))}
+              options={entities.data.map((e) => ({ value: e.id, label: SHORT[e.jurisdiction] ?? e.name }))}
               className="w-fit"
             />
-          </div>
-        ) : null}
+          ) : null
+        }
+      >
+        <ErrorLine error={entities.error} />
         {v ? (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-13">
-            <LabelChip>{v.entity.rail.label}</LabelChip>
-            <span className="text-fg-muted">{v.entity.rail.note}</span>
-          </div>
+          <p className="m-0 max-w-[80ch] text-12 text-fg-muted">
+            {v.entity.rail.note} Personal here means the agent&apos;s authority is bound to verified persons: for a company, its directors ({v.entity.threshold} of{" "}
+            {v.entity.directors.length}). The board resolution is the treasurer agent&apos;s mandate.
+          </p>
         ) : null}
-        <p className="m-0 max-w-[80ch] text-12 text-fg-muted">
-          Personal means the agent&apos;s authority is bound to verified persons: for a company, its directors ({v ? `${v.entity.threshold} of ${v.entity.directors.length}` : "2 of 3"}). The board resolution is the treasurer agent&apos;s mandate.
-        </p>
-      </header>
+      </PageHeader>
 
       <ErrorLine error={view.error} className="mt-6" />
-      {view.loading ? (
+      {view.loading && !v ? (
         <div className="mt-8">
           <Loading rows={4} />
         </div>
       ) : null}
       {v ? (
-        <>
-          <section aria-labelledby="lanes-h" className="mt-10 grid gap-5 border-t border-line-2 pt-6">
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <h2 id="lanes-h" className="m-0 text-15 font-semibold text-fg-0">
-                Lanes
-              </h2>
-              <span className="text-12 text-fg-muted">The agent acts alone inside a lane; outside every lane is a board proposal.</span>
-            </div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-[repeat(4,minmax(0,1fr))_minmax(0,1.6fr)]">
-              {v.lanes.map((l) => (
-                <LaneGauge key={l.id} lane={l} size={116} />
-              ))}
-              {v.forecast ? (
-                <div className="col-span-2 grid content-center gap-2 rounded-card border border-brass/40 bg-bg-1 p-4 sm:col-span-3 lg:col-span-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <StateRing state="waiting" size={16} label="Forecast" />
-                    <OutputChip kind="estimate" />
-                  </div>
-                  <p className="m-0 text-13 text-fg-1">{v.forecast.note}</p>
-                  <p className="m-0 text-11 text-fg-muted">{v.forecast.model}</p>
-                </div>
-              ) : null}
+        <div className="mt-10 grid gap-10">
+          <section aria-labelledby="lanes-sec" className="grid gap-4">
+            <SectionLabel id="lanes-sec" index="01" title="Lanes" />
+            <Panel
+              id="lanes-h"
+              eyebrow="Board mandate"
+              title="Where the agent acts alone"
+              meta={<span>Each ring is a lane sealed by the board. The tick marks a reserve floor; it turns brass only when a breach is forecast.</span>}
+            >
+              <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
+                {v.lanes.map((l) => (
+                  <LaneGauge key={l.id} lane={l} size={116} />
+                ))}
+              </div>
+            </Panel>
+          </section>
+
+          <section aria-labelledby="forecast-sec" className="grid gap-4">
+            <SectionLabel id="forecast-sec" index="02" title="What is coming" />
+            <ForecastPanel entityId={v.entity.id} />
+          </section>
+
+          <section aria-labelledby="decide-sec" className="grid gap-4">
+            <SectionLabel id="decide-sec" index="03" title="Decisions" />
+            <div className="grid items-start gap-4 xl:grid-cols-2">
+              <Queue view={v} />
+              <div className="grid gap-4">
+                <TreasurerRequests key={v.entity.id} view={v} />
+                <PayrollPanel
+                  key={`${v.entity.id}:${nextPayroll?.amount.value ?? "none"}`}
+                  view={v}
+                  next={nextPayroll ? { day: nextPayroll.day, amount: nextPayroll.amount.value } : null}
+                />
+              </div>
             </div>
           </section>
 
-          <div className="mt-12 grid gap-12 xl:grid-cols-[340px_minmax(0,1fr)]">
-            <Queue view={v} />
+          <section aria-labelledby="ledger-sec" className="grid gap-4">
+            <SectionLabel id="ledger-sec" index="04" title="Records" />
             <Ledger view={v} />
-          </div>
-          {v.mandate ? (
-            <p className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line-1 pt-4 text-12 text-fg-muted">
-              <StateRing state="sealed" size={16} label={`${v.mandate.title}`} />
-              {v.mandate.sealedAt ? <span>sealed {formatTime(v.mandate.sealedAt)}</span> : null}
-              {v.mandate.published.map((t) => (
-                <TxLink key={t.txHash} ledger={t.ledger} hash={t.txHash} href={t.explorerUrl} badge={t.badge} label="Published" />
-              ))}
-            </p>
-          ) : null}
-        </>
+            {v.mandate ? (
+              <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-12 text-fg-muted">
+                <StateRing state="sealed" size={16} label={v.mandate.title} />
+                {v.mandate.sealedAt ? <span>sealed {formatTime(v.mandate.sealedAt)}</span> : null}
+                {v.mandate.published.map((t) => (
+                  <TxLink key={t.txHash} ledger={t.ledger} hash={t.txHash} href={t.explorerUrl} badge={t.badge} label="Published" />
+                ))}
+              </p>
+            ) : null}
+          </section>
+        </div>
       ) : null}
     </div>
   );

@@ -20,8 +20,16 @@ import type {
   CityPrincipal,
   CityReceipt,
   CitySnapshot,
+  CashForecast,
+  Coverage,
+  Credential,
+  CredentialVerification,
   Decision,
   DirectorProposal,
+  Escrow,
+  Narration,
+  SpendingInsights,
+  Suitability,
   Ledger,
   LedgerInstruction,
   Mandate,
@@ -390,6 +398,164 @@ function mapDecision(p: W.WireProposal): Decision {
     aigc: p.explanation.aiGenerated ? { label: "AI-generated", model: p.explanation.model ?? "unknown" } : null,
     approvalId: p.approvalId ?? null,
     receiptId: p.receiptIds?.[0] ?? null,
+    suitability: p.suitability ? mapSuitability(p.suitability) : null,
+  };
+}
+
+function mapSuitability(x: z.infer<typeof W.WireSuitability>): Suitability {
+  return {
+    product: {
+      id: x.product.id ?? null,
+      label: x.product.label,
+      address: x.product.address,
+      onChainName: x.product.onChainName ?? null,
+      nameMatchesRegistry: x.product.nameMatchesRegistry ?? null,
+    },
+    listed: x.listed,
+    riskClass: x.riskClass,
+    riskLabel: x.riskLabel,
+    mandateMaxRiskClass: x.mandateMaxRiskClass,
+    mandateMaxLabel: x.mandateMaxLabel,
+    verdict: x.verdict,
+    outcome: x.outcome,
+    why: x.why,
+    source: { ...x.source, block: String(x.source.block), ledger: mapLedger(x.source.ledger) },
+    label: x.label,
+  };
+}
+
+function mapNarration(n: z.infer<typeof W.WireNarration>): Narration {
+  return {
+    text: n.text,
+    aiGenerated: n.aiGenerated,
+    label: n.label ?? (n.aiGenerated ? "AI-generated" : "template text (deterministic)"),
+    model: n.model ?? (n.aiGenerated ? "not reported" : "none (template)"),
+    provider: n.provider ?? "",
+    fallbackReason: n.fallbackReason ?? null,
+  };
+}
+
+const blockOf = (b: string | number | null | undefined) => (b === null || b === undefined ? null : String(b));
+
+function mapEscrow(e: W.WireEscrow): Escrow {
+  return {
+    escrowId: e.escrowId,
+    ledger: mapLedger(e.ledger),
+    payee: { id: e.payee.id ?? null, label: e.payee.label, address: e.payee.address },
+    amount: amount(e.amount, e.token.decimals, e.token.symbol),
+    conditionId: e.conditionId,
+    releaseAttester: e.releaseAttester,
+    createdAt: iso(e.createdAt)!,
+    refundAfter: iso(e.refundAfter)!,
+    state: e.state,
+    canRelease: e.canRelease,
+    canRefundNow: e.canRefundNow,
+    fundingReceiptId: e.fundingReceiptId ?? null,
+  };
+}
+
+function mapCredential(c: W.WireCredential): Credential {
+  const m = c.typedData.message;
+  return {
+    id: c.id,
+    ledger: mapLedger(c.ledger),
+    issuer: c.issuer,
+    issuerLabel: c.issuerLabel,
+    subject: m.subject,
+    onTimePayments: Number(m.onTimePayments),
+    periodStart: iso(m.periodStart)!,
+    periodEnd: iso(m.periodEnd)!,
+    receiptIds: m.receiptIds,
+    statement: m.statement,
+    signature: c.signature,
+    anchorReceiptId: c.anchorReceiptId ?? null,
+    rule: c.rule,
+    label: c.label,
+    issuedAt: iso(c.issuedAt)!,
+  };
+}
+
+function mapVerification(v: z.infer<typeof W.WireCredentialVerification>): CredentialVerification {
+  return {
+    credentialHash: v.credentialHash,
+    valid: v.valid,
+    signatureValid: v.signatureValid,
+    recovered: v.recovered ?? null,
+    issuer: v.issuer ?? null,
+    issuerLabel: v.issuerLabel,
+    trustedIssuer: v.trustedIssuer,
+    receipts: v.receipts.map((r) => ({
+      receiptId: r.receiptId,
+      found: r.found,
+      intact: r.intact ?? null,
+      confirmed: r.confirmed ?? null,
+      toRentPayee: r.toRentPayee ?? null,
+      ownReceipt: r.ownReceipt ?? null,
+      txHash: r.txHash ?? null,
+      ledger: r.ledger ? mapLedger(r.ledger) : null,
+      ok: r.ok,
+    })),
+    anchorReceiptId: v.anchorReceiptId ?? null,
+    anchorCommitsCredential: v.anchorCommitsCredential,
+    label: v.label,
+  };
+}
+
+function mapInsights(x: z.infer<typeof W.WireInsights>): SpendingInsights {
+  return {
+    period: x.period,
+    categories: x.categories.map((c) => ({
+      category: c.category,
+      kind: c.kind,
+      cap: amount(c.cap, c.decimals, c.symbol),
+      spent: amount(c.spent, c.decimals, c.symbol),
+      remaining: amount(c.remaining, c.decimals, c.symbol),
+      usedBps: c.usedBps,
+      forecast: amount(c.forecastPeriodEnd, c.decimals, c.symbol),
+      forecastMethod: c.forecastMethod,
+      wouldReachCapAt: c.wouldReachCapAt ? iso(c.wouldReachCapAt) : null,
+      status: c.status,
+    })),
+    topPayees: x.topPayees.map((t) => ({ label: t.label, address: t.address, amount: amount(t.amount, t.decimals, t.symbol), payments: t.payments, receiptIds: t.receiptIds })),
+    totals: x.totals.map((t) => ({ cap: amount(t.cap, t.decimals, t.symbol), spent: amount(t.spent, t.decimals, t.symbol), forecast: amount(t.forecastPeriodEnd, t.decimals, t.symbol) })),
+    explanation: mapNarration(x.explanation),
+    ledger: mapLedger(x.ledger),
+    block: blockOf(x.block),
+    label: x.label,
+  };
+}
+
+function mapForecast(f: z.infer<typeof W.WireForecast>): CashForecast {
+  const a = (v: string) => amount(v, f.decimals, f.symbol);
+  return {
+    symbol: f.symbol,
+    decimals: f.decimals,
+    horizonDays: f.horizonDays,
+    rail: f.rail,
+    start: { posted: a(f.start.posted), pending: a(f.start.pending) },
+    reserveFloor: a(f.reserveFloor),
+    minBalance: f.minBalance,
+    headroomAboveFloor: f.headroomAboveFloor,
+    supplierRunRatePerDay: a(f.supplierRunRatePerDay),
+    events: f.events.map((e) => ({ day: e.day, date: iso(e.date)!, kind: e.kind, label: e.label, amount: a(e.amount) })),
+    daily: f.daily.map((d) => ({ day: d.day, date: iso(d.date)!, outflow: d.outflow, balance: d.balance, belowFloor: d.belowFloor })),
+    firstBreach: f.firstBreach ? { ...f.firstBreach, date: iso(f.firstBreach.date)! } : null,
+    velocity: f.velocity
+      ? {
+          windowEndsAt: iso(f.velocity.windowEndsAt)!,
+          maxCount: f.velocity.maxCount,
+          used: f.velocity.used,
+          countLeft: f.velocity.countLeft,
+          maxOutflow: a(f.velocity.maxOutflow),
+          outflow: a(f.velocity.outflow),
+          outflowLeft: a(f.velocity.outflowLeft),
+        }
+      : null,
+    flags: f.flags,
+    explanation: mapNarration(f.explanation),
+    label: f.label,
+    ledger: mapLedger(f.ledger),
+    block: blockOf(f.block),
   };
 }
 
@@ -774,7 +940,10 @@ export function createLiveApi(baseUrl: string): AgentApi {
     budgets: async () => mapLanes(await stateOf(cp())),
 
     ask: async (req) => {
-      const p = await call(W.WireProposal, "POST", `/v1/principals/${enc(cp())}/ask`, { text: req.text, autoExecute: true });
+      // autoExecute is accepted only with the visitor's own token (or the operator's): on the demo account the
+      // request is checked and proposed, and executing it is a separate (operator) step.
+      const own = cp() !== CONSOLE_PRINCIPAL && Boolean(activeVisitor());
+      const p = await call(W.WireProposal, "POST", `/v1/principals/${enc(cp())}/ask`, own ? { text: req.text, autoExecute: true } : { text: req.text });
       const d = mapDecision(p);
       return p.receipt ? { ...d, outcome: "executed", receipt: mapReceipt(p.receipt), receiptId: p.receipt.receiptId } : d;
     },
@@ -823,13 +992,25 @@ export function createLiveApi(baseUrl: string): AgentApi {
         to: t.to ?? null,
         toName: t.toName ?? null,
         gasUsed: t.gasUsed != null ? String(t.gasUsed) : null,
-        call: t.call ? { contract: t.call.contract ?? t.toName ?? "contract", fn: t.call.function, args: t.call.args.map(str) } : null,
+        call: t.call
+          ? {
+              contract: t.call.contract ?? t.toName ?? "contract",
+              fn: t.call.function,
+              args: Array.isArray(t.call.args)
+                ? t.call.args.map(str)
+                : typeof t.call.args === "string"
+                  ? [t.call.args]
+                  : Object.entries(t.call.args ?? {}).map(([k, v]) => `${k}: ${str(v)}`),
+            }
+          : null,
         events: (t.events ?? []).map((e) => ({
           contract: e.contract ?? e.addressName ?? "contract",
           event: e.event,
           args: Object.fromEntries(Object.entries(e.args ?? {}).map(([k, v]) => [k, str(v)])),
         })),
         note: t.note ?? null,
+        revert: t.revert ? { name: t.revert.name, message: t.revert.message ?? null } : null,
+        revertSource: t.revertSource ?? null,
       };
     },
     findReceiptByTx: async (txHash) => {
@@ -905,8 +1086,45 @@ export function createLiveApi(baseUrl: string): AgentApi {
     },
     contractDirectory: (ledger) => directoryOf(ledger),
 
+    draftVisitorMandate: async (text) => {
+      const d = await call(W.WireVisitorDraft, "POST", "/v1/mandates/draft", { text });
+      return {
+        draft: d.draft,
+        decodedSentences: d.decodedSentences,
+        diff: d.diff.map((r) => ({ ...r, said: r.said ?? null, note: r.note ?? null })),
+        flagged: d.flagged,
+        adjustments: d.adjustments.map((a) => ({ ...a, said: a.said ?? null })),
+        compiled: { ...d.compiled, preview: d.compiled.preview ?? true },
+        payeeBook: d.payeeBook,
+        userSentences: d.userSentences,
+        roundTrip: { ok: d.roundTrip.ok, checks: d.roundTrip.checks.map((c) => ({ name: c.name, ok: c.ok, detail: c.detail ?? null })) },
+        serviceHashRing: d.hashRing ? mapHashRing(d.hashRing) : null,
+        ledger: mapLedger(d.ledger),
+        ledgerBadge: d.ledgerBadge ?? null,
+        aigc: { ...d.aigc, latencyMs: d.aigc.latencyMs ?? null },
+        note: d.note ?? null,
+      };
+    },
+    visitorReseal: async (visitorId, token, mandate) => {
+      const v = await call(W.WireVisitorSignUp, "POST", `/v1/visitors/${enc(visitorId)}/reseal`, mandate === undefined ? {} : { mandate }, { "x-visitor-token": token });
+      return {
+        visitorId: v.visitorId,
+        token: v.token,
+        account: v.account,
+        did: v.did,
+        ledger: mapLedger(v.ledger),
+        ledgerBadge: v.ledgerBadge ?? null,
+        agent: v.agent,
+        mandate: v.mandate,
+        requests: v.requests,
+      };
+    },
     visitorSignUp: async (req) => {
-      const v = await call(W.WireVisitorSignUp, "POST", "/v1/visitors", { credentialId: req.credentialId, publicKey: { x: req.publicKey.x, y: req.publicKey.y } });
+      const v = await call(W.WireVisitorSignUp, "POST", "/v1/visitors", {
+        credentialId: req.credentialId,
+        publicKey: { x: req.publicKey.x, y: req.publicKey.y },
+        ...(req.mandate === undefined ? {} : { mandate: req.mandate }),
+      });
       return {
         visitorId: v.visitorId,
         token: v.token,
@@ -966,6 +1184,10 @@ export function createLiveApi(baseUrl: string): AgentApi {
         instructions: receipts.map(mapInstruction),
         mandate: s.mandate ? mapMandate(s.mandate, p.name, p.agent.agentId, p.ledgerBadge) : null,
         forecast: null,
+        payees: s.payees.map((x) => ({ id: x.id, label: x.label, address: x.address, category: x.category ?? "" })),
+        asset: s.balances[0]
+          ? { symbol: s.balances[0].symbol, decimals: s.balances[0].decimals, unit: s.balances[0].symbol.match(/^[A-Za-z]+/)?.[0] ?? s.balances[0].symbol }
+          : null,
       };
     },
     signBoardProposal: async (entityId, proposalId, directorId) => {
@@ -1171,6 +1393,56 @@ export function createLiveApi(baseUrl: string): AgentApi {
       };
     },
     cityFeed: () => cityFeed(),
+
+    insights: async () => mapInsights(await call(W.WireInsights, "GET", `/v1/principals/${enc(cp())}/insights?explain=1`)),
+    coverage: async () => {
+      const c = await call(W.WireCoverage, "GET", `/v1/principals/${enc(cp())}/coverage`);
+      const out: Coverage = {
+        obligations: c.obligations.map((o) => ({
+          payeeId: o.payeeId,
+          payeeLabel: o.payeeLabel,
+          category: o.category,
+          cadence: o.cadence,
+          upTo: amount(o.upTo, o.decimals, o.symbol),
+          protection: o.protection,
+          escrowIds: o.escrowIds,
+          refundableAfter: o.refundableAfter ? iso(o.refundableAfter) : null,
+          why: o.why,
+        })),
+        coverItems: c.coverItems,
+        gaps: c.gaps,
+        summary: c.summary,
+        label: c.label,
+        ledger: mapLedger(c.ledger),
+        block: blockOf(c.block),
+      };
+      return out;
+    },
+    escrows: async () => {
+      const r = await call(W.WireEscrowList, "GET", `/v1/principals/${enc(cp())}/escrows`);
+      return { escrows: r.escrows.map(mapEscrow), contract: r.contract ?? null, block: blockOf(r.block) };
+    },
+    releaseEscrow: async (escrowId, evidence) => {
+      const r = await call(z.object({ escrow: W.WireEscrow, receipt: W.WireReceipt.nullish() }), "POST", `/v1/principals/${enc(cp())}/escrows/${escrowId}/release`, evidence ? { evidence } : {});
+      return { escrow: mapEscrow(r.escrow), receipt: r.receipt ? mapReceipt(r.receipt) : null };
+    },
+    refundEscrow: async (escrowId) => {
+      const r = await call(z.object({ escrow: W.WireEscrow, receipt: W.WireReceipt.nullish() }), "POST", `/v1/principals/${enc(cp())}/escrows/${escrowId}/refund`, {});
+      return { escrow: mapEscrow(r.escrow), receipt: r.receipt ? mapReceipt(r.receipt) : null };
+    },
+    credentials: async () => (await call(z.array(W.WireCredential), "GET", `/v1/principals/${enc(cp())}/credentials`)).map(mapCredential),
+    issueCredential: async () => {
+      const r = await call(z.object({ credential: W.WireCredential, verification: W.WireCredentialVerification }), "POST", `/v1/principals/${enc(cp())}/credentials/payment-reliability`, {});
+      return { credential: mapCredential(r.credential), verification: mapVerification(r.verification) };
+    },
+    verifyCredential: async (hash) => mapVerification(await call(W.WireCredentialVerification, "GET", `/v1/credentials/${enc(hash)}/verify`)),
+    forecast: async (entityId, days = 30) => mapForecast(await call(W.WireForecast, "GET", `/v1/principals/${enc(entityId)}/forecast?days=${days}&explain=1`)),
+    runPayroll: async (entityId, req) => {
+      const p = await call(W.WireProposal, "POST", `/v1/principals/${enc(entityId)}/payroll`, { amount: req.amount, ...(req.memo ? { memo: req.memo } : {}) });
+      const d = mapDecision(p);
+      return p.receipt ? { ...d, outcome: "executed", receipt: mapReceipt(p.receipt), receiptId: p.receipt.receiptId } : d;
+    },
+    askAs: async (principalId, req) => mapDecision(await call(W.WireProposal, "POST", `/v1/principals/${enc(principalId)}/ask`, { text: req.text })),
     evidence: async () => {
       const e = await call(W.WireEvidence, "GET", "/v1/evidence");
       const kindOf = (o: string, err: unknown): "payment" | "revert" | "refusal" | "seal" | "pause" | "anchor" | "other" => {

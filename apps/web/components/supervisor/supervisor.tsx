@@ -12,7 +12,8 @@ import { formatTime, JURISDICTION_LABEL } from "@/lib/format";
 import { Sheet, ConfirmDialog } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useMotionOff } from "@/components/preferences";
-import { ErrorLine, LedgerChip, Loading, ReceiptOutcomeRing, SampleBadge, TxLink } from "@/components/data/parts";
+import { ErrorLine, LedgerChip, Loading, ReceiptOutcomeRing, TxLink } from "@/components/data/parts";
+import { PageHeader, Panel } from "@/components/data/panel";
 
 const STATUS: Record<RegistryAgent["status"], { ring: Parameters<typeof StateRing>[0]["state"]; word: string }> = {
   active: { ring: "verified", word: "Active" },
@@ -365,24 +366,48 @@ export function Supervisor() {
 
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 pt-6 pb-16 sm:px-6 lg:px-8 lg:pt-8">
-      <header className="mb-8 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="eyebrow m-0 text-fg-muted">Supervisor</p>
-          <h1 className="m-0 mt-1 text-22 font-semibold text-fg-0 sm:text-26">Agent registry</h1>
-          <p className="m-0 mt-1.5 max-w-[70ch] text-13 text-fg-muted">
-            The regulator node&apos;s view of every registered agent: who it acts for, who attests it, and whether its receipts are in the anchored
-            batches. A supervisor can pause an agent identity. It can never spend.
-          </p>
+      <PageHeader
+        eyebrow="Supervisor"
+        title="Agent registry"
+        lead="The regulator node's view of every registered agent: who it acts for, who attests it, and whether its receipts are in the anchored batches. A supervisor can pause an agent identity. It can never spend."
+        chips={
+          <>
+            <LabelChip dotted>Supervisor role played by the team</LabelChip>
+            <LabelChip>Pause only, never spend</LabelChip>
+          </>
+        }
+      />
+      <ErrorLine error={q.error} className="mt-6" />
+      {q.loading && !q.data ? (
+        <div className="mt-8">
+          <Loading rows={5} />
         </div>
-        <SampleBadge />
-      </header>
-      <ErrorLine error={q.error} />
-      {q.loading ? <Loading rows={5} /> : null}
+      ) : null}
       {q.data ? (
-        <>
-          <RegistryTable agents={demo} caption="Registered demo agents" onVerify={setVerify} onHalt={setHalt} />
+        <div className="mt-8 grid gap-6">
+          <dl className="m-0 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              { label: "Registered agents", value: q.data.length },
+              { label: "Active passports", value: q.data.filter((a) => a.status === "active").length },
+              { label: "Paused or revoked", value: q.data.filter((a) => a.status === "paused" || a.status === "revoked").length },
+              { label: "Self-registered, no trusted issuer", value: q.data.filter((a) => a.status === "self-registered").length },
+            ].map((x) => (
+              <div key={x.label} className="yl-card grid gap-1 px-4 py-3">
+                <dt className="text-12 text-fg-muted">{x.label}</dt>
+                <dd className="m-0 font-mono text-22 text-fg-0 tabular">{x.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <Panel
+            id="registry-h"
+            eyebrow="Passport registry"
+            title="Scenario agents"
+            meta={<span>Verify opens the Merkle path of an agent&apos;s latest receipt and checks it against the anchored roots.</span>}
+          >
+            <RegistryTable agents={demo} caption="Registered demo agents" onVerify={setVerify} onHalt={setHalt} />
+          </Panel>
           {visitors.length ? (
-            <details className="group mt-8 rounded-card border border-line-2 bg-bg-1">
+            <details className="yl-card group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-13 text-fg-1">
                 <span>
                   <span className="font-semibold text-fg-0">Visitor agents</span>{" "}
@@ -397,7 +422,7 @@ export function Supervisor() {
               </div>
             </details>
           ) : null}
-        </>
+        </div>
       ) : null}
       {msg ? (
         <p role="status" className="mt-4 text-13 text-fg-1">

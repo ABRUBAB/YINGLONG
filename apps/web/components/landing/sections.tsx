@@ -106,10 +106,10 @@ const SCENARIOS = [
 
 export function Scenarios() {
   return (
-    <section aria-labelledby="scenarios-title" className="yl-section">
+    <section aria-labelledby="scenarios-title" className="yl-section yl-defer border-y border-line-1 bg-bg-1">
       <div className="yl-container">
         <SectionHead
-          index="03"
+          index="04"
           eyebrow="Topic F, agent wallet"
           id="scenarios-title"
           title="One engine, two deep scenarios"
@@ -117,7 +117,7 @@ export function Scenarios() {
         />
         <div className="mt-14 grid gap-3 lg:grid-cols-2">
           {SCENARIOS.map((s) => (
-            <article key={s.key} className="yl-card yl-reveal grid content-start gap-6 p-6 sm:p-8 lg:p-10">
+            <article key={s.key} className="yl-card yl-card-raised yl-reveal grid content-start gap-6 p-6 sm:p-8 lg:p-10">
               <div className="flex flex-wrap items-center gap-2">
                 {s.chips.map((c) => (
                   <LabelChip key={c}>{c}</LabelChip>

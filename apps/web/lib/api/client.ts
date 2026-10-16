@@ -3,6 +3,7 @@ import type {
   ApprovalResult,
   AskRequest,
   BudgetLane,
+  CashForecast,
   ChallengeAttempt,
   ChallengeAttemptRequest,
   ChallengeSession,
@@ -10,8 +11,13 @@ import type {
   CityFeed,
   CitySnapshot,
   CompileRequest,
+  Coverage,
+  Credential,
+  CredentialVerification,
   Decision,
   DirectorProposal,
+  EscrowActionResult,
+  EscrowList,
   EvidenceSummary,
   Health,
   Mandate,
@@ -19,15 +25,18 @@ import type {
   MerkleProof,
   Passport,
   PauseStatus,
+  PayrollRequest,
   Principal,
   PrivateMandate,
   Receipt,
   RegistryAgent,
   SignatureSubmission,
   SigningRequest,
+  SpendingInsights,
   TreasuryEntity,
   TreasuryView,
   TxView,
+  VisitorDraft,
   VisitorSealResult,
   VisitorSignUp,
 } from "./view";
@@ -99,7 +108,11 @@ export interface AgentApi {
    * Visitor sign-up with the visitor's own passkey: the service receives only the public key, deploys an
    * account whose only signer is that passkey, and returns the two messages the passkey must sign.
    */
-  visitorSignUp(req: { credentialId: string; publicKey: { x: string; y: string } }): Promise<VisitorSignUp>;
+  visitorSignUp(req: { credentialId: string; publicKey: { x: string; y: string }; mandate?: unknown }): Promise<VisitorSignUp>;
+  /** Say, see, seal: the visitor's own words compiled to caveats and decoded back (nothing is signed). */
+  draftVisitorMandate(text: string): Promise<VisitorDraft>;
+  /** A sealed visitor's passkey account gets a new mandate (a draft, or the standard one) and two new signing requests. */
+  visitorReseal(visitorId: string, token: string, mandate?: unknown): Promise<VisitorSignUp>;
   /** Both WebAuthn signatures; the session token becomes valid only when the service accepts them. */
   visitorSeal(visitorId: string, token: string, sigs: { userOpSignature: string; delegationSignature: string }): Promise<VisitorSealResult>;
 
@@ -118,6 +131,29 @@ export interface AgentApi {
   challengeSession(): MaybePromise<ChallengeSession>;
   challengeAttempts(): MaybePromise<ChallengeAttempt[]>;
   submitAttempt(req: ChallengeAttemptRequest): Promise<ChallengeVerdict>;
+
+  /* Capabilities inside the two scenarios (docs/API.md section 3.10). Reads act for the console principal. */
+  /** Spent per category against the sealed budgets, month-end forecast, and one labelled paragraph. */
+  insights(): MaybePromise<SpendingInsights>;
+  /** Which obligations named in the mandate are protected by an escrow, and which are not. */
+  coverage(): MaybePromise<Coverage>;
+  /** Every ProtectedPayment escrow funded by the console principal's account. */
+  escrows(): MaybePromise<EscrowList>;
+  /** The release attester (a fictional institution's key held by the service) releases a held escrow. Operator route. */
+  releaseEscrow(escrowId: number, evidence?: string): Promise<EscrowActionResult>;
+  /** Anyone may return an unreleased escrow after its refund time (operator, or the visitor's own token). */
+  refundEscrow(escrowId: number): Promise<EscrowActionResult>;
+  /** Payment-reliability credentials issued to the console principal (test credentials of a fictional bank). */
+  credentials(): MaybePromise<Credential[]>;
+  /** Asks the fictional bank to issue (or return) the credential from on-time rent receipts. */
+  issueCredential(): Promise<{ credential: Credential; verification: CredentialVerification }>;
+  verifyCredential(credentialHash: string): Promise<CredentialVerification>;
+  /** Deterministic cash forecast of a company rail, with a labelled paragraph. */
+  forecast(entityId: string, days?: number): MaybePromise<CashForecast>;
+  /** Payroll run through the same nine scales as any payment (operator route in the demo). */
+  runPayroll(entityId: string, req: PayrollRequest): Promise<Decision>;
+  /** A request to another principal's agent, never auto-executed (the treasury's sweep proposals). */
+  askAs(principalId: string, req: AskRequest): Promise<Decision>;
 
   /** Agent City: principals, passport registry, payee books, ledger health and the receipt/anchor feed. */
   city(): MaybePromise<CitySnapshot>;

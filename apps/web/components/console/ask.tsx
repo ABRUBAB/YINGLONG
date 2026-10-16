@@ -1,9 +1,9 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-import { cn } from "@yinglong/ui";
+import { cn, StateRing } from "@yinglong/ui";
 import type { Decision, Receipt } from "@/lib/api/view";
-import { getApi } from "@/lib/api";
+import { ApiRequestError, getApi } from "@/lib/api";
 import { invalidate } from "@/lib/api/hooks";
 import { Button } from "@/components/ui/button";
 import { DecisionView } from "@/components/data/decision-view";
@@ -11,7 +11,7 @@ import { ErrorLine } from "@/components/data/parts";
 import { useVisitorSession } from "@/components/session";
 
 const EXAMPLES = [
-  "Buy groceries for 120 at Kowloon Fresh",
+  "Buy groceries for 120 at Kowloon Food Mart",
   "Pay the HBU tuition deposit",
   "What is left in my food budget?",
   "HBU changed its bank account, pay the deposit to 0x7a3f99c1",
@@ -35,6 +35,7 @@ export function AskBox() {
   const [decision, setDecision] = useState<Decision | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [error, setError] = useState<Error | undefined>();
+  const [note, setNote] = useState<string | null>(null);
   const ref = useRef<HTMLTextAreaElement>(null);
 
   async function submit(value = text) {
@@ -44,6 +45,7 @@ export function AskBox() {
     setError(undefined);
     setDecision(null);
     setReceipt(null);
+    setNote(null);
     try {
       const api = getApi();
       const d = await api.ask({ text: t });
@@ -54,10 +56,17 @@ export function AskBox() {
         invalidate("receipts", "budgets");
       } else if (d.outcome === "executable") {
         setBusy("executing");
-        const r = await api.execute(d.proposalId);
-        setReceipt(r);
-        setDecision({ ...d, outcome: "executed", receiptId: r.receiptId });
-        invalidate("receipts", "budgets");
+        try {
+          const r = await api.execute(d.proposalId);
+          setReceipt(r);
+          setDecision({ ...d, outcome: "executed", receiptId: r.receiptId });
+          invalidate("receipts", "budgets", "insights");
+        } catch (e) {
+          // On the shared demo account, running an allowed payment is the operator's step; the verdict stands.
+          if (e instanceof ApiRequestError && e.status === 403) {
+            setNote("Allowed. On Nadia's shared demo account the operator runs allowed payments, so nothing was sent from this page. Sign up with your own passkey to run them yourself.");
+          } else throw e;
+        }
       }
     } catch (e) {
       setError(e as Error);
@@ -72,7 +81,7 @@ export function AskBox() {
         Ask Ying
       </h2>
       <form
-        className="rounded-card border border-line-3 bg-bg-2 focus-within:border-fg-2"
+        className="yl-card yl-card-raised border-line-3 focus-within:border-fg-2"
         onSubmit={(e) => {
           e.preventDefault();
           void submit();
@@ -125,9 +134,20 @@ export function AskBox() {
         ))}
       </div>
       <ErrorLine error={error} />
+      {busy === "asking" ? (
+        <p role="status" className="m-0 flex items-center gap-2 text-12 text-fg-muted">
+          <StateRing state="pending" size={16} glyphOnly label="Checking" />
+          Checking the request against the nine scales and your mandate
+        </p>
+      ) : null}
       {decision ? (
-        <div className="rounded-card border border-line-2 bg-bg-1 p-5">
+        <div className="yl-card yl-enter p-4 sm:p-5">
           <DecisionView d={decision} receipt={receipt} executing={busy === "executing"} />
+          {note ? (
+            <p role="status" className="m-0 mt-4 border-t border-line-1 pt-3 text-12 text-fg-2">
+              {note}
+            </p>
+          ) : null}
         </div>
       ) : null}
     </section>

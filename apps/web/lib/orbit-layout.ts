@@ -43,7 +43,7 @@ export const TRACKS: Record<OrbitTrack, [number, number]> = {
   t2: [0.5, 0.62],
   t3: [0.68, 0.86],
   ring: [1, 1],
-  outside: [1.16, 1.46],
+  outside: [1.1, 1.26],
 };
 
 export function orbitKind(r: Pick<Receipt, "outcome" | "tier">): OrbitKind {

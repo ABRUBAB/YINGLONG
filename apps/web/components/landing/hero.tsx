@@ -83,7 +83,8 @@ export function Hero({ poster = false }: { poster?: boolean }) {
   const [webglOk, setWebglOk] = useState(false);
   const [drawn, setDrawn] = useState(false);
   const [playKey, setPlayKey] = useState(0);
-  const [hover, setHover] = useState<{ slot: OrbitSlot; x: number; y: number } | null>(null);
+  // The tooltip owns its state: pointer moves over coins re-render the tooltip only, never the hero.
+  const tooltip = useRef<HoverApi | null>(null);
   const [posterFailed, setPosterFailed] = useState(false);
   const posterImg = useRef<HTMLImageElement>(null);
   // The image may fail before hydration attaches onError: check it once on mount.
@@ -135,13 +136,11 @@ export function Hero({ poster = false }: { poster?: boolean }) {
     };
   }, [poster]);
 
-  const hoverReceipt = hover ? (hover.slot.index < receipts.length ? receipts[hover.slot.index] : null) : null;
-
   const stage = (
     <div
       className={cn(
         "relative w-full",
-        poster ? "aspect-[16/10]" : "aspect-[16/11] max-h-[58vh] lg:max-h-none lg:absolute lg:top-1/2 lg:right-[-7vw] lg:w-[min(60vw,1000px)] lg:-translate-y-1/2 lg:aspect-[16/10]",
+        poster ? "aspect-[16/10]" : "yl-hero-stage",
       )}
     >
       {/* Poster first: the WebP is the LCP-safe frame; the canvas fades in over it. */}
@@ -184,7 +183,7 @@ export function Hero({ poster = false }: { poster?: boolean }) {
               setDrawn(true);
               if (poster) (window as Window & { __posterReady?: boolean }).__posterReady = true;
             }}
-            onHover={(slot, x, y) => setHover(slot ? { slot, x, y } : null)}
+            onHover={(slot, x, y) => tooltip.current?.show(slot, x, y)}
           />
         </div>
       ) : null}
@@ -207,13 +206,14 @@ export function Hero({ poster = false }: { poster?: boolean }) {
         </div>
       ) : null}
 
-      <div className="yl-container relative grid lg:min-h-[min(calc(100dvh-var(--nav-h)),940px)] lg:grid-cols-12">
-        <div className="relative z-10 order-2 flex flex-col justify-center pt-4 pb-12 lg:order-1 lg:col-span-6 lg:py-24 xl:col-span-6">
+      {/* First screen, full bleed: the text block and the orbit, nothing else. */}
+      <div className="yl-hero-grid relative">
+        <div className="yl-hero-text relative z-10">
           <p className="yl-hero-in eyebrow m-0 flex items-center gap-3 text-fg-muted" style={{ ["--d" as string]: "0ms" }}>
             <span aria-hidden="true" className="h-px w-8 bg-line-3" />
             Personal Agent Identity &amp; Mandated Finance
           </p>
-          <h1 id="hero-title" className="type-hero m-0 mt-6 text-[2.75rem] text-fg-0 sm:text-[4rem] lg:text-[clamp(3.25rem,0.75rem+4vw,5.25rem)]">
+          <h1 id="hero-title" className="type-hero yl-hero-h1 m-0 mt-6 text-fg-0">
             <span className="yl-hero-line block" style={{ ["--d" as string]: "60ms" }}>
               Always with you.
             </span>
@@ -221,7 +221,7 @@ export function Hero({ poster = false }: { poster?: boolean }) {
               Never beyond your mandate.
             </span>
           </h1>
-          <p className="yl-hero-in m-0 mt-7 max-w-[36rem] text-lead text-fg-2" style={{ ["--d" as string]: "220ms" }}>
+          <p className="yl-hero-in yl-hero-lead m-0 mt-7 text-fg-2" style={{ ["--d" as string]: "220ms" }}>
             An AI agent that acts on your money only as you, only inside the mandate you sealed, and always with a receipt anyone can check.
           </p>
           <div className="yl-hero-in mt-9 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "280ms" }}>
@@ -236,73 +236,61 @@ export function Hero({ poster = false }: { poster?: boolean }) {
               Read the proof
             </ButtonLink>
           </div>
+        </div>
+        {/* The orbit column: the canvas fills it; the scene frames itself to the box. */}
+        <div className="yl-hero-orbit" data-hero-orbit>
+          {stage}
+        </div>
+      </div>
 
-          <dl className="yl-hero-in m-0 mt-12 grid max-w-[36rem] grid-cols-3 gap-x-6 border-t border-line-1 pt-6" style={{ ["--d" as string]: "340ms" }}>
-            <HeroStat label="Receipts inside the mandate" value={summary.inside + summary.asked + summary.waiting} />
-            <HeroStat label="Refused at the boundary" value={summary.refused} />
-            <HeroStat label="Budget left this period" value={Math.round(remaining * 100)} suffix="%" />
-          </dl>
-          <div className="yl-hero-in mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted" style={{ ["--d" as string]: "380ms" }}>
-            <LiveStatusO state="active" size={18} showWord className="text-fg-1" />
-            {latest ? (
-              <span>
-                Last receipt {formatTime(latest.timestamp, { date: false })} HKT <span className="font-mono text-fg-2">{shortHash(latest.receiptId, 6, 4)}</span>
-                {latest.ledgerBadge ? <span> · {latest.ledgerBadge}</span> : null}
-              </span>
-            ) : (
-              <span>Reading GET /v1/receipts</span>
-            )}
-            {isSample ? <SampleDataChip /> : null}
+      {/* Below the first screen: what the orbit counts, what each object means, and the visible
+          pause for the looping scene. */}
+      <div className="relative z-10 border-t border-line-1">
+        <div className="yl-container grid gap-8 py-10 lg:grid-cols-12 lg:gap-x-10">
+          <div className="grid content-start gap-5 lg:col-span-6">
+            <p className="eyebrow m-0 text-fg-muted">Reading the orbit</p>
+            <dl className="m-0 grid grid-cols-3 gap-x-6">
+              <HeroStat label="Receipts inside the mandate" value={summary.inside + summary.asked + summary.waiting} />
+              <HeroStat label="Refused at the boundary" value={summary.refused} />
+              <HeroStat label="Budget left this period" value={Math.round(remaining * 100)} suffix="%" />
+            </dl>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
+              <LiveStatusO state="active" size={18} showWord className="text-fg-1" />
+              {latest ? (
+                <span>
+                  Last receipt {formatTime(latest.timestamp, { date: false })} HKT <span className="font-mono text-fg-2">{shortHash(latest.receiptId, 6, 4)}</span>
+                  {latest.ledgerBadge ? <span> · {latest.ledgerBadge}</span> : null}
+                </span>
+              ) : (
+                <span>Reading GET /v1/receipts</span>
+              )}
+              {isSample ? <SampleDataChip /> : null}
+            </div>
+          </div>
+          <div className="grid content-start gap-5 lg:col-span-6">
+            <dl className="m-0 grid grid-cols-1 gap-x-6 gap-y-3 text-12 text-fg-muted sm:grid-cols-2">
+              <Key glyph={<circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.6" />} term="Ring" desc="the sealed mandate; bright arc = budget left" />
+              <Key glyph={<ellipse cx="8" cy="8" rx="5" ry="2.6" fill="currentColor" />} term="Coins" desc="receipts; nearer the ring = more authority needed" />
+              <Key glyph={<path d="M8 3l4 5-4 5-4-5z" fill="currentColor" opacity="0.6" />} term="Shards" desc="refused attempts; they never cross" />
+              <Key glyph={<circle cx="8" cy="8" r="3.6" fill="var(--steel)" />} term="Pearl" desc="the agent's on-chain identity" />
+            </dl>
+            <div className="flex flex-wrap items-center gap-1 text-12 text-fg-muted">
+              {show3D && !motionOff ? (
+                <button
+                  type="button"
+                  onClick={() => setPlayKey((k) => k + 1)}
+                  className="yl-press inline-flex h-8 items-center rounded-control px-2 text-12 text-fg-2 hover:bg-bg-3 hover:text-fg-0"
+                >
+                  Replay arrival
+                </button>
+              ) : null}
+              <MotionToggle />
+            </div>
           </div>
         </div>
-
-        <div className="relative order-1 -mx-[var(--gutter)] lg:order-2 lg:col-span-6 lg:mx-0">{stage}</div>
       </div>
 
-      {/* Key and controls: what each object means, and the visible pause for the looping scene. */}
-      <div className="yl-container relative z-10 flex flex-col gap-4 pb-8 lg:flex-row lg:items-end lg:justify-between">
-        <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-2 text-12 text-fg-muted sm:grid-cols-4 lg:max-w-[52rem]">
-          <Key glyph={<circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.6" />} term="Ring" desc="the sealed mandate; bright arc = budget left" />
-          <Key glyph={<ellipse cx="8" cy="8" rx="5" ry="2.6" fill="currentColor" />} term="Coins" desc="receipts; nearer the ring = more authority needed" />
-          <Key glyph={<path d="M8 3l4 5-4 5-4-5z" fill="currentColor" opacity="0.6" />} term="Shards" desc="refused attempts; they never cross" />
-          <Key glyph={<circle cx="8" cy="8" r="3.6" fill="var(--steel)" />} term="Pearl" desc="the agent's on-chain identity" />
-        </dl>
-        <div className="flex items-center gap-1 text-12 text-fg-muted">
-          {show3D && !motionOff ? (
-            <button
-              type="button"
-              onClick={() => setPlayKey((k) => k + 1)}
-              className="yl-press inline-flex h-8 items-center rounded-control px-2 text-12 text-fg-2 hover:bg-bg-3 hover:text-fg-0"
-            >
-              Replay arrival
-            </button>
-          ) : null}
-          <MotionToggle />
-        </div>
-      </div>
-
-      {hover ? (
-        <div
-          role="tooltip"
-          className="pointer-events-none fixed z-40 w-72 rounded-card border border-line-2 bg-bg-2 px-3.5 py-3 text-12"
-          style={{ left: Math.min(hover.x + 16, (typeof window !== "undefined" ? window.innerWidth : 1200) - 300), top: hover.y + 16 }}
-        >
-          <p className="eyebrow m-0 text-fg-muted">{KIND_WORD[hover.slot.kind]}</p>
-          {hoverReceipt ? (
-            <>
-              <p className="m-0 mt-1.5 text-13 font-medium text-fg-0">{hoverReceipt.summary}</p>
-              <p className="m-0 mt-1 text-fg-muted">
-                {formatTime(hoverReceipt.timestamp)} · {hoverReceipt.tier === "ASK" ? "T?" : hoverReceipt.tier}
-                {hoverReceipt.revertError ? ` · ${hoverReceipt.revertError}` : ""}
-              </p>
-              <p className="m-0 mt-1 font-mono text-fg-2">{shortHash(hoverReceipt.receiptId, 10, 6)}</p>
-              {hoverReceipt.ledgerBadge ? <p className="m-0 mt-1 text-fg-muted">{hoverReceipt.ledgerBadge}</p> : null}
-            </>
-          ) : (
-            <p className="m-0 mt-1.5 text-fg-2">Sample bench receipt (fixtures), not a live transaction.</p>
-          )}
-        </div>
-      ) : null}
+      <HoverCard apiRef={tooltip} receipts={receipts} />
 
       <p className="sr-only">
         The illustration shows the sealed mandate as a ring. Each coin inside it is one accountability receipt from the agent service, placed
@@ -334,6 +322,66 @@ function Key({ glyph, term, desc }: { glyph: React.ReactNode; term: string; desc
         {term}
       </dt>
       <dd className="m-0">{desc}</dd>
+    </div>
+  );
+}
+
+interface HoverApi {
+  show: (slot: OrbitSlot | null, x: number, y: number) => void;
+}
+
+/**
+ * The receipt under the pointer. It re-renders only when the hovered coin changes; while the pointer
+ * moves over the same coin, its position is written straight to the element's transform.
+ */
+function HoverCard({ apiRef, receipts }: { apiRef: React.RefObject<HoverApi | null>; receipts: Receipt[] }) {
+  const [slot, setSlot] = useState<OrbitSlot | null>(null);
+  const el = useRef<HTMLDivElement>(null);
+  const pos = useRef({ x: 0, y: 0 });
+  const place = () => {
+    const node = el.current;
+    if (!node) return;
+    const x = Math.max(8, Math.min(pos.current.x + 16, window.innerWidth - node.offsetWidth - 8));
+    const y = Math.min(pos.current.y + 16, window.innerHeight - node.offsetHeight - 8);
+    node.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
+  };
+  useEffect(() => {
+    apiRef.current = {
+      show: (s, x, y) => {
+        pos.current = { x, y };
+        setSlot((prev) => (prev === s ? prev : s));
+        place();
+      },
+    };
+    return () => {
+      apiRef.current = null;
+    };
+  }, [apiRef]);
+  useEffect(() => {
+    if (slot) place();
+  }, [slot]);
+  if (!slot) return null;
+  const receipt = slot.index < receipts.length ? receipts[slot.index] : null;
+  return (
+    <div
+      ref={el}
+      role="tooltip"
+      className="pointer-events-none fixed top-0 left-0 z-40 w-72 max-w-[calc(100vw-16px)] rounded-card border border-line-2 bg-bg-2 px-3.5 py-3 text-12"
+    >
+      <p className="eyebrow m-0 text-fg-muted">{KIND_WORD[slot.kind]}</p>
+      {receipt ? (
+        <>
+          <p className="m-0 mt-1.5 text-13 font-medium text-fg-0">{receipt.summary}</p>
+          <p className="m-0 mt-1 text-fg-muted">
+            {formatTime(receipt.timestamp)} · {receipt.tier === "ASK" ? "T?" : receipt.tier}
+            {receipt.revertError ? ` · ${receipt.revertError}` : ""}
+          </p>
+          <p className="m-0 mt-1 font-mono text-fg-2">{shortHash(receipt.receiptId, 10, 6)}</p>
+          {receipt.ledgerBadge ? <p className="m-0 mt-1 text-fg-muted">{receipt.ledgerBadge}</p> : null}
+        </>
+      ) : (
+        <p className="m-0 mt-1.5 text-fg-2">Sample bench receipt (fixtures), not a live transaction.</p>
+      )}
     </div>
   );
 }

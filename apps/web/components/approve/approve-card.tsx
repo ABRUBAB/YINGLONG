@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { Hex } from "viem";
-import { LabelChip, LiveStatusO, OutputChip, shortHash, StateRing } from "@yinglong/ui";
+import { cn, LabelChip, LiveStatusO, OutputChip, shortHash, StateRing } from "@yinglong/ui";
 import type { ApprovalRequest, Receipt } from "@/lib/api/view";
 import { getApi } from "@/lib/api";
 import { invalidate, useAgent } from "@/lib/api/hooks";
@@ -12,8 +12,10 @@ import { formatAmount, formatTime, formatUnits } from "@/lib/format";
 import { guardSigningRequest } from "@/lib/signing-guard";
 import { reviewRevoke, type RevokeContext } from "@/lib/account-ops";
 import { availableSigner, describeSignError, signAndSubmit, SIGNER_LABEL, type SignerKind } from "@/lib/sign";
-import { Mark } from "@/components/brand/mark";
 import { buttonClass } from "@/components/ui/button";
+
+/** Which signer this device will use, said before anything is signed. */
+const SIGNER_CHIP: Record<SignerKind, string> = { passkey: "WebAuthn passkey", scripted: "Scripted passkey (demo)", sample: "Sample signature" };
 import { ErrorLine, ReceiptOutcomeRing, SampleBadge, TierBadge, TxLink } from "@/components/data/parts";
 
 const eq = (a?: string | null, b?: string | null) => Boolean(a && b && a.toLowerCase() === b.toLowerCase());
@@ -135,14 +137,14 @@ export function ApproveCard({ id }: { id: string }) {
 
   return (
     <div className="mx-auto flex min-h-[calc(100dvh-var(--nav-h))] w-full max-w-[420px] flex-col px-4 pt-5 pb-10">
-      <header className="mb-5 flex items-center justify-between">
-        <Link href="/app" className="flex items-center gap-2 text-fg-0" aria-label="YINGLONG console">
-          <Mark size={24} decorative />
-          <span className="eyebrow text-fg-1">Approval</span>
-        </Link>
-        <div className="flex items-center gap-2">
-          <SampleBadge />
+      <header className="mb-4 flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
           <LiveStatusO state={done ? "active" : "waiting"} size={20} className="text-fg-1" />
+          <span className="eyebrow text-fg-1">One approval</span>
+        </div>
+        <div className="flex flex-wrap items-center justify-end gap-1.5">
+          <SampleBadge />
+          {signer ? <LabelChip dotted={signer !== "passkey"}>{SIGNER_CHIP[signer]}</LabelChip> : null}
         </div>
       </header>
 
@@ -150,7 +152,7 @@ export function ApproveCard({ id }: { id: string }) {
         <ErrorLine error={q.error} />
         {q.loading ? <div role="status" aria-label="Loading approval" className="h-96 rounded-sheet bg-bg-1" /> : null}
         {a ? (
-          <article className="grid gap-5 rounded-sheet border border-line-2 bg-bg-1 p-5" aria-labelledby="apr-title">
+          <article className={cn("grid gap-5 rounded-sheet border bg-bg-1 p-5", !done && a.status === "pending" && !expired ? "border-brass/50" : "border-line-2")} aria-labelledby="apr-title">
             <div className="grid gap-2">
               <div className="flex flex-wrap items-center gap-2">
                 {done?.kind === "approved" ? (
@@ -166,7 +168,7 @@ export function ApproveCard({ id }: { id: string }) {
                 )}
                 {a.tier ? <TierBadge tier={a.tier} withName /> : null}
               </div>
-              <h1 id="apr-title" className="m-0 text-22 leading-tight font-semibold text-fg-0">
+              <h1 id="apr-title" className="m-0 text-22 leading-tight font-semibold text-balance text-fg-0">
                 {a.kind === "pause" ? (
                   "Pause your agent"
                 ) : a.kind === "resume" ? (
@@ -176,8 +178,8 @@ export function ApproveCard({ id }: { id: string }) {
                 ) : (
                   <>
                     {a.kind === "cosign" ? "Approve " : a.kind === "seal" ? "Seal " : "Sign "}
-                    {amount ? <span className="font-mono">{formatAmount(amount)}</span> : null}
-                    {amount ? ` to ${payeeName}` : payeeName}
+                    {amount ? <span className="block font-mono text-26 tracking-tight tabular">{formatAmount(amount)}</span> : null}
+                    {amount ? <span className="block">to {payeeName}</span> : payeeName}
                   </>
                 )}
               </h1>
@@ -199,7 +201,7 @@ export function ApproveCard({ id }: { id: string }) {
                   </>
                 ) : null}
                 <dt className="border-b border-line-1 py-2 text-fg-muted">Method</dt>
-                <dd className="m-0 border-b border-line-1 py-2 font-mono text-12 break-all text-fg-1">{local?.decoded?.method ?? a.decoded?.method ?? "unknown"}</dd>
+                <dd className="m-0 border-b border-line-1 py-2 font-mono text-12 [overflow-wrap:anywhere] text-fg-1">{(local?.decoded?.method ?? a.decoded?.method ?? "unknown").replace(/,/g, ", ")}</dd>
                 {revokeReview ? (
                   <>
                     <dt className="border-b border-line-1 py-2 text-fg-muted">Calls</dt>
@@ -240,6 +242,7 @@ export function ApproveCard({ id }: { id: string }) {
                 <dt className="py-2 text-fg-muted">Expires</dt>
                 <dd className="m-0 py-2 text-fg-1">{formatTime(a.expiresAt)} HKT</dd>
               </dl>
+              <p className="m-0 mt-2 text-12 font-medium text-fg-2">Checked on this device before your signer is asked</p>
               <ul className="m-0 grid list-none gap-1.5 p-0">
                 {local?.error ? (
                   <li>

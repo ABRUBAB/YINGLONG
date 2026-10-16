@@ -6,6 +6,7 @@ import type { Receipt } from "@/lib/api/view";
 import { useAgent } from "@/lib/api/hooks";
 import { formatAmount, formatDay, formatTime } from "@/lib/format";
 import { Sheet } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import { ErrorLine, LedgerChip, Loading, ReceiptOutcomeRing, TierBadge } from "@/components/data/parts";
 import { ReceiptCertificate } from "@/components/data/receipt-certificate";
 
@@ -13,8 +14,11 @@ import { ReceiptCertificate } from "@/components/data/receipt-certificate";
 export function ActivityTable() {
   const q = useAgent("receipts", (api) => api.receipts({ limit: 30 }), ["receipts"]);
   const [open, setOpen] = useState<Receipt | null>(null);
+  const [all, setAll] = useState(false);
+  const SHOWN = 12;
   if (q.loading) return <Loading label="Loading activity" rows={5} />;
-  const items = q.data?.items ?? [];
+  const every = q.data?.items ?? [];
+  const items = all ? every : every.slice(0, SHOWN);
   return (
     <div className="grid gap-3">
       <ErrorLine error={q.error} />
@@ -67,6 +71,13 @@ export function ActivityTable() {
               ))}
             </tbody>
           </table>
+        </div>
+      ) : null}
+      {every.length > SHOWN ? (
+        <div>
+          <Button size="sm" variant="quiet" aria-expanded={all} onClick={() => setAll((v) => !v)}>
+            {all ? `Show the latest ${SHOWN}` : `Show ${every.length - SHOWN} more receipt${every.length - SHOWN === 1 ? "" : "s"}`}
+          </Button>
         </div>
       ) : null}
       <Sheet

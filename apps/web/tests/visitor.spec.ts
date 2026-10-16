@@ -16,7 +16,7 @@ test("visitor: create a passkey, read both messages, seal, act, revoke, seal aga
 
   await page.goto("/start", { waitUntil: "networkidle" });
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Your agent, your mandate, your key/);
-  await page.getByRole("button", { name: "Create a passkey" }).click();
+  await page.getByRole("button", { name: "Use the standard visitor mandate" }).click();
 
   // Both messages decoded on this page and passed by the signing guard before anything is signed.
   await expect(page.getByRole("heading", { name: "The two messages your passkey signs" })).toBeVisible();
@@ -51,7 +51,7 @@ test("visitor: create a passkey, read both messages, seal, act, revoke, seal aga
 
   // The same passkey seals a new mandate (same visitor id).
   await reseal.click();
-  await page.getByRole("button", { name: "Prepare a new mandate" }).click();
+  await page.getByRole("button", { name: "Use the standard visitor mandate" }).click();
   await page.getByRole("button", { name: "Sign both with your passkey" }).click();
   await expect(page.getByRole("heading", { name: /Sealed with your passkey/ })).toBeVisible();
   expect(await passkey.credentials()).toHaveLength(1);
@@ -66,7 +66,30 @@ test("visitor: a dismissed passkey prompt creates nothing and says so", async ({
   const passkey = await addVirtualPasskey(context, page);
   await passkey.cdp.send("WebAuthn.setUserVerified", { authenticatorId: passkey.authenticatorId, isUserVerified: false });
   await page.goto("/start", { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Create a passkey" }).click();
+  await page.getByRole("button", { name: "Use the standard visitor mandate" }).click();
   await expect(page.getByText(/The passkey prompt was dismissed\. Nothing was created or signed\./)).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("yinglong.visitor.v1"))).toBeNull();
+});
+
+test("visitor: say, see, seal: own words compile to caveats, clamped and unmapped rows are flagged, the draft is sealed", async ({ page, context }) => {
+  const passkey = await addVirtualPasskey(context, page);
+  await page.goto("/start", { waitUntil: "networkidle" });
+  await page.getByLabel("Your rules, in plain English").fill(
+    "Only Arena Cafe and Kowloon Food Mart. Food at most 1500 a day. Ask me above 25, never more than 300 in one payment. Keep 150. Also tip the barista sometimes.",
+  );
+  await page.getByRole("button", { name: "See what the code enforces" }).click();
+  await expect(page.getByRole("heading", { name: "What the code will enforce" })).toBeVisible();
+  const decoded = page.getByRole("list", { name: "Decoded caveats, in order" });
+  await expect(decoded.getByText("It may pay only Arena Cafe and Kowloon Food Mart (your PayeeBook).")).toBeVisible();
+  await expect(page.getByText("Clamped").first()).toBeVisible();
+  await expect(page.getByText("Not enforced").first()).toBeVisible();
+  await expect(page.getByText("preview: final hash depends on your new account")).toBeVisible();
+  await page.getByRole("button", { name: "Edit" }).click();
+  await expect(page.getByLabel("Your rules, in plain English")).toHaveValue(/Food at most 1500 a day/);
+  await page.getByRole("button", { name: "See what the code enforces" }).click();
+  await page.getByRole("button", { name: "Seal with my passkey" }).click();
+  await expect(page.getByRole("heading", { name: "The two messages your passkey signs" })).toBeVisible();
+  await page.getByRole("button", { name: "Sign both with your passkey" }).click();
+  await expect(page.getByRole("heading", { name: /Sealed with your passkey/ })).toBeVisible();
+  expect(await passkey.credentials()).toHaveLength(1);
 });

@@ -338,6 +338,8 @@ export const Decision = z.object({
   receiptId: z.string().nullable(),
   /** Set when the service executed a T1 decision in the same call (autoExecute). */
   receipt: z.lazy(() => Receipt).nullable().optional(),
+  /** Sweeps into a product: the suitability explanation card (read from the ProductRegistry and the sealed caveat). */
+  suitability: z.lazy(() => Suitability).nullable().optional(),
 });
 export type Decision = z.infer<typeof Decision>;
 
@@ -476,6 +478,39 @@ export const VisitorSignUp = z.object({
 });
 export type VisitorSignUp = z.infer<typeof VisitorSignUp>;
 
+/**
+ * Say, see, seal (POST /v1/mandates/draft): what the visitor said, the closed-schema draft, and what the
+ * compiled caveats enforce, decoded back to English. `draft` is opaque: it is sent back unchanged.
+ */
+export const VisitorDraft = z.object({
+  draft: z.unknown(),
+  decodedSentences: z.array(z.string()),
+  diff: z.array(
+    z.object({
+      rule: z.string(),
+      said: z.string().nullable(),
+      enforced: z.string(),
+      source: z.string(),
+      status: z.enum(["as you said", "clamped", "default", "adjusted", "not enforced"]),
+      flagged: z.boolean(),
+      note: z.string().nullable(),
+    }),
+  ),
+  flagged: z.number().int().nonnegative(),
+  adjustments: z.array(z.object({ field: z.string(), said: z.string().nullable(), enforced: z.string(), kind: z.enum(["clamped", "default", "adjusted"]), reason: z.string() })),
+  compiled: z.object({ mandateHash: Hex32, delegationHash: Hex32, caveatCount: z.number().int().nonnegative(), preview: z.boolean() }),
+  payeeBook: z.array(z.object({ id: z.string(), label: z.string(), category: z.string(), address: Address })),
+  userSentences: z.array(z.string()),
+  roundTrip: z.object({ ok: z.boolean(), checks: z.array(z.object({ name: z.string(), ok: z.boolean(), detail: z.string().nullable() })) }),
+  serviceHashRing: ServiceHashRing.nullable(),
+  ledger: Ledger,
+  ledgerBadge: z.string().nullable(),
+  /** How the words became the closed schema: label exactly as the service returns it, with the model named. */
+  aigc: z.object({ label: z.string(), model: z.string(), provider: z.string(), via: z.enum(["llm", "rules"]), latencyMs: z.number().nullable() }),
+  note: z.string().nullable(),
+});
+export type VisitorDraft = z.infer<typeof VisitorDraft>;
+
 export const VisitorSealResult = z.object({
   principal: Principal,
   mandateHash: Hex32,
@@ -548,6 +583,10 @@ export const TreasuryView = z.object({
   instructions: z.array(LedgerInstruction),
   mandate: Mandate.nullable(),
   forecast: z.object({ breachInDays: z.number().int().nonnegative().nullable(), note: z.string(), model: z.string() }).nullable(),
+  /** Payees of the sealed mandate (PayeeBook): products (category treasury) and the payroll account come from here. */
+  payees: z.array(z.object({ id: z.string(), label: z.string(), address: Address, category: z.string() })).optional(),
+  /** The asset the rail moves (for amounts typed on this page); `unit` is the word the request parser knows. */
+  asset: z.object({ symbol: z.string(), decimals: z.number().int().min(0).max(36), unit: z.string() }).nullable().optional(),
 });
 export type TreasuryView = z.infer<typeof TreasuryView>;
 
@@ -786,5 +825,210 @@ export const TxView = z.object({
   call: z.object({ contract: z.string(), fn: z.string(), args: z.array(z.string()) }).nullable(),
   events: z.array(z.object({ contract: z.string(), event: z.string(), args: z.record(z.string(), z.string()) })),
   note: z.string().nullable(),
+  /** Typed revert reason of a failed transaction, and how it was recovered. */
+  revert: z.object({ name: z.string(), message: z.string().nullable() }).nullable().optional(),
+  /** "native receipt (exact revert data as executed)" or "eth_call replay". */
+  revertSource: z.string().nullable().optional(),
 });
 export type TxView = z.infer<typeof TxView>;
+
+/* ------------------------------------------------------------------ capabilities (docs/API.md section 3.10) */
+
+/** Signed integer in base units (projected balances can fall below zero). */
+export const SignedUnits = z.string().regex(/^-?(0|[1-9]\d*)$/, "expected an integer string");
+
+/** A paragraph about computed facts: AI-generated (model named) or the deterministic template. */
+export const Narration = z.object({
+  text: z.string(),
+  aiGenerated: z.boolean(),
+  /** "AI-generated" or "template text (deterministic)". */
+  label: z.string(),
+  model: z.string(),
+  provider: z.string(),
+  fallbackReason: z.string().nullable(),
+});
+export type Narration = z.infer<typeof Narration>;
+
+export const InsightCategory = z.object({
+  category: z.string(),
+  kind: z.enum(["scheduled", "one-off", "variable"]),
+  cap: Amount,
+  spent: Amount,
+  remaining: Amount,
+  usedBps: z.number().int().nonnegative(),
+  forecast: Amount,
+  forecastMethod: z.string(),
+  wouldReachCapAt: IsoTime.nullable(),
+  status: z.enum(["on track", "at cap", "due this period", "would reach the cap before the period ends"]),
+});
+export type InsightCategory = z.infer<typeof InsightCategory>;
+
+export const SpendingInsights = z.object({
+  period: z.object({ start: IsoTime, end: IsoTime, daysLeft: z.number().int().nonnegative(), timeCompressed: z.boolean() }).nullable(),
+  categories: z.array(InsightCategory),
+  topPayees: z.array(z.object({ label: z.string(), address: Address, amount: Amount, payments: z.number().int().nonnegative(), receiptIds: z.array(z.string()) })),
+  totals: z.array(z.object({ cap: Amount, spent: Amount, forecast: Amount })),
+  explanation: Narration,
+  ledger: Ledger,
+  block: z.string().nullable(),
+  label: z.string(),
+});
+export type SpendingInsights = z.infer<typeof SpendingInsights>;
+
+export const Obligation = z.object({
+  payeeId: z.string(),
+  payeeLabel: z.string(),
+  category: z.string(),
+  cadence: z.enum(["every period", "one-off", "per invoice"]),
+  upTo: Amount,
+  protection: z.enum(["escrow-protected", "settled through escrow", "paid directly (no protection)", "unprotected"]),
+  escrowIds: z.array(z.number().int().nonnegative()),
+  refundableAfter: IsoTime.nullable(),
+  why: z.string(),
+});
+export type Obligation = z.infer<typeof Obligation>;
+
+export const Coverage = z.object({
+  obligations: z.array(Obligation),
+  coverItems: z.array(z.object({ item: z.string(), status: z.string(), gap: z.boolean(), note: z.string() })),
+  gaps: z.array(z.string()),
+  summary: z.object({ protected: z.number().int(), unprotected: z.number().int(), settled: z.number().int(), gaps: z.number().int() }),
+  label: z.string(),
+  ledger: Ledger,
+  block: z.string().nullable(),
+});
+export type Coverage = z.infer<typeof Coverage>;
+
+export const Escrow = z.object({
+  escrowId: z.number().int().nonnegative(),
+  ledger: Ledger,
+  payee: z.object({ id: z.string().nullable(), label: z.string(), address: Address }),
+  amount: Amount,
+  conditionId: Hex32,
+  releaseAttester: z.object({ address: Address, label: z.string(), heldByService: z.boolean() }),
+  createdAt: IsoTime,
+  refundAfter: IsoTime,
+  state: z.enum(["held", "released", "refunded"]),
+  canRelease: z.boolean(),
+  canRefundNow: z.boolean(),
+  fundingReceiptId: z.string().nullable(),
+});
+export type Escrow = z.infer<typeof Escrow>;
+
+export const EscrowList = z.object({ escrows: z.array(Escrow), contract: Address.nullable(), block: z.string().nullable() });
+export type EscrowList = z.infer<typeof EscrowList>;
+
+export const EscrowActionResult = z.object({ escrow: Escrow, receipt: Receipt.nullable() });
+export type EscrowActionResult = z.infer<typeof EscrowActionResult>;
+
+export const Credential = z.object({
+  /** EIP-712 hash of the credential message. */
+  id: Hex32,
+  ledger: Ledger,
+  issuer: Address,
+  issuerLabel: z.string(),
+  subject: z.string(),
+  onTimePayments: z.number().int().nonnegative(),
+  periodStart: IsoTime,
+  periodEnd: IsoTime,
+  receiptIds: z.array(z.string()),
+  /** Always "test credential issued by a fictional bank; not a credit score". */
+  statement: z.string(),
+  signature: HexData,
+  anchorReceiptId: z.string().nullable(),
+  rule: z.string(),
+  label: z.string(),
+  issuedAt: IsoTime,
+});
+export type Credential = z.infer<typeof Credential>;
+
+export const CredentialVerification = z.object({
+  credentialHash: Hex32,
+  valid: z.boolean(),
+  signatureValid: z.boolean(),
+  recovered: Address.nullable(),
+  issuer: Address.nullable(),
+  issuerLabel: z.string(),
+  trustedIssuer: z.boolean(),
+  receipts: z.array(
+    z.object({
+      receiptId: z.string(),
+      found: z.boolean(),
+      intact: z.boolean().nullable(),
+      confirmed: z.boolean().nullable(),
+      toRentPayee: z.boolean().nullable(),
+      ownReceipt: z.boolean().nullable(),
+      txHash: Hex32.nullable(),
+      ledger: Ledger.nullable(),
+      ok: z.boolean(),
+    }),
+  ),
+  anchorReceiptId: z.string().nullable(),
+  anchorCommitsCredential: z.boolean(),
+  label: z.string(),
+});
+export type CredentialVerification = z.infer<typeof CredentialVerification>;
+
+export const ForecastEvent = z.object({
+  day: z.number().int().nonnegative(),
+  date: IsoTime,
+  kind: z.enum(["scheduled instruction", "payroll", "supplier run-rate"]),
+  label: z.string(),
+  amount: Amount,
+});
+export type ForecastEvent = z.infer<typeof ForecastEvent>;
+
+export const CashForecast = z.object({
+  symbol: z.string(),
+  decimals: z.number().int().min(0).max(36),
+  horizonDays: z.number().int().positive(),
+  rail: z.string(),
+  start: z.object({ posted: Amount, pending: Amount }),
+  reserveFloor: Amount,
+  /** Signed base units in `decimals`. */
+  minBalance: SignedUnits,
+  headroomAboveFloor: SignedUnits,
+  supplierRunRatePerDay: Amount,
+  events: z.array(ForecastEvent),
+  daily: z.array(z.object({ day: z.number().int().nonnegative(), date: IsoTime, outflow: BaseUnits, balance: SignedUnits, belowFloor: z.boolean() })),
+  firstBreach: z.object({ day: z.number().int().nonnegative(), date: IsoTime, balance: SignedUnits, shortfall: BaseUnits }).nullable(),
+  velocity: z
+    .object({
+      windowEndsAt: IsoTime,
+      maxCount: z.number().int(),
+      used: z.number().int(),
+      countLeft: z.number().int(),
+      maxOutflow: Amount,
+      outflow: Amount,
+      outflowLeft: Amount,
+    })
+    .nullable(),
+  flags: z.array(z.string()),
+  explanation: Narration,
+  label: z.string(),
+  ledger: Ledger,
+  block: z.string().nullable(),
+});
+export type CashForecast = z.infer<typeof CashForecast>;
+
+export const Suitability = z.object({
+  product: z.object({ id: z.string().nullable(), label: z.string(), address: Address, onChainName: z.string().nullable(), nameMatchesRegistry: z.boolean().nullable() }),
+  listed: z.boolean(),
+  riskClass: z.number().int().nullable(),
+  riskLabel: z.string(),
+  mandateMaxRiskClass: z.number().int().nullable(),
+  mandateMaxLabel: z.string(),
+  verdict: z.enum(["suitable", "unsuitable", "not a listed product", "no suitability rule sealed"]),
+  outcome: z.enum(["approved", "needs your approval", "refused", "held"]),
+  why: z.array(z.string()),
+  source: z.object({ registry: Address, function: z.string(), enforcer: z.string(), block: z.string(), ledger: Ledger }),
+  label: z.string(),
+});
+export type Suitability = z.infer<typeof Suitability>;
+
+export const PayrollRequest = z.object({
+  /** Base units of the rail's asset. */
+  amount: BaseUnits,
+  memo: z.string().max(60).regex(/^[A-Za-z ._-]*$/).optional(),
+});
+export type PayrollRequest = z.infer<typeof PayrollRequest>;

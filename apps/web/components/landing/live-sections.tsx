@@ -10,6 +10,7 @@ import { ArrowIcon, ButtonLink } from "@/components/ui/button";
 import { Qr } from "@/components/qr";
 import { ErrorLine, TxLink } from "@/components/data/parts";
 import { SectionHead } from "./sections";
+import { Tickers } from "./tickers";
 
 const SOURCE_LABEL: Record<string, string> = {
   "anvil-fork": "Anvil fork",
@@ -114,10 +115,10 @@ export function Evidence() {
   const q = useAgent("evidence", (api) => api.evidence(), ["evidence"]);
   const e = q.data;
   return (
-    <section aria-labelledby="evidence-title" className="yl-section border-y border-line-1 bg-bg-1">
+    <section aria-labelledby="evidence-title" className="yl-section yl-defer">
       <div className="yl-container grid gap-12 lg:grid-cols-12 lg:gap-8">
         <SectionHead
-          index="04"
+          index="07"
           eyebrow="Evidence"
           id="evidence-title"
           title="Measured, not claimed"
@@ -178,13 +179,16 @@ export function Evidence() {
             <ul className="m-0 grid list-none gap-0 border-t border-line-2 p-0">
               {e.hashes.slice(0, 6).map((h) => (
                 <li key={h.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-line-1 py-3.5 text-13">
-                  <span className="text-fg-1">{h.label}</span>
+                  <span className="min-w-0 text-fg-1 [overflow-wrap:anywhere]">{h.label}</span>
                   <TxLink ledger={h.tx.ledger} hash={h.tx.txHash} href={h.tx.explorerUrl} badge={h.tx.badge} label={h.typedError ? `Reverted: ${h.typedError}` : "On chain"} />
                 </li>
               ))}
             </ul>
           ) : null}
         </div>
+      </div>
+      <div className="yl-container mt-16">
+        <Tickers />
       </div>
     </section>
   );
@@ -194,11 +198,11 @@ export function Evidence() {
 export function ChallengeCta() {
   const q = useAgent("challenge-session", (api) => api.challengeSession(), ["challenge"]);
   return (
-    <section aria-labelledby="cta-title" className="yl-section">
+    <section aria-labelledby="cta-title" className="yl-section yl-defer">
       <div className="yl-container">
         <div className="yl-card grid items-center gap-10 overflow-hidden p-6 sm:p-10 lg:grid-cols-12 lg:p-14">
           <div className="lg:col-span-7">
-            <SectionHead index="05" eyebrow="Judge's Challenge" id="cta-title" title="Nothing you type can move funds outside the mandate. Try." />
+            <SectionHead index="09" eyebrow="Judge's Challenge" id="cta-title" title="Nothing you type can move funds outside the mandate. Try." />
             <p className="m-0 mt-5 max-w-[52ch] text-15 text-fg-2">
               Scan the code for a guest mandate with a tiny cap, write any attack to Ying, and see which of the nine scales stopped it. Press bypass
               to send a raw redemption straight to the chain and get the revert hash.

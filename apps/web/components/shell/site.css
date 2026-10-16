@@ -1,0 +1,297 @@
+/*
+ * Site shell, home and About styles (the global nav sheet, the landing sections, the About page).
+ * Imported once by components/shell/site-nav.tsx, which renders on every route. Only transform,
+ * opacity and SVG stroke properties animate; every moment has a still state under reduced motion
+ * and the page-level Pause motion control (docs/MOTION.md).
+ */
+
+/* ------------------------------------------------------------------ page guard */
+/* No element may widen the page: a phone browser would otherwise zoom out to fit the overflow and
+   size every fixed element (the menu sheet among them) to the wider layout viewport. Clip on both
+   html and body (Chrome on Android needs both); clip never creates a scroll container, so sticky
+   positioning keeps working. Overflow is still a bug: tests/home.spec.ts looks for unclipped
+   elements wider than the viewport. */
+html,
+body {
+  overflow-x: clip;
+}
+
+/* ------------------------------------------------------------------ nav sheet */
+.yl-navsheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: color-mix(in oklab, var(--bg-0) 72%, transparent);
+  transition: opacity 200ms ease-out;
+}
+.yl-navsheet {
+  position: fixed;
+  z-index: 61;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  /* At most the viewport: 100vw follows the device width even if the layout viewport grows. */
+  width: min(100vw, 22rem);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--bg-1);
+  color: var(--fg-1);
+  border-left: 1px solid var(--line-2);
+  outline: none;
+  overflow: hidden;
+  transition:
+    transform var(--dur-sheet) var(--ease-drawer),
+    opacity 200ms ease-out;
+}
+@media (min-width: 480px) {
+  .yl-navsheet {
+    border-top-left-radius: var(--radius-sheet);
+    border-bottom-left-radius: var(--radius-sheet);
+  }
+}
+.yl-navsheet[data-starting-style],
+.yl-navsheet[data-ending-style] {
+  transform: translateX(100%);
+}
+.yl-navsheet-backdrop[data-starting-style],
+.yl-navsheet-backdrop[data-ending-style] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .yl-navsheet,
+  .yl-navsheet-backdrop {
+    transition: opacity 160ms ease-out;
+  }
+  .yl-navsheet[data-starting-style],
+  .yl-navsheet[data-ending-style] {
+    transform: none;
+    opacity: 0;
+  }
+}
+:root[data-motion="off"] .yl-navsheet,
+:root[data-motion="off"] .yl-navsheet-backdrop {
+  transition: none;
+}
+
+/* ------------------------------------------------------------------ hero */
+/* One full-bleed first screen (no container): the text column (44%, at least 520 px) and the orbit
+   column (the rest), side padding clamp(24px, 4vw, 96px). The text block is centred vertically; the
+   canvas fills the orbit column at the full hero height and frames the instrument itself (ring and
+   ticks at 94% of the column width, centred both ways; components/three/mandate-orbit.tsx). The
+   canvas never leaves its column, so nothing in the scene can reach the text. Phones: text first,
+   then the orbit, a 90vw square. */
+.yl-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-inline: clamp(24px, 4vw, 96px);
+}
+.yl-hero-text {
+  padding-block: 3rem 1.5rem;
+}
+.yl-hero-h1 {
+  font-size: clamp(3rem, 1rem + 5.2vw, 9rem);
+}
+.yl-hero-lead {
+  max-width: 36ch;
+  font-size: clamp(1rem, 0.6rem + 0.6vw, 1.375rem);
+  line-height: 1.55;
+}
+.yl-hero-orbit {
+  justify-self: center;
+  width: 90vw;
+  aspect-ratio: 1 / 1;
+  position: relative;
+}
+.yl-hero-stage {
+  position: absolute;
+  inset: 0;
+}
+@media (min-width: 1024px) {
+  .yl-hero-grid {
+    grid-template-columns: minmax(520px, 44%) minmax(0, 1fr);
+    column-gap: clamp(24px, 3vw, 64px);
+    height: max(640px, calc(100svh - var(--nav-h)));
+  }
+  .yl-hero-text {
+    align-self: center;
+    padding-block: min(6vh, 3rem);
+  }
+  /* The headline scales with the viewport width, and never so far that the text block (up to six
+     lines at the narrowest column) would push the actions below the fold. */
+  .yl-hero-h1 {
+    font-size: max(3rem, min(clamp(3rem, 1rem + 5.2vw, 9rem), calc(max(640px, 100svh - var(--nav-h)) * 0.1667 - 58px)));
+  }
+  .yl-hero-orbit {
+    justify-self: stretch;
+    width: auto;
+    height: 100%;
+    aspect-ratio: auto;
+    /* Soft top and bottom edges: shards in flight fade out instead of meeting a hard line. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+  }
+}
+
+/* ------------------------------------------------------------------ off-screen sections */
+/* Sections below the seven verbs skip rendering until they approach the viewport. */
+.yl-defer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 960px;
+}
+
+/* ------------------------------------------------------------------ live arrivals */
+/* A new row in the proof wall, a new verdict: rises 10 px into place once (CSS, off the main thread). */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-arrive {
+    animation: yl-arrive 520ms var(--ease-out) both;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes yl-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Rings that turn into place once when their section enters the viewport: the whole element
+   rotates and fades (compositor only; inside [data-drawn] or a phone that has come into view). */
+.yl-ring-in {
+  transform-origin: 50% 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) [data-drawn="false"] .yl-ring-in {
+    opacity: 0;
+    transform: rotate(-24deg) scale(0.94);
+  }
+  :root:not([data-motion="off"]) [data-drawn="true"] .yl-ring-in,
+  :root:not([data-motion="off"]) .yl-phone .yl-ring-in {
+    transition:
+      transform 900ms var(--ease-out),
+      opacity 600ms var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  @starting-style {
+    :root:not([data-motion="off"]) .yl-phone .yl-ring-in {
+      opacity: 0;
+      transform: rotate(-24deg) scale(0.94);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ nine scales */
+/* The request token rides a rail one station wide (one row tall on phones); one transition moves it
+   to the stopping station. --stop is set once per run on the track, never per frame. */
+.yl-scale-rail {
+  transform: translateY(calc(var(--stop, 0) * 100%));
+}
+@media (min-width: 1024px) {
+  .yl-scale-rail {
+    transform: translateX(calc(var(--stop, 0) * 100%));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-scales[data-run="false"] .yl-scale-rail {
+    transform: none;
+  }
+  :root:not([data-motion="off"]) .yl-scales[data-run="true"] .yl-scale-rail {
+    transition: transform calc(var(--stop, 0) * 240ms + 1ms) var(--ease-in-out);
+  }
+  :root:not([data-motion="off"]) .yl-scales[data-run="false"] .yl-station-state {
+    opacity: 0;
+  }
+  :root:not([data-motion="off"]) .yl-scales[data-run="true"] .yl-station-state {
+    animation: yl-station 260ms var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 240ms);
+  }
+}
+@keyframes yl-station {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+/* ------------------------------------------------------------------ phone mock */
+.yl-phone {
+  aspect-ratio: 9 / 18.5;
+  border-radius: 36px;
+  border: 1px solid var(--line-2);
+  background: var(--bg-0);
+  box-sizing: border-box;
+}
+.yl-phone-screen {
+  border-radius: 28px;
+  background: var(--bg-1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-passkey-ring {
+    /* Two breaths (4.8 s, under the 5 s that would need a pause control), then it rests. */
+    animation: yl-passkey 2.4s var(--ease-in-out) 2;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+}
+@keyframes yl-passkey {
+  50% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+}
+
+/* ------------------------------------------------------------------ About timeline */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion="off"]) .yl-timeline-fill {
+      animation: yl-timeline-fill linear both;
+      animation-timeline: --yl-timeline;
+      animation-range: contain 0% contain 100%;
+    }
+  }
+}
+.yl-timeline-scope {
+  view-timeline-name: --yl-timeline;
+}
+.yl-timeline-fill {
+  transform-origin: top center;
+}
+@keyframes yl-timeline-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Seven verbs: the life-cycle ring fills with scroll on the compositor where supported. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion="off"]) .yl-verbs-progress {
+      stroke-dasharray: 1 2;
+      animation: yl-verbs-progress linear both;
+      animation-timeline: --yl-verbs;
+      /* From the list's top at 60% of the viewport to its bottom at 60%: the reader's line. */
+      animation-range: cover 40vh cover calc(100% - 60vh);
+    }
+  }
+}
+.yl-verbs-scope-root {
+  timeline-scope: --yl-verbs;
+}
+.yl-verbs-timeline {
+  view-timeline-name: --yl-verbs;
+}
+@keyframes yl-verbs-progress {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}

@@ -201,6 +201,7 @@ export const WireProposal = z.object({
   createdAt: Time,
   /** Present with autoExecute when a T1 decision was executed in the same call. */
   receipt: z.lazy(() => WireReceipt).nullish(),
+  suitability: z.lazy(() => WireSuitability).nullish(),
 });
 export type WireProposal = z.infer<typeof WireProposal>;
 
@@ -307,6 +308,33 @@ export const WireVisitorSignUp = z.object({
   requests: z.array(z.object({ kind: z.literal("seal"), step: z.enum(["publish", "delegation"]), title: z.string(), digest: Hex32, typedData: WireTypedData })),
 });
 export type WireVisitorSignUp = z.infer<typeof WireVisitorSignUp>;
+
+export const WireVisitorDraft = z.object({
+  draft: z.unknown(),
+  adjustments: z.array(z.object({ field: z.string(), said: z.string().nullish(), enforced: z.string(), kind: z.enum(["clamped", "default", "adjusted"]), reason: z.string() })),
+  compiled: z.object({ mandateHash: Hex32, delegationHash: Hex32, caveatCount: z.number().int(), preview: z.boolean().nullish() }),
+  decodedSentences: z.array(z.string()),
+  payeeBook: z.array(z.object({ id: z.string(), label: z.string(), category: z.string(), address: Address })),
+  userSentences: z.array(z.string()),
+  diff: z.array(
+    z.object({
+      rule: z.string(),
+      said: z.string().nullish(),
+      enforced: z.string(),
+      source: z.string(),
+      status: z.enum(["as you said", "clamped", "default", "adjusted", "not enforced"]),
+      flagged: z.boolean(),
+      note: z.string().nullish(),
+    }),
+  ),
+  flagged: z.number().int(),
+  roundTrip: z.object({ ok: z.boolean(), checks: z.array(z.object({ name: z.string(), ok: z.boolean(), detail: z.string().nullish() })) }),
+  hashRing: WireHashRing.nullish(),
+  ledger: WireLedger,
+  ledgerBadge: z.string().nullish(),
+  aigc: z.object({ label: z.string(), model: z.string(), provider: z.string(), via: z.enum(["llm", "rules"]), latencyMs: z.number().nullish() }),
+  note: z.string().nullish(),
+});
 
 export const WireVisitorSeal = z.object({ principal: WirePrincipal, mandateHash: Hex32, publishTx: Hex32.nullish() });
 
@@ -480,11 +508,187 @@ export const WireTx = z.object({
   to: Address.nullish(),
   toName: z.string().nullish(),
   gasUsed: IntLike.nullish(),
-  call: z.object({ contract: z.string().nullish(), function: z.string(), args: z.array(z.unknown()) }).nullish(),
+  // `args` is a list, an object, or a one-line summary (redeemDelegations).
+  call: z.object({ contract: z.string().nullish(), function: z.string(), args: z.union([z.array(z.unknown()), z.record(z.string(), z.unknown()), z.string()]).nullish() }).nullish(),
   events: z
     .array(z.object({ contract: z.string().nullish(), addressName: z.string().nullish(), event: z.string(), args: z.record(z.string(), z.unknown()).nullish() }))
     .nullish(),
   note: z.string().nullish(),
+  revert: z.object({ name: z.string(), message: z.string().nullish() }).nullish(),
+  revertSource: z.string().nullish(),
+});
+
+/* ------------------------------------------------------------------ capabilities (docs/API.md section 3.10) */
+
+export const SInt = z.string().regex(/^-?(0|[1-9]\d*)$/, "expected an integer string");
+
+export const WireNarration = z.object({
+  text: z.string(),
+  aiGenerated: z.boolean(),
+  label: z.string().nullish(),
+  model: z.string().nullish(),
+  provider: z.string().nullish(),
+  fallbackReason: z.string().nullish(),
+});
+
+export const WireInsights = z.object({
+  period: z.object({ start: Time, end: Time, daysLeft: z.number().int(), timeCompressed: z.boolean() }).nullable(),
+  categories: z.array(
+    z.object({
+      symbol: z.string(),
+      decimals: z.number().int(),
+      category: z.string(),
+      kind: z.enum(["scheduled", "one-off", "variable"]),
+      cap: UInt,
+      spent: UInt,
+      remaining: UInt,
+      usedBps: z.number().int(),
+      forecastPeriodEnd: UInt,
+      forecastMethod: z.string(),
+      wouldReachCapAt: Time.nullish(),
+      status: z.enum(["on track", "at cap", "due this period", "would reach the cap before the period ends"]),
+    }),
+  ),
+  topPayees: z.array(z.object({ label: z.string(), address: Address, symbol: z.string(), decimals: z.number().int(), amount: UInt, payments: z.number().int(), receiptIds: z.array(z.string()) })),
+  totals: z.array(z.object({ symbol: z.string(), decimals: z.number().int(), cap: UInt, spent: UInt, forecastPeriodEnd: UInt })),
+  explanation: WireNarration,
+  block: IntLike.nullish(),
+  ledger: WireLedger,
+  label: z.string(),
+});
+
+export const WireCoverage = z.object({
+  obligations: z.array(
+    z.object({
+      payeeId: z.string(),
+      payeeLabel: z.string(),
+      category: z.string(),
+      cadence: z.enum(["every period", "one-off", "per invoice"]),
+      symbol: z.string(),
+      decimals: z.number().int(),
+      upTo: UInt,
+      protection: z.enum(["escrow-protected", "settled through escrow", "paid directly (no protection)", "unprotected"]),
+      escrowIds: z.array(z.number().int()),
+      refundableAfter: Time.nullish(),
+      why: z.string(),
+    }),
+  ),
+  coverItems: z.array(z.object({ item: z.string(), status: z.string(), gap: z.boolean(), note: z.string() })),
+  gaps: z.array(z.string()),
+  summary: z.object({ protected: z.number().int(), unprotected: z.number().int(), settled: z.number().int(), gaps: z.number().int() }),
+  label: z.string(),
+  block: IntLike.nullish(),
+  ledger: WireLedger,
+});
+
+export const WireEscrow = z.object({
+  escrowId: z.number().int(),
+  ledger: WireLedger,
+  payer: Address.nullish(),
+  payee: z.object({ address: Address, id: z.string().nullish(), label: z.string() }),
+  token: z.object({ address: Address.nullish(), symbol: z.string(), decimals: z.number().int() }),
+  amount: UInt,
+  conditionId: Hex32,
+  releaseAttester: z.object({ address: Address, label: z.string(), heldByService: z.boolean() }),
+  createdAt: Time,
+  refundAfter: Time,
+  state: z.enum(["held", "released", "refunded"]),
+  canRelease: z.boolean(),
+  canRefundNow: z.boolean(),
+  fundingReceiptId: z.string().nullish(),
+});
+export type WireEscrow = z.infer<typeof WireEscrow>;
+
+export const WireEscrowList = z.object({ escrows: z.array(WireEscrow), block: IntLike.nullish(), contract: Address.nullish() });
+
+export const WireCredential = z.object({
+  id: Hex32,
+  principal: z.string(),
+  ledger: WireLedger,
+  issuer: Address,
+  issuerLabel: z.string(),
+  typedData: z.object({
+    domain: z.record(z.string(), z.unknown()),
+    message: z.object({
+      subject: z.string(),
+      onTimePayments: z.union([z.number(), z.string()]),
+      periodStart: IntLike,
+      periodEnd: IntLike,
+      receiptIds: z.array(z.string()),
+      issuedAt: IntLike,
+      statement: z.string(),
+    }),
+  }),
+  signature: HexData,
+  anchorReceiptId: z.string().nullish(),
+  rule: z.string(),
+  label: z.string(),
+  issuedAt: Time,
+  reused: z.boolean().nullish(),
+});
+export type WireCredential = z.infer<typeof WireCredential>;
+
+export const WireCredentialVerification = z.object({
+  credentialHash: Hex32,
+  valid: z.boolean(),
+  signatureValid: z.boolean(),
+  recovered: Address.nullish(),
+  issuer: Address.nullish(),
+  issuerLabel: z.string(),
+  trustedIssuer: z.boolean(),
+  receipts: z.array(
+    z.object({
+      receiptId: z.string(),
+      found: z.boolean(),
+      intact: z.boolean().nullish(),
+      confirmed: z.boolean().nullish(),
+      toRentPayee: z.boolean().nullish(),
+      ownReceipt: z.boolean().nullish(),
+      txHash: Hex32.nullish(),
+      ledger: WireLedger.nullish(),
+      ok: z.boolean(),
+    }),
+  ),
+  anchorReceiptId: z.string().nullish(),
+  anchorCommitsCredential: z.boolean(),
+  label: z.string(),
+});
+
+export const WireForecast = z.object({
+  symbol: z.string(),
+  decimals: z.number().int(),
+  horizonDays: z.number().int(),
+  start: z.object({ posted: UInt, pending: UInt }),
+  reserveFloor: UInt,
+  events: z.array(z.object({ day: z.number().int(), date: Time, kind: z.enum(["scheduled instruction", "payroll", "supplier run-rate"]), label: z.string(), amount: UInt })),
+  supplierRunRatePerDay: UInt,
+  daily: z.array(z.object({ day: z.number().int(), date: Time, outflow: UInt, balance: SInt, belowFloor: z.boolean() })),
+  minBalance: SInt,
+  headroomAboveFloor: SInt,
+  firstBreach: z.object({ day: z.number().int(), date: Time, balance: SInt, shortfall: UInt }).nullable(),
+  flags: z.array(z.string()),
+  velocity: z
+    .object({ windowSeconds: IntLike, windowEndsAt: Time, maxCount: z.number().int(), used: z.number().int(), countLeft: z.number().int(), maxOutflow: UInt, outflow: UInt, outflowLeft: UInt })
+    .nullable(),
+  ledger: WireLedger,
+  block: IntLike.nullish(),
+  rail: z.string(),
+  explanation: WireNarration,
+  label: z.string(),
+});
+
+export const WireSuitability = z.object({
+  product: z.object({ id: z.string().nullish(), label: z.string(), address: Address, onChainName: z.string().nullish(), nameMatchesRegistry: z.boolean().nullish() }),
+  listed: z.boolean(),
+  riskClass: z.number().int().nullable(),
+  riskLabel: z.string(),
+  mandateMaxRiskClass: z.number().int().nullable(),
+  mandateMaxLabel: z.string(),
+  verdict: z.enum(["suitable", "unsuitable", "not a listed product", "no suitability rule sealed"]),
+  outcome: z.enum(["approved", "needs your approval", "refused", "held"]),
+  why: z.array(z.string()),
+  source: z.object({ registry: Address, function: z.string(), enforcer: z.string(), block: IntLike, ledger: WireLedger }),
+  label: z.string(),
 });
 
 /* ------------------------------------------------------------------ requested additions */

@@ -8,17 +8,18 @@
   "scripts": {
     "dev": "next dev --port 3000",
     "dev:fixtures": "node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures -- next dev --port 3000",
-    "build": "next build",
-    "build:fixtures": "node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures -- next build",
+    "build": "node scripts/site-data.mjs && next build",
+    "build:fixtures": "node scripts/site-data.mjs && node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures -- next build",
     "start": "next start --port 3000",
     "typecheck": "tsc --noEmit",
+    "site-data": "node scripts/site-data.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "screens": "playwright test tests/routes.spec.ts",
     "posters": "node scripts/posters.mjs",
     "contrast": "node scripts/contrast.mjs",
     "fonts": "python -I scripts/build-fonts.py",
-    "build:e2e": "node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures NEXT_DIST_DIR=.next-e2e -- next build"
+    "build:e2e": "node scripts/site-data.mjs && node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures NEXT_DIST_DIR=.next-e2e -- next build"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",

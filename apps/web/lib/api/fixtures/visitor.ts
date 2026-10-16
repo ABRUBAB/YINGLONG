@@ -275,7 +275,7 @@ export function createFixtureVisitors() {
       return v;
     },
 
-    signUp(req: { credentialId: string; publicKey: { x: string; y: string } }): VisitorSignUp {
+    signUp(req: { credentialId: string; publicKey: { x: string; y: string }; mandate?: unknown }): VisitorSignUp {
       if (!/^[A-Za-z0-9_-]{16,512}$/.test(req.credentialId)) throw new ApiRequestError("credentialId must be the passkey's raw id in base64url", 400, "service_error");
       if (!/^0x[0-9a-fA-F]{64}$/.test(req.publicKey.x) || !/^0x[0-9a-fA-F]{64}$/.test(req.publicKey.y)) {
         throw new ApiRequestError("publicKey.x and publicKey.y must be 32-byte hex coordinates", 400, "service_error");
@@ -304,12 +304,24 @@ export function createFixtureVisitors() {
         ledger: "fisco",
         ledgerBadge: BADGE,
         agent: { label: "Ying", wallet: v.agentWallet, agentId: v.agentId, identityCode: `YL-TEST-V${v.id.slice(2, 8).toUpperCase()}` },
-        mandate: { title: "Your mandate (sealed with your passkey)", sentences: VISITOR_SENTENCES, mandateHash: v.mandateHash, delegationHash: v.delegationHash },
+        // A drafted mandate (sample) keeps the sentences the visitor saw; the sample caveats stay the standard ones.
+        mandate: {
+          title: req.mandate ? "Your own mandate (sealed with your passkey)" : "Your mandate (sealed with your passkey)",
+          sentences: (req.mandate as { decoded?: string[] } | undefined)?.decoded ?? VISITOR_SENTENCES,
+          mandateHash: v.mandateHash,
+          delegationHash: v.delegationHash,
+        },
         requests: [
           { kind: "seal", step: "publish", title: "Publish your mandate", digest: v.pending.opDigest, typedData: op },
           { kind: "seal", step: "delegation", title: "Give your agent this mandate", digest: v.pending.delegationDigest, typedData: del },
         ],
       };
+    },
+
+    reseal(visitorId: string, token: string, mandate?: unknown): VisitorSignUp {
+      const v = visitors.get(visitorId);
+      if (!v || v.token !== token) throw new ApiRequestError("unknown visitor or wrong session token", 400, "service_error");
+      return this.signUp({ credentialId: v.credentialId, publicKey: { x: v.x, y: v.y }, mandate });
     },
 
     async seal(visitorId: string, token: string, sigs: { userOpSignature: string; delegationSignature: string }): Promise<VisitorSealResult> {

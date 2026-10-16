@@ -10,6 +10,7 @@ import { ApiRequestError } from "../client";
 import type {
   ApprovalRequest,
   ChallengeAttempt,
+  Escrow,
   Decision,
   Mandate,
   MandateDraft,
@@ -25,6 +26,9 @@ import { typedDataDigest } from "../../signing-guard";
 import { activeVisitor } from "../session";
 import * as D from "./data";
 import { citySnapshot } from "./city";
+import * as C from "./capabilities";
+import { sampleVisitorDraft } from "./draft";
+import { formatUnits } from "../../format";
 import { attackFamily, compileSample, simulateDecision } from "./simulate";
 import { addr, baseTx, fiscoTx, h } from "./util";
 import { BASE_DIRECTORY, createFixtureVisitors, FISCO_DIRECTORY, revokeTypedData, type FixtureVisitor } from "./visitor";
@@ -45,6 +49,7 @@ export function createFixtureApi(): AgentApi {
     drafts: new Map<string, MandateDraft>(),
     decisions: new Map<string, Decision>(),
     signing: new Map<string, SigningRequest & { context: Record<string, string> }>(),
+    escrows: clone(C.escrows) as Escrow[],
   };
 
   const notFound = (what: string) => new ApiRequestError(`${what} was not found in the sample data.`, 404, "not_found");
@@ -389,6 +394,14 @@ export function createFixtureApi(): AgentApi {
       await wait(900);
       return visitors.signUp(req);
     },
+    draftVisitorMandate: async (text) => {
+      await wait(650);
+      return sampleVisitorDraft(text);
+    },
+    visitorReseal: async (visitorId, token, mandate) => {
+      await wait(900);
+      return visitors.reseal(visitorId, token, mandate);
+    },
     visitorSeal: async (visitorId, token, sigs) => {
       await wait(600);
       return visitors.seal(visitorId, token, sigs);
@@ -398,7 +411,7 @@ export function createFixtureApi(): AgentApi {
     treasury: (entityId) => {
       const v = state.treasury[entityId];
       if (!v) throw notFound("Entity");
-      return v;
+      return { ...v, payees: C.treasuryPayees[entityId] ?? [], asset: C.treasuryAssets[entityId] ?? null };
     },
     signBoardProposal: async (entityId, proposalId, directorId) => {
       await wait(700);
@@ -430,6 +443,8 @@ export function createFixtureApi(): AgentApi {
         call: r ? { contract: "DelegationManager", fn: "redeemDelegations", args: ["(sample)"] } : null,
         events: [],
         note: "Sample data: fixtures mode does not read a ledger.",
+        revert: r?.outcome === "reverted" && r.revertError ? { name: r.revertError, message: `${r.revertError} (sample)` } : null,
+        revertSource: r?.outcome === "reverted" ? (ledger === "fisco" ? "native receipt (exact revert data as executed)" : "eth_call replay") : null,
       };
     },
 
@@ -465,6 +480,127 @@ export function createFixtureApi(): AgentApi {
     city: () => citySnapshot,
     cityFeed: () => citySnapshot.feed,
     evidence: () => D.evidence,
+
+    insights: () => {
+      if (visitor()) throw notFound("Spending insights for this visitor");
+      return C.insights;
+    },
+    coverage: () => {
+      if (visitor()) throw notFound("Coverage for this visitor");
+      return C.coverageFrom(state.escrows);
+    },
+    escrows: () => ({ escrows: visitor() ? [] : state.escrows, contract: C.ESCROW_CONTRACT, block: "31884517" }),
+    releaseEscrow: async (escrowId) => {
+      await wait(800);
+      const e = state.escrows.find((x) => x.escrowId === escrowId);
+      if (!e) throw notFound("Escrow");
+      if (e.state !== "held") throw new ApiRequestError(`escrow is ${e.state}`, 400, "service_error");
+      Object.assign(e, { state: "released", canRelease: false, canRefundNow: false });
+      const receipt = newReceipt({
+        summary: `Escrow ${escrowId} released to ${e.payee.label}`,
+        tier: "T3",
+        outcome: "confirmed",
+        payeeName: e.payee.label,
+        amount: e.amount,
+        category: "tuition",
+        explanation: `${e.releaseAttester.label} attested the condition; the escrow paid ${e.payee.label}. The agent cannot move escrowed funds.`,
+        aigc: null,
+      });
+      return { escrow: clone(e), receipt };
+    },
+    refundEscrow: async (escrowId) => {
+      await wait(800);
+      const e = state.escrows.find((x) => x.escrowId === escrowId);
+      if (!e) throw notFound("Escrow");
+      if (e.state !== "held") throw new ApiRequestError(`escrow is ${e.state}`, 400, "service_error");
+      if (!e.canRefundNow) throw new ApiRequestError(`too early: refundable after ${e.refundAfter}`, 400, "service_error", "TooEarly");
+      Object.assign(e, { state: "refunded", canRelease: false, canRefundNow: false });
+      const receipt = newReceipt({
+        summary: `Escrow ${escrowId} refunded to you`,
+        tier: "T3",
+        outcome: "confirmed",
+        payeeName: "Your account",
+        amount: e.amount,
+        category: "tuition",
+        explanation: `The escrow was not released before ${e.refundAfter}, so it returned to your account.`,
+        aigc: null,
+      });
+      return { escrow: clone(e), receipt };
+    },
+    credentials: () => (visitor() ? [] : [C.credential]),
+    issueCredential: async () => {
+      await wait(600);
+      return { credential: C.credential, verification: C.verify(C.credential) };
+    },
+    verifyCredential: async (hash) => {
+      await wait(500);
+      if (hash.toLowerCase() !== C.credential.id.toLowerCase()) throw notFound("Credential");
+      return C.verify(C.credential);
+    },
+    forecast: (entityId) => {
+      const f = C.forecasts[entityId];
+      if (!f) throw notFound("Forecast");
+      return f;
+    },
+    runPayroll: async (entityId, req) => {
+      await wait(700);
+      const v = state.treasury[entityId];
+      if (!v) throw notFound("Entity");
+      const payee = (C.treasuryPayees[entityId] ?? []).find((p) => p.category === "payroll");
+      const asset = C.treasuryAssets[entityId]!;
+      if (!payee) throw new ApiRequestError("this principal's mandate has no payroll payee", 400, "service_error");
+      const lane = v.lanes.find((l) => l.category === "payroll");
+      const left = lane ? BigInt(lane.cap.value) - BigInt(lane.spent.value) : 0n;
+      const value = BigInt(req.amount);
+      const amount = { value: req.amount, decimals: asset.decimals, symbol: asset.symbol };
+      const text = `Pay the ${payee.label} ${formatUnits(value, asset.decimals)} ${asset.unit} for payroll${req.memo ? ` (${req.memo})` : ""}`;
+      const refused = !lane || value > left;
+      const d = simulateDecision(text);
+      const decision = {
+        ...d,
+        input: { text, language: "en" as const },
+        intent: { action: "pay" as const, summary: `Payroll to ${payee.label}`, payeeId: payee.id, payeeName: payee.label, amount, category: "payroll", intentHash: null },
+        tier: refused ? ("T4" as const) : ("T1" as const),
+        outcome: refused ? ("refused" as const) : ("executed" as const),
+        question: null,
+        scales: d.scales.map((sc, k) =>
+          refused
+            ? k < 4
+              ? { ...sc, status: "passed" as const, reason: null, error: null }
+              : k === 4
+                ? { ...sc, status: "stopped" as const, error: "CategoryBudgetExceeded", reason: `Only ${formatUnits(left > 0n ? left : 0n, asset.decimals)} ${asset.symbol} is left in this month's payroll lane.` }
+                : { ...sc, status: "skipped" as const, reason: null, error: null, durationMs: null, revert: null }
+            : { ...sc, status: "passed" as const, reason: null, error: null },
+        ),
+        explanation: refused
+          ? "This payroll run is larger than the payroll lane has left this month, so the CategoryBudgetEnforcer refuses it. A larger run is a board proposal."
+          : "Inside the payroll lane: the treasurer agent sent one coin-free instruction to the staff payroll account sealed in the mandate.",
+        aigc: null,
+      };
+      if (!refused) {
+        if (lane) lane.spent = { ...lane.spent, value: (BigInt(lane.spent.value) + value).toString() };
+        v.instructions.unshift({
+          id: `ins-payroll-${Date.now()}`,
+          instructionHash: h(`ins:payroll:${Date.now()}`),
+          kind: "payroll",
+          payeeName: payee.label,
+          amount,
+          condition: req.memo ?? "Payroll run",
+          status: "executed",
+          rejectError: null,
+          tx: fiscoTx(`payroll:${Date.now()}`),
+          createdAt: new Date().toISOString(),
+          anchor: { status: "pending", root: null, baseTx: null },
+        });
+      }
+      return decision;
+    },
+    askAs: async (principalId, req) => {
+      await wait(700);
+      const v = state.treasury[principalId];
+      if (!v) return simulateDecision(req.text);
+      return C.simulateTreasuryAsk(principalId, req.text, { ...v, payees: C.treasuryPayees[principalId] ?? [], asset: C.treasuryAssets[principalId] ?? null });
+    },
   };
   return api;
 }

@@ -17,8 +17,8 @@ import { usePause } from "./use-pause";
 export type Persona = "nadia" | "lotus" | "supervisor";
 
 const PERSONA: Record<Persona, { name: string; sub: string }> = {
-  nadia: { name: "Nadia Rahman", sub: "Agent Ying · passport 4127" },
-  lotus: { name: "Lotus Lane", sub: "Treasurer agent · passport 5310" },
+  nadia: { name: "Nadia Rahman", sub: "Agent Ying" },
+  lotus: { name: "Lotus Lane", sub: "Treasurer agent" },
   supervisor: { name: "Supervisor", sub: "Regulator node view" },
 };
 
@@ -38,7 +38,9 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
   const p =
     persona === "nadia" && visitor
       ? { name: me.data?.displayName ?? "Your account", sub: me.data ? `Agent ${me.data.agentName} · passport ${me.data.agentId}` : "Your passkey account" }
-      : PERSONA[persona];
+      : persona === "nadia" && me.data
+        ? { name: me.data.displayName, sub: `Agent ${me.data.agentName} · passport ${me.data.agentId}` }
+        : PERSONA[persona];
   const liveState: LiveState = persona === "nadia" && pause.paused ? "paused" : live;
   const showPause = persona === "nadia";
 
