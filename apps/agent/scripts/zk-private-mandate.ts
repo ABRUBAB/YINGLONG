@@ -5,7 +5,7 @@
 //   exists (the circuit refuses), a forged proof and a replayed proof both revert on-chain with typed errors.
 // Agent wallet: agent-ying, else guest-arena, else (when both already hold passports bound to other
 // principals, as on the shared demo ledgers) Ying's dedicated private-mandate wallet; see src/zk/agent.ts.
-// Usage (from apps/agent):  npx tsx scripts/zk-private-mandate.ts <anvil|fisco>
+// Usage (from apps/agent):  npx tsx scripts/zk-private-mandate.ts <anvil|fisco|base-sepolia>
 // Needs `pnpm --dir circuits install`; set YINGLONG_BB_CRS_PATH to choose the reference-string cache.
 // Writes apps/agent/data/zk-<ledger>.json (including `supervisorView` for
 // GET /v1/supervisor/agents/:agentId/private-mandate). All amounts are test units.
@@ -35,7 +35,7 @@ import {
 } from "../src/zk/privateMandate";
 
 const name = (process.argv[2] ?? "anvil") as LedgerName;
-if (name !== "anvil" && name !== "fisco") throw new Error("usage: zk-private-mandate.ts <anvil|fisco>");
+if (name !== "anvil" && name !== "fisco" && name !== "base-sepolia") throw new Error("usage: zk-private-mandate.ts <anvil|fisco|base-sepolia>");
 const ctx = ledgerContext(name);
 const U = (n: number) => BigInt(n) * 1_000_000n; // tHKD test units, 6 decimals
 // Gas limit for redemptions that are expected to revert (and the fallback). Generous on purpose: the router
