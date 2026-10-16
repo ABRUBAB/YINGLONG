@@ -135,6 +135,8 @@ const KIND_WORDS: [Intent["kind"], RegExp][] = [
   ["sweep", /\b(sweep|invest idle|money market|park (the )?cash)\b/i],
   ["escrow", /\b(deposit|escrow|prepay|prepayment)\b/i],
   ["pay", /\b(pay|send|transfer|settle|remit)\b/i],
+  // Everyday purchase words. "order" only as a purchase ("order a coffee"), never in "defer the optional order".
+  ["pay", /\b(buy|purchase|tip)\b|\border (a|an|some|me|two|three|\d)\b/i],
 ];
 
 const CATEGORY_WORDS: [Intent["category"], RegExp][] = [

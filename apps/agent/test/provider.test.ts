@@ -153,6 +153,13 @@ describe("rule parser payee matching", () => {
     const payroll = ruleParse("Pay the Staff payroll account 80000 CNY for payroll", payees, "CNY");
     expect(payroll).toMatchObject({ kind: "pay", payee: "staff_payroll", category: "payroll", amount: { value: "80000", unit: "CNY" } });
   });
+  it("reads everyday purchase words as a payment, but not a deferred order", () => {
+    const cafe = [{ id: "arena_cafe", label: "Arena Cafe", category: "food" }];
+    expect(ruleParse("Buy a coffee at Arena Cafe for 5 HKD", cafe, "tHKD")).toMatchObject({ kind: "pay", payee: "arena_cafe", amount: { value: "5", unit: "tHKD" } });
+    expect(ruleParse("Order a coffee from Arena Cafe, 5 HKD", cafe, "tHKD").kind).toBe("pay");
+    expect(ruleParse("Tip Arena Cafe 2 HKD", cafe, "tHKD").kind).toBe("pay");
+    expect(ruleParse("Should we defer the optional order?", payees, "CNY").kind).toBe("unknown");
+  });
 });
 
 describe("deterministic fill of an amount the model left empty", () => {
