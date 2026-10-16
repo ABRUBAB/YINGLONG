@@ -25,7 +25,7 @@ const tmp = mkdtempSync(join(process.env.TEMP ?? tmpdir(), "yl-"));
 const bundle = join(tmp, "yinglong.bundle");
 run("git", ["bundle", "create", bundle, "--all"], { cwd: root });
 scp(bundle, "/tmp/yinglong.bundle");
-ssh("set -e; cd /opt/yinglong/src && git fetch -q /tmp/yinglong.bundle 'refs/heads/*:refs/remotes/bundle/*' && git reset -q --hard bundle/main && git log --oneline -1");
+ssh("set -e; cd /opt/yinglong/src && git fetch -q /tmp/yinglong.bundle '+refs/heads/*:refs/remotes/bundle/*' && git reset -q --hard bundle/main && git log --oneline -1");
 
 if (process.argv.includes("--secrets")) {
   const admin = resolve(root, "..", ".secrets", "agent-admin-token.txt");
