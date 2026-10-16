@@ -1,9 +1,14 @@
 "use client";
 
-import { ViewTransition } from "react";
+import Link from "next/link";
+import { useState, ViewTransition } from "react";
 import { AuthorityOrbits, HashRing, LabelChip, OrbitGauge, shortHash, StateRing } from "@yinglong/ui";
 import type { BudgetLane } from "@/lib/api/view";
-import { useAgent } from "@/lib/api/hooks";
+import { invalidate, useAgent } from "@/lib/api/hooks";
+import { describeSignError, revokeMandate, SIGNER_LABEL } from "@/lib/sign";
+import { Button, buttonClass } from "@/components/ui/button";
+import { ConfirmDialog, DialogClose } from "@/components/ui/sheet";
+import { useVisitorSession } from "@/components/session";
 import { formatUnits, remaining, TIER_LABEL, TIER_WHO } from "@/lib/format";
 import { AmountFlow } from "@/components/data/amount-flow";
 import { ErrorLine, Loading, TierBadge, TxLink } from "@/components/data/parts";
@@ -39,12 +44,65 @@ export function LaneGauge({ lane, size = 104 }: { lane: BudgetLane; size?: numbe
 
 const TIERS = ["T0", "T1", "T2", "T3", "T4", "ASK"] as const;
 
+/** Revoke the live mandate: confirm, then the page decodes the user operation and the passkey signs it. */
+function RevokeControl() {
+  const [confirm, setConfirm] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  async function run() {
+    setConfirm(false);
+    setBusy(true);
+    setMessage(null);
+    try {
+      const { signer, result } = await revokeMandate();
+      invalidate("mandates", "receipts", "budgets", "me", "pause");
+      setMessage(`Revoked with ${SIGNER_LABEL[signer]}. ${result.receipt?.txHash ? "" : "The receipt appears in Activity."}`.trim());
+    } catch (e) {
+      setMessage(describeSignError(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="grid w-full gap-2">
+      <Button variant="secondary" size="sm" className="justify-self-center" disabled={busy} onClick={() => setConfirm(true)}>
+        {busy ? "Revoking" : "Revoke mandate"}
+      </Button>
+      {message ? (
+        <p role="status" className="m-0 text-center text-11 leading-snug text-fg-2">
+          {message}
+        </p>
+      ) : null}
+      <ConfirmDialog
+        open={confirm}
+        onOpenChange={setConfirm}
+        title="Revoke this mandate?"
+        actions={
+          <>
+            <DialogClose className={buttonClass("quiet", "md")}>Keep it</DialogClose>
+            <Button onClick={() => void run()}>Revoke with passkey</Button>
+          </>
+        }
+      >
+        <p className="m-0">
+          One operation from your own account retires the mandate in the MandateRegistry and disables its delegation. Your agent loses all
+          authority until you seal a new mandate. This page decodes the operation and refuses to sign anything else.
+        </p>
+      </ConfirmDialog>
+    </div>
+  );
+}
+
 /** Right Authority panel: the live mandate as orbit gauges, the Hash Ring, authority orbits, tiers. */
 export function AuthorityPanel({ morph = false }: { morph?: boolean }) {
   const mandates = useAgent("mandates", (api) => api.mandates(), ["mandates"]);
   const budgets = useAgent("budgets", (api) => api.budgets(), ["budgets", "receipts"]);
   const me = useAgent("me", (api) => api.me(), ["me", "pause"]);
+  const visitor = useVisitorSession();
   const live = mandates.data?.find((m) => m.status === "live");
+  const revoked = !live ? mandates.data?.find((m) => m.status === "revoked") : undefined;
   const ringCheck = live ? compareHashRing(live.delegationHash, live.serviceHashRing) : "absent";
   const paused = me.data?.paused ?? false;
 
@@ -54,11 +112,20 @@ export function AuthorityPanel({ morph = false }: { morph?: boolean }) {
         <div>
           <p className="eyebrow m-0 text-fg-muted">Authority</p>
           <h2 id="ap-mandate" className="m-0 mt-0.5 text-15 font-semibold text-fg-0">
-            {live ? `Mandate v${live.version}` : "No live mandate"}
+            {live ? `Mandate v${live.version}` : mandates.data ? "No live mandate" : "Mandate"}
           </h2>
         </div>
         <ErrorLine error={mandates.error} />
         {mandates.loading ? <Loading rows={2} /> : null}
+        {!live && mandates.data ? (
+          <div className="grid justify-items-center gap-3">
+            {revoked ? <HashRing hash={revoked.delegationHash} size={168} phase="revoked" bare={false} /> : null}
+            <StateRing state="expired" size={16} label={revoked ? "Revoked: the agent has no authority" : "No mandate sealed"} />
+            <Link href={visitor ? "/start?again=1" : "/app/mandates/new"} className={buttonClass("primary", "sm")}>
+              Seal a new mandate
+            </Link>
+          </div>
+        ) : null}
         {live ? (
           <div className="grid justify-items-center gap-3">
             {morph ? (
@@ -81,6 +148,7 @@ export function AuthorityPanel({ morph = false }: { morph?: boolean }) {
                 label={ringCheck === "match" ? "Agent service computes the same ring" : "Agent service ring differs"}
               />
             ) : null}
+            <RevokeControl />
           </div>
         ) : null}
       </section>

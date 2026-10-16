@@ -23,6 +23,8 @@ const KIND_TYPES: Record<SigningRequest["kind"], readonly string[]> = {
   pause: ["Trip"],
   resume: ["Untrip", "PackedUserOperation"],
   veto: ["Veto"],
+  // MandateRegistry.revoke + DelegationManager.disableDelegation, one user operation of the account.
+  revoke: ["PackedUserOperation"],
 };
 
 export type GuardResult =

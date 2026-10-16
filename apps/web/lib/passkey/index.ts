@@ -14,3 +14,5 @@ export {
 export type { EncodedWebAuthnSignature, WebAuthnAssertion } from "./encode";
 export { decodeWebAuthnSignature, verifyWebAuthnSignature, contractMessage, checkAuthFlags } from "./verify";
 export { publicKeyFromAttestation, publicKeyFromSpki, parseAuthData, decodeCbor } from "./cose";
+export { parseP256Spki, SpkiError } from "./spki";
+export { b64urlEncode, b64urlDecode } from "./bytes";

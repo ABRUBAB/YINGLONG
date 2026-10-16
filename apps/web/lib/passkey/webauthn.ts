@@ -45,14 +45,20 @@ export interface CreatedPasskey extends P256PublicKey {
   clientDataJSON: string;
 }
 
-/** Registers a new ES256 passkey and returns its public key coordinates. */
+/**
+ * Registers a new ES256 passkey and returns its public key coordinates. The key is read from
+ * getPublicKey() (SPKI, P-256 checked by parseP256Spki) and cross-checked against the COSE key in the
+ * attestation object when both are present; a disagreement aborts the registration.
+ */
 export async function createPasskey(opts: {
   challenge: string;
   user: { id: string; name: string; displayName: string };
   rpId?: string;
+  residentKey?: ResidentKeyRequirement;
   signal?: AbortSignal;
 }): Promise<CreatedPasskey> {
   const rpId = opts.rpId ?? currentRpId();
+  const residentKey = opts.residentKey ?? "required";
   let cred: PublicKeyCredential;
   try {
     cred = (await navigator.credentials.create({
@@ -62,9 +68,9 @@ export async function createPasskey(opts: {
         user: { id: b64urlDecode(opts.user.id) as BufferSource, name: opts.user.name, displayName: opts.user.displayName },
         challenge: b64urlDecode(opts.challenge) as BufferSource,
         pubKeyCredParams: [{ type: "public-key", alg: -7 }],
-        authenticatorSelection: { residentKey: "required", requireResidentKey: true, userVerification: "required" },
+        authenticatorSelection: { residentKey, requireResidentKey: residentKey === "required", userVerification: "required" },
         attestation: "none",
-        timeout: 60_000,
+        timeout: 120_000,
       },
     })) as PublicKeyCredential;
   } catch (e) {
@@ -72,17 +78,23 @@ export async function createPasskey(opts: {
   }
   const res = cred.response as AuthenticatorAttestationResponse;
   const attestationObject = new Uint8Array(res.attestationObject);
-  const fromAttestation = publicKeyFromAttestation(attestationObject);
-  // Cross-check with getPublicKey() where the browser offers it.
+  let fromAttestation: P256PublicKey | null = null;
+  try {
+    fromAttestation = publicKeyFromAttestation(attestationObject);
+  } catch {
+    fromAttestation = null;
+  }
   const spki = typeof res.getPublicKey === "function" ? res.getPublicKey() : null;
-  if (spki) {
-    const k = publicKeyFromSpki(new Uint8Array(spki));
-    if (k.x !== fromAttestation.x || k.y !== fromAttestation.y) throw new Error("Passkey public key mismatch between attestation and SPKI");
+  const fromSpki = spki ? publicKeyFromSpki(new Uint8Array(spki)) : null;
+  const key = fromSpki ?? fromAttestation;
+  if (!key) throw new Error("The authenticator returned no readable P-256 public key.");
+  if (fromSpki && fromAttestation && (fromSpki.x !== fromAttestation.x || fromSpki.y !== fromAttestation.y)) {
+    throw new Error("Passkey public key mismatch between attestation and SPKI");
   }
   return {
     keyId: cred.id,
-    x: fromAttestation.x,
-    y: fromAttestation.y,
+    x: key.x,
+    y: key.y,
     attestationObject: b64urlEncode(attestationObject),
     clientDataJSON: b64urlEncode(new Uint8Array(res.clientDataJSON)),
   };

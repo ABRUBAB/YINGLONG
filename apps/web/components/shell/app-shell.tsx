@@ -8,7 +8,9 @@ import { DragonCoin, Wordmark } from "@/components/brand/mark";
 import { MotionToggle, ThemeToggle } from "@/components/preferences";
 import { Sheet } from "@/components/ui/sheet";
 import { isSample } from "@/lib/api";
+import { useAgent } from "@/lib/api/hooks";
 import { explorerTxUrl } from "@/lib/chain";
+import { useVisitorSession } from "@/components/session";
 import { isActive, NAV, NavGlyph } from "./nav";
 import { usePause } from "./use-pause";
 
@@ -29,7 +31,13 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
   const pathname = usePathname() ?? "";
   const pause = usePause();
   const [menu, setMenu] = useState(false);
-  const p = PERSONA[persona];
+  const visitor = useVisitorSession();
+  const me = useAgent("me", (api) => api.me(), ["me", "pause"]);
+  // The console persona is whoever signed up on this device with their own passkey, else Nadia's demo.
+  const p =
+    persona === "nadia" && visitor
+      ? { name: me.data?.displayName ?? "Your account", sub: me.data ? `Agent ${me.data.agentName} · passport ${me.data.agentId}` : "Your passkey account" }
+      : PERSONA[persona];
   const liveState: LiveState = persona === "nadia" && pause.paused ? "paused" : live;
   const showPause = persona === "nadia";
 

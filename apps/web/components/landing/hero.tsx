@@ -92,7 +92,10 @@ export function Hero({ poster = false }: { poster?: boolean }) {
             <ButtonLink href="/app" size="lg">
               Open Nadia&apos;s console <ArrowIcon />
             </ButtonLink>
-            <ButtonLink href="/proof" variant="secondary" size="lg">
+            <ButtonLink href="/start" variant="secondary" size="lg">
+              Try it with your own passkey
+            </ButtonLink>
+            <ButtonLink href="/proof" variant="quiet" size="lg">
               Read the proof
             </ButtonLink>
           </div>

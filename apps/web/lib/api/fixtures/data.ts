@@ -5,6 +5,8 @@
  */
 import { encodeAbiParameters, encodeFunctionData, keccak256, type Hex } from "viem";
 import { typedDataDigest } from "../../signing-guard";
+import { delegationStructHash, ROOT_AUTHORITY } from "../../account-ops";
+import { NADIA_SOURCE } from "./source";
 import { buildMerkle, cosignTypedData, decodePayment, encodeSingleExecution, ESCROW_DATA, PAYMENT_ABI } from "../../chain";
 import type {
   ApprovalRequest,
@@ -192,14 +194,26 @@ export const ROUND_TRIP_CHECKS = [
   { id: "not-disabled", label: "Delegation is not disabled in the DelegationManager", passed: true },
 ];
 
-export const NADIA_SOURCE =
-  "Pay my rent, 9,500, to Harbour Homes on the 1st. Keep food under 3,000 a month and never let me go below 1,500. " +
-  "Pay the HBU tuition deposit before 1 November. Ask me above 2,000 or for anyone new.";
+export { NADIA_SOURCE };
+
+/**
+ * Nadia's sample root delegation (one caveat per rule). Its EIP-712 struct hash is the mandate's
+ * delegation hash, so a revoke in fixtures mode is checked exactly as a live one (disableDelegation of
+ * the delegation whose hash is the live delegation hash).
+ */
+export const nadiaDelegation = {
+  delegate: YING_WALLET,
+  delegator: NADIA_ACCOUNT,
+  authority: ROOT_AUTHORITY,
+  caveats: nadiaRules.map((r, i) => ({ enforcer: (r.enforcerAddress ?? addr(`enforcer:${r.enforcer}`)) as Hex, terms: h(`terms:nadia:v3:${i}`), args: "0x" as Hex })),
+  salt: 3n,
+  signature: "0x" as Hex,
+};
 
 export const nadiaMandate: Mandate = {
   id: "mandate-nadia-v3",
   mandateHash: h("mandate:nadia:v3"),
-  delegationHash: h("delegation:nadia:v3"),
+  delegationHash: delegationStructHash(nadiaDelegation),
   version: 3,
   status: "live",
   jurisdiction: "hk",

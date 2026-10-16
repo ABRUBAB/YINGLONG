@@ -78,6 +78,8 @@ export interface ApprovalRequest {
   signatures?: { signer: string; signedAt: string }[];
   /** Revoke only: the unsigned user operation whose EIP-712 digest the principal signs. */
   userOp?: PackedUserOp;
+  /** Revoke only: the contracts the signing client checks the operation against. */
+  contracts?: Record<string, Address>;
 }
 
 interface Proposals {
@@ -721,6 +723,7 @@ export async function createRevokeApproval(id: PrincipalId): Promise<ApprovalReq
     threshold: config(id).kind === "company" ? 2 : 1,
     signatures: [],
     userOp: op,
+    contracts: ctx.signingContracts(),
   };
   proposals.update((x) => {
     x.approvals[a.id] = a;

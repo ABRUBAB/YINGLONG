@@ -58,6 +58,10 @@ export async function evaluatePolicy(args: {
   const paused = await ctx.read<boolean>({ address: ctx.addr("KillSwitchRegistry"), abi: abi.KillSwitchRegistryAbi, functionName: "isPaused", args: [account, agent] });
   reads.paused = String(paused);
   if (paused) refuse("GlobalPauseEnforcer", "Paused", "the account is paused or the agent is halted");
+  // GlobalPauseEnforcer also refuses when the agent's passport is not active (a supervisory halt).
+  const [agentId, passportStatus] = await ctx.read<[bigint, number, Hex]>({ address: ctx.addr("YinglongPassportRegistry"), abi: abi.YinglongPassportRegistryAbi, functionName: "walletInfo", args: [agent] });
+  reads.passportStatus = String(passportStatus);
+  if (!paused && agentId !== 0n && Number(passportStatus) !== 1) refuse("GlobalPauseEnforcer", "Paused", "the agent identity is halted by the supervisor (pause only)");
   const live = await ctx.read<boolean>({ address: ctx.addr("MandateRegistry"), abi: abi.MandateRegistryAbi, functionName: "isLive", args: [args.mandateHash] });
   reads.mandateLive = String(live);
   if (!live) refuse("MandateBindingEnforcer", "MandateNotLive", "the mandate is not live");

@@ -141,6 +141,7 @@ export async function registerVisitor(args: { credentialId: string; x: Hex; y: H
     did,
     ledger: cfg.ledger,
     ledgerBadge: ctx.profile.badge,
+    contracts: ctx.signingContracts(),
     agent: { label: cfg.agentLabel, wallet: passport.wallet, agentId: passport.agentId, identityCode: cfg.identityCode },
     mandate: { title: mandate.title, sentences: mandate.sentences, mandateHash: compiled.mandateHash, delegationHash: compiled.delegationHash },
     requests: [

@@ -93,6 +93,8 @@ export const WireMandateView = z.object({
   lineageId: z.string(),
   version: z.number().int().nullish(),
   status: z.enum(["live", "superseded", "revoked"]).nullish(),
+  /** Requested addition: MandateRegistry.isLive(mandateHash), so a revoked mandate is shown as revoked. */
+  live: z.boolean().nullish(),
   jurisdiction: WireJurisdiction,
   validFrom: z.union([Time, z.number()]),
   validUntil: z.union([Time, z.number()]),
@@ -258,7 +260,7 @@ export const WireApproval = z.object({
   id: z.string(),
   principal: z.string(),
   proposalId: z.string().nullish(),
-  kind: z.enum(["cosign", "seal", "pause", "veto", "resume"]),
+  kind: z.enum(["cosign", "seal", "pause", "veto", "resume", "revoke"]),
   decoded: z
     .object({
       target: Address,
@@ -291,6 +293,23 @@ export type WireApproval = z.infer<typeof WireApproval>;
 export const WireSignatureResult = z.object({ receipt: WireReceipt.nullish() });
 export const WireApprovalRef = z.object({ approvalId: z.string(), approval: WireApproval.nullish() });
 
+/* ------------------------------------------------------------------ visitors */
+
+export const WireVisitorSignUp = z.object({
+  visitorId: z.string().regex(/^v-[0-9a-f]+$/),
+  token: z.string().min(8),
+  account: Address,
+  did: z.string(),
+  ledger: WireLedger,
+  ledgerBadge: z.string().nullish(),
+  agent: z.object({ label: z.string(), wallet: Address, agentId: z.union([z.string(), z.number()]).transform(String), identityCode: z.string() }),
+  mandate: z.object({ title: z.string(), sentences: z.array(z.string()), mandateHash: Hex32, delegationHash: Hex32 }),
+  requests: z.array(z.object({ kind: z.literal("seal"), step: z.enum(["publish", "delegation"]), title: z.string(), digest: Hex32, typedData: WireTypedData })),
+});
+export type WireVisitorSignUp = z.infer<typeof WireVisitorSignUp>;
+
+export const WireVisitorSeal = z.object({ principal: WirePrincipal, mandateHash: Hex32, publishTx: Hex32.nullish() });
+
 /* ------------------------------------------------------------------ mandates */
 
 export const WireCompileResult = z.object({
@@ -316,6 +335,8 @@ export const WireRegistryAgent = z.object({
   identityCode: z.string().nullish(),
   status: z.string(),
   principal: z.string().nullish(),
+  /** "demo" agents of the scenario principals, or "visitor" agents of people who signed up with a passkey. */
+  kind: z.enum(["demo", "visitor"]).nullish(),
   attestations: z
     .array(z.object({ issuer: z.string(), issuerLabel: z.string(), claimHash: z.string(), expiresAt: z.union([Time, z.number()]).nullish() }))
     .nullish(),

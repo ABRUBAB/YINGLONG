@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { Activity, useState } from "react";
-import { StateRing } from "@yinglong/ui";
+import { LabelChip, StateRing } from "@yinglong/ui";
 import { useAgent } from "@/lib/api/hooks";
+import { clearVisitorSession } from "@/lib/api/session";
+import { useVisitorSession } from "@/components/session";
 import { formatTime, railLabel } from "@/lib/format";
 import { Sheet } from "@/components/ui/sheet";
 import { Tabs, TabPanel } from "@/components/ui/controls";
@@ -27,6 +30,7 @@ export function Console() {
   const me = useAgent("me", (api) => api.me(), ["me", "pause"]);
   const mandates = useAgent("mandates", (api) => api.mandates(), ["mandates"]);
   const live = mandates.data?.find((m) => m.status === "live");
+  const visitor = useVisitorSession();
 
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -42,10 +46,28 @@ export function Console() {
                 <StateRing state="paused" size={16} label={`${me.data.agentName} is paused`} />
               ) : live ? (
                 <StateRing state="sealed" size={16} label={`${me.data?.agentName ?? "The agent"} acts inside mandate v${live.version}`} />
+              ) : mandates.data ? (
+                <StateRing state="expired" size={16} label="No live mandate: the agent has no authority" />
               ) : null}
               {live?.sealedAt ? <span>sealed {formatTime(live.sealedAt)}</span> : null}
               {me.data ? <span>{railLabel(me.data.jurisdiction, me.data.ledgerBadge)}</span> : null}
             </p>
+            {visitor ? (
+              <p className="m-0 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-12 text-fg-muted">
+                <LabelChip>Your passkey account</LabelChip>
+                <span>Every signature here is your passkey on this device.</span>
+                <button type="button" onClick={() => clearVisitorSession()} className="text-fg-2 underline decoration-line-3 underline-offset-4 hover:text-fg-0">
+                  Forget on this device
+                </button>
+              </p>
+            ) : (
+              <p className="m-0 mt-2 text-12 text-fg-muted">
+                This is Nadia&apos;s demo account.{" "}
+                <Link href="/start" className="text-fg-1 underline decoration-line-3 underline-offset-4 hover:text-fg-0">
+                  Try it with your own passkey
+                </Link>
+              </p>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <SampleBadge />

@@ -22,9 +22,11 @@ import type {
 } from "../view";
 import { cosignTypedData, encodeSingleExecution, killSwitchTypedData } from "../../chain";
 import { typedDataDigest } from "../../signing-guard";
+import { activeVisitor } from "../session";
 import * as D from "./data";
 import { attackFamily, compileSample, simulateDecision } from "./simulate";
 import { addr, baseTx, fiscoTx, h } from "./util";
+import { BASE_DIRECTORY, createFixtureVisitors, FISCO_DIRECTORY, revokeTypedData, type FixtureVisitor } from "./visitor";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const clone = <T>(v: T): T => structuredClone(v);
@@ -45,6 +47,14 @@ export function createFixtureApi(): AgentApi {
   };
 
   const notFound = (what: string) => new ApiRequestError(`${what} was not found in the sample data.`, 404, "not_found");
+
+  // A visitor who signed up on this device with their own passkey (render-safe: ignored until hydration,
+  // so the first client render equals the server render; SessionSync then refreshes every view).
+  const visitors = createFixtureVisitors();
+  const visitor = (): FixtureVisitor | null => {
+    const s = activeVisitor({ renderSafe: true });
+    return s ? visitors.restore(s) : null;
+  };
 
   function signingRequest(kind: SigningRequest["kind"], typedData: TypedData, context: Record<string, string>): SigningRequest {
     const req = {
@@ -95,13 +105,19 @@ export function createFixtureApi(): AgentApi {
       ],
       models: { intent: "qwen3.5-9b-instruct-q4 (sample)", sentinel: "mmBERT-base sentinel (sample)" },
     }),
-    me: () => ({ ...D.principal, paused: state.pause.paused }),
+    me: () => {
+      const v = visitor();
+      return v ? visitors.principal(v) : { ...D.principal, paused: state.pause.paused };
+    },
     passport: (agentId) => {
       if (agentId !== D.passport.agentId) throw notFound(`Agent ${agentId}`);
       return { ...D.passport, status: state.pause.paused ? "paused" : "active" };
     },
 
-    mandates: () => state.mandates,
+    mandates: () => {
+      const v = visitor();
+      return v ? [visitors.mandate(v)] : state.mandates;
+    },
     mandate: (hash) => {
       const m = state.mandates.find((x) => x.mandateHash.toLowerCase() === hash.toLowerCase());
       if (!m) throw notFound("Mandate");
@@ -118,7 +134,10 @@ export function createFixtureApi(): AgentApi {
       if (!state.drafts.has(draft.draftId)) throw new ApiRequestError("The draft expired. Compile again.", 410, "draft_expired");
       return signingRequest("seal", draft.wire as TypedData, { draftId: draft.draftId });
     },
-    budgets: () => D.budgets,
+    budgets: () => {
+      const v = visitor();
+      return v ? visitors.budgets() : D.budgets;
+    },
 
     ask: async (req) => {
       await wait(700);
@@ -156,7 +175,7 @@ export function createFixtureApi(): AgentApi {
         explanation: d.explanation,
       });
     },
-    receipts: (opts = {}) => ({ items: state.receipts.slice(0, opts.limit ?? 50), nextCursor: null }),
+    receipts: (opts = {}) => ({ items: (visitor()?.receipts ?? state.receipts).slice(0, opts.limit ?? 50), nextCursor: null }),
     receipt: (id) => {
       const r = state.receipts.find((x) => x.receiptId.toLowerCase() === id.toLowerCase());
       if (!r) throw notFound("Receipt");
@@ -171,7 +190,7 @@ export function createFixtureApi(): AgentApi {
     findReceiptByTx: async (txHash) => state.receipts.find((r) => r.txHash?.toLowerCase() === txHash.toLowerCase()) ?? null,
     agentReceipts: (agentId) => state.receipts.filter((r) => r.agentId === agentId).slice(0, 10),
 
-    approvals: () => state.approvals.filter((a) => a.status === "pending"),
+    approvals: () => (visitor() ? [] : state.approvals.filter((a) => a.status === "pending")),
     approval: (id) => {
       const a = state.approvals.find((x) => x.id === id);
       if (!a) throw notFound("Approval request");
@@ -197,6 +216,11 @@ export function createFixtureApi(): AgentApi {
       }
       const req = state.signing.get(requestId);
       if (!req) throw notFound("Signing request");
+      const signer = req.context.visitorId ? visitors.get(req.context.visitorId) : null;
+      if (req.context.visitorId) {
+        if (!signer) throw notFound("Visitor");
+        await visitors.verify(signer, req.digest as Hex, sig.signature, "approval");
+      }
       state.signing.delete(requestId);
       const asApproval = (): ApprovalRequest => ({
         id: req.id,
@@ -242,6 +266,19 @@ export function createFixtureApi(): AgentApi {
         state.mandates.unshift(mandate);
         const receipt = newReceipt({ summary: `Mandate v${mandate.version} sealed and published`, tier: "T3", outcome: "confirmed", txHash: mandate.published[0]!.txHash, mandateHash: mandate.mandateHash, delegationHash: mandate.delegationHash, aigc: null, explanation: "Sealed with your passkey and published on both ledgers." });
         return { approval: asApproval(), receipt };
+      }
+      if (req.kind === "revoke") {
+        if (signer) visitors.applyRevoke(signer);
+        else {
+          const live = state.mandates.find((m) => m.mandateHash === req.context.mandateHash);
+          if (live) live.status = "revoked";
+          newReceipt({ summary: "Revoked the mandate", tier: "T3", outcome: "confirmed", mandateHash: (req.context.mandateHash ?? D.nadiaMandate.mandateHash) as Hex, aigc: null, explanation: "Revoked the mandate and disabled its delegation (sample: one user operation)." });
+        }
+        return { approval: asApproval(), receipt: null };
+      }
+      if ((req.kind === "pause" || req.kind === "resume") && signer) {
+        visitors.applyPause(signer, req.kind === "pause");
+        return { approval: asApproval(), receipt: null };
       }
       if (req.kind === "pause" || req.kind === "resume") {
         state.pause =
@@ -292,9 +329,28 @@ export function createFixtureApi(): AgentApi {
       return a;
     },
 
-    pauseStatus: () => state.pause,
+    pauseStatus: () => {
+      const v = visitor();
+      return v ? { paused: v.paused, since: null, txs: [], measuredMs: null } : state.pause;
+    },
     requestPause: async (action) => {
       await wait(150);
+      const v = visitor();
+      if (v) {
+        return signingRequest(
+          action,
+          killSwitchTypedData({
+            action: action === "pause" ? "Trip" : "Untrip",
+            chainId: visitors.chainId,
+            ledgerName: "fisco",
+            verifyingContract: visitors.killSwitch,
+            account: v.account,
+            nonce: 0n,
+            deadline: BigInt(Math.floor(Date.now() / 1000) + 3600),
+          }),
+          { visitorId: v.id },
+        );
+      }
       return signingRequest(
         action,
         killSwitchTypedData({
@@ -308,6 +364,33 @@ export function createFixtureApi(): AgentApi {
         }),
         {},
       );
+    },
+
+    requestRevoke: async () => {
+      await wait(200);
+      const v = visitor();
+      const ctx = await api.revokeContext();
+      const td = revokeTypedData(ctx, v ? v.delegation : D.nadiaDelegation);
+      return signingRequest("revoke", td, v ? { visitorId: v.id, mandateHash: ctx.mandateHash } : { mandateHash: ctx.mandateHash });
+    },
+    revokeContext: async (principalId) => {
+      const v = visitor();
+      if (v && (!principalId || principalId === v.id)) {
+        if (v.revoked) throw new ApiRequestError("the mandate is not live", 400, "service_error");
+        return visitors.revokeContext(v);
+      }
+      const live = state.mandates.find((m) => m.status === "live");
+      if (!live) throw new ApiRequestError("the mandate is not live", 400, "service_error");
+      return { principalId: "nadia", account: D.NADIA_ACCOUNT, ledger: "base-sepolia", mandateHash: live.mandateHash as Hex, delegationHash: live.delegationHash as Hex, directory: BASE_DIRECTORY };
+    },
+    contractDirectory: async (ledger) => (ledger === "fisco" ? FISCO_DIRECTORY : BASE_DIRECTORY),
+    visitorSignUp: async (req) => {
+      await wait(900);
+      return visitors.signUp(req);
+    },
+    visitorSeal: async (visitorId, token, sigs) => {
+      await wait(600);
+      return visitors.seal(visitorId, token, sigs);
     },
 
     treasuryEntities: () => D.entities,

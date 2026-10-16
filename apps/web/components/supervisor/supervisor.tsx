@@ -245,8 +245,98 @@ function VerifyDrawer({ agent, onClose }: { agent: RegistryAgent | null; onClose
   );
 }
 
+/** One registry table (demo agents, or the visitors' own agents). */
+function RegistryTable({
+  agents,
+  caption,
+  onVerify,
+  onHalt,
+}: {
+  agents: RegistryAgent[];
+  caption: string;
+  onVerify: (a: RegistryAgent) => void;
+  onHalt: (a: RegistryAgent) => void;
+}) {
+  return (
+    <div className="-mx-1 overflow-x-auto px-1" tabIndex={0} role="region" aria-label={`${caption} (scrolls sideways on small screens)`}>
+      <table className="yl-table min-w-[900px]">
+          <caption className="sr-only">{caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Agent</th>
+              <th scope="col">Acts for</th>
+              <th scope="col">Passport</th>
+              <th scope="col" className="text-right">
+                Reputation
+              </th>
+              <th scope="col" className="text-right">
+                Receipts
+              </th>
+              <th scope="col">Ledger</th>
+              <th scope="col">Status</th>
+              <th scope="col">
+                <span className="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {agents.map((a) => (
+              <tr key={`${a.ledger}:${a.agentId}:${a.wallet}`}>
+                <td>
+                  <span className="block text-13 font-medium text-fg-0">{a.agentName}</span>
+                  <span className="block font-mono text-11 whitespace-nowrap text-fg-muted">
+                    #{a.agentId} {shortHash(a.wallet, 6, 4)}
+                  </span>
+                </td>
+                <td>
+                  <span className="block text-13 text-fg-1">{a.ownerName}</span>
+                  <span className="block text-11 text-fg-muted">{a.jurisdiction ? JURISDICTION_LABEL[a.jurisdiction] : "Unknown jurisdiction"}</span>
+                </td>
+                <td>
+                  {a.trustedAttestations === null ? (
+                    <span className="block text-13 text-fg-1">Passport {a.status === "active" ? "active" : a.status}</span>
+                  ) : a.trustedAttestations > 0 ? (
+                    <span className="block text-13 text-fg-1">
+                      {a.trustedAttestations} trusted attestation{a.trustedAttestations === 1 ? "" : "s"}
+                    </span>
+                  ) : (
+                    <span className="block text-13 text-fg-1">No trusted issuer</span>
+                  )}
+                  <span className="block max-w-[220px] truncate text-11 text-fg-muted" title={a.issuers.join(", ")}>
+                    {a.issuers.join(", ") || (a.identityCode ? `Identity code ${a.identityCode} (placeholder)` : a.trustedAttestations === 0 ? "Self-issued credential only" : "Attestations not reported")}
+                  </span>
+                </td>
+                <td className="num text-13 text-fg-1">{a.reputation ?? "—"}</td>
+                <td className="num text-13 text-fg-1">{a.receipts ?? "—"}</td>
+                <td>
+                  <LedgerChip ledger={a.ledger} />
+                </td>
+                <td>
+                  <StateRing state={STATUS[a.status].ring} label={STATUS[a.status].word} />
+                </td>
+                <td className="whitespace-nowrap">
+                  <div className="flex justify-end gap-2">
+                    <Button size="sm" variant="secondary" onClick={() => onVerify(a)}>
+                      Verify
+                    </Button>
+                    <Button size="sm" variant="ghost" disabled={a.status === "paused" || a.status === "revoked"} onClick={() => onHalt(a)}>
+                      Pause agent
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+    </div>
+  );
+}
+
 export function Supervisor() {
   const q = useAgent("registry", (api) => api.registry(), ["registry"]);
+  // Demo agents first; visitors' own agents (sign-up with a passkey) grouped below, collapsed.
+  const demo = (q.data ?? []).filter((a) => a.kind !== "visitor");
+  const visitors = (q.data ?? []).filter((a) => a.kind === "visitor");
   const [verify, setVerify] = useState<RegistryAgent | null>(null);
   const [halt, setHalt] = useState<RegistryAgent | null>(null);
   const [reason, setReason] = useState("");
@@ -289,77 +379,25 @@ export function Supervisor() {
       <ErrorLine error={q.error} />
       {q.loading ? <Loading rows={5} /> : null}
       {q.data ? (
-        <div className="-mx-1 overflow-x-auto px-1" tabIndex={0} role="region" aria-label="Table (scrolls sideways on small screens)">
-          <table className="yl-table min-w-[900px]">
-            <caption className="sr-only">Registered agents</caption>
-            <thead>
-              <tr>
-                <th scope="col">Agent</th>
-                <th scope="col">Acts for</th>
-                <th scope="col">Passport</th>
-                <th scope="col" className="text-right">
-                  Reputation
-                </th>
-                <th scope="col" className="text-right">
-                  Receipts
-                </th>
-                <th scope="col">Ledger</th>
-                <th scope="col">Status</th>
-                <th scope="col">
-                  <span className="sr-only">Actions</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {q.data.map((a) => (
-                <tr key={a.agentId}>
-                  <td>
-                    <span className="block text-13 font-medium text-fg-0">{a.agentName}</span>
-                    <span className="block font-mono text-11 whitespace-nowrap text-fg-muted">
-                      #{a.agentId} {shortHash(a.wallet, 6, 4)}
-                    </span>
-                  </td>
-                  <td>
-                    <span className="block text-13 text-fg-1">{a.ownerName}</span>
-                    <span className="block text-11 text-fg-muted">{a.jurisdiction ? JURISDICTION_LABEL[a.jurisdiction] : "Unknown jurisdiction"}</span>
-                  </td>
-                  <td>
-                    {a.trustedAttestations === null ? (
-                      <span className="block text-13 text-fg-1">Passport {a.status === "active" ? "active" : a.status}</span>
-                    ) : a.trustedAttestations > 0 ? (
-                      <span className="block text-13 text-fg-1">
-                        {a.trustedAttestations} trusted attestation{a.trustedAttestations === 1 ? "" : "s"}
-                      </span>
-                    ) : (
-                      <span className="block text-13 text-fg-1">No trusted issuer</span>
-                    )}
-                    <span className="block max-w-[220px] truncate text-11 text-fg-muted" title={a.issuers.join(", ")}>
-                      {a.issuers.join(", ") || (a.identityCode ? `Identity code ${a.identityCode} (placeholder)` : a.trustedAttestations === 0 ? "Self-issued credential only" : "Attestations not reported")}
-                    </span>
-                  </td>
-                  <td className="num text-13 text-fg-1">{a.reputation ?? "—"}</td>
-                  <td className="num text-13 text-fg-1">{a.receipts ?? "—"}</td>
-                  <td>
-                    <LedgerChip ledger={a.ledger} />
-                  </td>
-                  <td>
-                    <StateRing state={STATUS[a.status].ring} label={STATUS[a.status].word} />
-                  </td>
-                  <td className="whitespace-nowrap">
-                    <div className="flex justify-end gap-2">
-                      <Button size="sm" variant="secondary" onClick={() => setVerify(a)}>
-                        Verify
-                      </Button>
-                      <Button size="sm" variant="ghost" disabled={a.status === "paused" || a.status === "revoked"} onClick={() => setHalt(a)}>
-                        Pause agent
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <RegistryTable agents={demo} caption="Registered demo agents" onVerify={setVerify} onHalt={setHalt} />
+          {visitors.length ? (
+            <details className="group mt-8 rounded-card border border-line-2 bg-bg-1">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-13 text-fg-1">
+                <span>
+                  <span className="font-semibold text-fg-0">Visitor agents</span>{" "}
+                  <span className="font-mono text-fg-muted">{visitors.length}</span>
+                  <span className="ml-2 text-fg-muted">signed up with their own passkeys (test units only)</span>
+                </span>
+                <span className="text-12 text-fg-muted group-open:hidden">Show</span>
+                <span className="hidden text-12 text-fg-muted group-open:inline">Hide</span>
+              </summary>
+              <div className="border-t border-line-2 px-4 pt-2 pb-4">
+                <RegistryTable agents={visitors} caption="Visitor agents" onVerify={setVerify} onHalt={setHalt} />
+              </div>
+            </details>
+          ) : null}
+        </>
       ) : null}
       {msg ? (
         <p role="status" className="mt-4 text-13 text-fg-1">

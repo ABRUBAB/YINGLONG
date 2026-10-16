@@ -33,6 +33,8 @@ const config: NextConfig = {
   // Separate output for the fixtures build used by Playwright (NEXT_DIST_DIR=.next-e2e).
   distDir: process.env.NEXT_DIST_DIR || ".next",
   transpilePackages: ["@yinglong/ui"],
+  // Live builds never bundle the sample-data adapter (lib/api/fixtures/entry -> none).
+  turbopack: dataMode === "live" ? { resolveAlias: { "@/lib/api/fixtures/entry": "./lib/api/fixtures/none.ts" } } : undefined,
   images: {
     dangerouslyAllowSVG: false,
     formats: ["image/webp"],

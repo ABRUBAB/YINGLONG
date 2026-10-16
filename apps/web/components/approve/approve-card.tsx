@@ -10,6 +10,7 @@ import { invalidate, useAgent } from "@/lib/api/hooks";
 import { decodePayment, executionHash, UndecodableExecution, type DecodedPayment } from "@/lib/chain";
 import { formatAmount, formatTime, formatUnits } from "@/lib/format";
 import { guardSigningRequest } from "@/lib/signing-guard";
+import { reviewRevoke, type RevokeContext } from "@/lib/account-ops";
 import { availableSigner, describeSignError, signAndSubmit, SIGNER_LABEL, type SignerKind } from "@/lib/sign";
 import { Mark } from "@/components/brand/mark";
 import { buttonClass } from "@/components/ui/button";
@@ -72,8 +73,30 @@ export function ApproveCard({ id }: { id: string }) {
   }, []);
 
   const a = q.data;
+  // A revoke is checked against the principal's own account, its live mandate and the deployment's
+  // MandateRegistry / DelegationManager (read from the service's directory), never against `decoded`.
+  const [revoke, setRevoke] = useState<{ ctx: RevokeContext | null; error: string | null } | null>(null);
+  useEffect(() => {
+    if (a?.kind !== "revoke") return;
+    let cancelled = false;
+    getApi()
+      .revokeContext(a.principal ?? undefined)
+      .then(
+        (ctx) => !cancelled && setRevoke({ ctx, error: null }),
+        (e: Error) => !cancelled && setRevoke({ ctx: null, error: `What a revoke must look like could not be read: ${e.message}` }),
+      );
+    return () => {
+      cancelled = true;
+    };
+  }, [a?.kind, a?.principal, a?.id]);
+  const revokeReview = useMemo(() => (a?.kind === "revoke" && revoke?.ctx ? reviewRevoke(a.typedData, revoke.ctx) : null), [a, revoke]);
   const guard = useMemo(() => (a ? guardSigningRequest(a) : null), [a]);
-  const local = useMemo(() => (a ? checkLocally(a) : null), [a]);
+  const local = useMemo((): LocalCheck | null => {
+    if (!a) return null;
+    if (a.kind !== "revoke") return checkLocally(a);
+    if (revokeReview) return { decoded: null, error: null, checks: revokeReview.checks };
+    return { decoded: null, error: revoke?.error ?? "Reading your account and live mandate to check the operation.", checks: [] };
+  }, [a, revoke, revokeReview]);
   const expired = a ? a.status === "expired" || Date.parse(a.expiresAt) < Date.now() : false;
   const localOk = local ? !local.error && local.checks.every((c) => c.ok) : false;
   const canApprove = Boolean(a && a.status === "pending" && !expired && guard?.ok && localOk && !done);
@@ -148,6 +171,8 @@ export function ApproveCard({ id }: { id: string }) {
                   "Pause your agent"
                 ) : a.kind === "resume" ? (
                   "Resume your agent"
+                ) : a.kind === "revoke" ? (
+                  "Revoke your mandate"
                 ) : (
                   <>
                     {a.kind === "cosign" ? "Approve " : a.kind === "seal" ? "Seal " : "Sign "}
@@ -175,6 +200,18 @@ export function ApproveCard({ id }: { id: string }) {
                 ) : null}
                 <dt className="border-b border-line-1 py-2 text-fg-muted">Method</dt>
                 <dd className="m-0 border-b border-line-1 py-2 font-mono text-12 break-all text-fg-1">{local?.decoded?.method ?? a.decoded?.method ?? "unknown"}</dd>
+                {revokeReview ? (
+                  <>
+                    <dt className="border-b border-line-1 py-2 text-fg-muted">Calls</dt>
+                    <dd className="m-0 border-b border-line-1 py-2 text-fg-1">
+                      <ol className="m-0 grid list-decimal gap-1 pl-4">
+                        {revokeReview.lines.map((l) => (
+                          <li key={l}>{l}</li>
+                        ))}
+                      </ol>
+                    </dd>
+                  </>
+                ) : null}
                 {a.decoded?.payee ? (
                   <>
                     <dt className="border-b border-line-1 py-2 text-fg-muted">Payee</dt>

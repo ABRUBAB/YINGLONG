@@ -78,6 +78,17 @@ export class LedgerContext {
     return this.ticking;
   }
 
+  /** Addresses a signing client checks a user operation or delegation against before the passkey signs. */
+  signingContracts(): Record<"EntryPoint" | "DelegationManager" | "MandateRegistry" | "PayeeBook" | "KillSwitchRegistry", Address> {
+    return {
+      EntryPoint: this.addr("EntryPoint"),
+      DelegationManager: this.addr("DelegationManager"),
+      MandateRegistry: this.addr("MandateRegistry"),
+      PayeeBook: this.addr("PayeeBook"),
+      KillSwitchRegistry: this.addr("KillSwitchRegistry"),
+    };
+  }
+
   addr(name: keyof Deployment["contracts"]): Address {
     return this.deployment.contracts[name].address;
   }

@@ -22,7 +22,7 @@
 | Ledger names | `anvil` (local bench, simulated), `base-sepolia` (public testnet), `fisco` (team-run FISCO BCOS); every hash-bearing object carries `ledger` and, where shown, `ledgerBadge` |
 | Operator token | Header `x-admin-token`, compared with `AGENT_ADMIN_TOKEN` or the file named by `AGENT_ADMIN_TOKEN_FILE`. It is required for POST requests whose path ends in `/board-proposals`, `/sign`, `/onboard`, `/execute`, `/demo-sign`, `/attack`, `/bypass` or `/decline`, except that a visitor's session token (below) opens `execute`, `bypass`, `decline` and `attack` for that visitor's own proposals, approvals and account. If no token is configured, these routes are open (development only); the VM deployment mounts one (`infra/app/compose.yaml`) |
 | Visitor token | Header `x-visitor-token`: returned by `POST /v1/visitors`, valid only after the visitor's passkey has sealed the mandate (`POST /v1/visitors/:id/seal`); it also allows `autoExecute` on that visitor's `ask` |
-| Rate limit | Per client IP (first `X-Forwarded-For` entry), `RATE_LIMIT_PER_MIN` requests per minute (default 60); over the limit: 429 `{"ok": false, "error": "rate limit"}`. Requests with a valid operator token are not limited. Visitor sign-ups: at most `VISITORS_PER_HOUR` (default 30) per hour in total |
+| Rate limit | Per client IP (first `X-Forwarded-For` entry), with separate budgets: GET requests `RATE_LIMIT_GET_PER_MIN` per minute (default 600), other methods `RATE_LIMIT_PER_MIN` per minute (default 60); over the limit: 429 `{"ok": false, "error": "rate limit"}`. Requests with a valid operator token are not limited. Visitor sign-ups: at most `VISITORS_PER_HOUR` (default 30) per hour in total |
 | CORS | Any origin is reflected; methods GET and POST; request headers `Content-Type` and `x-visitor-token` are allowed cross-origin, so browsers cannot send the operator token |
 | Errors | Any thrown error: HTTP 400 `{"ok": false, "error": "<message>"}`; zod validation failures put the issue list in `error` |
 
@@ -152,7 +152,7 @@ curl -s https://api.yinglong-agent.tech/v1/principals
 
 #### `GET /v1/principals/:id/state`: public
 
-Response: `{principal: PrincipalSummary, balances: [{symbol, address, decimals, amount}], mandate: MandateView or null, budgets: [{symbol, decimals, category, cap, spent, periodLengthSeconds, periodEndsAt}], tiers: [{symbol, defaultT1Cap, newPayeeT1Cap, t2Ceiling, categoryT1Caps}], reserveFloors: [{symbol, amount}], velocity: {symbol, windowSeconds, maxCount, maxOutflow} or null, payees: [{id, label, address, category}], paused, block}`. `spent` is read from `CategoryBudgetEnforcer.spentNow` on the principal's ledger. 404 `not onboarded` if the principal has no mandate yet.
+Response: `{principal: PrincipalSummary, balances: [{symbol, address, decimals, amount}], mandate: MandateView or null, budgets: [{symbol, decimals, category, cap, spent, periodLengthSeconds, periodEndsAt}], tiers: [{symbol, defaultT1Cap, newPayeeT1Cap, t2Ceiling, categoryT1Caps}], reserveFloors: [{symbol, amount}], velocity: {symbol, windowSeconds, maxCount, maxOutflow} or null, payees: [{id, label, address, category}], paused, block}`. `spent` is read from `CategoryBudgetEnforcer.spentNow` on the principal's ledger. `mandate` also carries `live` (from `MandateRegistry.isLive`) and `status` (`"live"` or `"revoked"`): after a revoke the last sealed mandate is still shown, marked revoked. `paused` is true when the account is tripped or the agent identity is halted by the supervisor. 404 `not onboarded` if the principal has no mandate yet.
 
 ```sh
 curl -s https://api.yinglong-agent.tech/v1/principals/nadia/state
@@ -290,7 +290,7 @@ curl -s -X POST https://api.yinglong-agent.tech/v1/principals/nadia/resume
 
 #### `POST /v1/principals/:id/revoke`: public, passkey-gated
 
-Builds one user operation from the principal's own account that calls `MandateRegistry.revoke(mandateHash)` and `DelegationManager.disableDelegation(rootDelegation)`. Response: `{approvalId, approval}` with `approval.kind = "revoke"`, `approval.typedData` the `PackedUserOperation` under the account's DeleGatorCore EIP-712 domain (`HybridDeleGator` or `MultiSigDeleGator`, version `1`, the account as verifying contract) and `approval.digest` its hash. Submitting the signature through `POST /v1/approvals/:id/signature` sends the operation straight to the EntryPoint and writes a T3 receipt with the confirmation time. After a revoke every redemption fails (`MandateNotLive` in the mirror, `CannotUseADisabledDelegation` on-chain) until a new mandate is sealed. 400 if no mandate is live.
+Builds one user operation from the principal's own account that calls `MandateRegistry.revoke(mandateHash)` and `DelegationManager.disableDelegation(rootDelegation)`. Response: `{approvalId, approval}` with `approval.kind = "revoke"`, `approval.typedData` the `PackedUserOperation` under the account's DeleGatorCore EIP-712 domain (`HybridDeleGator` or `MultiSigDeleGator`, version `1`, the account as verifying contract) and `approval.digest` its hash; `approval.contracts` lists the addresses the approval page checks the operation against (as for visitors). Submitting the signature through `POST /v1/approvals/:id/signature` sends the operation straight to the EntryPoint and writes a T3 receipt with the confirmation time. After a revoke every redemption fails (`MandateNotLive` in the mirror, `CannotUseADisabledDelegation` on-chain) until a new mandate is sealed. 400 if no mandate is live.
 
 ```sh
 curl -s -X POST https://api.yinglong-agent.tech/v1/principals/guest/revoke
@@ -486,7 +486,7 @@ A visitor creates a passkey in the browser (WebAuthn, P-256). The server deploys
 | `credentialId` | string | The passkey's raw id in base64url (16 to 512 characters); it is the account's key id |
 | `publicKey.x`, `publicKey.y` | hex | The P-256 public key coordinates, 32 bytes each |
 
-Response: `{visitorId, token, account, did, ledger, ledgerBadge, agent: {label, wallet, agentId, identityCode}, mandate: {title, sentences, mandateHash, delegationHash}, requests}`. `requests` holds two signing requests, each `{kind: "seal", step, title, digest, typedData}`: `step: "publish"` is the user operation that writes the payee book, adds the guardians (pause only) and publishes the mandate with its full caveat array; `step: "delegation"` is the root delegation under the DelegationManager domain. The same passkey signing up again gets the same `visitorId`, a new token and new requests (the old mandate is retired in the same operation). The `visitorId` is `v-` plus 10 hex characters of `keccak256(credentialId:x:y)`.
+Response: `{visitorId, token, account, did, ledger, ledgerBadge, contracts, agent: {label, wallet, agentId, identityCode}, mandate: {title, sentences, mandateHash, delegationHash}, requests}`. `contracts` gives the `EntryPoint`, `DelegationManager`, `MandateRegistry`, `PayeeBook` and `KillSwitchRegistry` addresses the browser checks both messages against before the passkey signs. `requests` holds two signing requests, each `{kind: "seal", step, title, digest, typedData}`: `step: "publish"` is the user operation that writes the payee book, adds the guardians (pause only) and publishes the mandate with its full caveat array; `step: "delegation"` is the root delegation under the DelegationManager domain. The same passkey signing up again gets the same `visitorId`, a new token and new requests (the old mandate is retired in the same operation). The `visitorId` is `v-` plus 10 hex characters of `keccak256(credentialId:x:y)`.
 
 #### `POST /v1/visitors/:id/seal`: visitor token, passkey-gated
 
@@ -499,6 +499,22 @@ Response: `{visitorId, account, agentWallet, agentId, createdAt, sealedAt, pendi
 ```sh
 curl -s https://api.yinglong-agent.tech/v1/visitors/v-0123456789
 ```
+
+### 3.9 Supervisor (pause only; the role is played by the team)
+
+#### `POST /v1/supervisor/agents/:agentId/halt`: operator
+
+Body `{halted: boolean, ledger: "anvil" | "base-sepolia" | "fisco"}`. Calls `YinglongPassportRegistry.supervisorSetStatus(agentId, halted)` from the supervisor key: a halted passport makes `GlobalPauseEnforcer` refuse every redemption by that agent wallet (`Paused`), and the policy mirror refuses it before signing. Lifting the halt (`halted: false`) restores the passport. The supervisor cannot spend, rotate keys or change mandates. Response: `{ok, txHash, explorerUrl, halted, note}`.
+
+```sh
+curl -s -X POST https://api.yinglong-agent.tech/v1/supervisor/agents/<agentId>/halt \
+  -H "Content-Type: application/json" -H "x-admin-token: $YINGLONG_ADMIN_TOKEN" \
+  -d '{"halted": true, "ledger": "fisco"}'
+```
+
+#### `GET /v1/supervisor/agents/:agentId/private-mandate`: public
+
+The supervisor's view of a private (zero-knowledge) mandate recorded for this agent: what the regulator may see (commitment, verifier, proof type, redemption transactions) without the hidden cap or payees. Source: the `supervisorView` object in `apps/agent/data/zk-<ledger>.json`. 404 if no private mandate is recorded for the agent.
 
 ## 4. Other paths on the same host
 

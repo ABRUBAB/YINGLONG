@@ -33,7 +33,8 @@ describe.skipIf(!base)("live adapter against the running agent service", () => {
     const ids: string[] = [];
     for (const principal of ["nadia", "lotus-sz"]) {
       const raw = (await (await fetch(`${base}/v1/approvals?principal=${principal}`)).json()) as Array<{ id: string }>;
-      ids.push(...raw.map((r) => r.id));
+      // The 8 most recent per principal: the service allows 60 requests a minute per IP.
+      ids.push(...raw.slice(-8).map((r) => r.id));
     }
     const list = await Promise.all(ids.map(async (id) => V.ApprovalRequest.parse(await api.approval(id))));
     for (const a of list) {

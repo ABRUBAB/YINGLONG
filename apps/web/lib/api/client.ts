@@ -27,7 +27,10 @@ import type {
   TreasuryEntity,
   TreasuryView,
   TxView,
+  VisitorSealResult,
+  VisitorSignUp,
 } from "./view";
+import type { ContractDirectory, RevokeContext } from "../account-ops";
 
 /** Reads may resolve synchronously (fixtures) so server rendering shows data on first paint. */
 export type MaybePromise<T> = T | Promise<T>;
@@ -84,6 +87,20 @@ export interface AgentApi {
 
   pauseStatus(): MaybePromise<PauseStatus>;
   requestPause(action: "pause" | "resume"): Promise<SigningRequest>;
+  /** Revoke the live mandate: one user operation (MandateRegistry.revoke + DelegationManager.disableDelegation). */
+  requestRevoke(): Promise<SigningRequest>;
+  /** What a revoke must look like for this principal (account, live mandate, deployment addresses). */
+  revokeContext(principalId?: string): Promise<RevokeContext>;
+  /** The deployment directory of one ledger (EntryPoint, DelegationManager, MandateRegistry, ...). */
+  contractDirectory(ledger: string): Promise<ContractDirectory>;
+
+  /**
+   * Visitor sign-up with the visitor's own passkey: the service receives only the public key, deploys an
+   * account whose only signer is that passkey, and returns the two messages the passkey must sign.
+   */
+  visitorSignUp(req: { credentialId: string; publicKey: { x: string; y: string } }): Promise<VisitorSignUp>;
+  /** Both WebAuthn signatures; the session token becomes valid only when the service accepts them. */
+  visitorSeal(visitorId: string, token: string, sigs: { userOpSignature: string; delegationSignature: string }): Promise<VisitorSealResult>;
 
   treasuryEntities(): MaybePromise<TreasuryEntity[]>;
   treasury(entityId: string): MaybePromise<TreasuryView>;

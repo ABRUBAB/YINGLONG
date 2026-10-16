@@ -5,11 +5,20 @@ import { defineConfig, devices } from "@playwright/test";
  * Browser: the system Chrome by default (PW_CHANNEL=chrome) so no download is needed on machines
  * that cannot reach the Playwright CDN; set PW_CHANNEL= (empty) to use the bundled Chromium.
  */
-const PORT = Number(process.env.E2E_PORT || 3210);
 const channel = process.env.PW_CHANNEL ?? "chrome";
+/**
+ * AGENT_API_IT=<agent service URL>: run only the live specs (*.live.spec.ts) against a live build in
+ * .next (build it with NEXT_PUBLIC_AGENT_API set to the same URL). Otherwise the fixtures build runs
+ * every other spec. The page is served on localhost, a valid WebAuthn RP ID (127.0.0.1 is not).
+ */
+const LIVE = Boolean(process.env.AGENT_API_IT);
+// Separate ports so a running fixtures server is never reused for the live specs (and vice versa).
+const PORT = Number(process.env.E2E_PORT || (LIVE ? 3220 : 3210));
 
 export default defineConfig({
   testDir: "tests",
+  testMatch: LIVE ? /.*\.live\.spec\.ts$/ : /.*\.spec\.ts$/,
+  testIgnore: LIVE ? [] : [/.*\.live\.spec\.ts$/],
   timeout: 90_000,
   expect: { timeout: 15_000 },
   fullyParallel: false,
@@ -27,7 +36,9 @@ export default defineConfig({
   webServer: process.env.E2E_NO_SERVER
     ? undefined
     : {
-        command: `node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures NEXT_DIST_DIR=.next-e2e -- next start --port ${PORT}`,
+        command: LIVE
+          ? `next start --port ${PORT}`
+          : `node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures NEXT_DIST_DIR=.next-e2e -- next start --port ${PORT}`,
         url: `http://localhost:${PORT}`,
         reuseExistingServer: true,
         timeout: 120_000,

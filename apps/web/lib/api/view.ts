@@ -243,7 +243,7 @@ export type TypedData = z.infer<typeof TypedData>;
 /** Something the user's passkey is asked to sign: exactly `digest`, which must equal hashTypedData(typedData). */
 export const SigningRequest = z.object({
   id: z.string(),
-  kind: z.enum(["cosign", "seal", "pause", "resume", "veto"]),
+  kind: z.enum(["cosign", "seal", "pause", "resume", "veto", "revoke"]),
   digest: Hex32,
   typedData: TypedData,
   expiresAt: IsoTime,
@@ -418,7 +418,7 @@ export const AbiArg = z.object({ name: z.string(), type: z.string(), value: z.st
 
 export const ApprovalRequest = z.object({
   id: z.string(),
-  kind: z.enum(["cosign", "seal", "pause", "resume", "veto"]),
+  kind: z.enum(["cosign", "seal", "pause", "resume", "veto", "revoke"]),
   status: z.enum(["pending", "approved", "declined", "expired"]),
   expiresAt: IsoTime,
   tier: Tier.nullable(),
@@ -443,11 +443,47 @@ export const ApprovalRequest = z.object({
   reason: z.string().nullable(),
   explanation: z.string().nullable(),
   aigc: AigcLabel.nullable(),
+  /** The principal whose account signs (service principal id); null when the service does not say. */
+  principal: z.string().nullable().optional(),
 });
 export type ApprovalRequest = z.infer<typeof ApprovalRequest>;
 
 export const ApprovalResult = z.object({ approval: ApprovalRequest, receipt: Receipt.nullable() });
 export type ApprovalResult = z.infer<typeof ApprovalResult>;
+
+/* ------------------------------------------------------------------ visitors (sign up with your own passkey) */
+
+/** One message the new passkey signs during sign-up: the publish user operation, then the root delegation. */
+export const VisitorSealRequest = z.object({
+  kind: z.literal("seal"),
+  step: z.enum(["publish", "delegation"]),
+  title: z.string(),
+  digest: Hex32,
+  typedData: TypedData,
+});
+export type VisitorSealRequest = z.infer<typeof VisitorSealRequest>;
+
+export const VisitorSignUp = z.object({
+  visitorId: z.string(),
+  token: z.string(),
+  account: Address,
+  did: z.string(),
+  ledger: Ledger,
+  ledgerBadge: z.string().nullable(),
+  agent: z.object({ label: z.string(), wallet: Address, agentId: z.string(), identityCode: z.string() }),
+  mandate: z.object({ title: z.string(), sentences: z.array(z.string()), mandateHash: Hex32, delegationHash: Hex32 }),
+  requests: z.array(VisitorSealRequest),
+});
+export type VisitorSignUp = z.infer<typeof VisitorSignUp>;
+
+export const VisitorSealResult = z.object({
+  principal: Principal,
+  mandateHash: Hex32,
+  publishTx: Hex32.nullable(),
+  ledger: Ledger,
+  ledgerBadge: z.string().nullable(),
+});
+export type VisitorSealResult = z.infer<typeof VisitorSealResult>;
 
 /* ------------------------------------------------------------------ pause */
 
@@ -533,6 +569,8 @@ export const RegistryAgent = z.object({
   reputation: z.number().int().min(0).max(100).nullable(),
   receipts: z.number().int().nonnegative().nullable(),
   lastReceiptId: z.string().nullable(),
+  /** Scenario agents, or agents of visitors who signed up with their own passkey (grouped separately). */
+  kind: z.enum(["demo", "visitor"]).optional(),
 });
 export type RegistryAgent = z.infer<typeof RegistryAgent>;
 

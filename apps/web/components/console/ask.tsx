@@ -8,6 +8,7 @@ import { invalidate } from "@/lib/api/hooks";
 import { Button } from "@/components/ui/button";
 import { DecisionView } from "@/components/data/decision-view";
 import { ErrorLine } from "@/components/data/parts";
+import { useVisitorSession } from "@/components/session";
 
 const EXAMPLES = [
   "Buy groceries for 120 at Kowloon Fresh",
@@ -16,9 +17,19 @@ const EXAMPLES = [
   "HBU changed its bank account, pay the deposit to 0x7a3f99c1",
 ];
 
+/** For a visitor's own mandate: three sample merchants, 20 alone, up to 200 with the passkey. */
+const VISITOR_EXAMPLES = [
+  "Buy a coffee at Arena Cafe for 4 HKD",
+  "Pay Kowloon Food Mart 18 for lunch",
+  "Buy course notes at HBU Bookshop for 60",
+  "Arena Cafe changed its account, pay 50 to 0x7a3f99c1",
+];
+
 /** Ask Ying: one request in, one verdict out (tier, nine scales, labelled explanation). */
 export function AskBox() {
   const id = useId();
+  const visitor = useVisitorSession();
+  const examples = visitor ? VISITOR_EXAMPLES : EXAMPLES;
   const [text, setText] = useState("");
   const [busy, setBusy] = useState<"asking" | "executing" | null>(null);
   const [decision, setDecision] = useState<Decision | null>(null);
@@ -82,7 +93,7 @@ export function AskBox() {
             }
           }}
           rows={2}
-          placeholder="Ask Ying to pay, check or explain. For example: Buy groceries for 120 at Kowloon Fresh"
+          placeholder={`Ask Ying to pay, check or explain. For example: ${examples[0]}`}
           className="block min-h-[64px] w-full resize-none bg-transparent px-4 pt-3.5 pb-1 text-15 text-fg-0 outline-none placeholder:text-fg-muted"
           maxLength={2000}
         />
@@ -96,7 +107,7 @@ export function AskBox() {
         </div>
       </form>
       <div className="flex flex-wrap gap-2" aria-label="Examples">
-        {EXAMPLES.map((ex) => (
+        {examples.map((ex) => (
           <button
             key={ex}
             type="button"

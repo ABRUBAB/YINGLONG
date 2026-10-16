@@ -4,6 +4,7 @@
  * data whose COSE_Key is { 1: 2 (EC2), 3: -7 (ES256), -1: 1 (P-256), -2: x, -3: y }.
  */
 import { bytesToHex } from "./bytes";
+import { parseP256Spki } from "./spki";
 
 type Cbor = number | bigint | string | boolean | null | Uint8Array | Cbor[] | Map<Cbor, Cbor>;
 
@@ -129,8 +130,5 @@ export function publicKeyFromAttestation(attestationObject: Uint8Array): P256Pub
 
 /** SubjectPublicKeyInfo DER (AuthenticatorAttestationResponse.getPublicKey()) -> { x, y }. */
 export function publicKeyFromSpki(spki: Uint8Array): P256PublicKey {
-  // The uncompressed point 0x04 || x || y is the last 65 bytes of a P-256 SPKI.
-  const point = spki.slice(spki.length - 65);
-  if (point[0] !== 0x04) throw new Error("SPKI does not end with an uncompressed P-256 point");
-  return { x: bytesToHex(point.slice(1, 33)), y: bytesToHex(point.slice(33, 65)) };
+  return parseP256Spki(spki);
 }

@@ -7,7 +7,7 @@ import type { Jurisdiction, Mandate, MandateDraft, Receipt } from "@/lib/api/vie
 import { getApi, isSample } from "@/lib/api";
 import { invalidate, useAgent } from "@/lib/api/hooks";
 import { isPromise } from "@/lib/api/client";
-import { NADIA_SOURCE } from "@/lib/api/fixtures/data";
+import { NADIA_SOURCE } from "@/lib/api/fixtures/source";
 import { JURISDICTION_LABEL, RAIL_LABEL, railLabel } from "@/lib/format";
 import { availableSigner, describeSignError, signAndSubmit, SIGNER_LABEL, type SignerKind } from "@/lib/sign";
 import { compareHashRing } from "@/lib/hash-ring-check";

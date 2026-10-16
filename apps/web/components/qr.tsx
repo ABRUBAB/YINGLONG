@@ -1,11 +1,37 @@
-import { encode } from "uqr";
+"use client";
+
+import { useEffect, useState } from "react";
 import { cn } from "@yinglong/ui";
+
+type Encode = (typeof import("uqr"))["encode"];
+let encoder: Encode | null = null;
+let loading: Promise<Encode> | null = null;
+
+/** The QR encoder (uqr) loads on first use, so pages that never show a code do not ship it. */
+function loadEncoder(): Promise<Encode> {
+  loading ??= import("uqr").then((m) => (encoder = m.encode));
+  return loading;
+}
 
 /**
  * QR code rendered as one SVG path (generated locally, no network). Error correction H so the orbit
  * glyph can sit in the centre (it covers well under 20 percent of the modules, BRAND.md section 2).
+ * Until the encoder has loaded, a blank tile of the same size holds the place (same label).
  */
 export function Qr({ value, size = 160, label, glyph = true, className }: { value: string; size?: number; label: string; glyph?: boolean; className?: string }) {
+  const [encode, setEncode] = useState<Encode | null>(() => encoder);
+  useEffect(() => {
+    if (encode) return;
+    let alive = true;
+    loadEncoder().then((e) => alive && setEncode(() => e));
+    return () => {
+      alive = false;
+    };
+  }, [encode]);
+
+  const tile = cn("shrink-0 rounded-control bg-[#FAFAF7] text-[#0B0B0A]", className);
+  if (!encode) return <svg viewBox="0 0 10 10" width={size} height={size} role="img" aria-label={label} className={tile} />;
+
   const { data, size: n } = encode(value, { ecc: "H", border: 0 });
   let d = "";
   const c = (n - 1) / 2;
@@ -19,15 +45,7 @@ export function Qr({ value, size = 160, label, glyph = true, className }: { valu
   }
   const g = hole * 2 + 1;
   return (
-    <svg
-      viewBox={`-2 -2 ${n + 4} ${n + 4}`}
-      width={size}
-      height={size}
-      role="img"
-      aria-label={label}
-      className={cn("shrink-0 rounded-control bg-[#FAFAF7] text-[#0B0B0A]", className)}
-      shapeRendering="crispEdges"
-    >
+    <svg viewBox={`-2 -2 ${n + 4} ${n + 4}`} width={size} height={size} role="img" aria-label={label} className={tile} shapeRendering="crispEdges">
       <path d={d} fill="currentColor" />
       {glyph ? (
         <g transform={`translate(${c - hole} ${c - hole}) scale(${g / 24})`} shapeRendering="geometricPrecision">

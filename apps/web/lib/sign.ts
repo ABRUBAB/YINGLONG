@@ -17,6 +17,8 @@ import { isPromise } from "./api/client";
 import type { ApprovalResult, SigningRequest } from "./api/view";
 import { passkeysSupported, signHash, PasskeyCancelledError, PasskeyEncodingError } from "./passkey";
 import { guardSigningRequest, type GuardResult } from "./signing-guard";
+import { activeVisitor } from "./api/session";
+import { reviewRevoke, type Check } from "./account-ops";
 
 export type SignerKind = "passkey" | "scripted" | "sample";
 
@@ -37,6 +39,9 @@ const SAMPLE_SIGNATURE = `0x${"00".repeat(31)}01` as Hex;
 
 /** Which signer this session will use (for labelling buttons before the user presses them). */
 export async function availableSigner(): Promise<SignerKind> {
+  // A visitor signed up with their own passkey: every signature is theirs, in fixtures mode too
+  // (the fixture service then verifies the WebAuthn signature against the visitor's public key).
+  if (activeVisitor()) return "passkey";
   if (DATA_MODE === "fixtures") return "sample";
   const me = getApi().me();
   const principal = isPromise(me) ? await me : me;
@@ -59,18 +64,46 @@ export async function signAndSubmit(req: SigningRequest, opts: { prefer?: Signer
     return { result: await api.demoSign(req.id), signer, primaryType: guard.primaryType };
   }
   if (!passkeysSupported()) throw new Error("This browser cannot use passkeys. Open the approval link on your phone.");
-  const me = api.me();
-  const principal = isPromise(me) ? await me : me;
-  const enc = await signHash(req.digest as Hex, { keyIds: principal.passkeys.map((k) => k.keyId) });
+  const visitor = activeVisitor();
+  let keyIds: string[];
+  if (visitor) keyIds = [visitor.credentialId];
+  else {
+    const me = api.me();
+    const principal = isPromise(me) ? await me : me;
+    keyIds = principal.passkeys.map((k) => k.keyId);
+  }
+  const enc = await signHash(req.digest as Hex, { keyIds });
   return { result: await api.submitSignature(req.id, { keyId: enc.keyId, signature: enc.signature }), signer, primaryType: guard.primaryType };
+}
+
+export class RevokeRefusedError extends Error {
+  constructor(readonly checks: Check[]) {
+    super(`Not signed: ${checks.filter((c) => !c.ok).map((c) => c.label).join("; ")}.`);
+    this.name = "RevokeRefusedError";
+  }
+}
+
+/**
+ * Revoke the live mandate. The service builds the user operation; this page decodes it and signs only
+ * if it is exactly MandateRegistry.revoke(live mandate) + DelegationManager.disableDelegation(its
+ * delegation) from the principal's own account.
+ */
+export async function revokeMandate(): Promise<{ result: ApprovalResult; signer: SignerKind; checks: Check[] }> {
+  const api = getApi();
+  const req = await api.requestRevoke();
+  const ctx = await api.revokeContext();
+  const review = reviewRevoke(req.typedData, ctx);
+  if (!review.ok) throw new RevokeRefusedError(review.checks);
+  const { result, signer } = await signAndSubmit(req);
+  return { result, signer, checks: review.checks };
 }
 
 export function describeSignError(e: unknown): string {
   if (e instanceof PasskeyCancelledError) return "The passkey prompt was dismissed. Nothing was signed.";
-  if (e instanceof SigningRefusedError) return e.message;
+  if (e instanceof SigningRefusedError || e instanceof RevokeRefusedError) return e.message;
   if (e instanceof PasskeyEncodingError) return `The authenticator's response was refused: ${e.message}`;
-  if (e instanceof ApiRequestError && e.status === 403)
-    return "This demo account is signed by a scripted passkey that only the operator can trigger. Nothing was signed here; register your own passkey on the account to sign from this device.";
+  if (e instanceof ApiRequestError && e.status === 403 && !activeVisitor())
+    return "This demo account is signed by a scripted passkey that only the operator can trigger. Nothing was signed here; sign up with your own passkey on /start to sign from this device.";
   if (e instanceof Error) return e.message;
   return "Signing failed. Nothing was signed.";
 }

@@ -22,7 +22,13 @@ export function Approvals() {
             <StateRing state="waiting" size={20} glyphOnly label="Needs you" className="mt-0.5 sm:mt-0" />
             <div className="min-w-0">
               <p className="m-0 flex flex-wrap items-center gap-2 text-13 font-medium text-fg-0">
-                {a.kind === "pause" ? "Pause your agent" : a.kind === "resume" ? "Resume your agent" : (a.decoded?.payee?.name ?? a.decoded?.targetName ?? "Signature request")}
+                {a.kind === "pause"
+                  ? "Pause your agent"
+                  : a.kind === "resume"
+                    ? "Resume your agent"
+                    : a.kind === "revoke"
+                      ? "Revoke your mandate"
+                      : (a.decoded?.payee?.name ?? a.decoded?.targetName ?? "Signature request")}
                 {a.kind === "cosign" && a.decoded?.payee?.name && a.decoded.targetName !== a.decoded.payee.name ? (
                   <span className="font-normal text-fg-muted">via {a.decoded.targetName}</span>
                 ) : null}

@@ -7,6 +7,8 @@
 import { z } from "zod";
 import { ApiRequestError, CONSOLE_PRINCIPAL, type AgentApi } from "./client";
 import * as W from "./types";
+import { activePrincipalId, activeVisitor } from "./session";
+import { DIRECTORY_NAMES, type ContractDirectory } from "../account-ops";
 import type {
   Amount,
   ApprovalRequest,
@@ -200,7 +202,13 @@ function mapReceipt(r: W.WireReceipt): Receipt {
             ? "Paused the agent (kill switch)"
             : /^resumed\b/i.test(r.explanation.text)
               ? "Resumed the agent"
-              : "Agent action",
+              : /^revoked the mandate/i.test(r.explanation.text)
+                ? "Revoked the mandate"
+                : /^mandate sealed/i.test(r.explanation.text)
+                  ? /scripted/i.test(r.explanation.text)
+                    ? "Mandate sealed (scripted passkey)"
+                    : "Mandate sealed with your passkey"
+                  : "Agent action",
     ),
     payeeName: r.payment ? payeeLabel(r.payment) : null,
     amount: r.payment ? amount(r.payment.amount, r.payment.decimals, r.payment.symbol) : null,
@@ -245,7 +253,7 @@ function mapApproval(a: W.WireApproval, payees: W.WirePrincipalState["payees"] =
     // The service keeps an unsigned request "pending" after its deadline; past expiry it can no longer be used.
     status: a.status === "signed" ? "approved" : a.status === "pending" && Date.parse(iso(a.expiresAt)!) < Date.now() ? "expired" : a.status,
     expiresAt: iso(a.expiresAt)!,
-    tier: a.kind === "cosign" ? "T2" : a.kind === "seal" || a.kind === "resume" ? "T3" : null,
+    tier: a.kind === "cosign" ? "T2" : a.kind === "seal" || a.kind === "resume" || a.kind === "revoke" ? "T3" : null,
     ledger,
     chainId,
     digest: a.digest,
@@ -272,6 +280,7 @@ function mapApproval(a: W.WireApproval, payees: W.WirePrincipalState["payees"] =
     reason: a.reason ?? null,
     explanation: a.explanation?.text ?? null,
     aigc: a.explanation?.aiGenerated ? { label: "AI-generated", model: a.explanation.model ?? "unknown" } : null,
+    principal: a.principal,
   };
 }
 
@@ -408,18 +417,27 @@ export function createLiveApi(baseUrl: string): AgentApi {
   const GET_TTL_MS = 4000;
   const cache = new Map<string, { at: number; json: Promise<{ ok: boolean; status: number; json: unknown }> }>();
 
-  async function fetchJson(method: "GET" | "POST", path: string, body?: unknown) {
+  async function fetchJson(method: "GET" | "POST", path: string, body?: unknown, extraHeaders: Record<string, string> = {}) {
     if (method === "POST") cache.clear();
     const now = Date.now();
     const hit = method === "GET" ? cache.get(path) : undefined;
     if (hit && now - hit.at < GET_TTL_MS) return hit.json;
+    // A visitor's own actions (ask with autoExecute, execute, bypass, decline, attack) carry the session
+    // token the service issued at sign-up. Reads stay simple requests (no preflight, no token).
+    const visitor = method === "POST" ? activeVisitor() : null;
+    const headers: Record<string, string> = {
+      accept: "application/json",
+      ...(body !== undefined ? { "content-type": "application/json" } : {}),
+      ...(visitor ? { "x-visitor-token": visitor.token } : {}),
+      ...extraHeaders,
+    };
     const run = (async () => {
       let res: Response;
       try {
         res = await fetch(`${root}${path}`, {
           method,
           credentials: "omit",
-          headers: body !== undefined ? { "content-type": "application/json", accept: "application/json" } : { accept: "application/json" },
+          headers,
           body: body !== undefined ? JSON.stringify(body) : undefined,
           cache: "no-store",
         });
@@ -435,8 +453,8 @@ export function createLiveApi(baseUrl: string): AgentApi {
     return run;
   }
 
-  async function call<T extends z.ZodType>(schema: T, method: "GET" | "POST", path: string, body?: unknown): Promise<z.infer<T>> {
-    const res = await fetchJson(method, path, body);
+  async function call<T extends z.ZodType>(schema: T, method: "GET" | "POST", path: string, body?: unknown, headers?: Record<string, string>): Promise<z.infer<T>> {
+    const res = await fetchJson(method, path, body, headers);
     const json = res.json;
     if (!res.ok) {
       const parsed = W.WireError.safeParse(json);
@@ -465,11 +483,47 @@ export function createLiveApi(baseUrl: string): AgentApi {
       .map(mapReceipt)
       .sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
 
+  /** The principal the console acts for: the visitor signed up on this device, else Nadia. */
+  const cp = () => activePrincipalId();
+
   async function consolePrincipal(): Promise<W.WirePrincipal> {
+    const id = cp();
+    if (id !== CONSOLE_PRINCIPAL) {
+      // Visitors are not in GET /v1/principals; their summary comes with their state.
+      return (await stateOf(id)).principal;
+    }
     const all = await principals();
     const p = all.find((x) => x.id === CONSOLE_PRINCIPAL) ?? all.find((x) => x.kind === "person");
     if (!p) throw new ApiRequestError("The agent service lists no personal principal.", 404, "no_principal");
     return p;
+  }
+
+  /** Deployment directory per wire ledger name, from /v1/evidence `contracts`. */
+  async function directoryOf(ledger: string): Promise<ContractDirectory> {
+    const ev = await call(W.WireEvidence, "GET", "/v1/evidence");
+    const wire = ledger === "anvil-bench" ? "anvil" : ledger;
+    const dir: ContractDirectory = { ledger: wire };
+    for (const c of ev.contracts ?? []) {
+      if (c.ledger !== wire) continue;
+      const name = (DIRECTORY_NAMES as readonly string[]).find((n) => c.name === n || c.name.startsWith(`${n} `));
+      if (name && !dir[name as (typeof DIRECTORY_NAMES)[number]]) dir[name as (typeof DIRECTORY_NAMES)[number]] = c.address as `0x${string}`;
+    }
+    return dir;
+  }
+
+  /**
+   * Whether the mandate is still live. The service's MandateView carries `live` once it is added
+   * (MandateRegistry.isLive); until then a confirmed revoke receipt for this mandate hash says it.
+   */
+  async function mandateStatus(principalId: string, m: W.WireMandateView): Promise<Mandate["status"]> {
+    if (m.status) return m.status;
+    if (m.live === false) return "revoked";
+    if (m.live === true) return "live";
+    const recent = await receiptsOf(principalId, 30).catch(() => [] as Receipt[]);
+    const revoked = recent.some(
+      (r) => r.outcome === "confirmed" && r.mandateHash.toLowerCase() === m.mandateHash.toLowerCase() && /^revoked the mandate/i.test(r.explanation),
+    );
+    return revoked ? "revoked" : "live";
   }
 
   function toPrincipal(p: W.WirePrincipal): Principal {
@@ -586,7 +640,9 @@ export function createLiveApi(baseUrl: string): AgentApi {
     mandates: async () => {
       const p = await consolePrincipal();
       const s = await stateOf(p.id);
-      return s.mandate ? [mapMandate(s.mandate, p.name, p.agent.agentId, p.ledgerBadge)] : [];
+      if (!s.mandate) return [];
+      const status = await mandateStatus(p.id, s.mandate);
+      return [{ ...mapMandate(s.mandate, p.name, p.agent.agentId, p.ledgerBadge), status }];
     },
     mandate: async (hash) => {
       const [p, m] = await Promise.all([consolePrincipal(), call(W.WireMandateView, "GET", `/v1/mandates/${enc(hash)}`)]);
@@ -609,15 +665,15 @@ export function createLiveApi(baseUrl: string): AgentApi {
       let doc: unknown = null;
       const warnings: string[] = [];
       try {
-        doc = (await call(z.object({ mandate: z.unknown() }), "POST", "/v1/mandates/draft", { principal: CONSOLE_PRINCIPAL, text: req.text, jurisdiction: req.jurisdiction })).mandate;
+        doc = (await call(z.object({ mandate: z.unknown() }), "POST", "/v1/mandates/draft", { principal: cp(), text: req.text, jurisdiction: req.jurisdiction })).mandate;
       } catch (e) {
         if (!missing(e)) throw e;
         try {
-          doc = await call(z.unknown(), "GET", `/v1/principals/${enc(CONSOLE_PRINCIPAL)}/mandate`);
+          doc = await call(z.unknown(), "GET", `/v1/principals/${enc(cp())}/mandate`);
           warnings.push("The agent service does not draft mandates from free text yet, so this preview compiles the sealed mandate document unchanged.");
         } catch (e2) {
           if (!missing(e2)) throw e2;
-          const m = (await stateOf(CONSOLE_PRINCIPAL)).mandate;
+          const m = (await stateOf(cp())).mandate;
           if (!m) throw new ApiRequestError("The agent service does not draft mandates from free text yet, and this principal has no sealed mandate to show.", 404, "not_found");
           const rules = mapRules(m.rules);
           return {
@@ -637,7 +693,7 @@ export function createLiveApi(baseUrl: string): AgentApi {
           };
         }
       }
-      const r = await call(W.WireCompileResult, "POST", "/v1/mandates/compile", { principal: CONSOLE_PRINCIPAL, mandate: doc });
+      const r = await call(W.WireCompileResult, "POST", "/v1/mandates/compile", { principal: cp(), mandate: doc });
       const rules = mapRules(r.rules);
       const decoded = r.roundTrip?.sentences ?? r.sentences;
       return {
@@ -658,13 +714,13 @@ export function createLiveApi(baseUrl: string): AgentApi {
     },
     requestSeal: async (draft) => {
       if (draft.wire === undefined) throw new ApiRequestError("This preview shows the sealed mandate; there is no new mandate document to seal.", 409, "nothing_to_seal");
-      const { approvalId } = await call(W.WireApprovalRef, "POST", "/v1/mandates/seal", { principal: CONSOLE_PRINCIPAL, mandate: draft.wire });
+      const { approvalId } = await call(W.WireApprovalRef, "POST", "/v1/mandates/seal", { principal: cp(), mandate: draft.wire });
       return toSigning(await approvalOf(approvalId), "seal");
     },
-    budgets: async () => mapLanes(await stateOf(CONSOLE_PRINCIPAL)),
+    budgets: async () => mapLanes(await stateOf(cp())),
 
     ask: async (req) => {
-      const p = await call(W.WireProposal, "POST", `/v1/principals/${enc(CONSOLE_PRINCIPAL)}/ask`, { text: req.text, autoExecute: true });
+      const p = await call(W.WireProposal, "POST", `/v1/principals/${enc(cp())}/ask`, { text: req.text, autoExecute: true });
       const d = mapDecision(p);
       return p.receipt ? { ...d, outcome: "executed", receipt: mapReceipt(p.receipt), receiptId: p.receipt.receiptId } : d;
     },
@@ -673,7 +729,7 @@ export function createLiveApi(baseUrl: string): AgentApi {
       if (!r.receipt) throw new ApiRequestError("The agent service returned no receipt.", 502, "no_receipt");
       return mapReceipt(r.receipt);
     },
-    receipts: async (opts = {}) => ({ items: await receiptsOf(CONSOLE_PRINCIPAL, opts.limit ?? 50), nextCursor: null }),
+    receipts: async (opts = {}) => ({ items: await receiptsOf(cp(), opts.limit ?? 50), nextCursor: null }),
     receipt: async (id) => mapReceipt(await call(W.WireReceipt, "GET", `/v1/receipts/${enc(id)}`)),
     receiptProof: async (id) => {
       const p = await call(W.WireProof, "GET", `/proof/${enc(id)}?verify=1`);
@@ -736,8 +792,8 @@ export function createLiveApi(baseUrl: string): AgentApi {
 
     approvals: async () => {
       const [list, s] = await Promise.all([
-        call(z.array(W.WireApproval), "GET", `/v1/approvals?principal=${enc(CONSOLE_PRINCIPAL)}`),
-        stateOf(CONSOLE_PRINCIPAL).catch(() => null),
+        call(z.array(W.WireApproval), "GET", `/v1/approvals?principal=${enc(cp())}`),
+        stateOf(cp()).catch(() => null),
       ]);
       return list
         .filter((a) => a.kind === "cosign")
@@ -761,7 +817,7 @@ export function createLiveApi(baseUrl: string): AgentApi {
       const r = await call(
         z.object({ proposal: W.WireProposal.nullish(), receipt: W.WireReceipt.nullish() }),
         "POST",
-        `/v1/principals/${enc(CONSOLE_PRINCIPAL)}/attack`,
+        `/v1/principals/${enc(cp())}/attack`,
         req,
       );
       return { decision: r.proposal ? mapDecision(r.proposal) : null, receipt: r.receipt ? mapReceipt(r.receipt) : null };
@@ -773,8 +829,57 @@ export function createLiveApi(baseUrl: string): AgentApi {
       return { paused: p.paused, since: null, txs: [], measuredMs: null };
     },
     requestPause: async (action) => {
-      const r = await call(W.WireApprovalRef, "POST", `/v1/principals/${enc(CONSOLE_PRINCIPAL)}/${action}`, {});
+      const r = await call(W.WireApprovalRef, "POST", `/v1/principals/${enc(cp())}/${action}`, {});
       return toSigning(r.approval ?? (await approvalOf(r.approvalId)), action);
+    },
+    requestRevoke: async () => {
+      const r = await call(W.WireApprovalRef, "POST", `/v1/principals/${enc(cp())}/revoke`, {});
+      return toSigning(r.approval ?? (await approvalOf(r.approvalId)), "revoke");
+    },
+    revokeContext: async (principalId) => {
+      const id = principalId ?? cp();
+      const s = await stateOf(id);
+      if (!s.mandate) throw new ApiRequestError("This principal has no sealed mandate.", 404, "no_mandate");
+      return {
+        principalId: id,
+        account: s.principal.account as `0x${string}`,
+        ledger: s.principal.ledger,
+        mandateHash: s.mandate.mandateHash as `0x${string}`,
+        delegationHash: s.mandate.delegationHash as `0x${string}`,
+        directory: await directoryOf(s.principal.ledger),
+      };
+    },
+    contractDirectory: (ledger) => directoryOf(ledger),
+
+    visitorSignUp: async (req) => {
+      const v = await call(W.WireVisitorSignUp, "POST", "/v1/visitors", { credentialId: req.credentialId, publicKey: { x: req.publicKey.x, y: req.publicKey.y } });
+      return {
+        visitorId: v.visitorId,
+        token: v.token,
+        account: v.account,
+        did: v.did,
+        ledger: mapLedger(v.ledger),
+        ledgerBadge: v.ledgerBadge ?? null,
+        agent: v.agent,
+        mandate: v.mandate,
+        requests: v.requests,
+      };
+    },
+    visitorSeal: async (visitorId, token, sigs) => {
+      const r = await call(
+        W.WireVisitorSeal,
+        "POST",
+        `/v1/visitors/${enc(visitorId)}/seal`,
+        { userOpSignature: sigs.userOpSignature, delegationSignature: sigs.delegationSignature },
+        { "x-visitor-token": token },
+      );
+      return {
+        principal: toPrincipal(r.principal),
+        mandateHash: r.mandateHash,
+        publishTx: r.publishTx ?? null,
+        ledger: mapLedger(r.principal.ledger),
+        ledgerBadge: r.principal.ledgerBadge ?? null,
+      };
     },
 
     treasuryEntities: async () => Promise.all((await principals()).filter((p) => p.kind === "company").map(entityOf)),
@@ -821,20 +926,26 @@ export function createLiveApi(baseUrl: string): AgentApi {
     registry: async () => {
       const [reg, all] = await Promise.all([call(z.array(W.WireRegistryAgent), "GET", "/v1/registry/agents"), principals()]);
       return reg.map((r): RegistryAgent => {
-        const p = all.find((x) => x.agent.agentId === r.agentId);
+        const kind = r.kind ?? (r.principal?.startsWith("v-") ? "visitor" : "demo");
+        // Match on the principal the registry names (two companies may share one treasurer agent id).
+        const p =
+          kind === "demo"
+            ? (all.find((x) => x.id === r.principal) ?? all.find((x) => x.agent.agentId === r.agentId && x.ledger === r.ledger) ?? all.find((x) => x.agent.agentId === r.agentId))
+            : undefined;
         const s = r.status.toLowerCase();
         const status: RegistryAgent["status"] =
           s === "halted" || s === "paused"
             ? "paused"
             : s === "revoked"
               ? "revoked"
-              : s.includes("self") || (!p && (r.attestations ?? []).length === 0)
+              : s.includes("self") || (!p && !r.principal && (r.attestations ?? []).length === 0)
                 ? "self-registered"
                 : "active";
         return {
+          kind,
           agentId: r.agentId,
           agentName: r.label,
-          ownerName: p?.name ?? "Unknown",
+          ownerName: p?.name ?? (kind === "visitor" && r.principal ? `Visitor ${r.principal.slice(2, 6).toUpperCase()}` : "Unknown"),
           ownerDid: r.ownerDidHash,
           wallet: r.wallet,
           ledger: mapLedger(r.ledger),

@@ -38,9 +38,13 @@ app.use("/v1/*", async (c, next) => {
   if (ADMIN && c.req.header("x-admin-token") === ADMIN) return next();
   const ip = c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   const now = Date.now();
-  const h = hits.get(ip);
-  if (!h || now - h.at > 60_000) hits.set(ip, { n: 1, at: now });
-  else if (++h.n > Number(process.env.RATE_LIMIT_PER_MIN ?? 60)) return c.json({ ok: false, error: "rate limit" }, 429);
+  // Reads and writes have separate budgets (a room of judges behind one address mostly reads).
+  const isRead = c.req.method === "GET";
+  const key = `${isRead ? "r" : "w"}:${ip}`;
+  const limit = isRead ? Number(process.env.RATE_LIMIT_GET_PER_MIN ?? 600) : Number(process.env.RATE_LIMIT_PER_MIN ?? 60);
+  const h = hits.get(key);
+  if (!h || now - h.at > 60_000) hits.set(key, { n: 1, at: now });
+  else if (++h.n > limit) return c.json({ ok: false, error: "rate limit" }, 429);
   await next();
 });
 const PROTECTED = [/\/halt$/, /\/board-proposals$/, /\/sign$/, /\/onboard$/, /\/execute$/, /\/demo-sign$/, /\/attack$/, /\/bypass$/, /\/decline$/];
@@ -125,7 +129,8 @@ async function principalSummary(st: PrincipalState) {
     signer: st.signerLabel,
     passkeyIds: isVisitorId(st.id) ? [visitorStore.get().visitors[st.id]?.keyId].filter((k): k is string => !!k) : ([] as string[]),
     agent: { label: cfg.agentLabel, wallet: st.agentWallet, agentId: st.agentId, passportStatus: ["none", "active", "halted", "revoked"][Number(info[1])], identityCode: cfg.identityCode },
-    paused,
+    // Redemptions are paused if the account is tripped or the agent identity is halted by the supervisor.
+    paused: paused || Number(info[1]) === 2,
   };
 }
 
@@ -224,11 +229,13 @@ app.get("/v1/principals/:id/state", async (c) => {
     }
   }
   const summary = await principalSummary(st);
+  const live = st.mandateHash ? await ctx.read<boolean>({ address: ctx.addr("MandateRegistry"), abi: abi.MandateRegistryAbi, functionName: "isLive", args: [st.mandateHash] }) : false;
+  const mv = mandateView(st);
   return c.json(
     apiJson({
       principal: summary,
       balances,
-      mandate: mandateView(st),
+      mandate: mv ? { ...mv, live, status: live ? "live" : "revoked" } : null,
       budgets,
       tiers: m.tiers.map((t) => ({ symbol: t.asset, defaultT1Cap: t.defaultT1Cap, newPayeeT1Cap: t.newPayeeT1Cap, t2Ceiling: t.t2Ceiling, categoryT1Caps: t.categoryT1Caps })),
       reserveFloors: m.reserveFloors.map((f) => ({ symbol: f.asset, amount: f.amount })),
