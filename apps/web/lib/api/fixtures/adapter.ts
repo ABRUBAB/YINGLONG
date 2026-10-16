@@ -392,7 +392,14 @@ export function createFixtureApi(): AgentApi {
     contractDirectory: async (ledger) => (ledger === "fisco" ? FISCO_DIRECTORY : BASE_DIRECTORY),
     visitorSignUp: async (req) => {
       await wait(900);
-      return visitors.signUp(req);
+      if (!req.credentialId || !req.publicKey) throw new ApiRequestError("sample data supports passkey sign-up only", 400, "service_error");
+      return visitors.signUp({ credentialId: req.credentialId, publicKey: req.publicKey, mandate: req.mandate });
+    },
+    visitorLoginChallenge: async () => {
+      throw new ApiRequestError("logging in again needs the live service", 400, "service_error");
+    },
+    visitorLogin: async () => {
+      throw new ApiRequestError("logging in again needs the live service", 400, "service_error");
     },
     draftVisitorMandate: async (text) => {
       await wait(650);

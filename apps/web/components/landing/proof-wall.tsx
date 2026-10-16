@@ -129,11 +129,11 @@ export function ProofWall() {
     <section ref={root} aria-labelledby="wall-title" className="yl-section yl-defer border-y border-line-1 bg-bg-1">
       <div className="yl-container">
         <SectionHead
-          index="06"
-          eyebrow="Proof wall"
+          index="07"
+          eyebrow="Live activity"
           id="wall-title"
-          title="Every action, on both ledgers, with the rule that decided it"
-          lead="The newest receipts from the agent service. Allowed actions name the tier that let them through; refusals name the enforcer that stopped them."
+          title="Every payment and every blocked attempt, as it happens"
+          lead="The newest records from both blockchains. Each one says why it was allowed, or which rule blocked it."
         >
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
             {isSample ? <SampleDataChip /> : <span>Read from GET /v1/receipts every 15 s while this wall is on screen</span>}

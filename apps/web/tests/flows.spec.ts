@@ -33,20 +33,9 @@ test("approve: the phone decodes the call itself, the guard checks the digest, o
   await expect(page.getByText(/Approved with/)).toBeVisible();
 });
 
-test("studio: one changed word gives a new delegation hash; Enter opens the confirmation and seals", async ({ page }) => {
+test("studio: the old address forwards to writing new rules", async ({ page }) => {
   await page.goto("/app/mandates/new", { waitUntil: "networkidle" });
-  const hashLine = page.getByText(/^Delegation hash/);
-  await expect(hashLine).toBeVisible();
-  const before = await hashLine.textContent();
-  const box = page.getByLabel("Your mandate in your own words");
-  await box.fill((await box.inputValue()).replace("3,000", "30,000"));
-  await expect(page.getByText("Spend at most 30,000.00 tHKD on food each month.")).toBeVisible();
-  await expect(hashLine).not.toHaveText(before ?? "");
-  await page.getByLabel(/I have read every rule/).check();
-  await page.getByRole("button", { name: "Press and hold to seal" }).focus();
-  await page.keyboard.press("Enter");
-  await page.getByRole("button", { name: /Seal with/ }).click();
-  await expect(page.getByText(/Sealed: mandate v4/)).toBeVisible();
+  await expect(page).toHaveURL(/\/start/);
 });
 
 test("pause: one tap pauses, the live status says so, resume needs the owner", async ({ page }) => {

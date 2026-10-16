@@ -17,6 +17,7 @@ test("visitor: create a passkey, read both messages, seal, act, revoke, seal aga
   await page.goto("/start", { waitUntil: "networkidle" });
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Get your own AI agent in three steps/);
   await page.getByRole("button", { name: "Skip and use simple ready-made rules" }).click();
+  await page.getByRole("button", { name: /Fingerprint or face/ }).click();
 
   // Both messages decoded on this page and passed by the signing guard before anything is signed.
   await expect(page.getByRole("heading", { name: "Confirm twice with your fingerprint" })).toBeVisible();
@@ -54,6 +55,8 @@ test("visitor: create a passkey, read both messages, seal, act, revoke, seal aga
   // The same passkey seals a new mandate (same visitor id).
   await reseal.click();
   await page.getByRole("button", { name: "Skip and use simple ready-made rules" }).click();
+  // A logged-in visitor reuses the same passkey: no method choice the second time.
+  await expect(page.getByRole("button", { name: /Fingerprint or face/ })).toHaveCount(0);
   await page.getByRole("button", { name: "Step 1 of 2: Save my rules" }).click();
   await page.getByRole("button", { name: "Step 2 of 2: Give my agent permission" }).click();
   await expect(page.getByRole("heading", { name: /Done. Your agent is ready/ })).toBeVisible();
@@ -70,6 +73,7 @@ test("visitor: a dismissed passkey prompt creates nothing and says so", async ({
   await passkey.cdp.send("WebAuthn.setUserVerified", { authenticatorId: passkey.authenticatorId, isUserVerified: false });
   await page.goto("/start", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Skip and use simple ready-made rules" }).click();
+  await page.getByRole("button", { name: /Fingerprint or face/ }).click();
   await expect(page.getByText(/The fingerprint prompt was closed, so nothing was saved\./)).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("yinglong.visitor.v1"))).toBeNull();
 });
@@ -91,6 +95,7 @@ test("visitor: say, see, seal: own words compile to caveats, clamped and unmappe
   await expect(page.getByLabel("Your rules, in plain English")).toHaveValue(/Food at most 1500 a day/);
   await page.getByRole("button", { name: "Check my rules" }).click();
   await page.getByRole("button", { name: "Looks right: lock it with my fingerprint" }).click();
+  await page.getByRole("button", { name: /Fingerprint or face/ }).click();
   await expect(page.getByRole("heading", { name: "Confirm twice with your fingerprint" })).toBeVisible();
   await page.getByRole("button", { name: "Step 1 of 2: Save my rules" }).click();
   await page.getByRole("button", { name: "Step 2 of 2: Give my agent permission" }).click();

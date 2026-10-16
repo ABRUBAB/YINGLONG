@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HashRing, LabelChip, shortHash, StateRing } from "@yinglong/ui";
 import type { VisitorDraft, VisitorSealResult, VisitorSignUp } from "@/lib/api/view";
 import { ApiRequestError, getApi, isSample } from "@/lib/api";
@@ -10,7 +10,17 @@ import { invalidate, useAgent } from "@/lib/api/hooks";
 import { clearVisitorSession } from "@/lib/api/session";
 import type { Hex } from "viem";
 import { passkeysSupported, PasskeyCancelledError, PasskeyServiceError } from "@/lib/passkey";
-import { completeSignUp, createVisitorPasskey, reviewSignUp, signStep, SignUpRefusedError, type SignUpReview, type VisitorKey } from "@/lib/visitor";
+import {
+  completeSignUp,
+  createVisitorPasskey,
+  createVisitorSecretKey,
+  logInAgain,
+  reviewSignUp,
+  signStep,
+  SignUpRefusedError,
+  type SignUpReview,
+  type VisitorKey,
+} from "@/lib/visitor";
 import { useVisitorSession } from "@/components/session";
 import { Button, buttonClass } from "@/components/ui/button";
 import { SampleBadge, TxLink } from "@/components/data/parts";
@@ -20,6 +30,8 @@ type Phase =
   | { at: "intro" }
   | { at: "drafting" }
   | { at: "see"; draft: VisitorDraft }
+  | { at: "choose"; mandate: unknown }
+  | { at: "showKey"; key: VisitorKey; mandate: unknown }
   | { at: "creating" }
   | { at: "registering"; key: VisitorKey }
   | { at: "review"; key: VisitorKey; signUp: VisitorSignUp; review: SignUpReview }
@@ -84,16 +96,18 @@ export function Start() {
     try {
       const api = getApi();
       let signUp: VisitorSignUp;
-      if (resealing && session && session.credentialId === key.credentialId) {
+      const sameKey = key.method === "key" ? session?.owner?.toLowerCase() === key.owner?.toLowerCase() : session?.credentialId === key.credentialId;
+      const signUpReq = key.method === "key" ? { owner: key.owner, mandate } : { credentialId: key.credentialId, publicKey: key.publicKey, mandate };
+      if (resealing && session && sameKey) {
         try {
           signUp = await api.visitorReseal(session.visitorId, session.token, mandate);
         } catch (e) {
           // An older session token: the same passkey signing up again reaches the same account.
           if (!(e instanceof ApiRequestError) || e.status !== 400 || !/token/i.test(e.message)) throw e;
-          signUp = await api.visitorSignUp({ credentialId: key.credentialId, publicKey: key.publicKey, mandate });
+          signUp = await api.visitorSignUp(signUpReq);
         }
       } else {
-        signUp = await api.visitorSignUp({ credentialId: key.credentialId, publicKey: key.publicKey, mandate });
+        signUp = await api.visitorSignUp(signUpReq);
       }
       const directory = await api.contractDirectory(signUp.ledger);
       setPhase({ at: "review", key, signUp, review: reviewSignUp(signUp, directory) });
@@ -114,6 +128,13 @@ export function Start() {
 
   /** After a revoke: the same passkey seals a new mandate (same visitor id, new messages). */
   async function reseal(mandate: unknown = chosen) {
+    if (session?.method === "key" && session.secretKey) {
+      await register(
+        { method: "key", credentialId: "", publicKey: { x: "0x", y: "0x" }, secretKey: session.secretKey as `0x${string}`, owner: session.owner as `0x${string}` },
+        mandate,
+      );
+      return;
+    }
     if (!session?.publicKey) {
       setPhase({ at: "error", message: "This device does not remember the passkey's public key. Create a new passkey instead." });
       return;
@@ -138,16 +159,34 @@ export function Start() {
   function sealWith(mandate: unknown) {
     setChosen(mandate);
     if (resealing) void reseal(mandate);
-    else void create(mandate);
+    else setPhase({ at: "choose", mandate });
+  }
+
+  /** The secret-key path: make the key here, show it once, continue only after the visitor saved it. */
+  function startSecretKey(mandate: unknown) {
+    setPhase({ at: "showKey", key: createVisitorSecretKey(), mandate });
   }
 
   /** Confirmation 1 of 2, on its own tap: save the rules (the publishing operation). */
   async function confirmFirst() {
     if (phase.at !== "review") return;
     const { key, signUp, review } = phase;
+    if (key.method === "key") {
+      try {
+        setPhase({ at: "signing", key, signUp, review, step: "sealing" });
+        const userOpSignature = await signStep(review, key, "publish");
+        const delegationSignature = await signStep(review, key, "delegation");
+        const sealed = await completeSignUp(getApi(), signUp, key, { userOpSignature, delegationSignature });
+        invalidate("me", "pause", "mandates", "budgets", "receipts", "approvals", "session");
+        setPhase({ at: "done", signUp, sealed });
+      } catch (e) {
+        setPhase({ at: "error", message: describe(e), key });
+      }
+      return;
+    }
     try {
       setPhase({ at: "signing", key, signUp, review, step: "publish" });
-      const publishSig = await signStep(review, key.credentialId, "publish");
+      const publishSig = await signStep(review, key, "publish");
       setPhase({ at: "half", key, signUp, review, publishSig });
     } catch (e) {
       setPhase({ at: "error", message: describe(e), key });
@@ -160,7 +199,7 @@ export function Start() {
     const { key, signUp, review, publishSig } = phase;
     try {
       setPhase({ at: "signing", key, signUp, review, step: "delegation", publishSig });
-      const delegationSig = await signStep(review, key.credentialId, "delegation");
+      const delegationSig = await signStep(review, key, "delegation");
       setPhase({ at: "signing", key, signUp, review, step: "sealing", publishSig });
       const sealed = await completeSignUp(getApi(), signUp, key, { userOpSignature: publishSig, delegationSignature: delegationSig });
       invalidate("me", "pause", "mandates", "budgets", "receipts", "approvals", "session");
@@ -169,6 +208,15 @@ export function Start() {
       setPhase({ at: "error", message: describe(e), key });
     }
   }
+
+  const flowRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (phase.at === "intro") return;
+    const el = flowRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 96;
+    if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }, [phase.at]);
 
   const busy = phase.at === "creating" || phase.at === "registering" || phase.at === "signing" || phase.at === "drafting";
   // The delegation's Hash Ring: draft while you read, holding while the passkey signs, sealed after.
@@ -200,7 +248,7 @@ export function Start() {
       </header>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
-        <div className="grid content-start gap-8" aria-live="polite">
+        <div ref={flowRef} className="grid content-start gap-8" aria-live="polite">
           {phase.at === "intro" && session && !again ? (
             <section aria-labelledby="start-create" className="yl-card grid gap-4 p-5 sm:p-6">
               <h2 id="start-create" className="m-0 text-18 font-semibold text-fg-0">
@@ -233,6 +281,7 @@ export function Start() {
                   Your old rules were cancelled. Write new ones and lock them with the same fingerprint: same account, same agent.
                 </p>
               ) : null}
+              {!session ? <LogInAgain onDone={() => router.push("/app")} /> : null}
               <SayStep
                 text={text}
                 onText={setText}
@@ -255,6 +304,10 @@ export function Start() {
               sealLabel="Looks right: lock it with my fingerprint"
             />
           ) : null}
+
+          {phase.at === "choose" ? <ChooseMethod onPasskey={() => void create(phase.mandate)} onKey={() => startSecretKey(phase.mandate)} /> : null}
+
+          {phase.at === "showKey" ? <ShowSecretKey secretKey={phase.key.secretKey!} onContinue={() => void register(phase.key, phase.mandate)} /> : null}
 
           {phase.at === "creating" ? (
             <p role="status" className="m-0 flex items-center gap-2 text-15 text-fg-1">
@@ -355,7 +408,8 @@ function ReviewView({
 }) {
   const { signUp, review } = phase;
   const signing = phase.at === "signing" ? phase.step : null;
-  const firstDone = phase.at === "half" || (phase.at === "signing" && phase.step !== "publish");
+  const isKey = phase.key.method === "key";
+  const firstDone = !isKey && (phase.at === "half" || (phase.at === "signing" && phase.step !== "publish"));
   const plain: Record<string, { title: string; body: string }> = {
     publish: { title: "Save your rules", body: "Writes your rules onto the blockchain, from your own account, so anyone can check them." },
     delegation: { title: "Give your agent permission", body: "Lets your agent act for you, but only inside the rules you just saved." },
@@ -378,9 +432,13 @@ function ReviewView({
 
       <section aria-labelledby="start-messages" className="grid gap-4">
         <h2 id="start-messages" className="m-0 text-18 font-semibold text-fg-0">
-          Confirm twice with your fingerprint
+          {isKey ? "Confirm with your secret key" : "Confirm twice with your fingerprint"}
         </h2>
-        <p className="m-0 text-13 text-fg-2">Your phone asks two times, one tap each. Nothing is saved until both are done.</p>
+        <p className="m-0 text-13 text-fg-2">
+          {isKey
+            ? "Your secret key signs both steps in this browser. Nothing is saved until both are done."
+            : "Your phone asks two times, one tap each. Nothing is saved until both are done."}
+        </p>
         {review.steps.map((st, i) => {
           const t = plain[st.step] ?? { title: st.title, body: "" };
           const done = st.step === "publish" && firstDone;
@@ -441,7 +499,13 @@ function ReviewView({
         <div className="flex flex-wrap items-center gap-4">
           {!firstDone ? (
             <Button size="lg" onClick={onFirst} disabled={!review.ok || signing !== null}>
-              {signing === "publish" ? "Waiting for your fingerprint..." : "Step 1 of 2: Save my rules"}
+              {isKey
+                ? signing
+                  ? "Saving..."
+                  : "Save my rules and give my agent permission"
+                : signing === "publish"
+                  ? "Waiting for your fingerprint..."
+                  : "Step 1 of 2: Save my rules"}
             </Button>
           ) : (
             <Button size="lg" onClick={onSecond} disabled={signing !== null}>
@@ -451,5 +515,139 @@ function ReviewView({
         </div>
       </section>
     </>
+  );
+}
+
+function ChooseMethod({ onPasskey, onKey }: { onPasskey: () => void; onKey: () => void }) {
+  return (
+    <section aria-labelledby="start-choose" className="grid gap-4">
+      <h2 id="start-choose" className="m-0 text-18 font-semibold text-fg-0">
+        How do you want to lock your account?
+      </h2>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <button type="button" onClick={onPasskey} className="yl-card yl-press grid gap-2 p-5 text-left">
+          <span className="text-15 font-semibold text-fg-0">Fingerprint or face (passkey)</span>
+          <span className="text-13 text-fg-2">
+            Your phone keeps the key and asks for your fingerprint each time. Easiest, but some phones (often without Google services)
+            do not support it.
+          </span>
+        </button>
+        <button type="button" onClick={onKey} className="yl-card yl-press grid gap-2 p-5 text-left">
+          <span className="text-15 font-semibold text-fg-0">Secret key (works on every phone)</span>
+          <span className="text-13 text-fg-2">
+            Like a crypto wallet: we create a key in your browser, you copy and keep it, and you paste it to log in on any device.
+          </span>
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function ShowSecretKey({ secretKey, onContinue }: { secretKey: string; onContinue: () => void }) {
+  const [saved, setSaved] = useState(false);
+  const [copied, setCopied] = useState(false);
+  return (
+    <section aria-labelledby="start-key" className="yl-card grid gap-4 p-5 sm:p-6">
+      <h2 id="start-key" className="m-0 text-18 font-semibold text-fg-0">
+        Your secret key
+      </h2>
+      <p className="m-0 text-13 text-fg-2">
+        This key controls your account. It was made in this browser and is shown only now. Copy it and keep it somewhere safe: you need it
+        to log in again. Anyone with this key can use your account (test money only).
+      </p>
+      <p className="m-0 rounded-control border border-line-3 bg-bg-2 px-3 py-3 font-mono text-13 break-all text-fg-0 select-all">{secretKey}</p>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          variant="secondary"
+          onClick={() => {
+            void navigator.clipboard
+              ?.writeText(secretKey)
+              .then(() => setCopied(true))
+              .catch(() => setCopied(false));
+          }}
+        >
+          {copied ? "Copied" : "Copy secret key"}
+        </Button>
+        <label className="flex items-center gap-2 text-13 text-fg-1">
+          <input type="checkbox" checked={saved} onChange={(e) => setSaved(e.target.checked)} /> I saved my secret key
+        </label>
+      </div>
+      <div>
+        <Button size="lg" disabled={!saved} onClick={onContinue}>
+          Continue
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+function LogInAgain({ onDone }: { onDone: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [key, setKey] = useState("");
+  const [busy, setBusy] = useState<null | "passkey" | "key">(null);
+  const [error, setError] = useState<string | null>(null);
+  async function go(how: "passkey" | "key") {
+    setError(null);
+    setBusy(how);
+    try {
+      if (how === "key") {
+        const k = key.trim();
+        if (!/^0x[0-9a-fA-F]{64}$/.test(k)) throw new Error("A secret key starts with 0x followed by 64 letters and numbers.");
+        await logInAgain(getApi(), { method: "key", secretKey: k as `0x${string}` });
+      } else {
+        await logInAgain(getApi(), { method: "passkey" });
+      }
+      invalidate("me", "pause", "mandates", "budgets", "receipts", "approvals", "session");
+      onDone();
+    } catch (e) {
+      setError(describe(e));
+    } finally {
+      setBusy(null);
+    }
+  }
+  return (
+    <section aria-labelledby="start-login" className="rounded-card border border-line-2 bg-bg-1 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="start-login" className="m-0 text-15 font-semibold text-fg-0">
+          Already have an agent?
+        </h2>
+        <Button variant="secondary" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+          {open ? "Close" : "Log in"}
+        </Button>
+      </div>
+      {open ? (
+        <div className="mt-4 grid gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <Button onClick={() => void go("passkey")} disabled={busy !== null}>
+              {busy === "passkey" ? "Waiting for your fingerprint..." : "Log in with my passkey"}
+            </Button>
+          </div>
+          <div className="grid gap-2">
+            <label htmlFor="start-login-key" className="text-13 text-fg-1">
+              Or paste your secret key
+            </label>
+            <input
+              id="start-login-key"
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="0x..."
+              className="rounded-control border border-line-3 bg-bg-2 px-3 py-2 font-mono text-13 text-fg-0"
+            />
+            <div>
+              <Button variant="secondary" onClick={() => void go("key")} disabled={busy !== null || !key.trim()}>
+                {busy === "key" ? "Logging in..." : "Log in with my secret key"}
+              </Button>
+            </div>
+          </div>
+          {error ? (
+            <p role="alert" className="m-0 text-13 text-fg-1">
+              {error}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+    </section>
   );
 }

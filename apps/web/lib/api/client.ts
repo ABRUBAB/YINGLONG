@@ -108,7 +108,10 @@ export interface AgentApi {
    * Visitor sign-up with the visitor's own passkey: the service receives only the public key, deploys an
    * account whose only signer is that passkey, and returns the two messages the passkey must sign.
    */
-  visitorSignUp(req: { credentialId: string; publicKey: { x: string; y: string }; mandate?: unknown }): Promise<VisitorSignUp>;
+  visitorSignUp(req: { credentialId?: string; publicKey?: { x: string; y: string }; owner?: string; mandate?: unknown }): Promise<VisitorSignUp>;
+  /** Log in again: a one-time login message to sign with the passkey or secret key of an existing account. */
+  visitorLoginChallenge(): Promise<{ nonce: string; issuedAt: string; digest: string; chainId: number }>;
+  visitorLogin(req: { nonce: string; issuedAt: string; signature: string; credentialId?: string; owner?: string }): Promise<VisitorLogin>;
   /** Say, see, seal: the visitor's own words compiled to caveats and decoded back (nothing is signed). */
   draftVisitorMandate(text: string): Promise<VisitorDraft>;
   /** A sealed visitor's passkey account gets a new mandate (a draft, or the standard one) and two new signing requests. */
@@ -180,3 +183,13 @@ export function isPromise<T>(v: MaybePromise<T>): v is Promise<T> {
 
 export const TREASURY_IDS = ["lotus-sz", "lotus-hk"] as const;
 export const CONSOLE_PRINCIPAL = "nadia";
+
+export interface VisitorLogin {
+  visitorId: string;
+  token: string;
+  account: string;
+  method: "passkey" | "key";
+  credentialId?: string;
+  owner?: string;
+  publicKey?: { x: string; y: string };
+}

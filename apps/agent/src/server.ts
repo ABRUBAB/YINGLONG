@@ -16,7 +16,7 @@ import { board, createBoardProposal, directorSign } from "./board";
 import { explainTx } from "./explorer";
 import { apiJson, DATA_DIR } from "./store";
 import { config, isVisitorId, onboard, PRINCIPALS, visitorConfig, visitorStore, world, type PrincipalId, type PrincipalState } from "./world";
-import { registerVisitor, resealVisitor, sealVisitor, visitorStatus, visitorTokenOk } from "./visitors";
+import { loginChallenge, loginVisitor, registerVisitor, resealVisitor, sealVisitor, visitorStatus, visitorTokenOk } from "./visitors";
 import { draftMandate } from "./understand/draft";
 import { insightsFor } from "./insights";
 import { coverageFor, listEscrows, NotFound, refundEscrow, releaseEscrow } from "./escrows";
@@ -284,8 +284,27 @@ const AskBody = z.object({
 
 // ---------------------------------------------------------------- visitors (sign up with your own passkey)
 app.post("/v1/visitors", async (c) => {
-  const b = z.object({ credentialId: z.string(), publicKey: z.object({ x: z.string(), y: z.string() }), mandate: z.unknown().optional() }).parse(await c.req.json());
+  // Either a passkey (credentialId + publicKey) or a secret key kept in the browser (owner = that key's address).
+  const b = z
+    .object({ credentialId: z.string().optional(), publicKey: z.object({ x: z.string(), y: z.string() }).optional(), owner: z.string().optional(), mandate: z.unknown().optional() })
+    .parse(await c.req.json());
+  if (b.owner) return c.json(apiJson(await registerVisitor({ owner: b.owner as Address, mandate: b.mandate })));
+  if (!b.credentialId || !b.publicKey) return c.json({ ok: false, error: "send a passkey (credentialId and publicKey) or a secret key address (owner)" }, 400);
   return c.json(apiJson(await registerVisitor({ credentialId: b.credentialId, x: b.publicKey.x as Hex, y: b.publicKey.y as Hex, mandate: b.mandate })));
+});
+// Log in again: get a one-time login message, sign it with your passkey or secret key, get a new session token.
+app.post("/v1/visitors/login/challenge", async (c) => c.json(apiJson(await loginChallenge())));
+app.post("/v1/visitors/login", async (c) => {
+  const b = z
+    .object({
+      nonce: z.string().regex(/^0x[0-9a-fA-F]{64}$/),
+      issuedAt: z.string().regex(/^[0-9]+$/),
+      signature: z.string().regex(/^0x[0-9a-fA-F]+$/),
+      credentialId: z.string().optional(),
+      owner: z.string().regex(/^0x[0-9a-fA-F]{40}$/).optional(),
+    })
+    .parse(await c.req.json());
+  return c.json(apiJson(await loginVisitor({ ...b, nonce: b.nonce as Hex, signature: b.signature as Hex, owner: b.owner as Address | undefined })));
 });
 app.post("/v1/visitors/:id/reseal", async (c) => {
   const b = z.object({ mandate: z.unknown().optional() }).parse(await c.req.json().catch(() => ({})));

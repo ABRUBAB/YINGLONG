@@ -89,11 +89,11 @@ export function ProofDocument() {
     <Contents />
     <article className="min-w-0">
       <header className="grid gap-4">
-        <p className="eyebrow m-0 text-fg-muted">Proof Center</p>
-        <h1 className="type-display m-0 text-32 leading-tight text-fg-0 sm:text-[2.6rem]">What is proven, and how to check it</h1>
+        <p className="eyebrow m-0 text-fg-muted">Proof</p>
+        <h1 className="type-display m-0 text-32 leading-tight text-fg-0 sm:text-[2.6rem]">Real blockchain records you can check yourself</h1>
         <p className="measure m-0 text-15 text-fg-2">
-          Every hash on this page opens on a block explorer or on our read-only ledger page. Every number carries its source and sample size. Nothing
-          here is typed by hand: it is generated from the code and the ledgers.
+          Every claim we make is listed here with a link to the blockchain record behind it. Click any link to open the record. Nothing here
+          is typed by hand: it is all generated from our code and the blockchains.
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <LabelChip>Test units</LabelChip>

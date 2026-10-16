@@ -118,11 +118,11 @@ export function Evidence() {
     <section aria-labelledby="evidence-title" className="yl-section yl-defer">
       <div className="yl-container grid gap-12 lg:grid-cols-12 lg:gap-8">
         <SectionHead
-          index="07"
+          index="08"
           eyebrow="Evidence"
           id="evidence-title"
-          title="Measured, not claimed"
-          lead="Every number is generated from the code and carries its source. If a number is not generated, it does not appear."
+          title="Numbers we measured, not promises"
+          lead="Every number here comes straight from our tests and the blockchain, with a link to where it came from."
           className="lg:col-span-4"
         >
           <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -202,10 +202,10 @@ export function ChallengeCta() {
       <div className="yl-container">
         <div className="yl-card grid items-center gap-10 overflow-hidden p-6 sm:p-10 lg:grid-cols-12 lg:p-14">
           <div className="lg:col-span-7">
-            <SectionHead index="09" eyebrow="Judge's Challenge" id="cta-title" title="Nothing you type can move funds outside the mandate. Try." />
+            <SectionHead index="10" eyebrow="Try to hack it" id="cta-title" title="Nothing you type can make the agent send money outside its rules. Try." />
             <p className="m-0 mt-5 max-w-[52ch] text-15 text-fg-2">
-              Scan the code for a guest mandate with a tiny cap, write any attack to Ying, and see which of the nine scales stopped it. Press bypass
-              to send a raw redemption straight to the chain and get the revert hash.
+              Type any trick to the agent (fake invoices, "ignore your instructions", urgent requests) and see which safety check stopped it.
+              Press "bypass" to skip the AI and send the payment straight to the blockchain: it still gets blocked, with proof.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href="/challenge" size="lg">

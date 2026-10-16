@@ -2,15 +2,14 @@
 export const ROUTES = [
   { path: "/", name: "home", heading: /Always with you/ },
   { path: "/app", name: "app", heading: /Nadia Rahman/ },
-  { path: "/app/mandates/new", name: "studio", heading: /Say it\. See it\. Seal it\./ },
   { path: "/treasury", name: "treasury", heading: /Lotus Lane/ },
-  { path: "/supervisor", name: "supervisor", heading: /Agent registry/ },
-  { path: "/proof", name: "proof", heading: /What is proven/ },
+  { path: "/supervisor", name: "supervisor", heading: /Every AI agent, who it works for/ },
+  { path: "/proof", name: "proof", heading: /Real blockchain records you can check yourself/ },
   { path: "/approve/apr-tuition", name: "approve", heading: /Approve/ },
-  { path: "/challenge", name: "challenge", heading: /Nothing you type can move funds/ },
-  { path: "/city", name: "city", heading: /Two rails, one engine/ },
+  { path: "/challenge", name: "challenge", heading: /Try to trick the agent/ },
+  { path: "/city", name: "city", heading: /Every agent and payment, live/ },
   { path: "/start", name: "start", heading: /Get your own AI agent in three steps/ },
-  { path: "/about", name: "about", heading: /An agent wallet/ },
+  { path: "/about", name: "about", heading: /An AI agent that pays for you/ },
 ] as const;
 
 export const WIDTHS = [375, 768, 1440] as const;

@@ -367,9 +367,9 @@ export function Supervisor() {
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 pt-6 pb-16 sm:px-6 lg:px-8 lg:pt-8">
       <PageHeader
-        eyebrow="Supervisor"
-        title="Agent registry"
-        lead="The regulator node's view of every registered agent: who it acts for, who attests it, and whether its receipts are in the anchored batches. A supervisor can pause an agent identity. It can never spend."
+        eyebrow="Regulator view"
+        title="Every AI agent, who it works for, and a pause button"
+        lead="This is what a regulator sees: every registered agent, who it acts for, who vouches for it, and whether its records check out. A regulator can pause any agent, but can never spend anyone's money. Press Verify on any row to check a record yourself."
         chips={
           <>
             <LabelChip dotted>Supervisor role played by the team</LabelChip>

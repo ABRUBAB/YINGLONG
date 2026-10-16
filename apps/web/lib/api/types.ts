@@ -706,3 +706,19 @@ export const WireError = z.union([
   z.object({ ok: z.literal(false), error: z.string() }),
   z.object({ error: z.object({ code: z.string(), message: z.string(), typedError: z.string().nullish() }) }),
 ]);
+
+export const WireLoginChallenge = z.object({
+  nonce: z.string(),
+  issuedAt: z.string(),
+  digest: z.string(),
+  typedData: z.object({ domain: z.object({ chainId: z.union([z.number(), z.string()]) }).passthrough() }).passthrough(),
+});
+export const WireLogin = z.object({
+  visitorId: z.string(),
+  token: z.string(),
+  account: z.string(),
+  method: z.enum(["passkey", "key"]),
+  credentialId: z.string().nullish(),
+  owner: z.string().nullish(),
+  publicKey: z.object({ x: z.string(), y: z.string() }).nullish(),
+});

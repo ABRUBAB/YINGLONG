@@ -119,11 +119,11 @@ export function TwinChains() {
     <section aria-labelledby="twin-title" className="yl-section yl-defer">
       <div className="yl-container">
         <SectionHead
-          index="05"
+          index="06"
           eyebrow="Same rules, two chains"
           id="twin-title"
-          title="One mandate, enforced by the same bytecode on a public chain and a consortium chain"
-          lead="Each ring draws the runtime code hash of the thirteen YINGLONG enforcers, eight ticks per enforcer. The rings match because the code does."
+          title="The same rules run on two different blockchains"
+          lead="A public blockchain (Base) and a bank-style private blockchain (FISCO BCOS, used in China). Each ring is drawn from the fingerprint of our 13 rule programs on that chain. They match because the code is identical."
         >
           {isSample ? (
             <div className="mt-2">

@@ -15,7 +15,7 @@ import { availableSigner, describeSignError, signAndSubmit, SIGNER_LABEL, type S
 import { buttonClass } from "@/components/ui/button";
 
 /** Which signer this device will use, said before anything is signed. */
-const SIGNER_CHIP: Record<SignerKind, string> = { passkey: "WebAuthn passkey", scripted: "Scripted passkey (demo)", sample: "Sample signature" };
+const SIGNER_CHIP: Record<SignerKind, string> = { passkey: "Your passkey", key: "Your secret key", scripted: "Demo signature (scripted)", sample: "Sample signature" };
 import { ErrorLine, ReceiptOutcomeRing, SampleBadge, TierBadge, TxLink } from "@/components/data/parts";
 
 const eq = (a?: string | null, b?: string | null) => Boolean(a && b && a.toLowerCase() === b.toLowerCase());

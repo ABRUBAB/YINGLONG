@@ -61,13 +61,13 @@ export interface NavItem {
 }
 
 export const NAV: NavItem[] = [
-  { href: "/app", label: "Console", glyph: "console", mobile: true },
-  { href: "/app/mandates/new", label: "Mandate Studio", glyph: "studio", mobile: true },
-  { href: "/treasury", label: "Treasury", glyph: "treasury", mobile: true },
-  { href: "/supervisor", label: "Supervisor", glyph: "supervisor", mobile: true },
+  { href: "/app", label: "Agent console", glyph: "console", mobile: true },
+  { href: "/start", label: "Write new rules", glyph: "studio", mobile: true },
+  { href: "/treasury", label: "Company demo", glyph: "treasury", mobile: true },
+  { href: "/supervisor", label: "Regulator", glyph: "supervisor", mobile: true },
   { href: "/proof", label: "Proof", glyph: "proof" },
-  { href: "/city", label: "Agent City", glyph: "city" },
-  { href: "/challenge", label: "Judge's Challenge", glyph: "challenge" },
+  { href: "/city", label: "Live map", glyph: "city" },
+  { href: "/challenge", label: "Try to hack it", glyph: "challenge" },
 ];
 
 export function NavGlyph({ name, size = 16 }: { name: keyof typeof NAV_GLYPHS; size?: number }) {

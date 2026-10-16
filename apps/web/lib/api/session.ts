@@ -13,8 +13,14 @@ import { CONSOLE_PRINCIPAL } from "./client";
 export interface VisitorSession {
   visitorId: string;
   token: string;
+  /** How this visitor signs: a passkey on this device, or a secret key kept in this browser (like a wallet). */
+  method: "passkey" | "key";
+  /** Passkey only: the credential id. Empty for a secret-key visitor. */
   credentialId: string;
   publicKey?: { x: string; y: string };
+  /** Secret key only: the key itself (test units only; the visitor was shown it and told to save it) and its address. */
+  secretKey?: string;
+  owner?: string;
   account?: string;
   sealedAt?: string;
 }
@@ -32,11 +38,16 @@ function parse(raw: string | null): VisitorSession | null {
     const v = JSON.parse(raw) as Partial<VisitorSession>;
     if (typeof v.visitorId !== "string" || !VISITOR_ID.test(v.visitorId)) return null;
     if (typeof v.token !== "string" || !v.token) return null;
-    if (typeof v.credentialId !== "string" || !v.credentialId) return null;
+    const method = v.method === "key" ? "key" : "passkey";
+    if (method === "passkey" && (typeof v.credentialId !== "string" || !v.credentialId)) return null;
+    if (method === "key" && (typeof v.secretKey !== "string" || !/^0x[0-9a-fA-F]{64}$/.test(v.secretKey))) return null;
     return {
       visitorId: v.visitorId,
       token: v.token,
-      credentialId: v.credentialId,
+      method,
+      credentialId: typeof v.credentialId === "string" ? v.credentialId : "",
+      secretKey: method === "key" ? v.secretKey : undefined,
+      owner: typeof v.owner === "string" ? v.owner : undefined,
       publicKey: v.publicKey && typeof v.publicKey.x === "string" && typeof v.publicKey.y === "string" ? { x: v.publicKey.x, y: v.publicKey.y } : undefined,
       account: typeof v.account === "string" ? v.account : undefined,
       sealedAt: typeof v.sealedAt === "string" ? v.sealedAt : undefined,

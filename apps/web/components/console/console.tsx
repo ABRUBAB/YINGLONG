@@ -41,9 +41,9 @@ export function Console() {
     <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="mx-auto w-full max-w-[960px] px-4 pt-6 pb-14 sm:px-6 lg:px-8 lg:pt-8">
         <PageHeader
-          eyebrow="Console"
+          eyebrow="Agent console"
           title={me.data ? me.data.displayName : "Console"}
-          lead={`Ask ${me.data?.agentName ?? "the agent"} to pay, check or explain. It acts only inside the mandate you sealed; code and the chain decide, and every action leaves a receipt.`}
+          lead={`Type a request below, like "Pay my rent" or "How much food budget is left?". ${me.data?.agentName ?? "The agent"} pays on its own when it is inside the rules, asks you first when it needs to, and refuses anything else. Every action leaves a receipt.`}
           chips={
             <>
               {visitor ? <LabelChip>Your passkey account</LabelChip> : null}

@@ -55,7 +55,7 @@ export function TxLookup({ ledger, hash }: { ledger: string; hash: string }) {
   return (
     <article className="mx-auto w-full max-w-[880px] px-4 pt-10 pb-20 sm:px-6">
       <PageHeader
-        eyebrow="Transaction decoder"
+        eyebrow="Blockchain record"
         title={<span className="block font-mono text-15 font-medium break-all sm:text-18">{hash}</span>}
         lead="This ledger has no public explorer, so the agent service reads the transaction and its receipt, decodes the call and events against the YINGLONG contracts, and recovers the typed revert reason."
         chips={<LabelChip dotted={ledger === "anvil"}>{tx?.badge ?? LEDGER[ledger] ?? ledger}</LabelChip>}

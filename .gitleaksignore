@@ -23,3 +23,4 @@ cf205cd35b3b21f75885290b5a106ae4b439c5e1:apps/agent/data/visitors.json:generic-a
 cf205cd35b3b21f75885290b5a106ae4b439c5e1:apps/agent/data/visitors.json:generic-api-key:26
 cf205cd35b3b21f75885290b5a106ae4b439c5e1:apps/agent/data/visitors.json:generic-api-key:40
 71bfe3c6e7e94f21dd3fb32635d67efffc3fbdc7:contracts/test/vectors/zk/mandate_compliance.fixtures.json:generic-api-key:83
+52cc43808e52bb4490efc419247a7e7cfca937b2:ml/serving/models.lock.json:generic-api-key:38

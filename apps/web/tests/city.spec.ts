@@ -39,7 +39,7 @@ for (const width of WIDTHS) {
         if (m.type() === "error" && !IGNORED_CONSOLE.some((re) => re.test(m.text()))) errors.push(m.text());
       });
       await page.goto("/city", { waitUntil: "networkidle" });
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Two rails, one engine/);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Every agent and payment, live/);
       const map = page.locator('[aria-roledescription="map"]');
       await expect(map).toBeVisible();
       await expect(page.getByText("Sample data").first()).toBeVisible();

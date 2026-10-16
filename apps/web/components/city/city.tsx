@@ -135,11 +135,11 @@ export function AgentCity() {
       <div className="yl-container pt-10 pb-6">
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
           <div className="min-w-0">
-            <p className="eyebrow m-0 text-fg-muted">Agent City: Greater Bay</p>
-            <h1 className="m-0 mt-2 text-26 font-semibold text-fg-0">Two rails, one engine</h1>
+            <p className="eyebrow m-0 text-fg-muted">Live map</p>
+            <h1 className="m-0 mt-2 text-26 font-semibold text-fg-0">Every agent and payment, live</h1>
             <p className="m-0 mt-2 max-w-[60ch] text-15 text-fg-2">
-              Shenzhen on the coin-free consortium rail, Hong Kong on the test rail, with the boundary between them. Every principal, agent, payee and payment
-              below is read from the agent service; receipts arrive as they are written.
+              Top: Shenzhen, where companies pay through a bank-style system with no coins. Bottom: Hong Kong, with test money. Each card is a
+              person, a company, an AI agent or a shop; each line is a payment, drawn as it happens. Tap anything to see its details.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

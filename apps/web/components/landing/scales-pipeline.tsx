@@ -65,11 +65,11 @@ export function ScalesPipeline() {
     <section aria-labelledby="scales-title" className="yl-section">
       <div className="yl-container">
         <SectionHead
-          index="03"
-          eyebrow="Nine scales"
+          index="04"
+          eyebrow="Nine safety checks"
           id="scales-title"
-          title="Between any request and the chain, nine checks in a fixed order"
-          lead="Only deterministic rules refuse. Where the last attack in the Judge's Challenge was stopped:"
+          title="Every request passes nine safety checks before any money moves"
+          lead="AI can raise a warning, but only fixed rules can say no. Here is where the latest hacking attempt was stopped:"
         >
           {isSample ? (
             <div className="mt-2">

@@ -49,11 +49,11 @@ export function Pillars() {
     <section aria-labelledby="pillars-title" className="yl-section">
       <div className="yl-container grid gap-12 lg:grid-cols-12 lg:gap-8">
         <SectionHead
-          index="01"
-          eyebrow="Five pillars"
+          index="02"
+          eyebrow="How it keeps you safe"
           id="pillars-title"
-          title="Before an agent touches money"
-          lead="A bank asks these questions of every person. YINGLONG answers them for every agent, on ledgers a supervisor can read."
+          title="Five things checked before an agent touches money"
+          lead="A bank checks every person before they can move money. YINGLONG checks every AI agent the same way, and a regulator can see it all."
           className="lg:sticky lg:top-[calc(var(--nav-h)+3rem)] lg:col-span-4 lg:self-start"
         />
         <ol className="m-0 grid list-none gap-3 p-0 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-6">
@@ -109,11 +109,11 @@ export function Scenarios() {
     <section aria-labelledby="scenarios-title" className="yl-section yl-defer border-y border-line-1 bg-bg-1">
       <div className="yl-container">
         <SectionHead
-          index="04"
+          index="05"
           eyebrow="Topic F, agent wallet"
           id="scenarios-title"
-          title="One engine, two deep scenarios"
-          lead="Every money movement in both passes the same path: seal, scales, chain, receipt."
+          title="Two real-life examples, one system"
+          lead="A student in Hong Kong and a company in Shenzhen. Every payment in both goes through the same steps: your rules, the safety checks, the blockchain, a receipt."
         />
         <div className="mt-14 grid gap-3 lg:grid-cols-2">
           {SCENARIOS.map((s) => (

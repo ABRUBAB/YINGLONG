@@ -6,7 +6,7 @@
 import { test, expect } from "@playwright/test";
 import { ROUTES } from "./routes";
 
-const PAGES = ["Home", "Console", "Treasury", "Supervisor", "Agent City", "Proof", "Judge's Challenge", "About"];
+const PAGES = ["Home", "Student demo", "Company demo", "Regulator", "Live map", "Proof", "Try to hack it", "About"];
 
 test.describe("desktop", () => {
   test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
@@ -15,7 +15,7 @@ test.describe("desktop", () => {
       await page.goto(r.path, { waitUntil: "networkidle" });
       const nav = page.getByRole("navigation", { name: "Site" });
       for (const label of PAGES) await expect(nav.getByRole("link", { name: label, exact: true })).toBeVisible();
-      await expect(page.getByRole("link", { name: "Sign up with your passkey" }).first()).toHaveAttribute("href", "/start");
+      await expect(page.getByRole("link", { name: "Create your agent" }).first()).toHaveAttribute("href", "/start");
       expect(await page.locator('img[src*="dragon"], img[src*="coin"], img[src*="yinglong-mark"]').count()).toBe(0);
     });
   }
@@ -34,6 +34,6 @@ test.describe("phone", () => {
     for (const label of PAGES) await expect(sheet.getByRole("link", { name: new RegExp(`^${label}`) })).toBeVisible();
     await sheet.getByRole("link", { name: /^About/ }).click();
     await expect(page).toHaveURL(/\/about$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/An agent wallet/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/An AI agent that pays for you/);
   });
 });

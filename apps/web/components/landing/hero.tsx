@@ -211,29 +211,30 @@ export function Hero({ poster = false }: { poster?: boolean }) {
         <div className="yl-hero-text relative z-10">
           <p className="yl-hero-in eyebrow m-0 flex items-center gap-3 text-fg-muted" style={{ ["--d" as string]: "0ms" }}>
             <span aria-hidden="true" className="h-px w-8 bg-line-3" />
-            Personal Agent Identity &amp; Mandated Finance
+            AI agents that pay for you, safely
           </p>
           <h1 id="hero-title" className="type-hero yl-hero-h1 m-0 mt-6 text-fg-0">
             <span className="yl-hero-line block" style={{ ["--d" as string]: "60ms" }}>
               Always with you.
             </span>
             <span className="yl-hero-line block text-fg-muted" style={{ ["--d" as string]: "140ms" }}>
-              Never beyond your mandate.
+              Never beyond your rules.
             </span>
           </h1>
           <p className="yl-hero-in yl-hero-lead m-0 mt-7 text-fg-2" style={{ ["--d" as string]: "220ms" }}>
-            An AI agent that acts on your money only as you, only inside the mandate you sealed, and always with a receipt anyone can check.
+            Let an AI agent pay for you, but only inside the spending rules you set. It cannot break them: the blockchain blocks anything
+            outside your rules, and every payment leaves a receipt anyone can check.
           </p>
           <div className="yl-hero-in mt-9 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "280ms" }}>
             <ButtonLink href="/start" size="lg">
               <PasskeyIcon size={16} />
-              Sign up with your passkey
+              Create your agent
             </ButtonLink>
             <ButtonLink href="/app" variant="secondary" size="lg">
-              Open Nadia&apos;s console <ArrowIcon />
+              See a demo <ArrowIcon />
             </ButtonLink>
             <ButtonLink href="/proof" variant="quiet" size="lg" className="ml-1">
-              Read the proof
+              Check the proof
             </ButtonLink>
           </div>
         </div>
@@ -248,11 +249,11 @@ export function Hero({ poster = false }: { poster?: boolean }) {
       <div className="relative z-10 border-t border-line-1">
         <div className="yl-container grid gap-8 py-10 lg:grid-cols-12 lg:gap-x-10">
           <div className="grid content-start gap-5 lg:col-span-6">
-            <p className="eyebrow m-0 text-fg-muted">Reading the orbit</p>
+            <p className="eyebrow m-0 text-fg-muted">What the ring shows (live)</p>
             <dl className="m-0 grid grid-cols-3 gap-x-6">
-              <HeroStat label="Receipts inside the mandate" value={summary.inside + summary.asked + summary.waiting} />
-              <HeroStat label="Refused at the boundary" value={summary.refused} />
-              <HeroStat label="Budget left this period" value={Math.round(remaining * 100)} suffix="%" />
+              <HeroStat label="Payments made inside the rules" value={summary.inside + summary.asked + summary.waiting} />
+              <HeroStat label="Attempts blocked" value={summary.refused} />
+              <HeroStat label="Budget left today" value={Math.round(remaining * 100)} suffix="%" />
             </dl>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
               <LiveStatusO state="active" size={18} showWord className="text-fg-1" />

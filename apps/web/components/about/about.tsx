@@ -113,15 +113,15 @@ export function AboutPage() {
               </p>
               <h1 id="about-title" className="type-hero m-0 mt-6 text-[2.5rem] text-fg-0 sm:text-[3.5rem] lg:text-[clamp(3.25rem,1rem+3.4vw,4.75rem)]">
                 <span className="yl-hero-line block" style={{ ["--d" as string]: "60ms" }}>
-                  An agent wallet
+                  An AI agent that pays for you
                 </span>
                 <span className="yl-hero-line block text-fg-muted" style={{ ["--d" as string]: "140ms" }}>
-                  that proves it stayed inside its mandate.
+                  and proves it kept to your rules.
                 </span>
               </h1>
               <p className="yl-hero-in m-0 mt-7 max-w-[40rem] text-lead text-fg-2" style={{ ["--d" as string]: "220ms" }}>
-                YINGLONG gives a personal AI agent an identity, a mandate its owner seals with a passkey, nine defences between any request and the
-                chain, and a receipt for every action that anyone can verify.
+                YINGLONG gives an AI agent its own ID, spending rules that only its owner can set (locked with a fingerprint or a secret key),
+                nine safety checks before any payment, and a receipt for every action that anyone can check on a blockchain.
               </p>
               <nav aria-label="On this page" className="yl-hero-in mt-9 flex flex-wrap gap-x-5 gap-y-2 text-13" style={{ ["--d" as string]: "280ms" }}>
                 {[

@@ -1,4 +1,5 @@
 "use client";
+import { privateKeyToAccount } from "viem/accounts";
 
 /**
  * One path for every passkey signature the user gives (seal, approve, pause, resume, director
@@ -20,10 +21,11 @@ import { guardSigningRequest, type GuardResult } from "./signing-guard";
 import { activeVisitor } from "./api/session";
 import { reviewRevoke, type Check } from "./account-ops";
 
-export type SignerKind = "passkey" | "scripted" | "sample";
+export type SignerKind = "passkey" | "key" | "scripted" | "sample";
 
 export const SIGNER_LABEL: Record<SignerKind, string> = {
   passkey: "your passkey",
+  key: "your secret key",
   scripted: "the scripted passkey (software P-256 key, demo)",
   sample: "a sample signature (fixtures mode, nothing sent)",
 };
@@ -41,7 +43,8 @@ const SAMPLE_SIGNATURE = `0x${"00".repeat(31)}01` as Hex;
 export async function availableSigner(): Promise<SignerKind> {
   // A visitor signed up with their own passkey: every signature is theirs, in fixtures mode too
   // (the fixture service then verifies the WebAuthn signature against the visitor's public key).
-  if (activeVisitor()) return "passkey";
+  const v = activeVisitor();
+  if (v) return v.method === "key" ? "key" : "passkey";
   if (DATA_MODE === "fixtures") return "sample";
   const me = getApi().me();
   const principal = isPromise(me) ? await me : me;
@@ -62,6 +65,12 @@ export async function signAndSubmit(req: SigningRequest, opts: { prefer?: Signer
   }
   if (signer === "scripted") {
     return { result: await api.demoSign(req.id), signer, primaryType: guard.primaryType };
+  }
+  if (signer === "key") {
+    const v = activeVisitor();
+    if (!v?.secretKey) throw new Error("This device does not hold your secret key. Log in again with it.");
+    const signature = await privateKeyToAccount(v.secretKey as Hex).sign({ hash: req.digest as Hex });
+    return { result: await api.submitSignature(req.id, { keyId: "secret-key", signature }), signer, primaryType: guard.primaryType };
   }
   if (!passkeysSupported()) throw new Error("This browser cannot use passkeys. Open the approval link on your phone.");
   const visitor = activeVisitor();

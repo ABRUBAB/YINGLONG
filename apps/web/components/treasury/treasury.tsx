@@ -237,9 +237,9 @@ export function Treasury() {
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 pt-6 pb-16 sm:px-6 lg:px-8 lg:pt-8">
       <PageHeader
-        eyebrow="Treasury"
+        eyebrow="Company demo"
         title={v?.entity.name ?? "Lotus Lane treasury"}
-        lead="A treasurer agent runs the company's lanes alone; anything outside them goes to the board. Every instruction is anchored, and the forecast shows what is coming."
+        lead="An AI treasurer pays this company's suppliers and staff on its own, within the board's limits. Anything bigger needs two of three directors to approve. Below: the limits, the 30-day cash forecast, the approvals waiting, and every payment."
         chips={
           v ? (
             <>

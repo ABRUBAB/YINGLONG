@@ -32,11 +32,11 @@ export function OwnAgent() {
       <div className="yl-container grid items-center gap-14 lg:grid-cols-12 lg:gap-8">
         <div className="grid content-start gap-10 lg:col-span-7">
           <SectionHead
-            index="08"
+            index="09"
             eyebrow="Your own agent"
             id="own-title"
-            title="Your agent, your mandate, your key"
-            lead="Sign up with a passkey and get an agent with its own wallet and passport, bound by a mandate only you can change."
+            title="Get your own agent in about a minute"
+            lead="Write your rules, lock them with your fingerprint or a secret key, and your agent gets its own ID and wallet. Only you can change its rules."
           />
           <ol className="m-0 grid list-none gap-0 border-t border-line-2 p-0">
             {STEPS.map((s) => (

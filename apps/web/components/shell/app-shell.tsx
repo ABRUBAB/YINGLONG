@@ -178,7 +178,7 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
                 )}
               >
                 <NavGlyph name={item.glyph} size={18} />
-                <span className="max-w-full truncate px-0.5">{item.label === "Mandate Studio" ? "Studio" : item.label}</span>
+                <span className="max-w-full truncate px-0.5">{item.label === "Write new rules" ? "Rules" : item.label === "Agent console" ? "Console" : item.label}</span>
               </Link>
             );
           })}

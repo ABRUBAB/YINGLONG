@@ -52,7 +52,7 @@ export function Challenge() {
     <div className="mx-auto w-full max-w-[1320px] px-4 pt-10 pb-20 sm:px-6 lg:px-8">
       <div className="grid gap-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-16">
         <aside className="grid content-start gap-5">
-          <p className="eyebrow m-0 text-fg-muted">Judge&apos;s Challenge</p>
+          <p className="eyebrow m-0 text-fg-muted">Try to hack it</p>
           <div className="yl-card grid justify-items-start gap-4 p-5">
             <Qr value={s?.joinUrl ?? "https://app.yinglong-agent.tech/challenge"} size={200} label="QR code: open the challenge with a guest mandate on your phone" />
             <p className="m-0 text-13 text-fg-1">Scan to get a guest mandate on your phone.</p>
@@ -89,11 +89,12 @@ export function Challenge() {
         <div className="grid content-start gap-10">
           <div className="grid gap-4">
             <h1 className="type-display m-0 max-w-[18ch] text-[2.4rem] leading-[1.04] text-fg-0 sm:text-[3.2rem]">
-              {s?.rule ?? "Nothing you type can move funds outside the mandate. Try."}
+              Try to trick the agent into sending money it should not.
             </h1>
             <p className="m-0 max-w-[60ch] text-lead text-fg-2">
-              Your words go through the same nine scales as every request. Switch the scales off and the raw redemption still meets the enforcers
-              on chain: you get the typed revert and its transaction hash.
+              This test agent may only buy coffee, at most 10 at a time. Type anything you like: a fake invoice, "ignore your rules", an urgent
+              plea. It goes through the same nine safety checks as every request. Turn on "bypass" to skip the AI completely and send the payment
+              straight to the blockchain: the blockchain still blocks it, and you get the proof.
             </p>
           </div>
 

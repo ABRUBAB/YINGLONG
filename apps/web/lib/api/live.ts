@@ -1119,12 +1119,27 @@ export function createLiveApi(baseUrl: string): AgentApi {
         requests: v.requests,
       };
     },
+    visitorLoginChallenge: async () => {
+      const v = await call(W.WireLoginChallenge, "POST", "/v1/visitors/login/challenge", {});
+      return { nonce: v.nonce, issuedAt: v.issuedAt, digest: v.digest, chainId: Number(v.typedData.domain.chainId) };
+    },
+    visitorLogin: async (req) => {
+      const v = await call(W.WireLogin, "POST", "/v1/visitors/login", req);
+      return { ...v, credentialId: v.credentialId ?? undefined, owner: v.owner ?? undefined, publicKey: v.publicKey ?? undefined };
+    },
     visitorSignUp: async (req) => {
-      const v = await call(W.WireVisitorSignUp, "POST", "/v1/visitors", {
-        credentialId: req.credentialId,
-        publicKey: { x: req.publicKey.x, y: req.publicKey.y },
-        ...(req.mandate === undefined ? {} : { mandate: req.mandate }),
-      });
+      const v = await call(
+        W.WireVisitorSignUp,
+        "POST",
+        "/v1/visitors",
+        req.owner
+          ? { owner: req.owner, ...(req.mandate === undefined ? {} : { mandate: req.mandate }) }
+          : {
+              credentialId: req.credentialId,
+              publicKey: { x: req.publicKey!.x, y: req.publicKey!.y },
+              ...(req.mandate === undefined ? {} : { mandate: req.mandate }),
+            },
+      );
       return {
         visitorId: v.visitorId,
         token: v.token,

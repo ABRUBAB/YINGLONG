@@ -151,11 +151,11 @@ export function Verbs() {
     <section ref={root} aria-labelledby="verbs-title" className="yl-section yl-verbs-scope-root relative border-y border-line-1 bg-bg-1">
       <div className="yl-container">
         <SectionHead
-          index="02"
-          eyebrow="Seven verbs"
+          index="03"
+          eyebrow="How it works"
           id="verbs-title"
-          title="A power of attorney, enforced by code"
-          lead="Say it, see it, seal it. Then the chain enforces it, anyone can verify it, every action proves itself, and one tap revokes it."
+          title="Like giving someone permission to pay for you, but enforced by code"
+          lead="You write the rules, check them, and lock them. From then on the blockchain enforces them, anyone can check them, every payment leaves a receipt, and one tap cancels everything."
         />
         <div className="mt-14 grid gap-12 lg:grid-cols-12 lg:gap-8">
           <div className="hidden lg:col-span-5 lg:block">

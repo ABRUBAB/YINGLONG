@@ -7,6 +7,7 @@ import { ScalesPipeline } from "@/components/landing/scales-pipeline";
 import { TwinChains } from "@/components/landing/twin-chains";
 import { ProofWall } from "@/components/landing/proof-wall";
 import { OwnAgent } from "@/components/landing/own-agent";
+import { TryIt } from "@/components/landing/try-it";
 
 /**
  * Landing (docs/DESIGN.md section 8): the Mandate Orbit hero (poster first, 3D after load), the
@@ -22,7 +23,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   if (sp.poster === "1") {
     return (
       <main id="main" data-poster data-surface="obsidian" className="min-h-dvh bg-bg-0">
-        <h1 className="sr-only">Always with you. Never beyond your mandate.</h1>
+        <h1 className="sr-only">Always with you. Never beyond your rules.</h1>
         <Hero poster />
       </main>
     );
@@ -31,6 +32,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     <ViewTransition>
       <main id="main">
         <Hero />
+        <TryIt />
         <EvidenceRibbon />
         <Pillars />
         <Verbs />

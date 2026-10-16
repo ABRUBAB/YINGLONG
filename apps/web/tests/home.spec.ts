@@ -107,7 +107,7 @@ for (const [width, height] of [
       const textRight = Math.max(r(text).right, ...[...text.querySelectorAll("*")].map((e) => r(e).right));
       const orbit = r(document.querySelector(".yl-hero-orbit")!);
       const actions = [...text.querySelectorAll("a")].map((e) => r(e).bottom);
-      const below = [...document.querySelectorAll("p")].find((p) => p.textContent === "Reading the orbit")!;
+      const below = [...document.querySelectorAll("p")].find((p) => p.textContent === "What the ring shows (live)")!;
       return { textRight, orbit: orbit.toJSON(), actionsBottom: Math.max(...actions), belowTop: r(below).top, inner: innerHeight, innerWidth };
     });
     expect(g.orbit.left, "the orbit column starts right of every text block").toBeGreaterThan(g.textRight);

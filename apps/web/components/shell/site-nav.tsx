@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { cn } from "@yinglong/ui";
 import { Mark, Wordmark } from "@/components/brand/mark";
 import { ButtonLink, CloseIcon } from "@/components/ui/button";
 import { MotionToggle, ThemeToggle } from "@/components/preferences";
-import { pageActive, SIGN_UP, SITE_PAGES } from "./pages";
+import { MY_AGENT, pageActive, SIGN_UP, SITE_PAGES } from "./pages";
+import { useVisitorSession } from "@/components/session";
+import { clearVisitorSession } from "@/lib/api/session";
 import "./site.css";
 
 /** Routes whose first screen is an always-obsidian surface: the nav joins that surface there. */
@@ -34,6 +36,8 @@ function MenuIcon() {
  */
 export function SiteNav() {
   const pathname = usePathname() ?? "/";
+  const session = useVisitorSession();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const obsidian = OBSIDIAN.has(pathname);
   // Workspace routes (the in-app rail spans the full width) get a full-width bar to match.
@@ -76,11 +80,18 @@ export function SiteNav() {
           <span className="hidden xl:contents">
             <ThemeToggle compact />
           </span>
-          <ButtonLink href={SIGN_UP.href} size="sm" aria-label={SIGN_UP.label}>
-            <PasskeyIcon />
-            <span className="sm:hidden">Sign up</span>
-            <span className="hidden sm:inline">{SIGN_UP.label}</span>
-          </ButtonLink>
+          {session ? (
+            <ButtonLink href={MY_AGENT.href} size="sm" aria-label={MY_AGENT.label}>
+              <PasskeyIcon />
+              <span>{MY_AGENT.label}</span>
+            </ButtonLink>
+          ) : (
+            <ButtonLink href={SIGN_UP.href} size="sm" aria-label={SIGN_UP.label}>
+              <PasskeyIcon />
+              <span className="sm:hidden">Create agent</span>
+              <span className="hidden sm:inline">{SIGN_UP.label}</span>
+            </ButtonLink>
+          )}
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger className="yl-press inline-flex h-9 items-center gap-2 rounded-control border border-line-3 px-3 text-13 text-fg-1 hover:bg-bg-2 xl:hidden">
               <MenuIcon />
@@ -127,10 +138,30 @@ export function SiteNav() {
                   </nav>
                 </div>
                 <div className="grid gap-4 border-t border-line-1 px-5 pt-4 pb-5">
-                  <ButtonLink href={SIGN_UP.href} size="lg" onClick={() => setOpen(false)} className="w-full min-w-0">
-                    <PasskeyIcon />
-                    <span className="truncate">{SIGN_UP.label}</span>
-                  </ButtonLink>
+                  {session ? (
+                    <div className="grid gap-2">
+                      <ButtonLink href={MY_AGENT.href} size="lg" onClick={() => setOpen(false)} className="w-full min-w-0">
+                        <PasskeyIcon />
+                        <span className="truncate">{MY_AGENT.label}</span>
+                      </ButtonLink>
+                      <button
+                        type="button"
+                        className="yl-press h-10 rounded-control border border-line-3 text-13 text-fg-1 hover:bg-bg-2"
+                        onClick={() => {
+                          clearVisitorSession();
+                          setOpen(false);
+                          router.push("/");
+                        }}
+                      >
+                        Log out
+                      </button>
+                    </div>
+                  ) : (
+                    <ButtonLink href={SIGN_UP.href} size="lg" onClick={() => setOpen(false)} className="w-full min-w-0">
+                      <PasskeyIcon />
+                      <span className="truncate">{SIGN_UP.label}</span>
+                    </ButtonLink>
+                  )}
                   <div className="flex flex-wrap items-center gap-1">
                     <ThemeToggle />
                     <MotionToggle />

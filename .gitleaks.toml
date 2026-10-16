@@ -7,4 +7,5 @@ description = "Raw tool output (hex-heavy Foundry and Halmos dumps) and public Z
 paths = [
   '''contracts/reports/[^/]+\.raw\.json$''',
   '''contracts/test/vectors/''',
+  '''ml/serving/models\.lock\.json$''',
 ]

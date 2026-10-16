@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { encodeFunctionData, keccak256, stringToBytes, type Address, type Hex } from "viem";
+import { encodeFunctionData, hashTypedData, keccak256, stringToBytes, type Address, type Hex } from "viem";
 import { abi } from "@yinglong/sdk";
 import { buildUserOp, ensureAccount, executeCallData, hybridInitData, submitUserOp, userOpDigest, type PackedUserOp } from "@yinglong/sdk/account";
 import { agentAddress } from "@yinglong/sdk/server";
@@ -44,23 +44,35 @@ export function visitorIdFor(credentialId: string, x: Hex, y: Hex): `v-${string}
   return `v-${keccak256(stringToBytes(`${credentialId}:${x.toLowerCase()}:${y.toLowerCase()}`)).slice(2, 12)}`;
 }
 
+/** A visitor who chose a secret key (an ordinary key kept in their browser, like a wallet) instead of a passkey. */
+export function visitorIdForOwner(owner: Address): `v-${string}` {
+  return `v-${keccak256(stringToBytes(`owner:${owner.toLowerCase()}`)).slice(2, 12)}`;
+}
+
+const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
+
 export function visitorTokenOk(id: string, token: string | undefined): boolean {
   const v = visitorStore.get().visitors[id];
   return !!v && !!v.sealedAt && !!token && keccak256(stringToBytes(token)) === v.tokenHash;
 }
 
-export async function registerVisitor(args: { credentialId: string; x: Hex; y: Hex; mandate?: unknown }) {
+export async function registerVisitor(args: { credentialId?: string; x?: Hex; y?: Hex; owner?: Address; mandate?: unknown }) {
   // A draft from POST /v1/mandates/draft is re-validated here (closed schema, then the same bounds): nothing the
   // client sends can widen the visitor's authority beyond the bounds.
   const draft = args.mandate === undefined ? undefined : DraftInput.parse(args.mandate);
   if (draft) normaliseVisitorRules(draft.rules);
-  if (!WEBAUTHN_ID.test(args.credentialId)) throw new Error("credentialId must be the passkey's raw id in base64url");
-  if (!COORD.test(args.x) || !COORD.test(args.y)) throw new Error("publicKey.x and publicKey.y must be 32-byte hex coordinates");
+  const byKey = !!args.owner;
+  if (byKey) {
+    if (!ADDRESS.test(args.owner!)) throw new Error("owner must be the address of your secret key");
+  } else {
+    if (!args.credentialId || !WEBAUTHN_ID.test(args.credentialId)) throw new Error("credentialId must be the passkey's raw id in base64url");
+    if (!args.x || !args.y || !COORD.test(args.x) || !COORD.test(args.y)) throw new Error("publicKey.x and publicKey.y must be 32-byte hex coordinates");
+  }
   const now0 = Date.now();
   while (created.length && now0 - created[0]! > 3_600_000) created.shift();
   if (created.length >= Number(process.env.VISITORS_PER_HOUR ?? 30)) throw new Error("too many sign-ups in the last hour; try again later");
 
-  const id = visitorIdFor(args.credentialId, args.x, args.y);
+  const id = byKey ? visitorIdForOwner(args.owner!) : visitorIdFor(args.credentialId!, args.x!, args.y!);
   const cfg = visitorConfig(id);
   const ctx = ledgerContext(cfg.ledger);
   await ctx.freshHead();
@@ -71,7 +83,8 @@ export async function registerVisitor(args: { credentialId: string; x: Hex; y: H
     walletClient: ctx.wallet("relayer"),
     factory: ctx.addr("SimpleFactory"),
     implementation: ctx.addr("HybridDeleGatorImpl"),
-    initData: hybridInitData([args.credentialId], [BigInt(args.x)], [BigInt(args.y)]),
+    // Passkey: owner = address(0) and the passkey as the only key. Secret key: that key's address as the only owner.
+    initData: byKey ? hybridInitData([], [], [], args.owner!) : hybridInitData([args.credentialId!], [BigInt(args.x!)], [BigInt(args.y!)]),
     salt: keccak256(stringToBytes(`yinglong:visitor:${id}`)),
     ...ctx.txOpts(),
   });
@@ -131,9 +144,10 @@ export async function registerVisitor(args: { credentialId: string; x: Hex; y: H
   const token = randomBytes(24).toString("base64url");
   const rec: VisitorRecord = {
     id,
-    keyId: args.credentialId,
-    x: args.x,
-    y: args.y,
+    keyId: args.credentialId ?? "",
+    x: args.x ?? "0x",
+    y: args.y ?? "0x",
+    owner: args.owner,
     account,
     agentWallet: passport.wallet,
     agentId: passport.agentId,
@@ -194,7 +208,12 @@ export async function sealVisitor(id: string, token: string | undefined, sigs: {
 
   // Label the seal by the signature format the account verified: a WebAuthn assertion (authenticator data and
   // client data) or a raw 96-byte P-256 signature from a software key (scripted runs).
-  const sealedBy = sigs.userOpSignature.length === 2 + 2 * 96 ? "scripted passkey (software P-256 key)" : "passkey (WebAuthn)";
+  const sealedBy =
+    sigs.userOpSignature.length === 2 + 2 * 65
+      ? "secret key (kept in your browser)"
+      : sigs.userOpSignature.length === 2 + 2 * 96
+        ? "scripted passkey (software P-256 key)"
+        : "passkey (WebAuthn)";
   const prev = world.get().principals[v.id];
   const state: PrincipalState = {
     id: v.id,
@@ -249,5 +268,60 @@ export function visitorStatus(id: string) {
 export async function resealVisitor(id: string, token: string | undefined, mandate?: unknown) {
   if (!visitorTokenOk(id, token)) throw new Error("unknown visitor or wrong session token");
   const v = visitorStore.get().visitors[id]!;
-  return registerVisitor({ credentialId: v.keyId, x: v.x, y: v.y, mandate });
+  return v.owner ? registerVisitor({ owner: v.owner, mandate }) : registerVisitor({ credentialId: v.keyId, x: v.x, y: v.y, mandate });
+}
+
+// ---------------------------------------------------------------- log in again (passkey or secret key)
+
+const challenges = new Map<string, number>();
+
+/** The login message, built the same way here and in the browser (which refuses to sign anything else for login). */
+export function loginTypedData(chainId: number, nonce: Hex, issuedAt: bigint) {
+  return {
+    domain: { name: "YINGLONG login", version: "1", chainId },
+    types: { Login: [{ name: "nonce", type: "bytes32" }, { name: "issuedAt", type: "uint256" }] },
+    primaryType: "Login" as const,
+    message: { nonce, issuedAt },
+  };
+}
+
+export async function loginChallenge() {
+  const ctx = ledgerContext(visitorConfig("v-0000000000").ledger);
+  const nonce = `0x${randomBytes(32).toString("hex")}` as Hex;
+  const issuedAt = BigInt(Math.floor(Date.now() / 1000));
+  challenges.set(nonce, Date.now() + 5 * 60_000);
+  for (const [k, exp] of challenges) if (exp < Date.now()) challenges.delete(k);
+  const td = loginTypedData(ctx.profile.chainId, nonce, issuedAt);
+  return { nonce, issuedAt: issuedAt.toString(), typedData: { ...td, message: { nonce, issuedAt: issuedAt.toString() } }, digest: hashTypedData(td) };
+}
+
+/** Prove you hold the passkey or secret key of an existing account; returns a new session token. */
+export async function loginVisitor(args: { nonce: Hex; issuedAt: string; signature: Hex; credentialId?: string; owner?: Address }) {
+  const exp = challenges.get(args.nonce);
+  if (!exp || exp < Date.now()) throw new Error("this login request expired; try again");
+  challenges.delete(args.nonce);
+  const all = Object.values(visitorStore.get().visitors);
+  const v = args.owner
+    ? all.find((x) => x.owner && x.owner.toLowerCase() === args.owner!.toLowerCase())
+    : all.find((x) => x.keyId && x.keyId === args.credentialId);
+  if (!v || !v.sealedAt) throw new Error("no account found for this key on this site; sign up first");
+  const ctx = ledgerContext(visitorConfig(v.id).ledger);
+  const digest = hashTypedData(loginTypedData(ctx.profile.chainId, args.nonce, BigInt(args.issuedAt)));
+  const magic = await ctx.pub
+    .readContract({ address: v.account, abi: abi.HybridDeleGatorAbi, functionName: "isValidSignature", args: [digest, args.signature] })
+    .catch(() => "0x");
+  if (magic !== MAGIC_1271) throw new Error("the signature does not match this account");
+  const token = randomBytes(24).toString("base64url");
+  visitorStore.update((d) => {
+    d.visitors[v.id]!.tokenHash = keccak256(stringToBytes(token));
+  });
+  return {
+    visitorId: v.id,
+    token,
+    account: v.account,
+    method: v.owner ? "key" : "passkey",
+    credentialId: v.keyId || undefined,
+    owner: v.owner,
+    publicKey: v.owner ? undefined : { x: v.x, y: v.y },
+  };
 }

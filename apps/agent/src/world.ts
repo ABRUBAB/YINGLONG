@@ -111,6 +111,8 @@ export interface VisitorRecord {
   tokenHash: Hex;
   createdAt: string;
   sealedAt?: string;
+  /** Set when the visitor chose a secret key instead of a passkey: that key's address owns the account. */
+  owner?: Address;
 }
 export const visitorStore = new DocStore<{ visitors: Record<string, VisitorRecord> }>(resolve(DATA_DIR, "visitors.json"), { visitors: {} });
 

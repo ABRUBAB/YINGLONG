@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-16T08:36:51.584Z",
+  "generatedAt": "2026-10-16T11:08:44.276Z",
   "timeline": {
-    "head": "8812f4e",
-    "count": 77,
+    "head": "cbeeba6",
+    "count": 79,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-16T13:52:00+06:00",
+    "last": "2026-10-16T14:44:03+06:00",
     "commits": [
       {
         "hash": "b9b6640",
@@ -543,6 +543,20 @@
         "hash": "8812f4e",
         "at": "2026-10-16T13:52:00+06:00",
         "subject": "Base private-mandate record: received amounts and stored commitments re-derived from the chain (the first run read a lagging node); the script now waits for the head before reading",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "6f87530",
+        "at": "2026-10-16T14:44:01+06:00",
+        "subject": "Passkey sign-up: one tap per fingerprint prompt (Android's credential manager refused back-to-back requests), one retry on a passkey-service hiccup, plain-language wording on the sign-up page with technical details folded away; agent uses the sentinel's calibrated label",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "cbeeba6",
+        "at": "2026-10-16T14:44:03+06:00",
+        "subject": "Sentinel served on the VPS (models fetched at start and verified against pinned SHA-256, token never in the image); attack bench runner and results on a local chain: 0 of 300 attacks moved value outside a mandate, stock caveats alone lost value in 90 of 105 hijacks",
         "track": "agent",
         "milestone": false
       }

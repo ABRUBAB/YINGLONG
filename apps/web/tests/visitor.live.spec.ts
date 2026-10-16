@@ -21,6 +21,7 @@ test("live visitor: passkey sign-up, seal on FISCO, act, revoke", async ({ page,
   const passkey = await addVirtualPasskey(context, page);
   await page.goto("/start", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Skip and use simple ready-made rules" }).click();
+  await page.getByRole("button", { name: /Fingerprint or face/ }).click();
 
   // Account deployment, passport and test units take 5 to 15 s on FISCO.
   await expect(page.getByRole("heading", { name: "Confirm twice with your fingerprint" })).toBeVisible({ timeout: 90_000 });
