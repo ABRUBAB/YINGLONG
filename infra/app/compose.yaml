@@ -36,6 +36,9 @@ services:
       <<: *env
       AGENT_DATA_DIR: /data
       AGENT_ADMIN_TOKEN_FILE: /run/secrets/admin-token.txt
+      # M1 injection sentinel (ml service below, 127.0.0.1:8090). The agent calls it with a 4 s timeout and falls back
+      # to the labelled regex sentinel if it is down or slow; it can only raise a tier.
+      SENTINEL_URL: http://127.0.0.1:8090
       # Alibaba Cloud Model Studio (DashScope, Qwen) key: bare key value, written by scripts/vps-deploy.mjs --secrets.
       DASHSCOPE_KEY_FILE: /run/secrets/dashscope.txt
       DASHSCOPE_BASE_URL: ${DASHSCOPE_BASE_URL:-https://dashscope-intl.aliyuncs.com/compatible-mode/v1}
@@ -83,8 +86,36 @@ services:
       - /opt/yinglong/fisco/nodes/127.0.0.1/sdk:/run/secrets/fisco-sdk:ro
       - /opt/yinglong/data/indexer:/data
     depends_on: [agent]
+  # M1 injection sentinel (ml/serving, CPU only). The image holds no weights and no token: at start the container
+  # downloads the revisions pinned in ml/serving/models.lock.json into the named volume ml-models, verifying every
+  # SHA-256 (it stops on a mismatch). The HuggingFace READ token is the file written by scripts/vps-deploy.mjs --secrets.
+  # Only M1 is loaded (the agent calls /sentinel only); the 3 GiB cap covers the int8 mmBERT-base session.
+  ml:
+    image: yinglong/ml:latest
+    build: { context: ../../ml/serving }
+    network_mode: host
+    restart: unless-stopped
+    user: "1000:1000"
+    mem_limit: 3g
+    memswap_limit: 3g
+    environment:
+      YL_MODELS: ${YL_MODELS:-m1}
+      YL_ORT_THREADS: "2"
+      HF_TOKEN_FILE: /run/secrets/hf-token.txt
+    command: ["uvicorn", "app:app", "--host", "127.0.0.1", "--port", "8090", "--workers", "1"]
+    volumes:
+      - /opt/yinglong/secrets/hf-token.txt:/run/secrets/hf-token.txt:ro
+      - ml-models:/models
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8090/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 600s
   web:
     image: yinglong/web:latest
     build: { context: ../.., dockerfile: infra/web/Dockerfile }
     network_mode: host
     restart: unless-stopped
+volumes:
+  ml-models: {}

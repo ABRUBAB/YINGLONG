@@ -56,10 +56,23 @@ if (process.argv.includes("--secrets")) {
   } else {
     console.log("no DashScope key export found next to the repository: skipped");
   }
+  // HuggingFace READ token for the ml service (private model repos): the file next to the repository is copied as is
+  // (never read, printed or logged here) to a root-owned-by-uid-1000 file that the ml container mounts read-only.
+  const hf = resolve(root, "..", "HF_AC_token.txt");
+  if (existsSync(hf)) {
+    scp(hf, "/tmp/hf-token.txt");
+    ssh("sudo mv /tmp/hf-token.txt /opt/yinglong/secrets/hf-token.txt && sudo chown 1000:1000 /opt/yinglong/secrets/hf-token.txt && sudo chmod 600 /opt/yinglong/secrets/hf-token.txt");
+    console.log("HuggingFace token file installed on the VPS");
+  } else {
+    console.log("no HF_AC_token.txt next to the repository: skipped");
+  }
 }
 // The agent mounts the DashScope key file; make sure the path exists as a file (an absent bind source would
 // become a directory). An empty file means "not configured".
 ssh("sudo test -f /opt/yinglong/secrets/dashscope.txt || (sudo touch /opt/yinglong/secrets/dashscope.txt && sudo chown 1000:1000 /opt/yinglong/secrets/dashscope.txt && sudo chmod 600 /opt/yinglong/secrets/dashscope.txt)");
+// The ml service mounts the HuggingFace token file; keep the path a file (empty = no token; the models volume may
+// already hold the verified files).
+ssh("sudo test -f /opt/yinglong/secrets/hf-token.txt || (sudo touch /opt/yinglong/secrets/hf-token.txt && sudo chown 1000:1000 /opt/yinglong/secrets/hf-token.txt && sudo chmod 600 /opt/yinglong/secrets/hf-token.txt)");
 if (process.argv.includes("--edge")) {
   ssh("set -e; mkdir -p /opt/yinglong/edge && cp -r /opt/yinglong/src/infra/edge/. /opt/yinglong/edge/ && cd /opt/yinglong/edge && docker compose up -d --force-recreate 2>&1 | tail -2");
 }

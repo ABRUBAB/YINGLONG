@@ -1,0 +1,38 @@
+{
+  "nadia": {
+    "added": [
+      "pearl_river_fx as treasury",
+      "lantern_canteen as food",
+      "harbour_transit as services",
+      "kowloon_power as services",
+      "rahman_family as services",
+      "campus_print as services"
+    ],
+    "skipped": []
+  },
+  "lotus-sz": {
+    "added": [
+      "dongguan_packaging as supplier",
+      "pearl_river_fx as services",
+      "nanshan_utilities as services"
+    ],
+    "skipped": [
+      "kowloon_forwarders (tHKD)",
+      "lotus_lane_hk (tHKD)",
+      "bay_cloud_services (tUSD)"
+    ]
+  },
+  "lotus-hk": {
+    "added": [
+      "lotus_lane_hk as treasury"
+    ],
+    "skipped": [
+      "shenzhen_components (CNY)",
+      "dongguan_packaging (CNY)",
+      "staff_payroll (CNY)",
+      "pearl_river_fx (CNY)",
+      "bay_cloud_services (tUSD)",
+      "nanshan_utilities (CNY)"
+    ]
+  }
+}

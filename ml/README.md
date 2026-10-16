@@ -51,10 +51,17 @@ Contract used by the agent runtime: `POST $SENTINEL_URL/sentinel` with `{"text":
 
 ```
 cd ml/serving
-HF_TOKEN=<read token, from the key file> docker build --secret id=hf_token,env=HF_TOKEN -t yinglong-ml .
-docker run -d --name yinglong-ml --restart unless-stopped --memory 3g --cpus 2 -p 127.0.0.1:8090:8090 yinglong-ml
+docker build -t yinglong-ml .          # no weights, no token in the image
+docker run -d --name yinglong-ml --restart unless-stopped --memory 3g --cpus 2 -p 127.0.0.1:8090:8090 \
+  -e YL_MODELS=m1 -e HF_TOKEN_FILE=/run/secrets/hf-token.txt -v <path to the READ token file>:/run/secrets/hf-token.txt:ro \
+  -v yl-ml-models:/models yinglong-ml
 # agent: SENTINEL_URL=http://127.0.0.1:8090 (or the compose service name)
 ```
+At container start `fetch_models.py` downloads the pinned files into the `/models` volume and verifies every SHA-256 (it
+stops on a mismatch; a populated volume needs no network or token). On the VPS this is the `ml` service in
+`infra/app/compose.yaml` (host network, 127.0.0.1:8090, `mem_limit: 3g`, only M1 loaded); `node scripts/vps-deploy.mjs --secrets`
+copies the token file to `/opt/yinglong/secrets/hf-token.txt`. The agent calls `/sentinel` with a 4 s timeout; the shipped
+mmBERT-base file takes about 0.34 s (64 tokens) to 1.3 s (256 tokens) per call on two cores (table above).
 Without Docker: `uv sync && uv run python fetch_models.py && uv run uvicorn app:app --host 127.0.0.1 --port 8090`.
 `models.lock.json` pins every file by revision and SHA-256; the service refuses to start on a mismatch. The weight-only int8
 mmBERT-base file size is listed in MODELS.md and the resident memory with all three models loaded is in `ml/results/serving_memory.json`; per-call time on two
