@@ -28,7 +28,8 @@ describe("fixture data satisfies the view-model contract", () => {
     T.PrivateMandate.parse(sync(api.privateMandate("4127")));
     T.ChallengeSession.parse(sync(api.challengeSession()));
     z.array(T.ChallengeAttempt).parse(sync(api.challengeAttempts()));
-    T.CityGraph.parse(sync(api.city()));
+    T.CitySnapshot.parse(sync(api.city()));
+    T.CityFeed.parse(sync(api.cityFeed()));
     T.EvidenceSummary.parse(sync(api.evidence()));
   });
 

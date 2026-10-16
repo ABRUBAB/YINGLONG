@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Reads the brand vector masters in public/brand and writes components/brand/paths.ts with their
-// geometry, so marks can be inlined (currentColor inheritance, group-level animation).
+// geometry (the S glyph and the wordmark; the dragon mark is retired), so marks can be inlined (currentColor inheritance, group-level animation).
 // Run: node scripts/brand-to-tsx.mjs
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -17,26 +17,6 @@ function paths(svg, groupId) {
   if (!g) return [];
   return [...g[1].matchAll(/<path(?: id="([^"]+)")? d="([^"]+)"/g)].map((m) => ({ id: m[1] ?? groupId, d: m[2] }));
 }
-function attr(svg, groupId, name) {
-  const g = new RegExp(`<g id="${groupId}"([^>]*)>`).exec(svg);
-  const m = g && new RegExp(`${name}="([^"]+)"`).exec(g[1]);
-  return m ? m[1] : undefined;
-}
-function circle(svg, groupId) {
-  const g = new RegExp(`<g id="${groupId}"[^>]*>\\s*<circle cx="([^"]+)" cy="([^"]+)" r="([^"]+)"`).exec(svg);
-  return g ? { cx: Number(g[1]), cy: Number(g[2]), r: Number(g[3]) } : undefined;
-}
-
-function tier(file) {
-  const svg = read(file);
-  return {
-    viewBox: viewBox(svg),
-    orbit: { ...circle(svg, "orbit"), strokeWidth: Number(attr(svg, "orbit", "stroke-width")) },
-    pearl: circle(svg, "pearl"),
-    spine: paths(svg, "spine"),
-    head: paths(svg, "head"),
-  };
-}
 
 const glyph = read("yinglong-glyph.svg");
 const wordmark = read("yinglong-wordmark.svg");
@@ -44,8 +24,6 @@ const ring = /<circle id="status-ring" cx="([^"]+)" cy="([^"]+)" r="([^"]+)"[^>]
 const pearl = /<circle id="status-pearl" cx="([^"]+)" cy="([^"]+)" r="([^"]+)"/.exec(wordmark);
 
 const out = {
-  mark: tier("yinglong-mark.svg"),
-  coil: tier("yinglong-coil.svg"),
   glyph: {
     viewBox: viewBox(glyph),
     spine: /<path d="([^"]+)"/.exec(glyph)[1],

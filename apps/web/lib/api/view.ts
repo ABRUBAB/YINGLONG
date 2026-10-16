@@ -623,33 +623,114 @@ export type ChallengeVerdict = z.infer<typeof ChallengeVerdict>;
 
 /* ------------------------------------------------------------------ Agent City */
 
-export const CityNode = z.object({
-  id: z.string(),
-  label: z.string(),
-  kind: z.enum(["user", "agent", "service", "regulator", "anchor", "rogue"]),
-  rail: z.enum(["hk", "fisco", "seam"]),
-  passport: z.enum(["attested", "self-registered", "none"]),
-  reputation: z.number().int().min(0).max(100),
-});
-export type CityNode = z.infer<typeof CityNode>;
+/**
+ * What the city is built from: the service's own lists (principals, passport registry, receipts, payee
+ * books, ledger health, anchoring batches), mapped to view shapes. The graph (nodes, edges, layout) is
+ * derived in components/city from this snapshot, so nothing on the map is typed in by hand.
+ */
+export const CityPassport = z.enum(["attested", "self-registered", "halted", "revoked"]);
+export type CityPassport = z.infer<typeof CityPassport>;
 
-export const CityEdge = z.object({
+export const CityPayee = z.object({ label: z.string(), address: Address, category: z.string().nullable() });
+export type CityPayee = z.infer<typeof CityPayee>;
+
+export const CityPrincipal = z.object({
   id: z.string(),
-  from: z.string(),
-  to: z.string(),
-  state: z.enum(["settled", "awaiting", "reverted"]),
-  receiptId: z.string().nullable(),
+  kind: z.enum(["person", "company", "visitor"]),
+  name: z.string(),
+  jurisdiction: Jurisdiction,
+  ledger: Ledger,
+  ledgerBadge: z.string().nullable(),
+  account: Address,
+  signer: z.string(),
+  paused: z.boolean(),
+  agent: z.object({
+    agentId: z.string(),
+    label: z.string(),
+    wallet: Address,
+    identityCode: z.string().nullable(),
+    passport: CityPassport,
+    issuers: z.array(z.string()),
+  }),
+  mandate: z
+    .object({
+      mandateHash: Hex32,
+      status: z.enum(["live", "superseded", "revoked"]),
+      sentences: z.array(z.string()),
+      sealedAt: IsoTime.nullable(),
+      publishTx: TxRef.nullable(),
+      explorerUrl: z.string().nullable(),
+    })
+    .nullable(),
+  payees: z.array(CityPayee),
+});
+export type CityPrincipal = z.infer<typeof CityPrincipal>;
+
+/** A passport-registry entry that no listed principal owns (a counterparty agent, or a self-registered one). */
+export const CityAgent = z.object({
+  agentId: z.string(),
+  label: z.string(),
+  wallet: Address,
+  ledger: Ledger,
+  passport: CityPassport,
+  identityCode: z.string().nullable(),
+  issuers: z.array(z.string()),
+  ownerName: z.string().nullable(),
+});
+export type CityAgent = z.infer<typeof CityAgent>;
+
+export const CityReceipt = z.object({
+  receiptId: z.string(),
+  principal: z.string(),
+  agentId: z.string(),
+  ledger: Ledger,
+  ledgerBadge: z.string().nullable(),
+  tier: Tier,
+  outcome: ReceiptOutcome,
+  revertError: TypedError.nullable(),
+  txHash: Hex32.nullable(),
+  explorerUrl: z.string().nullable(),
+  timestamp: IsoTime,
+  summary: z.string(),
+  explanation: z.string(),
+  payee: z.object({ label: z.string(), address: Address.nullable() }).nullable(),
   amount: Amount.nullable(),
-  label: z.string(),
+  method: z.string().nullable(),
 });
-export type CityEdge = z.infer<typeof CityEdge>;
+export type CityReceipt = z.infer<typeof CityReceipt>;
 
-export const CityGraph = z.object({
-  nodes: z.array(CityNode),
-  edges: z.array(CityEdge),
-  anchors: z.array(z.object({ at: IsoTime, root: Hex32, baseTx: Hex32.nullable(), fiscoTx: Hex32.nullable() })),
+export const CityLedger = z.object({ ledger: Ledger, badge: z.string(), ok: z.boolean(), block: z.string().nullable() });
+export type CityLedger = z.infer<typeof CityLedger>;
+
+export const CityBatch = z.object({
+  batchId: z.number().int().nonnegative(),
+  root: Hex32,
+  count: z.number().int().nonnegative(),
+  createdAt: IsoTime,
+  anchors: z.array(z.object({ ledger: Ledger, txHash: Hex32, blockNumber: z.string().nullable() })),
+  crossAnchors: z.array(z.object({ onLedger: Ledger, remoteLedger: Ledger, txHash: Hex32 })),
 });
-export type CityGraph = z.infer<typeof CityGraph>;
+export type CityBatch = z.infer<typeof CityBatch>;
+
+/** The part of the city that changes every few seconds (polled). */
+export const CityFeed = z.object({
+  fetchedAt: IsoTime,
+  receipts: z.array(CityReceipt),
+  batches: z.array(CityBatch),
+  /** False when the anchoring relayer could not be read from this page (then `batches` is empty, not zero). */
+  batchesReadable: z.boolean(),
+});
+export type CityFeed = z.infer<typeof CityFeed>;
+
+export const CitySnapshot = z.object({
+  principals: z.array(CityPrincipal),
+  agents: z.array(CityAgent),
+  ledgers: z.array(CityLedger),
+  /** Every visitor in the registry (only the most recent ones are listed in `principals`). */
+  visitorCount: z.number().int().nonnegative(),
+  feed: CityFeed,
+});
+export type CitySnapshot = z.infer<typeof CitySnapshot>;
 
 /* ------------------------------------------------------------------ evidence (generated by scripts/finalize) */
 

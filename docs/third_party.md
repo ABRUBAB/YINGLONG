@@ -121,6 +121,23 @@ Python: <!-- gen:thirdparty.python.table -->35 direct dependencies of 3 Python p
 | `pytest` | 9.1.1 | MIT | dev | ml/serving |
 <!-- /gen -->
 
+### Front end
+
+Libraries and copied component patterns used by `apps/web` (the generated table above lists installed versions; this table records why each front-end piece is there and what was copied). Checked 16 Oct 2026: every version is older than two weeks, pinned exactly, and fetches nothing from a third-party origin at runtime (Playwright `tests/network.spec.ts`).
+
+| Piece | Version | Licence | Kind | Used for |
+|---|---|---|---|---|
+| `@paper-design/shaders-react` (+ `@paper-design/shaders`) | 0.0.81 (released 17 Sep 2026) | Apache-2.0 | installed, exact pin | `Dithering` atmosphere behind the landing hero, two greys of the obsidian ramp; lazy-loaded, paused off-screen and under reduced motion |
+| `three`, `@react-three/fiber`, `@react-three/drei` | 0.186.1, 9.8.2, 10.7.9 | MIT | installed (existing) | Mandate Orbit hero scene: InstancedMesh receipts and refusals, procedural `Environment` with `Lightformer`s only (no preset, no CDN) |
+| `@react-three/postprocessing`, `postprocessing` | 3.2.0, 6.39.5 | MIT, Zlib | installed (existing) | Bloom on specular highlights only (threshold 0.92), desktop pointers only |
+| `gsap`, `@gsap/react` (ScrollTrigger, SplitText) | 3.15.0, 2.1.2 | GSAP Standard "no charge" licence (not MIT) | installed (existing) | Seven-verbs scroll story (imported after hydration): scrubbed ring progress, letter reveals; seal press-and-hold |
+| `motion` | 14.2.0 | MIT | installed (existing) | Available for in-component state in the app routes; kept off the landing page, where CSS does the same job without the bundle |
+| `@number-flow/react` | 0.6.2 | MIT | installed (existing) | Hero counters (receipts inside, refusals, budget left) |
+| Magic UI `Marquee` (magicui.design) | pattern, 2026 | MIT | **adapted, not copied verbatim**: CSS track duplication and linear loop re-implemented in `app/globals.css` (`.yl-marquee`) | Evidence ribbon of real hashes; own pause button, pauses on hover, focus, Pause motion and reduced motion |
+| Magic UI `MagicCard` (magicui.design) | pattern, 2026 | MIT | **adapted, not copied verbatim**: pointer-following radial light restyled to a monochrome 1 px border (`components/ui/spotlight-card.tsx`, `.yl-spotlight`) | Pillar and team cards |
+
+No Aceternity or React Bits code is used.
+
 ## 4. Models
 
 | Model | Use | Licence | Status |
@@ -228,7 +245,7 @@ Fonts are self-hosted; no request goes to a third-party font host.
 |---|---|
 | Originals | `YINGLONG_logo.png` (1254 px RGB, no alpha) and the team logo (640 px JPEG) are **team-supplied AI-generated rasters** |
 | Generator, date and terms of the originals | **Not recorded yet** [U]. The lead records them here before submission: generator: ______; date: ______; terms of use: ______ |
-| Marks of record | Vectors **redrawn**, not traced: every curve is generated from a small set of control points by the brand build scripts; a raw vectorised trace of the original was used only to read proportions. The redrawn dragon head awaits the lead's approval |
+| Marks of record | Vectors **redrawn**, not traced: every curve is generated from a small set of control points by the brand build scripts; a raw vectorised trace of the original was used only to read proportions. The dragon mark is retired from the web app (16 Oct 2026): the site uses only the S glyph (ring, pearl and S stroke) |
 | Trademarks | No trademark symbols; none of these marks is registered |
 | Optional 3D lighting | If an HDR environment is used: a self-hosted 1k file from Poly Haven, CC0 [S] |
 

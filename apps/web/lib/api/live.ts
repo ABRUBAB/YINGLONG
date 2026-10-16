@@ -14,9 +14,12 @@ import type {
   ApprovalRequest,
   BudgetLane,
   ChallengeAttempt,
-  CityEdge,
-  CityGraph,
-  CityNode,
+  CityAgent,
+  CityBatch,
+  CityFeed,
+  CityPrincipal,
+  CityReceipt,
+  CitySnapshot,
   Decision,
   DirectorProposal,
   Ledger,
@@ -582,6 +585,57 @@ export function createLiveApi(baseUrl: string): AgentApi {
     return { approval, receipt: receipt ? mapReceipt(receipt) : null };
   }
 
+  /** Agent City: how many of the most recent visitors get their own row (each costs one state read). */
+  const CITY_VISITORS = 6;
+
+  // The anchoring relayer (apps/indexer) answers on the same host. When the browser cannot read it
+  // (network or CORS), stop asking for this page view: the city renders without batches and says so.
+  let batchesBlocked = false;
+  async function cityFeed(): Promise<CityFeed> {
+    const [wire, batches] = await Promise.all([
+      call(z.array(W.WireReceipt), "GET", "/v1/receipts?limit=200"),
+      batchesBlocked
+        ? null
+        : call(W.WireBatches, "GET", "/batches").catch((e: unknown) => {
+            if (e instanceof ApiRequestError && e.status === 0) batchesBlocked = true;
+            return null;
+          }),
+    ]);
+    const receipts: CityReceipt[] = wire
+      .filter((r) => r.source !== "anvil-bench")
+      .map((r) => {
+        const v = mapReceipt(r);
+        return {
+          receiptId: v.receiptId,
+          principal: r.principal,
+          agentId: v.agentId,
+          ledger: v.ledger,
+          ledgerBadge: v.ledgerBadge,
+          tier: v.tier,
+          outcome: v.outcome,
+          revertError: v.revertError,
+          txHash: v.txHash,
+          explorerUrl: v.explorerUrl,
+          timestamp: v.timestamp,
+          summary: v.summary,
+          explanation: v.explanation,
+          payee: r.payment ? { label: payeeLabel(r.payment), address: payeeAddress(r.payment) } : null,
+          amount: v.amount,
+          method: r.payment?.method ?? null,
+        };
+      })
+      .sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
+    const mapped: CityBatch[] = (batches?.batches ?? []).map((b) => ({
+      batchId: b.batchId,
+      root: b.root,
+      count: b.count,
+      createdAt: iso(b.createdAt)!,
+      anchors: b.anchors.map((a) => ({ ledger: mapLedger(a.ledger), txHash: a.txHash, blockNumber: a.blockNumber == null ? null : String(a.blockNumber) })),
+      crossAnchors: (b.crossAnchors ?? []).map((c) => ({ onLedger: mapLedger(c.onLedger), remoteLedger: mapLedger(c.remoteLedger), txHash: c.txHash })),
+    }));
+    return { fetchedAt: new Date().toISOString(), receipts, batches: mapped, batchesReadable: batches !== null };
+  }
+
   const api: AgentApi = {
     mode: "live",
     baseUrl: root,
@@ -1024,53 +1078,99 @@ export function createLiveApi(baseUrl: string): AgentApi {
       return { attempt, decision, receipt };
     },
 
-    city: async (): Promise<CityGraph> => {
-      const [all, reg] = await Promise.all([principals(), call(z.array(W.WireRegistryAgent), "GET", "/v1/registry/agents").catch(() => [])]);
-      const nodes = new Map<string, CityNode>();
-      const edges: CityEdge[] = [];
-      const anchors = new Map<string, CityGraph["anchors"][number]>();
-      const railOf = (j: W.WirePrincipal["jurisdiction"]) => (j === "mainland" ? "fisco" : "hk") as CityNode["rail"];
-      nodes.set("anchor:base", { id: "anchor:base", label: "Public anchor (Base Sepolia)", kind: "anchor", rail: "seam", passport: "none", reputation: 60 });
-      nodes.set("anchor:fisco", { id: "anchor:fisco", label: "Consortium anchor (FISCO)", kind: "anchor", rail: "seam", passport: "none", reputation: 60 });
-      nodes.set("regulator", { id: "regulator", label: "Regulator node", kind: "regulator", rail: "fisco", passport: "none", reputation: 60 });
-      for (const p of all) {
-        const rail = railOf(p.jurisdiction);
-        const attested = reg.find((r) => r.agentId === p.agent.agentId)?.attestations?.length ?? 0;
-        nodes.set(`p:${p.id}`, { id: `p:${p.id}`, label: p.name, kind: "user", rail, passport: "none", reputation: 50 });
-        nodes.set(`a:${p.agent.agentId}`, { id: `a:${p.agent.agentId}`, label: p.agent.label, kind: "agent", rail, passport: attested ? "attested" : "self-registered", reputation: 80 });
-        edges.push({ id: `seal:${p.id}`, from: `p:${p.id}`, to: `a:${p.agent.agentId}`, state: "settled", receiptId: null, amount: null, label: "Mandate sealed" });
-        const [s, receipts] = await Promise.all([stateOf(p.id).catch(() => null), receiptsOf(p.id, 20).catch(() => [] as Receipt[])]);
-        for (const payee of s?.payees ?? []) {
-          const id = `payee:${payee.address.toLowerCase()}`;
-          if (!nodes.has(id)) nodes.set(id, { id, label: payee.label, kind: "service", rail, passport: "attested", reputation: 70 });
-        }
-        for (const r of receipts) {
-          if (r.anchor) {
-            const key = r.anchor.root;
-            if (!anchors.has(key)) anchors.set(key, { at: r.timestamp, root: r.anchor.root, baseTx: r.anchor.baseTx, fiscoTx: r.anchor.fiscoTx });
-          }
-          const target = [...nodes.values()].find((n) => n.kind === "service" && n.label === r.payeeName);
-          if (!target) continue;
-          edges.push({
-            id: r.receiptId,
-            from: `a:${p.agent.agentId}`,
-            to: target.id,
-            state: r.outcome === "confirmed" ? "settled" : r.outcome === "awaiting_approval" || r.outcome === "pending" ? "awaiting" : "reverted",
-            receiptId: r.receiptId,
-            amount: r.amount,
-            label: r.revertError ? `Refused: ${r.revertError}` : r.summary,
-          });
-        }
-      }
-      for (const r of reg) {
-        const id = `a:${r.agentId}`;
-        if (!nodes.has(id)) {
-          const self = (r.attestations ?? []).length === 0 && !r.principal;
-          nodes.set(id, { id, label: r.label, kind: self ? "rogue" : "service", rail: r.ledger === "fisco" ? "fisco" : "hk", passport: self ? "self-registered" : "attested", reputation: self ? 12 : 70 });
-        }
-      }
-      return { nodes: [...nodes.values()], edges: edges.slice(0, 40), anchors: [...anchors.values()].slice(0, 6) };
+    city: async (): Promise<CitySnapshot> => {
+      const [all, reg, health, feed] = await Promise.all([
+        principals(),
+        call(z.array(W.WireRegistryAgent), "GET", "/v1/registry/agents").catch(() => [] as W.WireRegistryAgent[]),
+        call(W.WireHealth, "GET", "/v1/health").catch(() => null),
+        cityFeed(),
+      ]);
+      // Visitors are not in /v1/principals; the registry lists them. The most recent ones get a full row.
+      const visitorEntries = reg.filter((r) => (r.kind ?? (r.principal?.startsWith("v-") ? "visitor" : "demo")) === "visitor" && r.principal);
+      const recentVisitors = [...visitorEntries].sort((a, b) => Number(b.agentId) - Number(a.agentId)).slice(0, CITY_VISITORS);
+      const passportOf = (entry: W.WireRegistryAgent | undefined, principalStatus?: string): CityPrincipal["agent"]["passport"] => {
+        const st = (entry?.status ?? principalStatus ?? "").toLowerCase();
+        if (st === "halted" || st === "paused") return "halted";
+        if (st === "revoked") return "revoked";
+        if (st.includes("self")) return "self-registered";
+        // An entry in YinglongPassportRegistry is a passport a trusted issuer signed; an owner-less entry
+        // with no attestation is an identity its holder registered for itself.
+        if (entry) return !entry.principal && !(entry.attestations ?? []).length ? "self-registered" : "attested";
+        return principalStatus === "active" ? "attested" : "self-registered";
+      };
+      const toCity = (p: W.WirePrincipal, s: W.WirePrincipalState | null, kind: CityPrincipal["kind"], name: string): CityPrincipal => {
+        const entry = reg.find((r) => r.principal === p.id) ?? reg.find((r) => r.agentId === p.agent.agentId && r.ledger === p.ledger);
+        const m = s?.mandate ?? null;
+        const ledger = m ? mapLedger(m.ledger) : mapLedger(p.ledger);
+        return {
+          id: p.id,
+          kind,
+          name,
+          jurisdiction: p.jurisdiction,
+          ledger: mapLedger(p.ledger),
+          ledgerBadge: p.ledgerBadge ?? null,
+          account: p.account,
+          signer: p.signer,
+          paused: s?.paused ?? p.paused,
+          agent: {
+            agentId: p.agent.agentId,
+            label: p.agent.label,
+            wallet: p.agent.wallet,
+            identityCode: p.agent.identityCode || entry?.identityCode || null,
+            passport: passportOf(entry, p.agent.passportStatus),
+            issuers: (entry?.attestations ?? []).map((a) => a.issuerLabel),
+          },
+          mandate: m
+            ? {
+                mandateHash: m.mandateHash,
+                status: m.status ?? (m.live === false ? "revoked" : "live"),
+                sentences: m.userSentences.length ? m.userSentences : m.sentences,
+                sealedAt: iso(m.sealedAt ?? null),
+                publishTx: m.publishTx ? { ledger, chainId: CHAIN_ID[ledger], txHash: m.publishTx } : null,
+                explorerUrl: m.explorerUrl ?? null,
+              }
+            : null,
+          payees: (s?.payees ?? []).map((x) => ({ label: x.label, address: x.address, category: x.category ?? null })),
+        };
+      };
+      const listed = await Promise.all(
+        all.map(async (p) => toCity(p, await stateOf(p.id).catch(() => null), p.kind === "company" ? "company" : "person", p.name)),
+      );
+      const visitors = (
+        await Promise.all(
+          recentVisitors.map(async (r) => {
+            const s = await stateOf(r.principal!).catch(() => null);
+            return s ? toCity(s.principal, s, "visitor", `Visitor ${r.principal!.slice(2, 6).toUpperCase()}`) : null;
+          }),
+        )
+      ).filter((v): v is CityPrincipal => v !== null);
+      const owned = new Set([...all.map((p) => p.id), ...visitorEntries.map((v) => v.principal!)]);
+      const agents: CityAgent[] = reg
+        .filter((r) => !(r.principal && owned.has(r.principal)))
+        .map((r) => ({
+          agentId: r.agentId,
+          label: r.label,
+          wallet: r.wallet,
+          ledger: mapLedger(r.ledger),
+          passport: passportOf(r),
+          identityCode: r.identityCode ?? null,
+          issuers: (r.attestations ?? []).map((a) => a.issuerLabel),
+          ownerName: null,
+        }));
+      return {
+        principals: [...listed, ...visitors],
+        agents,
+        ledgers: (health?.ledgers ?? []).map((l) => ({
+          ledger: mapLedger(l.name),
+          badge: l.badge ?? l.name,
+          ok: l.ok !== false,
+          block: l.ok === false || l.block == null ? null : String(l.block),
+        })),
+        visitorCount: visitorEntries.length,
+        feed,
+      };
     },
+    cityFeed: () => cityFeed(),
     evidence: async () => {
       const e = await call(W.WireEvidence, "GET", "/v1/evidence");
       const kindOf = (o: string, err: unknown): "payment" | "revert" | "refusal" | "seal" | "pause" | "anchor" | "other" => {

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/components/landing/site-header";
 import { Challenge } from "@/components/challenge/challenge";
 
 export const metadata: Metadata = {
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 export default function ChallengePage() {
   return (
     <>
-      <SiteHeader />
       <main id="main">
         <Challenge />
       </main>

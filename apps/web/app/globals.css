@@ -43,6 +43,13 @@
   --text-h1--line-height: 0.98;
   --text-h2: clamp(1.75rem, 1.2rem + 2.2vw, 3rem);
   --text-h2--line-height: 1.05;
+  /* Marketing display scale (landing, about): one step above h1, a section h3 and a lead paragraph. */
+  --text-display: clamp(2.75rem, 1.2rem + 5.6vw, 6.75rem);
+  --text-display--line-height: 0.94;
+  --text-h3: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+  --text-h3--line-height: 1.15;
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.4vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
 
   --radius-control: 6px;
   --radius-card: 10px;
@@ -50,6 +57,10 @@
   --radius-pill: 999px;
 
   --ease-out-orbit: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Motion tokens (docs/DESIGN.md section 7): strong curves, never ease-in for UI. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @theme inline {
@@ -203,6 +214,152 @@
   :where(.overflow-x-auto) {
     position: relative;
   }
+}
+
+/* ------------------------------------------------------------------ system tokens (non-colour) */
+:root {
+  --dur-press: 140ms; /* button press, toggles */
+  --dur-ui: 180ms; /* hover, colour, small popovers */
+  --dur-sheet: 260ms; /* sheets, dialogs, menus */
+  --dur-reveal: 700ms; /* section reveals on the landing and about pages */
+  --container: 1320px;
+  --nav-h: 64px;
+  --gutter: 16px;
+  --section-y: clamp(4.5rem, 2.5rem + 6vw, 8.5rem);
+}
+@media (min-width: 640px) {
+  :root {
+    --gutter: 24px;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 32px;
+  }
+}
+
+/* Layout primitives: one container width, one gutter, one section rhythm on every page. */
+@utility yl-container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+@utility yl-section {
+  padding-block: var(--section-y);
+}
+/* Display headline: Hubot Sans wide, tight leading; for the landing and about heroes only. */
+@utility type-hero {
+  font-family: var(--font-display);
+  font-stretch: 118%;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 0.94;
+}
+/* Section kicker: a short mono index next to an eyebrow ("01 / Seven verbs"). */
+@utility kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  color: var(--fg-muted);
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Cards: one surface, one hairline, one radius. Elevation is a step in bg, never a shadow. */
+.yl-card {
+  position: relative;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-card);
+  background: var(--bg-1);
+  transition: border-color var(--dur-ui) ease;
+}
+.yl-card-raised {
+  background: var(--bg-2);
+}
+@media (hover: hover) and (pointer: fine) {
+  a.yl-card:hover,
+  .yl-card[data-interactive]:hover {
+    border-color: var(--line-2);
+  }
+}
+/* Spotlight border (after Magic UI MagicCard, MIT; restyled to ORBIT): a soft monochrome light
+   follows the pointer along the card's border only. No hue, no glow on the content. */
+.yl-spotlight {
+  --mx: -400px;
+  --my: -400px;
+  isolation: isolate;
+}
+.yl-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(260px circle at var(--mx) var(--my), var(--fg-2), transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--dur-ui) ease;
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .yl-spotlight:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Pressable feedback: every button and button-like link scales a touch on press. */
+@media (prefers-reduced-motion: no-preference) {
+  .yl-press {
+    transition-property: background-color, border-color, color, opacity, transform;
+  }
+  .yl-press:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: scale(0.97);
+  }
+}
+
+/* Marquee (after Magic UI Marquee, MIT): a linear loop of real evidence hashes. Paused on hover,
+   on focus, by the page-level Pause motion control, by its own pause button, and under reduced motion. */
+.yl-marquee {
+  --gap: 2.5rem;
+  display: flex;
+  overflow: hidden;
+  gap: var(--gap);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.yl-marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--gap);
+  min-width: max-content;
+  animation: yl-marquee var(--duration, 60s) linear infinite;
+}
+.yl-marquee:hover .yl-marquee-track,
+.yl-marquee:focus-within .yl-marquee-track,
+.yl-marquee[data-paused="true"] .yl-marquee-track,
+:root[data-motion="off"] .yl-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .yl-marquee-track {
+    animation: none;
+  }
+}
+@keyframes yl-marquee {
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+/* Poster capture (/?poster=1, scripts/posters.mjs): the stage renders alone. */
+body:has([data-poster]) .yl-sitenav,
+body:has([data-poster]) .yl-sitefooter {
+  display: none;
 }
 
 /* Skip link */
@@ -410,5 +567,64 @@
   }
   .yl-certificate {
     break-inside: avoid;
+  }
+}
+
+/* Landing hero entrance (docs/MOTION.md, moment 2a): one time, on load; lines rise out of a soft blur. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-hero-in {
+    animation: yl-rise 700ms var(--ease-out) both;
+    animation-delay: var(--d, 0ms);
+  }
+  :root:not([data-motion="off"]) .yl-hero-line {
+    animation: yl-line 900ms var(--ease-out) both;
+    animation-delay: var(--d, 0ms);
+  }
+}
+/* Reduced motion: gentler, not zero. The text fades in place; nothing moves or blurs. */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="off"]) .yl-hero-in,
+  :root:not([data-motion="off"]) .yl-hero-line {
+    animation: yl-fade 240ms ease-out both;
+  }
+}
+@keyframes yl-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes yl-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@keyframes yl-line {
+  from {
+    opacity: 0;
+    transform: translateY(0.24em);
+    filter: blur(6px);
+  }
+}
+
+/* The app shell's bottom tab bar is fixed below 1024 px: keep the footer clear of it. */
+@media (max-width: 1023.98px) {
+  body:has(.yl-appshell) .yl-sitefooter {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Seven verbs: the diagram in the ring swaps in when the verb in view changes (docs/MOTION.md, 2c). */
+@media (prefers-reduced-motion: no-preference) {
+  .yl-verb-diagram {
+    transform-box: view-box;
+    transform-origin: 0 0;
+    animation: yl-diagram-in 220ms var(--ease-out) both;
+  }
+}
+@keyframes yl-diagram-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
   }
 }

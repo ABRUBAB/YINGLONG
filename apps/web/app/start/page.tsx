@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { SiteHeader } from "@/components/landing/site-header";
 import { Start } from "@/components/start/start";
 
 export const metadata: Metadata = {
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 export default function StartPage() {
   return (
     <>
-      <SiteHeader />
       <main id="main">
         <Suspense>
           <Start />

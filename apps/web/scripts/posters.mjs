@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Renders the Receipt Dragon posters (master plan 14.7, "poster first"):
- *   public/posters/dragon-375.webp, dragon-768.webp, dragon-1440.webp  (hero fallback and LCP frame)
+ * Renders the Mandate Orbit posters (master plan 14.7, "poster first"):
+ *   public/posters/orbit-375.webp, orbit-768.webp, orbit-1440.webp  (hero fallback and LCP frame, 16:10)
  *   public/posters/og.webp                                              (Open Graph image, 1200x630)
  * from `/?poster=1` (fixed state, no events) of a running fixtures server.
  * Usage: node scripts/posters.mjs [baseUrl]   (default http://localhost:3210)
@@ -33,22 +33,23 @@ async function capture(width, height, target) {
   const el = page.locator("[data-hero-canvas]");
   const png = await el.screenshot({ omitBackground: false });
   const meta = await sharp(png).metadata();
-  const size = Math.min(target, meta.width ?? target);
-  await sharp(png).resize(size, size, { fit: "cover" }).flatten({ background: "#0B0C0F" }).webp({ quality: 84, effort: 6 }).toFile(join(out, `dragon-${width}.webp`));
-  console.log(`dragon-${width}.webp ${size}px`);
+  const w = Math.min(target, meta.width ?? target);
+  const h = Math.round((w * 10) / 16);
+  await sharp(png).resize(w, h, { fit: "cover" }).flatten({ background: "#0B0C0F" }).webp({ quality: 84, effort: 6 }).toFile(join(out, `orbit-${width}.webp`));
+  console.log(`orbit-${width}.webp ${w}x${h}px`);
   await ctx.close();
 }
 
-await capture(375, 812, 700);
-await capture(768, 1024, 900);
-await capture(1440, 900, 1100);
+await capture(375, 812, 760);
+await capture(768, 1024, 1200);
+await capture(1440, 900, 1600);
 
-// Open Graph: the landing hero as a reader sees it (text + dragon), after the event replay ends.
+// Open Graph: the landing hero as a reader sees it (text + orbit), after the arrival ends.
 {
   const ctx = await browser.newContext({ viewport: { width: 1200, height: 694 }, deviceScaleFactor: 1, reducedMotion: "no-preference" });
   const page = await ctx.newPage();
   await page.goto(`${base}/`, { waitUntil: "networkidle" });
-  await page.waitForTimeout(14_000);
+  await page.waitForTimeout(9_000);
   const png = await page.screenshot({ clip: { x: 0, y: 64, width: 1200, height: 630 } });
   await sharp(png).webp({ quality: 82 }).toFile(join(out, "og.webp"));
   console.log("og.webp 1200x630");

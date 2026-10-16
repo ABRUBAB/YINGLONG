@@ -7,7 +7,8 @@ import type {
   ChallengeAttemptRequest,
   ChallengeSession,
   ChallengeVerdict,
-  CityGraph,
+  CityFeed,
+  CitySnapshot,
   CompileRequest,
   Decision,
   DirectorProposal,
@@ -118,7 +119,10 @@ export interface AgentApi {
   challengeAttempts(): MaybePromise<ChallengeAttempt[]>;
   submitAttempt(req: ChallengeAttemptRequest): Promise<ChallengeVerdict>;
 
-  city(): MaybePromise<CityGraph>;
+  /** Agent City: principals, passport registry, payee books, ledger health and the receipt/anchor feed. */
+  city(): MaybePromise<CitySnapshot>;
+  /** The polled part of the city: recent receipts across every principal and the anchoring batches. */
+  cityFeed(): MaybePromise<CityFeed>;
   evidence(): MaybePromise<EvidenceSummary>;
 }
 

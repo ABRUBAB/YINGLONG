@@ -46,14 +46,15 @@ export function useTheme(): "dark" | "light" {
   );
 }
 
-export function ThemeToggle({ className }: { className?: string }) {
+export function ThemeToggle({ className, compact }: { className?: string; compact?: boolean }) {
   const theme = useTheme();
   const next = theme === "dark" ? "light" : "dark";
   return (
     <button
       type="button"
       className={cn(
-        "inline-flex h-8 items-center gap-2 rounded-control px-2 text-12 text-fg-2 hover:bg-bg-3 hover:text-fg-0",
+        "inline-flex h-8 items-center gap-2 rounded-control text-12 text-fg-2 hover:bg-bg-3 hover:text-fg-0",
+        compact ? "w-8 justify-center" : "px-2",
         className,
       )}
       aria-label={`Switch to the ${next} theme`}
@@ -66,7 +67,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         <circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
         <path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor" />
       </svg>
-      {theme === "dark" ? "Paper" : "Obsidian"}
+      {compact ? null : theme === "dark" ? "Paper" : "Obsidian"}
     </button>
   );
 }

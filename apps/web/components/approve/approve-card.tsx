@@ -134,7 +134,7 @@ export function ApproveCard({ id }: { id: string }) {
   const payeeName = a?.decoded?.payee?.name ?? a?.decoded?.targetName ?? "the payee";
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[420px] flex-col px-4 pt-5 pb-10">
+    <div className="mx-auto flex min-h-[calc(100dvh-var(--nav-h))] w-full max-w-[420px] flex-col px-4 pt-5 pb-10">
       <header className="mb-5 flex items-center justify-between">
         <Link href="/app" className="flex items-center gap-2 text-fg-0" aria-label="YINGLONG console">
           <Mark size={24} decorative />

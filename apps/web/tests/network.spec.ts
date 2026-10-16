@@ -1,7 +1,7 @@
 /**
  * The app must work from mainland China: no request may leave our own origin at runtime (no Google
  * Fonts, no CDN, no drei Environment presets, no CDN Draco). In fixtures mode not even the agent API
- * is contacted. Runs with motion enabled so the lazy 3D chunks (dragon, city) load too.
+ * is contacted. Runs with motion enabled so the lazy 3D chunks (Mandate Orbit, city) and the Paper Shaders atmosphere load too.
  */
 import { test, expect } from "@playwright/test";
 import { ROUTES } from "./routes";

@@ -24,6 +24,7 @@ import { cosignTypedData, encodeSingleExecution, killSwitchTypedData } from "../
 import { typedDataDigest } from "../../signing-guard";
 import { activeVisitor } from "../session";
 import * as D from "./data";
+import { citySnapshot } from "./city";
 import { attackFamily, compileSample, simulateDecision } from "./simulate";
 import { addr, baseTx, fiscoTx, h } from "./util";
 import { BASE_DIRECTORY, createFixtureVisitors, FISCO_DIRECTORY, revokeTypedData, type FixtureVisitor } from "./visitor";
@@ -461,7 +462,8 @@ export function createFixtureApi(): AgentApi {
       return { attempt, decision, receipt: null };
     },
 
-    city: () => D.city,
+    city: () => citySnapshot,
+    cityFeed: () => citySnapshot.feed,
     evidence: () => D.evidence,
   };
   return api;

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, ViewTransition, type ReactNode } from "react";
 import { cn, LiveStatusO, PauseButton, SampleDataChip, StateRing, type LiveState } from "@yinglong/ui";
-import { DragonCoin, Wordmark } from "@/components/brand/mark";
+import { MarkBadge } from "@/components/brand/mark";
 import { MotionToggle, ThemeToggle } from "@/components/preferences";
 import { Sheet } from "@/components/ui/sheet";
 import { isSample } from "@/lib/api";
@@ -23,9 +23,10 @@ const PERSONA: Record<Persona, { name: string; sub: string }> = {
 };
 
 /**
- * App shell (master plan 14.5): 240 px rail (72 px icon rail from 1024 to 1279 px) with the dragon
- * coin at the top and, for Nadia, the inverted Pause always visible at the bottom. Below 1024 px the
- * rail becomes a top bar and a bottom tab bar that still carries Pause.
+ * App shell (master plan 14.5), the secondary in-app navigation under the global site nav: a 240 px
+ * rail (72 px icon rail from 1024 to 1279 px) with the persona at the top and, for Nadia, the
+ * inverted Pause always visible at the bottom. Below 1024 px the rail becomes a persona bar and a
+ * bottom tab bar that still carries Pause.
  */
 export function AppShell({ persona, children, live = "active" }: { persona: Persona; children: ReactNode; live?: LiveState }) {
   const pathname = usePathname() ?? "";
@@ -51,24 +52,19 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
   ) : null;
 
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)]">
+    <div className="yl-appshell min-h-[calc(100dvh-var(--nav-h))] lg:grid lg:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)]">
       {/* Rail */}
-      <aside className="hidden border-r border-line-1 bg-bg-1 lg:block" aria-label="Primary">
-        <div className="sticky top-0 flex h-dvh flex-col">
-        <div className="flex items-center gap-3 px-4 pt-5 pb-4 xl:px-5">
-          <Link href="/" className="flex items-center gap-3 rounded-control" aria-label="YINGLONG home">
-            <DragonCoin size={40} />
-            <Wordmark height={11} className="hidden text-fg-0 xl:block" live={liveState} />
-          </Link>
-        </div>
-        <div className="mx-4 hidden border-y border-line-1 py-3 xl:block">
-          <div className="flex items-center justify-between gap-2">
-            <div className="min-w-0">
+      <aside className="hidden border-r border-line-1 bg-bg-1 lg:block" aria-label="Workspace">
+        <div className="sticky top-[var(--nav-h)] flex h-[calc(100dvh-var(--nav-h))] flex-col">
+        <div className="flex items-center justify-center gap-3 border-b border-line-1 px-3 py-4 xl:justify-between xl:px-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <MarkBadge size={36} />
+            <div className="hidden min-w-0 xl:block">
               <p className="m-0 truncate text-13 font-medium text-fg-0">{p.name}</p>
               <p className="m-0 truncate text-11 text-fg-muted">{p.sub}</p>
             </div>
-            <LiveStatusO state={liveState} size={20} className="text-fg-1" />
           </div>
+          <LiveStatusO state={liveState} size={20} className="hidden text-fg-1 xl:inline-flex" />
         </div>
         <nav className="mt-3 flex-1 overflow-y-auto px-2 xl:px-3" aria-label="Sections">
           <ul className="m-0 grid list-none gap-0.5 p-0">
@@ -139,23 +135,24 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
       </aside>
 
       <div className="min-w-0">
-        {/* Mobile top bar */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-line-1 bg-bg-1 px-4 lg:hidden">
-          <Link href="/" className="flex items-center gap-2.5" aria-label="YINGLONG home">
-            <DragonCoin size={32} />
-            <Wordmark height={10} className="text-fg-0" live={liveState} />
-          </Link>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setMenu(true)}
-              className="inline-flex h-9 items-center gap-2 rounded-control border border-line-3 px-3 text-13 text-fg-1"
-              aria-haspopup="dialog"
-            >
-              Menu
-            </button>
+        {/* Mobile persona bar (the global site nav sits above it) */}
+        <div className="flex h-14 items-center justify-between gap-3 border-b border-line-1 bg-bg-1 px-4 lg:hidden">
+          <div className="flex min-w-0 items-center gap-3">
+            <LiveStatusO state={liveState} size={20} className="text-fg-1" />
+            <div className="min-w-0">
+              <p className="m-0 truncate text-13 font-medium text-fg-0">{p.name}</p>
+              <p className="m-0 truncate text-11 text-fg-muted">{p.sub}</p>
+            </div>
           </div>
-        </header>
+          <button
+            type="button"
+            onClick={() => setMenu(true)}
+            className="yl-press inline-flex h-9 shrink-0 items-center gap-2 rounded-control border border-line-3 px-3 text-13 text-fg-1"
+            aria-haspopup="dialog"
+          >
+            Sections
+          </button>
+        </div>
 
         <main id="main" className="min-w-0 pb-24 lg:pb-0">
           <ViewTransition>{children}</ViewTransition>
@@ -212,7 +209,7 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
         ) : null}
       </div>
 
-      <Sheet open={menu} onOpenChange={setMenu} title="YINGLONG" description={`${p.name} · ${p.sub}`} side="bottom">
+      <Sheet open={menu} onOpenChange={setMenu} title="Sections" description={`${p.name} · ${p.sub}`} side="bottom">
         <ul className="m-0 grid list-none gap-1 p-0">
           {NAV.map((item) => (
             <li key={item.href}>

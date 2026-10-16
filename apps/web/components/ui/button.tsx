@@ -11,7 +11,7 @@ export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
   "inline-flex shrink-0 items-center justify-center gap-2 rounded-control font-medium whitespace-nowrap select-none " +
-  "transition-[background-color,border-color,color,opacity] duration-150 ease-out " +
+  "yl-press transition-[background-color,border-color,color,opacity] duration-150 ease-out " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus " +
   "disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45";
 

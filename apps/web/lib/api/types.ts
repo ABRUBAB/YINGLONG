@@ -451,6 +451,22 @@ export const WireProof = z.object({
   onChain: z.object({ ledger: WireLedger, onchainBatchId: z.union([z.number(), z.string()]).nullish(), valid: z.boolean() }).nullish(),
 });
 
+/* ------------------------------------------------------------------ anchoring batches (indexer, GET /batches) */
+
+export const WireBatches = z.object({
+  batches: z.array(
+    z.object({
+      batchId: z.union([z.number(), z.string()]).transform(Number),
+      root: Hex32,
+      count: z.number().int(),
+      createdAt: Time,
+      anchors: z.array(z.object({ ledger: WireLedger, txHash: Hex32, blockNumber: IntLike.nullish() })),
+      crossAnchors: z.array(z.object({ onLedger: WireLedger, remoteLedger: WireLedger, txHash: Hex32 })).nullish(),
+    }),
+  ),
+});
+export type WireBatches = z.infer<typeof WireBatches>;
+
 /* ------------------------------------------------------------------ read-only explorer (GET /v1/tx/:ledger/:hash) */
 
 export const WireTx = z.object({

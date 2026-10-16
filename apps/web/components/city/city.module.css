@@ -1,0 +1,102 @@
+/*
+ * Agent City motion and states. Only opacity and transform animate; every moment is tied to a state
+ * change (docs/MOTION.md #13 "City pulse"): hover highlight, a receipt arriving, a feed row arriving.
+ * Reduced motion and the page's "Pause motion" control keep the final states and drop the movement.
+ */
+
+.item {
+  transition:
+    opacity 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 120ms ease-out;
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  z-index: 2;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    border-color: var(--line-3);
+    background-color: var(--bg-3);
+  }
+}
+
+.item:active {
+  transform: scale(0.98);
+}
+
+.edge {
+  transition: opacity 150ms ease;
+}
+
+.dim {
+  opacity: 0.22;
+}
+
+.hidden {
+  opacity: 0.08;
+}
+
+/* Packets: colour by state (settled white, brass waits short of the payee, ash stops at the refusing ring). */
+.packet {
+  fill: var(--fg-0);
+  pointer-events: none;
+}
+.packet[data-tone="awaiting"] {
+  fill: var(--brass);
+}
+.packet[data-tone="refused"] {
+  fill: var(--fg-muted);
+}
+.packet[data-tone="anchor"] {
+  fill: var(--steel);
+}
+
+.card {
+  transform-origin: top left;
+  animation: card-in 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* A receipt that just arrived in the live feed. */
+.fresh {
+  animation: fresh 1400ms ease-out;
+}
+
+@keyframes fresh {
+  from {
+    background-color: var(--bg-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: card-fade 120ms ease;
+  }
+  .item:active {
+    transform: none;
+  }
+}
+
+:global(html[data-motion="off"]) .card {
+  animation: none;
+}
+:global(html[data-motion="off"]) .fresh {
+  animation: none;
+}
+
+@keyframes card-fade {
+  from {
+    opacity: 0;
+  }
+}

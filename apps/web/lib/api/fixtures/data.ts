@@ -13,7 +13,6 @@ import type {
   BudgetLane,
   ChallengeAttempt,
   ChallengeSession,
-  CityGraph,
   EvidenceSummary,
   Mandate,
   MandateRule,
@@ -1012,46 +1011,6 @@ export const challengeAttempts: ChallengeAttempt[] = [
   attempt(7, "lab-guest", "Prompt inside an x402 description", "quarantine", "escalated", "TaintedField", false),
   attempt(8, "reviewer-11", "Exceed the guest cap", "chain", "reverted", "CategoryBudgetExceeded", true),
 ];
-
-/* ------------------------------------------------------------------ Agent City */
-
-export const city: CityGraph = {
-  nodes: [
-    { id: "nadia", label: "Nadia", kind: "user", rail: "hk", passport: "none", reputation: 50 },
-    { id: "ying", label: "Ying", kind: "agent", rail: "hk", passport: "attested", reputation: 92 },
-    { id: "harbour-homes", label: "Harbour Homes", kind: "service", rail: "hk", passport: "attested", reputation: 74 },
-    { id: "hbu", label: "HBU Bursar", kind: "service", rail: "hk", passport: "attested", reputation: 90 },
-    { id: "pearl-river", label: "Pearl River FX", kind: "service", rail: "hk", passport: "attested", reputation: 81 },
-    { id: "hdb", label: "Harbour Digital Bank", kind: "service", rail: "hk", passport: "attested", reputation: 95 },
-    { id: "mirage", label: "Mirage", kind: "rogue", rail: "hk", passport: "self-registered", reputation: 12 },
-    { id: "lotus-hk", label: "Lotus Lane HK", kind: "agent", rail: "hk", passport: "attested", reputation: 86 },
-    { id: "kowloon-fwd", label: "Kowloon Forwarders", kind: "service", rail: "hk", passport: "attested", reputation: 70 },
-    { id: "base-anchor", label: "Public anchor (Base Sepolia)", kind: "anchor", rail: "seam", passport: "none", reputation: 60 },
-    { id: "fisco-anchor", label: "Consortium anchor (FISCO)", kind: "anchor", rail: "seam", passport: "none", reputation: 60 },
-    { id: "lotus-sz", label: "Lotus Lane Shenzhen", kind: "agent", rail: "fisco", passport: "attested", reputation: 88 },
-    { id: "sz-components", label: "Shenzhen Components", kind: "service", rail: "fisco", passport: "attested", reputation: 79 },
-    { id: "kyb", label: "KYB Verifier", kind: "service", rail: "fisco", passport: "attested", reputation: 77 },
-    { id: "ecny-sim", label: "e-CNY-style simulator", kind: "service", rail: "fisco", passport: "none", reputation: 60 },
-    { id: "regulator", label: "Regulator node", kind: "regulator", rail: "fisco", passport: "none", reputation: 60 },
-  ],
-  edges: [
-    { id: "e1", from: "ying", to: "harbour-homes", state: "settled", receiptId: receipts[7]!.receiptId, amount: amt("9500", THKD), label: "Rent" },
-    { id: "e2", from: "ying", to: "pearl-river", state: "settled", receiptId: receipts[1]!.receiptId, amount: amt("0.40", USDC), label: "Quote over x402" },
-    { id: "e3", from: "ying", to: "hbu", state: "awaiting", receiptId: null, amount: amt("20000", THKD), label: "Tuition deposit (needs Nadia)" },
-    { id: "e4", from: "ying", to: "mirage", state: "reverted", receiptId: receipts[2]!.receiptId, amount: null, label: "Refused: PayeeNotVerified" },
-    { id: "e5", from: "nadia", to: "ying", state: "settled", receiptId: null, amount: null, label: "Mandate v3 sealed" },
-    { id: "e6", from: "lotus-hk", to: "kowloon-fwd", state: "settled", receiptId: null, amount: amt("18400", THKD), label: "Freight" },
-    { id: "e7", from: "lotus-sz", to: "sz-components", state: "settled", receiptId: null, amount: amt("27640", CNYT), label: "Invoice 2231" },
-    { id: "e8", from: "lotus-sz", to: "kyb", state: "settled", receiptId: null, amount: amt("12", CNYT), label: "KYB check" },
-    { id: "e9", from: "lotus-sz", to: "sz-components", state: "reverted", receiptId: null, amount: amt("49900", CNYT), label: "Refused: VelocityExceeded" },
-    { id: "e10", from: "sz-components", to: "ecny-sim", state: "settled", receiptId: null, amount: null, label: "Conditional payment instruction" },
-    { id: "e11", from: "hdb", to: "ying", state: "settled", receiptId: null, amount: null, label: "Attests passport" },
-  ],
-  anchors: [
-    { at: minutesAgo(35), root: ANCHOR_ROOT, baseTx: anchorBase.txHash, fiscoTx: anchorFisco.txHash },
-    { at: minutesAgo(95), root: h("root:batch-311"), baseTx: h("tx:base:anchor:batch-311"), fiscoTx: h("tx:fisco:anchor:batch-311") },
-  ],
-};
 
 /* ------------------------------------------------------------------ evidence */
 

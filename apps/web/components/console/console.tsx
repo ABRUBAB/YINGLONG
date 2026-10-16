@@ -111,7 +111,7 @@ export function Console() {
 
       <aside
         aria-label="Authority"
-        className="sticky top-0 hidden h-dvh overflow-y-auto border-l border-line-1 bg-bg-1 px-6 py-8 lg:block"
+        className="sticky top-[var(--nav-h)] hidden h-[calc(100dvh-var(--nav-h))] overflow-y-auto border-l border-line-1 bg-bg-1 px-6 py-8 lg:block"
       >
         <AuthorityPanel morph />
       </aside>

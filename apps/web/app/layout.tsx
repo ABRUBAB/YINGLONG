@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { SessionSync } from "@/components/session";
+import { SiteNav } from "@/components/shell/site-nav";
+import { SiteFooter } from "@/components/shell/site-footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://app.yinglong-agent.tech"),
@@ -39,7 +41,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a href="#main" className="yl-skip">
           Skip to content
         </a>
+        <SiteNav />
         {children}
+        <SiteFooter />
         <SessionSync />
       </body>
     </html>
