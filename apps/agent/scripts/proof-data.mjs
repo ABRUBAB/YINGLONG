@@ -18,6 +18,12 @@ const src = (p) => {
   return v;
 };
 
+/** The training log (trainer_state.json log_history) saved from the model's HuggingFace repo by the ML team. */
+function curve(name) {
+  const c = src(`ml/results/curves/${name}.json`);
+  return c ? { repo: c.repo, revision: c.revision, file: c.file, points: c.points } : null;
+}
+
 /** Counts from rates: recall x positives and specificity x negatives, rounded to whole items. */
 function confusion(t) {
   if (!t?.positives || !t?.negatives) return null;
@@ -43,9 +49,8 @@ function sentinel() {
     arms: ["m1_sentinel_mdeberta.json", "m1_sentinel_mmbert_small.json", "m1_sentinel_protectai_v2.json"]
       .map((f) => [f, src(`ml/results/${f}`)])
       .filter(([, v]) => v)
-      .map(([f, v]) => ({ file: f, arm: v.arm ?? v.model ?? f, test: v.at_selected_threshold?.test_overall ?? v.test_overall ?? null })),
-    curves: null,
-    curvesNote: "Per-step training curves were not saved with these results; only final metrics with 95% intervals.",
+      .map(([f, v]) => ({ file: f, arm: v.arm ?? v.model ?? f, test: v.at_selected_threshold?.test_overall ?? v.test_overall ?? null, curves: v.hf_repo ? curve(String(v.hf_repo).split("/")[1]) : null })),
+    curves: curve("yl-sentinel-mmbert-base"),
   };
 }
 
@@ -54,7 +59,8 @@ function intent() {
     .filter((f) => /^m4_intent_.*\.json$/.test(f))
     .map((f) => {
       const m = src(`ml/results/${f}`);
-      return { model: m.model, base: m.base, hfRepo: m.hf_repo, revision: m.hf_revision, trainRows: m.train_rows, trainSeconds: m.train_runtime_secs, finalTrainLoss: m.final_train_loss, epochs: m.epochs, test: m.test?.overall ?? null };
+      const repo = String(m.hf_repo ?? "").split("/")[1];
+      return { model: m.model, base: m.base, hfRepo: m.hf_repo, revision: m.hf_revision, trainRows: m.train_rows, trainSeconds: m.train_runtime_secs, finalTrainLoss: m.final_train_loss, epochs: m.epochs, test: m.test?.overall ?? null, curves: repo ? curve(repo) : null };
     });
 }
 

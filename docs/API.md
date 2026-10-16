@@ -394,7 +394,7 @@ Everything needed to check that the service is real, in one response:
 | `service` | `{startedAt, uptimeSeconds, health, evidence}`; measure response time on the client against `GET /v1/health` |
 | `chain` | `{ledgers: [{ledger, label, chainId, contractCount, contracts: [{name, address, codeHash, explorerUrl}]}], bytecode: {compared, identical, differ}}`: both ledgers and how many same-named contracts have identical runtime bytecode |
 | `transactions` | `{counts: {<ledger>: {<outcome>: n}}, latest: [{receiptId, ledger, outcome, tier, title, txHash, explorerUrl, revertError, at, auditUrl}]}` (newest 12) |
-| `ml` | `{sentinel, intent, anomaly, forecast}`: test metrics with 95% intervals, per-language results and a confusion matrix derived from recall and specificity (`sentinel.confusion`), copied from `ml/results/*.json` |
+| `ml` | `{sentinel, intent, anomaly, forecast}`: test metrics with 95% intervals, per-language results and a confusion matrix derived from recall and specificity (`sentinel.confusion`), and the real training curves (`curves.points[]` = `{step, epoch, loss | eval_loss, eval_macro_f1, learning_rate, grad_norm}` from each model's `trainer_state.json`, with the HuggingFace repo revision), copied from `ml/results/*.json` and `ml/results/curves/*.json` |
 | `bench` | `{generatedAt, commit, ledger, understanding, metrics, detail}` from `bench/reports/summary.json` |
 | `sources` | the result files the `ml` and `bench` fields were copied from (`apps/agent/scripts/proof-data.mjs`) |
 
