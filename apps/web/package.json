@@ -12,6 +12,7 @@
     "build:fixtures": "node scripts/site-data.mjs && node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures -- next build",
     "start": "next start --port 3000",
     "typecheck": "tsc --noEmit",
+    "check:faq-links": "node scripts/check-faq-links.mjs",
     "site-data": "node scripts/site-data.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test",

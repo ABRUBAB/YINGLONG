@@ -20,7 +20,7 @@ export function SectionHead({
   children?: ReactNode;
 }) {
   return (
-    <div className={cn("grid content-start gap-4", className)}>
+    <div className={cn("yl-section-head grid content-start gap-4", className)}>
       <p className="m-0 flex items-center gap-3">
         <span className="kicker">{index}</span>
         <span aria-hidden="true" className="h-px w-6 bg-line-2" />

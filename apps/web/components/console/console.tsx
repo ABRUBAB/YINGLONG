@@ -39,7 +39,7 @@ export function Console() {
   const visitor = useVisitorSession();
 
   return (
-    <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-x-6">
       <div className="mx-auto w-full max-w-[960px] px-4 pt-6 pb-14 sm:px-6 lg:px-8 lg:pt-8">
         <PageHeader
           eyebrow="Agent console"

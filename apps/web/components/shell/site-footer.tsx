@@ -70,7 +70,7 @@ export function SiteFooter() {
 
       <div className="border-t border-line-1" aria-hidden="true">
         <div className="yl-container py-6">
-          <svg viewBox="0 0 1200 150" className="yl-megamark block h-auto w-full max-w-[860px]" role="presentation">
+          <svg viewBox="0 0 1200 150" className="yl-megamark mx-auto block h-auto w-full max-w-[860px]" role="presentation">
             <text x="0" y="132" textLength="1200" lengthAdjust="spacingAndGlyphs" fontSize="150">
               YINGLONG
             </text>

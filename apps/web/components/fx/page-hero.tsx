@@ -45,17 +45,17 @@ export function PageHero({
   return (
     <header className={cn("relative isolate overflow-hidden border-b border-line-1", className)}>
       <div aria-hidden="true" className="yl-hero-glow" />
-      <div className="yl-container grid items-center gap-8 py-10 md:grid-cols-12 lg:py-14">
+      <div className="yl-container grid items-center gap-6 py-8 sm:gap-8 sm:py-10 md:grid-cols-12 lg:py-14">
         <div className="grid content-start gap-5 md:col-span-7">
           <p className="eyebrow m-0 flex items-center gap-3 text-fg-muted">
             <span aria-hidden="true" className="h-px w-8 bg-line-3" />
             {eyebrow}
           </p>
-          <h1 id={id} className="type-hero m-0 text-[clamp(2.1rem,1.1rem+3.2vw,3.75rem)] text-fg-0">
+          <h1 id={id} className="type-hero m-0 max-w-[19ch] text-[clamp(2.1rem,1.1rem+3.2vw,3.75rem)] text-balance text-fg-0">
             {title}
           </h1>
-          {lead ? <p className="m-0 max-w-[52ch] text-15 text-fg-2 sm:text-18 sm:leading-[1.6]">{lead}</p> : null}
-          {chips ? <div className="flex flex-wrap items-center gap-2">{chips}</div> : null}
+          {lead ? <p className="m-0 max-w-[52ch] text-15 leading-relaxed text-fg-2 sm:text-18 sm:leading-[1.6]">{lead}</p> : null}
+          {chips ? <div className="flex flex-wrap items-center gap-2 border-t border-line-1 pt-4">{chips}</div> : null}
           {actions ? <div className="flex flex-wrap items-center gap-3">{actions}</div> : null}
         </div>
         <div className="relative md:col-span-5">

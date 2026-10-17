@@ -47,12 +47,12 @@ const DEFAULT_VERIFY = "yinglong verify samples/nadia.delegation.json --chain ba
 /** On this page: one row of jump chips under the header; it sticks under the top bar while you read (never printed). */
 function Contents({ sections }: { sections: Sec[] }) {
   return (
-    <nav aria-label="On this page" className="no-print sticky top-[var(--nav-h)] z-20 -mx-4 mt-8 border-y border-line-1 bg-bg-0/85 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <ol className="m-0 flex list-none items-center gap-1 overflow-x-auto p-0 py-2 [scrollbar-width:none]">
+    <nav aria-label="On this page" className="no-print sticky top-[var(--nav-h)] z-20 -mx-4 mt-8 border-y border-line-1 bg-bg-0/95 px-4 shadow-sm backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <ol className="m-0 flex list-none items-center gap-1 overflow-x-auto p-0 py-2.5 [scrollbar-width:none]">
         <li className="eyebrow mr-2 shrink-0 text-fg-muted">On this page</li>
         {sections.map((s, i) => (
           <li key={s.id} className="shrink-0">
-            <a href={`#${s.id}`} className="inline-flex h-8 items-center gap-2 rounded-pill px-3 text-12 text-fg-2 transition-colors hover:bg-bg-3 hover:text-fg-0">
+            <a href={`#${s.id}`} className="inline-flex min-h-9 items-center gap-2 rounded-pill border border-transparent px-3 text-12 text-fg-2 transition-colors hover:border-line-2 hover:bg-bg-2 hover:text-fg-0 focus-visible:border-focus">
               <span className="font-mono text-fg-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
               {s.title}
             </a>

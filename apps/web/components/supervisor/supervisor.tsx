@@ -393,9 +393,9 @@ export function Supervisor() {
               { label: "Paused or revoked", value: q.data.filter((a) => a.status === "paused" || a.status === "revoked").length },
               { label: "Self-registered, no trusted issuer", value: q.data.filter((a) => a.status === "self-registered").length },
             ].map((x) => (
-              <div key={x.label} className="yl-card grid gap-1 px-4 py-3">
-                <dt className="text-12 text-fg-muted">{x.label}</dt>
-                <dd className="m-0 font-mono text-22 text-fg-0 tabular">{x.value}</dd>
+              <div key={x.label} className="yl-card grid min-h-24 content-between gap-3 border-t-2 border-t-steel/60 px-4 py-4 sm:px-5">
+                <dt className="text-12 leading-snug text-fg-muted">{x.label}</dt>
+                <dd className="m-0 font-mono text-26 leading-none text-fg-0 tabular">{x.value}</dd>
               </div>
             ))}
           </dl>

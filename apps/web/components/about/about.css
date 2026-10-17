@@ -3,3 +3,9 @@
 .yl-about-section {
   padding-block: clamp(2.5rem, 1.5rem + 2.4vw, 4rem);
 }
+
+/* The long About page alternates a quiet surface so its story, numbers and technical sections read
+   as separate chapters without adding more cards around already-carded content. */
+.yl-about-section:nth-of-type(even) {
+  background: color-mix(in oklab, var(--bg-1) 58%, var(--bg-0));
+}

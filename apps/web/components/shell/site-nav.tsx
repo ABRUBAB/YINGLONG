@@ -57,7 +57,7 @@ export function SiteNav() {
       className="yl-sitenav no-print sticky top-0 z-40 border-b border-line-1 bg-bg-0 text-fg-1"
     >
       <div className={cn("yl-container flex h-[var(--nav-h)] items-center justify-between gap-3", workspace && "max-w-none")}>
-        <Link href="/" className="-ml-1 flex shrink-0 items-center gap-2.5 rounded-control p-1" aria-label="YINGLONG home">
+        <Link href="/" className="yl-brand-link -ml-1 flex shrink-0 items-center gap-2.5 rounded-control p-1" aria-label="YINGLONG home">
           <Mark size={26} decorative className="text-fg-0" />
           <Wordmark height={11} className="text-fg-0" />
         </Link>

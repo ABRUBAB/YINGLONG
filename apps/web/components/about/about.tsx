@@ -123,7 +123,7 @@ export function AboutPage() {
         {/* 01 Why we built it. */}
         <section aria-labelledby="why-title" className="yl-about-section border-t border-line-1">
           <div className="yl-container grid gap-10 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:col-span-4 lg:self-start">
+            <div className="lg:col-span-4 lg:self-start">
               <SectionHead index="01" eyebrow="Why we built it" id="why-title" title="Money is where a trick hurts." />
             </div>
             <div className="grid gap-12 lg:col-span-8">
