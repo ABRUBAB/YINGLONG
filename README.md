@@ -8,19 +8,21 @@
 
 <p align="center">
   <a href="https://github.com/ABRUBAB/YINGLONG/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/ABRUBAB/YINGLONG/ci.yml?branch=main&style=flat-square&label=CI&labelColor=0B0C0F"></a>
-  <a href="https://app.yinglong-agent.tech"><img alt="Live app" src="https://img.shields.io/website?url=https%3A%2F%2Fapp.yinglong-agent.tech&style=flat-square&label=live%20app&labelColor=0B0C0F&up_message=online&up_color=2E5C95&down_color=6A7280"></a>
+  <a href="https://app.yinglong-agent.tech"><img alt="Live app" src="https://img.shields.io/website?url=https%3A%2F%2Fapp.yinglong-agent.tech&style=flat-square&label=live%20app&labelColor=0B0C0F&up_message=online&up_color=2B8A3E&down_color=6A7280"></a>
   <img alt="Topic F: Agent Wallet" src="https://img.shields.io/badge/Topic%20F-Agent%20Wallet-1E2228?style=flat-square&labelColor=0B0C0F">
-  <img alt="FISCO BCOS 3.17.1, team-run" src="https://img.shields.io/badge/FISCO%20BCOS%203.17.1-team--run-2E5C95?style=flat-square&labelColor=0B0C0F">
-  <img alt="Base Sepolia, testnet" src="https://img.shields.io/badge/Base%20Sepolia-testnet-7A5A10?style=flat-square&labelColor=0B0C0F">
+  <img alt="FISCO BCOS 3.17.1, team-run" src="https://img.shields.io/badge/FISCO%20BCOS%203.17.1-team--run-3A4A8C?style=flat-square&labelColor=0B0C0F">
+  <img alt="Base Sepolia, testnet" src="https://img.shields.io/badge/Base%20Sepolia-testnet-9A6B12?style=flat-square&labelColor=0B0C0F">
   <a href="LICENSE"><img alt="Licence: Apache-2.0" src="https://img.shields.io/badge/licence-Apache--2.0-353B45?style=flat-square&labelColor=0B0C0F"></a>
 </p>
 
 <p align="center">
   <a href="https://app.yinglong-agent.tech"><b>Live app</b></a>
   &nbsp;&middot;&nbsp;
+  <a href="https://app.yinglong-agent.tech/judge"><b>3-minute demo</b></a>
+  &nbsp;&middot;&nbsp;
   <a href="https://app.yinglong-agent.tech/start"><b>Sign up with your passkey</b></a>
   &nbsp;&middot;&nbsp;
-  <a href="https://app.yinglong-agent.tech/challenge"><b>Judge's Challenge</b></a>
+  <a href="https://app.yinglong-agent.tech/challenge"><b>Try to hack it</b></a>
   &nbsp;&middot;&nbsp;
   <a href="https://app.yinglong-agent.tech/proof"><b>Proof</b></a>
   &nbsp;&middot;&nbsp;
@@ -37,7 +39,7 @@
 
 **A verifiable AI agent that acts on your money only as you, only inside the mandate you sealed, and always with proof.**
 A mandate is a digital power of attorney enforced by code: you say the rules in plain language, YINGLONG compiles them into an ERC-7710 delegation whose caveat enforcers *are* the rules, and you seal it with a passkey (a company: 2 of 3 directors).
-The same caveat bytecode runs on a local EVM test chain and on our team-run FISCO BCOS consortium chain, and anyone can verify a mandate with one command; the public-testnet deployment is pending.
+The same caveat bytecode runs on the Base Sepolia public testnet and on our team-run FISCO BCOS consortium chain, and anyone can verify a mandate with one command.
 
 <sub>Entry for the 2026 Shenzhen International FinTech Competition, International Track, **Topic F (Agent Wallet)**.</sub>
 
@@ -54,43 +56,61 @@ The same caveat bytecode runs on a local EVM test chain and on our team-run FISC
 
 ## Try it in 60 seconds
 
-1. **Open the live app** at [app.yinglong-agent.tech](https://app.yinglong-agent.tech) and look at Nadia's console: every row carries a state word, a tier and, when it is on chain, a hash with its ledger badge.
+1. **Take the 3-minute demo** at [`/judge`](https://app.yinglong-agent.tech/judge): six steps, no typing. Each step runs a real operation on the live service and shows what came back, with the time it took. Or open Nadia's console at [`/app`](https://app.yinglong-agent.tech/app): every row carries a state word, a tier and, when it is on chain, a hash with its ledger badge.
 2. **Sign up with your passkey** at [`/start`](https://app.yinglong-agent.tech/start). No password: your device's WebAuthn passkey seals your own mandate on the team-run FISCO BCOS chain, in test units.
 3. **Ask Ying to pay** inside the mandate. Code and the chain decide; the AI only proposes and explains.
-4. **Attack it** on the [Judge's Challenge](https://app.yinglong-agent.tech/challenge): type any attack, or switch on "bypass" to push a raw redemption straight to the chain and get the revert hash back.
+4. **Try to hack it** at [`/challenge`](https://app.yinglong-agent.tech/challenge): type any attack, or choose "Straight to the blockchain" to push a raw transaction past the AI and get the revert hash back. The Rules Lab on the home page lets you practise the nine checks first.
 5. **Check the proof** at [`/proof`](https://app.yinglong-agent.tech/proof), or decode any FISCO BCOS transaction at `https://api.yinglong-agent.tech/v1/tx/fisco/<hash>`.
 
 ## The interface
 
+A dark and ash base with one lime-green accent, a separate ultramarine light theme, liquid-glass panels, and 3D only where it carries data. Every screen is shown with real evidence, not mock-ups. The numbers on a live page come from the service, and a "Sample data" chip appears whenever a number is not live.
+
 <table>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://app.yinglong-agent.tech"><img src="docs/assets/readme/screen-home.webp" width="100%" alt="Home: the Mandate Orbit hero"></a>
-      <br><sub><b>Home.</b> The Mandate Orbit: the ring is the mandate you drew, the pearl is the agent's on-chain identity.</sub>
+      <a href="https://app.yinglong-agent.tech"><img src="docs/assets/readme/screen-home.webp" width="100%" alt="Home: the Mandate Orbit hero with two receipt cards"></a>
+      <br><sub><b>Home.</b> The Mandate Orbit: the ring is the mandate you drew, the pearl is the agent's on-chain identity. Below it: the Rules Lab, the nine checks as a 3D tunnel, and the receipt chain.</sub>
     </td>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech"><img src="docs/assets/readme/screen-home-light.webp" width="100%" alt="Home in the light theme"></a>
+      <br><sub><b>Light theme.</b> Its own design on warm paper with an ultramarine accent, not an inverted dark theme. One button switches, and it follows your system.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech/judge"><img src="docs/assets/readme/screen-judge.webp" width="100%" alt="The 3-minute demo"></a>
+      <br><sub><b>3-minute demo.</b> Six steps with no typing: look, make an agent, pay, get tricked, send a raw transaction, check the records.</sub>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://app.yinglong-agent.tech/challenge"><img src="docs/assets/readme/screen-challenge.webp" width="100%" alt="Try to hack it"></a>
+      <br><sub><b>Try to hack it.</b> Attack the agent through the AI or straight at the blockchain; the nine checks light up to show which one stopped you.</sub>
+    </td>
+  </tr>
+  <tr>
     <td width="50%" valign="top">
       <a href="https://app.yinglong-agent.tech/app"><img src="docs/assets/readme/screen-console.webp" width="100%" alt="Console: activity, authority panel and budgets"></a>
       <br><sub><b>Console.</b> Nadia's agent: activity by tier, the Authority panel with the Hash Ring, live budgets and one-tap Pause.</sub>
     </td>
-  </tr>
-  <tr>
     <td width="50%" valign="top">
       <a href="https://app.yinglong-agent.tech/treasury"><img src="docs/assets/readme/screen-treasury.webp" width="100%" alt="Treasury: lanes, director queue and instruction ledger"></a>
       <br><sub><b>Treasury.</b> Lotus Lane (fictional): budget lanes, the 2-of-3 director queue and the coin-free instruction ledger.</sub>
     </td>
-    <td width="50%" valign="top">
-      <a href="https://app.yinglong-agent.tech/city"><img src="docs/assets/readme/screen-city.webp" width="100%" alt="Agent City: two rails, one engine"></a>
-      <br><sub><b>Agent City.</b> Shenzhen and Hong Kong rails on one engine; every principal, agent and payment is read live from the agent service.</sub>
-    </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://app.yinglong-agent.tech/proof"><img src="docs/assets/readme/screen-proof.webp" width="100%" alt="Proof Center"></a>
-      <br><sub><b>Proof.</b> The Proof Center: every number carries its source, every hash opens in the decoder.</sub>
+      <a href="https://app.yinglong-agent.tech/city"><img src="docs/assets/readme/screen-city.webp" width="100%" alt="Live map: two rails, one engine"></a>
+      <br><sub><b>Live map.</b> Shenzhen and Hong Kong rails on one engine; every principal, agent and payment is read live from the agent service.</sub>
     </td>
     <td width="50%" valign="top">
-      <a href="https://app.yinglong-agent.tech/challenge"><img src="docs/assets/readme/screen-challenge.webp" width="100%" alt="Judge's Challenge"></a>
-      <br><sub><b>Judge's Challenge.</b> Scan for a guest mandate and attack the agent; the board shows which scale stopped each attempt.</sub>
+      <a href="https://app.yinglong-agent.tech/proof"><img src="docs/assets/readme/screen-proof.webp" width="100%" alt="Proof Center"></a>
+      <br><sub><b>Proof.</b> The Proof Center: every number carries its source, every hash opens in the decoder. Heavy tables fold away until you need them.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top">
+      <a href="https://app.yinglong-agent.tech/about"><img src="docs/assets/readme/screen-about.webp" width="100%" alt="About: the team"></a>
+      <br><sub><b>About.</b> The five people behind it, as portrait panels that open on hover or tap, then why we built it and what is real.</sub>
     </td>
   </tr>
 </table>

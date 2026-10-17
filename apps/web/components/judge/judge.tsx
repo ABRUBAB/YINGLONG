@@ -83,7 +83,7 @@ export function Judge() {
           n={3}
           text={PAY_TEXT}
           title="A payment inside the rules."
-          lead="The request goes to your agent exactly as written. Nine checks run, each with its real time, and when they all pass the payment is sent and a receipt is written on chain."
+          lead="Your agent gets the request as written. Nine checks run, and when they all pass the payment is sent and a receipt is written on chain."
           nextLabel="Try a trick"
           expectBlock={false}
           run={pay}
@@ -98,7 +98,7 @@ export function Judge() {
           n={4}
           text={TRICK_TEXT}
           title="A trick that is blocked."
-          lead="Hidden instructions, an unknown address and an amount far over the cap, all in one request. The checks say which rule stopped it and why, in plain words. Nothing is sent."
+          lead="Hidden instructions, an unknown address and an amount far over the cap. The checks say which rule stopped it, in plain words. Nothing is sent."
           nextLabel="Send a raw transaction"
           expectBlock
           run={trick}

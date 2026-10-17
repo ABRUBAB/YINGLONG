@@ -1,3 +1,4 @@
+import { BrandSpinner } from "@/components/brand/loader";
 import type { ReactNode } from "react";
 import { cn, LabelChip, SampleDataChip, StateRing, type RingState, type TraceScale } from "@yinglong/ui";
 import type { Decision, Ledger, Receipt, ReceiptOutcome, Tier } from "@/lib/api/view";
@@ -153,7 +154,8 @@ export function ErrorLine({ error, className }: { error: Error | undefined; clas
 
 export function Loading({ label = "Loading", rows = 3 }: { label?: string; rows?: number }) {
   return (
-    <div role="status" aria-label={label} className="grid gap-2">
+    <div role="status" aria-label={label} className="grid gap-3">
+      <BrandSpinner size={28} label={label} />
       {Array.from({ length: rows }, (_, i) => (
         <div key={i} className="h-9 rounded-control bg-bg-2" />
       ))}

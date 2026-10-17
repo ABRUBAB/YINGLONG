@@ -128,16 +128,25 @@ Libraries and copied component patterns used by `apps/web` (the generated table 
 
 | Piece | Version | Licence | Kind | Used for |
 |---|---|---|---|---|
-| `@paper-design/shaders-react` (+ `@paper-design/shaders`) | 0.0.81 (released 17 Sep 2026) | Apache-2.0 | installed, exact pin | `Dithering` atmosphere behind the landing hero, two greys of the obsidian ramp; lazy-loaded, paused off-screen and under reduced motion |
+| `@paper-design/shaders-react` (+ `@paper-design/shaders`) | 0.0.81 (released 17 Sep 2026) | Apache-2.0 | installed, exact pin | `Water` (our own ring artwork seen through moving water) behind the closing call to action and `MeshGradient` behind the receipt chain on the landing page; mounted only while on screen, 520k and 380k pixel caps, paused under reduced motion and Pause motion. Not used in the hero any more (the full-hero `Dithering` shader was removed for speed) |
 | `three`, `@react-three/fiber`, `@react-three/drei` | 0.186.1, 9.8.2, 10.7.9 | MIT | installed (existing) | Mandate Orbit hero scene: InstancedMesh receipts and refusals, procedural `Environment` with `Lightformer`s only (no preset, no CDN) |
-| `@react-three/postprocessing`, `postprocessing` | 3.2.0, 6.39.5 | MIT, Zlib | installed (existing) | Bloom on specular highlights only (threshold 0.92), desktop pointers only |
+| `@react-three/postprocessing`, `postprocessing` | 3.2.0, 6.39.5 | MIT, Zlib | installed, no longer imported | The Bloom pass was removed on 17 Oct (frame cost); the packages stay installed until the lockfile is next pruned |
+| `three` (nine-gates tunnel) | 0.186.1 | MIT | installed (existing) | `components/three/gates-tunnel.tsx`: nine rings, one coin, shards; frames on demand while scrolling, no post-processing; the flat rail is the fallback |
 | `gsap`, `@gsap/react` (ScrollTrigger, SplitText) | 3.15.0, 2.1.2 | GSAP Standard "no charge" licence (not MIT) | installed (existing) | Seven-verbs scroll story (imported after hydration): scrubbed ring progress, letter reveals; seal press-and-hold |
-| `motion` | 14.2.0 | MIT | installed (existing) | Available for in-component state in the app routes; kept off the landing page, where CSS does the same job without the bundle |
+| `motion` | 14.2.0 | MIT | installed (existing) | Scroll reveals (`components/fx/reveal.tsx`), the nav pill, the receipt-chain block animation; all stop under reduced motion |
 | `@number-flow/react` | 0.6.2 | MIT | installed (existing) | Hero counters (receipts inside, refusals, budget left) |
 | Magic UI `Marquee` (magicui.design) | pattern, 2026 | MIT | **adapted, not copied verbatim**: CSS track duplication and linear loop re-implemented in `app/globals.css` (`.yl-marquee`) | Evidence ribbon of real hashes; own pause button, pauses on hover, focus, Pause motion and reduced motion |
 | Magic UI `MagicCard` (magicui.design) | pattern, 2026 | MIT | **adapted, not copied verbatim**: pointer-following radial light restyled to a monochrome 1 px border (`components/ui/spotlight-card.tsx`, `.yl-spotlight`) | Pillar and team cards |
 
 No Aceternity or React Bits code is used.
+
+### Artwork and photographs
+
+| Piece | Source | Licence | Used for |
+|---|---|---|---|
+| Glass illustrations (`apps/web/public/art/*.svg`, nine scenes, dark and light) | Drawn for this project by script (originals; no stock images, no third-party files) | Project licence (Apache-2.0) | Landing sections, inner-page banners, the water shader picture |
+| Team portraits (`apps/web/public/team/p1-p5.webp`) | Photographs of the five team members, supplied by the team lead for this site; cropped to 4:5, two backgrounds removed | Personal photographs: not covered by the Apache-2.0 licence; the lead decides whether they stay published | About page |
+| Fonts (Hubot Sans, Geist, Geist Mono, Anek Bangla) | SIL Open Font Licence 1.1, files and licence texts in `apps/web/public/fonts` | OFL-1.1 | All text |
 
 ## 4. Models
 

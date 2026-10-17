@@ -32,7 +32,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { Environment, Lightformer, PerformanceMonitor } from "@react-three/drei";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
 import type { OrbitSlot } from "@/lib/orbit-layout";
 import { TRACKS } from "@/lib/orbit-layout";
@@ -63,22 +62,22 @@ export interface MandateOrbitProps {
  */
 const PALETTES = {
   dark: {
-    inside: new THREE.Color("#6CC39A"),
-    waiting: new THREE.Color("#D3B46B"),
-    asked: new THREE.Color("#C9A95E"),
+    inside: new THREE.Color("#3DE35B"),
+    waiting: new THREE.Color("#FFB84D"),
+    asked: new THREE.Color("#F2A93B"),
     refused: new THREE.Color("#69717D"),
     ringOn: new THREE.Color("#F2F4F7"),
     ringOff: new THREE.Color("#3A4049"),
     track: "#3A414B",
     tick: "#AEB6C1",
-    pearl: "#F0634B",
+    pearl: "#FF5A5F",
     agent: "#DDE2E8",
     metal: 1,
     rough: 0.16,
     coinMetal: 0.35,
   },
   light: {
-    inside: new THREE.Color("#1F7A55"),
+    inside: new THREE.Color("#0F766E"),
     waiting: new THREE.Color("#7A5A10"),
     asked: new THREE.Color("#8A6A1E"),
     refused: new THREE.Color("#A3A199"),
@@ -461,19 +460,31 @@ function Orbit({ slots, remaining, ticks, motion, playKey, pointer, poster, onHo
   );
 }
 
+/** Asks for a frame at a fixed rate: the scene turns once in three minutes, so 30 fps looks the same as 60. */
+function Ticker({ on, fps }: { on: boolean; fps: number }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    if (!on) return;
+    const id = window.setInterval(() => invalidate(), 1000 / fps);
+    return () => window.clearInterval(id);
+  }, [on, fps, invalidate]);
+  return null;
+}
+
 export default function MandateOrbit(props: MandateOrbitProps) {
   const touch = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
   const visible = useDocumentVisible();
-  const maxDpr = props.poster ? 2 : touch ? 1.25 : 1.5;
+  const maxDpr = props.poster ? 2 : touch ? 1 : 1.25;
   const [dpr, setDpr] = useState(maxDpr);
-  const composer = !props.poster && !touch;
   const live = props.active && visible;
-  const frameloop = !live ? "never" : props.motion && !props.poster ? "always" : "demand";
+  // Frames on demand: a 30 fps timer while the stage is live and moving, nothing when it is not.
+  const frameloop = !live ? "never" : "demand";
+  const ticking = live && props.motion && !props.poster;
   return (
     <Canvas
       frameloop={frameloop}
       dpr={dpr}
-      gl={{ antialias: !composer, alpha: true, powerPreference: "high-performance", preserveDrawingBuffer: Boolean(props.poster), stencil: false }}
+      gl={{ antialias: true, alpha: true, powerPreference: "high-performance", preserveDrawingBuffer: Boolean(props.poster), stencil: false }}
       camera={{ fov: 23, position: [0, 2.35, 4.15], near: 0.1, far: 40 }}
       onCreated={({ gl, camera }) => {
         gl.setClearColor(0x000000, 0);
@@ -485,7 +496,8 @@ export default function MandateOrbit(props: MandateOrbitProps) {
       style={{ touchAction: "pan-y" }}
     >
       <FitInstrument />
-      <Environment resolution={256} frames={1}>
+      <Ticker on={ticking} fps={30} />
+      <Environment resolution={128} frames={1}>
         <Lightformer form="rect" intensity={2.6} position={[0, 5, 1]} rotation-x={Math.PI / 2} scale={[10, 3, 1]} />
         <Lightformer form="rect" intensity={1.4} position={[-5, 1, 1]} rotation-y={Math.PI / 2} scale={[8, 1.2, 1]} />
         <Lightformer form="rect" intensity={0.9} position={[5, 0.5, -1]} rotation-y={-Math.PI / 2} scale={[8, 0.8, 1]} />
@@ -501,11 +513,6 @@ export default function MandateOrbit(props: MandateOrbitProps) {
           onChange={({ factor }) => setDpr(Math.round((1 + (maxDpr - 1) * factor) * 20) / 20)}
           onFallback={() => setDpr(1)}
         />
-      ) : null}
-      {composer ? (
-        <EffectComposer multisampling={0}>
-          <Bloom mipmapBlur luminanceThreshold={0.92} luminanceSmoothing={0.08} intensity={0.55} radius={0.6} />
-        </EffectComposer>
       ) : null}
     </Canvas>
   );

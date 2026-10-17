@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-17T02:21:02.808Z",
+  "generatedAt": "2026-10-17T04:22:30.350Z",
   "timeline": {
-    "head": "de63b3a",
-    "count": 94,
+    "head": "e7928fc",
+    "count": 95,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-17T08:11:53+06:00",
+    "last": "2026-10-17T08:51:12+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -662,6 +662,13 @@
         "hash": "de63b3a",
         "at": "2026-10-17T08:11:53+06:00",
         "subject": "Review record: YR-04 and YR-07 fixed in a706b92",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "e7928fc",
+        "at": "2026-10-17T08:51:12+06:00",
+        "subject": "Home says what it is in the first screen; shorter home and About; Judge Mode: a guided 3-minute demo with real operations",
         "track": "infra",
         "milestone": false
       }

@@ -14,12 +14,13 @@ import { PasskeyIcon } from "@/components/shell/site-nav";
 import { MotionToggle, useMotionOff, useTheme } from "@/components/preferences";
 import { HERO_RECEIPTS, remainingShare, sampleBench } from "./hero-data";
 import { OrbitSvg } from "./orbit-svg";
+import { HeroChips } from "./hero-chips";
+import { Magnetic } from "@/components/fx/magnetic";
 import "./landing.css";
 
 // The 3D and shader chunks load only after first paint and idle, and never under reduced motion,
 // the Pause motion control, Save-Data, low device memory or without WebGL2 (the poster stays).
 const MandateOrbit = dynamic(() => import("@/components/three/mandate-orbit"), { ssr: false, loading: () => null });
-const Atmosphere = dynamic(() => import("./atmosphere"), { ssr: false, loading: () => null });
 
 function webgl2(): boolean {
   try {
@@ -247,11 +248,8 @@ export function Hero({ poster = false }: { poster?: boolean }) {
 
   return (
     <section ref={section} aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-bg-0 text-fg-1">
-      {afterLoad && webglOk ? (
-        <div className="absolute inset-0 -z-10 opacity-90 [mask-image:radial-gradient(120%_90%_at_70%_45%,#000_30%,transparent_80%)]">
-          <Atmosphere moving={!motionOff && onScreen} />
-        </div>
-      ) : null}
+      <div aria-hidden="true" className="yl-hero-glow" />
+      <div aria-hidden="true" className="yl-hero-beam" />
 
       {/* First screen, full bleed: what it is, what to do, three live numbers, and the orbit. */}
       <div className="yl-hero-grid relative">
@@ -265,7 +263,7 @@ export function Hero({ poster = false }: { poster?: boolean }) {
               An AI agent that pays for you.
             </span>
             <span className="yl-hero-line block text-fg-2" style={{ ["--d" as string]: "140ms" }}>
-              It cannot break your rules.
+              <span className="yl-sheen">It cannot break your rules.</span>
             </span>
           </h1>
           <p className="yl-hero-in yl-hero-sub m-0 mt-5 text-fg-2" style={{ ["--d" as string]: "220ms" }}>
@@ -273,13 +271,17 @@ export function Hero({ poster = false }: { poster?: boolean }) {
             blockchain blocks anything else and keeps a receipt for every action.
           </p>
           <div className="yl-hero-in mt-6 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "280ms" }}>
-            <ButtonLink href="/judge" size="lg">
-              Start the 3-minute demo <ArrowIcon />
-            </ButtonLink>
-            <ButtonLink href="/start" variant="secondary" size="lg">
-              <PasskeyIcon size={16} />
-              Create your agent
-            </ButtonLink>
+            <Magnetic>
+              <ButtonLink href="/judge" size="lg">
+                Start the 3-minute demo <ArrowIcon />
+              </ButtonLink>
+            </Magnetic>
+            <Magnetic>
+              <ButtonLink href="/start" variant="secondary" size="lg">
+                <PasskeyIcon size={16} />
+                Create your agent
+              </ButtonLink>
+            </Magnetic>
             <ButtonLink href="/app" variant="quiet" size="lg" className="ml-1">
               See a demo
             </ButtonLink>
@@ -307,6 +309,7 @@ export function Hero({ poster = false }: { poster?: boolean }) {
         {/* The orbit column: the canvas fills it; the scene frames itself to the box. */}
         <div className="yl-hero-orbit" data-hero-orbit>
           {stage}
+          <HeroChips receipts={receipts} />
         </div>
       </div>
 

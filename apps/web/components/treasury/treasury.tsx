@@ -239,14 +239,13 @@ export function Treasury() {
       <PageHeader
         eyebrow="Company demo"
         title={v?.entity.name ?? "Lotus Lane treasury"}
-        lead="An AI treasurer pays this company's suppliers and staff on its own, within the board's limits. Anything bigger needs two of three directors to approve. Below: the limits, the 30-day cash forecast, the approvals waiting, and every payment."
+        lead="An AI treasurer pays suppliers and staff on its own, within the board's limits. Anything bigger needs two of three directors."
+        art="treasury-glass"
         chips={
           v ? (
             <>
               <TestUnitsChip />
-              <LabelChip>{v.entity.rail.label}</LabelChip>
               <LedgerChip ledger={v.entity.rail.ledger} />
-              {v.entity.jurisdiction === "mainland" ? <LabelChip dotted>e-CNY-style simulator, not the PBoC sandbox</LabelChip> : null}
               <LabelChip dotted>Fictional company</LabelChip>
             </>
           ) : null
@@ -265,10 +264,13 @@ export function Treasury() {
       >
         <ErrorLine error={entities.error} />
         {v ? (
-          <p className="m-0 max-w-[80ch] text-12 text-fg-muted">
-            {v.entity.rail.note} Personal here means the agent&apos;s authority is bound to verified persons: for a company, its directors ({v.entity.threshold} of{" "}
-            {v.entity.directors.length}). The board resolution is the treasurer agent&apos;s mandate.
-          </p>
+          <details className="group text-12 text-fg-muted">
+            <summary className="w-fit cursor-pointer text-fg-2 underline decoration-line-3 underline-offset-4 hover:text-fg-0">About this payment rail</summary>
+            <p className="m-0 mt-2 max-w-[80ch]">
+              {v.entity.rail.label}. {v.entity.rail.note} The agent&apos;s authority is bound to verified persons: for a company, its directors ({v.entity.threshold} of{" "}
+              {v.entity.directors.length}). The board resolution is the treasurer agent&apos;s mandate.
+            </p>
+          </details>
         ) : null}
       </PageHeader>
 

@@ -29,19 +29,59 @@ export function uptimeText(seconds: number | null | undefined): string {
 /* ------------------------------------------------------------------ layout */
 
 /** One numbered section of the document: hairline on top, number in mono, a short plain lead. */
-export function ProofSection({ n, id, title, lead, meta, children, className }: { n: number; id: string; title: string; lead?: ReactNode; meta?: ReactNode; children: ReactNode; className?: string }) {
-  return (
-    <section id={id} aria-labelledby={`${id}-title`} className={cn("grid min-w-0 scroll-mt-[calc(var(--nav-h)+24px)] grid-cols-[minmax(0,1fr)] gap-5 border-t border-line-2 pt-8 print:break-inside-avoid", className)}>
-      <div className="grid gap-2">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-          <h2 id={`${id}-title`} className="m-0 flex items-baseline gap-4 text-18 font-semibold text-fg-0">
-            <span className="font-mono text-13 text-fg-muted tabular-nums">{String(n).padStart(2, "0")}</span>
-            {title}
-          </h2>
-          {meta ? <div className="flex flex-wrap items-center gap-2 text-12 text-fg-muted">{meta}</div> : null}
-        </div>
-        {lead ? <p className="m-0 max-w-[64ch] text-13 text-fg-2">{lead}</p> : null}
+export function ProofSection({
+  n,
+  id,
+  title,
+  lead,
+  meta,
+  children,
+  className,
+  fold,
+}: {
+  n: number;
+  id: string;
+  title: string;
+  lead?: ReactNode;
+  meta?: ReactNode;
+  children: ReactNode;
+  className?: string;
+  /** Closed until opened: for the heaviest tables. The heading and the lead stay visible. */
+  fold?: boolean;
+}) {
+  const head = (
+    <div className="grid min-w-0 gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <h2 id={`${id}-title`} className="type-display m-0 flex items-center gap-3 text-22 text-fg-0">
+          <span className="inline-grid size-9 shrink-0 place-items-center rounded-pill border border-line-2 bg-bg-0 font-mono text-12 text-fg-1 tabular-nums">{String(n).padStart(2, "0")}</span>
+          {title}
+        </h2>
+        {meta ? <div className="flex flex-wrap items-center gap-2 text-12 text-fg-muted">{meta}</div> : null}
       </div>
+      {lead ? <p className="m-0 max-w-[64ch] text-13 text-fg-2">{lead}</p> : null}
+    </div>
+  );
+  const shell = cn("yl-card yl-card--glass min-w-0 scroll-mt-[calc(var(--nav-h)+64px)] p-5 sm:p-7 print:break-inside-avoid", className);
+  if (fold) {
+    return (
+      <details id={id} className={cn("yl-fold group", shell)}>
+        <summary className="flex cursor-pointer list-none items-start justify-between gap-4 [&::-webkit-details-marker]:hidden">
+          {head}
+          <span className="mt-1 inline-flex h-9 shrink-0 items-center gap-2 rounded-pill border border-line-2 px-3 text-12 text-fg-1 transition-colors group-hover:border-line-3">
+            <span className="group-open:hidden">Show the numbers</span>
+            <span className="hidden group-open:inline">Hide</span>
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" className="transition-transform duration-200 group-open:rotate-180">
+              <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        </summary>
+        <div className="mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5">{children}</div>
+      </details>
+    );
+  }
+  return (
+    <section id={id} aria-labelledby={`${id}-title`} className={cn("grid grid-cols-[minmax(0,1fr)] gap-5", shell)}>
+      {head}
       {children}
     </section>
   );

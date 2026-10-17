@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@yinglong/ui";
 import { Mark, Wordmark } from "@/components/brand/mark";
 import { ButtonLink, CloseIcon } from "@/components/ui/button";
@@ -37,10 +38,22 @@ export function SiteNav() {
   const session = useVisitorSession();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hover, setHover] = useState<string | null>(null);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 8);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
   // Workspace routes (the in-app rail spans the full width) get a full-width bar to match.
   const workspace = WORKSPACE.some((w) => pageActive(pathname, w));
+  const activeHref = SITE_PAGES.find((p) => pageActive(pathname, p.href))?.href ?? null;
+  const pillAt = hover ?? activeHref;
   return (
     <header
+      data-scrolled={scrolled}
       className="yl-sitenav no-print sticky top-0 z-40 border-b border-line-1 bg-bg-0 text-fg-1"
     >
       <div className={cn("yl-container flex h-[var(--nav-h)] items-center justify-between gap-3", workspace && "max-w-none")}>
@@ -50,19 +63,30 @@ export function SiteNav() {
         </Link>
 
         <nav aria-label="Site" className="hidden h-full items-stretch xl:flex">
-          <ul className="m-0 flex list-none items-stretch gap-0.5 p-0">
+          <ul className="m-0 flex list-none items-stretch gap-0.5 p-0" onPointerLeave={() => setHover(null)}>
             {SITE_PAGES.map((p) => {
               const active = pageActive(pathname, p.href);
               return (
-                <li key={p.href} className="flex">
+                <li key={p.href} className="flex" onPointerEnter={() => setHover(p.href)}>
                   <Link
                     href={p.href}
                     aria-current={active ? "page" : undefined}
+                    onFocus={() => setHover(p.href)}
+                    onBlur={() => setHover(null)}
                     className={cn(
-                      "relative flex items-center rounded-control px-2.5 text-13 transition-colors duration-150",
-                      active ? "font-medium text-fg-0" : "text-fg-2 hover:text-fg-0",
+                      "relative isolate flex items-center rounded-control px-2.5 text-13 transition-colors duration-150",
+                      active || pillAt === p.href ? "text-fg-0" : "text-fg-2",
+                      active && "font-medium",
                     )}
                   >
+                    {pillAt === p.href ? (
+                      <motion.span
+                        layoutId="yl-navpill"
+                        aria-hidden="true"
+                        className="yl-navpill"
+                        transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 520, damping: 40, mass: 0.7 }}
+                      />
+                    ) : null}
                     {p.label}
                     {active ? <span aria-hidden="true" className="absolute inset-x-2.5 -bottom-px h-px bg-fg-0" /> : null}
                   </Link>

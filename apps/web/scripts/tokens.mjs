@@ -7,9 +7,14 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const TOKENS = {
+  // ORBIT Volt (17 Oct 2026). Dark: a lime-yellow green (#CBFF3C). Light: a separate design, deep ultramarine with a burnt-orange highlight on warm paper.
+  // ORBIT Volt (17 Oct 2026): the dark and ash base stays. On top of it, an electric green accent
+  // (#3DE35B) and a small family of supporting colours, used only for actions, states and highlights. Colour still carries state: electric green = brand, action and "inside the
+  // rules"; cyan = written on a ledger; amber = waiting on a person; coral = the seal; violet = the
+  // AI screen; lime = highlights; the inverted chip = refused.
   dark: {
-    "bg-0": "#0B0C0F", // obsidian
-    "bg-1": "#121418", // graphite-900
+    "bg-0": "#0B0C0F", // green obsidian
+    "bg-1": "#121418",
     "bg-2": "#171A1F",
     "bg-3": "#1E2228",
     "line-1": "#272C34", // decorative hairline
@@ -18,32 +23,40 @@ export const TOKENS = {
     "fg-faint": "#5C6470", // disabled only
     "fg-muted": "#8A93A0",
     "fg-2": "#B3BAC4",
-    "fg-1": "#E7E9EC", // bone
+    "fg-1": "#E7E9EC",
     "fg-0": "#F6F7F9",
     "chrome-0": "#FFFFFF", // seal and logo material only
     "chrome-1": "#C9CFD6",
     "chrome-2": "#9AA3AE",
-    steel: "#86AEDD", // written on a ledger
-    "steel-tint": "#1A2638",
-    brass: "#D3B46B", // waiting on a person
-    "brass-tint": "#2A2416",
-    jade: "#6CC39A", // inside the rules, settled
-    "jade-tint": "#15291F",
-    seal: "#F0634B", // the owner's seal, the pearl
-    "seal-tint": "#2E1813",
+    accent: "#CBFF3C", // brand and action: electric green
+    "accent-tint": "#242C0A",
+    "accent-fg": "#0F1503", // text on the accent
+    "accent-glow": "#CBFF3C", // lights, glows and fills (never text)
+    lime: "#E6FF7A", // highlights and gradients
+    "lime-tint": "#2A3008",
+    violet: "#A394FF", // the AI screen, gradients
+    "violet-tint": "#1B1840",
+    steel: "#3CD3F0", // written on a ledger (cyan)
+    "steel-tint": "#0A2630",
+    brass: "#FFB84D", // waiting on a person (amber)
+    "brass-tint": "#2D2008",
+    jade: "#3DE35B", // inside the rules, settled
+    "jade-tint": "#0E2A14",
+    seal: "#FF5A5F", // the owner's seal, the pearl (coral)
+    "seal-tint": "#301214",
     canvas: "#0E1014", // behind live charts
     grid: "#1A1E24", // chart grid lines
     "refused-bg": "#E7E9EC", // inverted chip
     "refused-fg": "#0B0C0F",
-    focus: "#FFFFFF",
+    focus: "#CBFF3C",
     "ink-mark": "#F4F3F0",
     signature: "#9A9A96",
   },
   light: {
-    "bg-0": "#F3F2EE", // bone
-    "bg-1": "#FAFAF7", // paper
+    "bg-0": "#F3F2EE", // pale green ivory
+    "bg-1": "#FAFAF7",
     "bg-2": "#FFFFFF",
-    "bg-3": "#ECEBE6", // ash-100
+    "bg-3": "#ECEBE6",
     "line-1": "#DCDAD3",
     "line-2": "#C3C1B9",
     "line-3": "#82807A",
@@ -55,14 +68,22 @@ export const TOKENS = {
     "chrome-0": "#0B0B0A",
     "chrome-1": "#46453F",
     "chrome-2": "#6B6A63",
-    steel: "#2E5C95",
-    "steel-tint": "#E3ECF7",
+    accent: "#2B3AE0",
+    "accent-tint": "#E3E6FC",
+    "accent-fg": "#FFFFFF",
+    "accent-glow": "#5565FF",
+    lime: "#C2410C",
+    "lime-tint": "#FDEBDD",
+    violet: "#8B2FD6",
+    "violet-tint": "#F1E4FB",
+    steel: "#0B6E85",
+    "steel-tint": "#D8EEF3",
     brass: "#7A5A10",
     "brass-tint": "#F6EFD9",
-    jade: "#1F7A55",
-    "jade-tint": "#E3F2EA",
-    seal: "#A62E1C",
-    "seal-tint": "#F7E6E1",
+    jade: "#0F766E",
+    "jade-tint": "#DDF1EE",
+    seal: "#B3262B",
+    "seal-tint": "#F8E3E3",
     canvas: "#FFFFFF",
     grid: "#ECEBE6",
     "refused-bg": "#1D1C1A",

@@ -129,7 +129,7 @@ export function ProofWall() {
     <section ref={root} aria-labelledby="wall-title" className="yl-landing-section yl-defer border-y border-line-1 bg-bg-1">
       <div className="yl-container">
         <SectionHead
-          index="03"
+          index="06"
           eyebrow="As it happens"
           id="wall-title"
           title="Live activity on both chains"

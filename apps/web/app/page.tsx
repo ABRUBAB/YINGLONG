@@ -1,17 +1,23 @@
 import { ViewTransition } from "react";
 import { Hero } from "@/components/landing/hero";
-import { TryIt } from "@/components/landing/try-it";
+import { LiveTicker } from "@/components/landing/live-ticker";
+import { Bento } from "@/components/landing/bento";
+import { RulesLab } from "@/components/landing/rules-lab";
 import { ScalesPipeline } from "@/components/landing/scales-pipeline";
 import { TwinChains } from "@/components/landing/twin-chains";
 import { ProofWall } from "@/components/landing/proof-wall";
 import { OwnAgent } from "@/components/landing/own-agent";
+import { FinalCta } from "@/components/landing/final-cta";
+import { ReceiptChain } from "@/components/landing/receipt-chain";
 
 /**
- * Landing, about 4,000 px at 1440 wide: the first screen says what the product is, offers the
- * three actions and shows three live numbers beside the Mandate Orbit (poster first, 3D after
- * load); then a thin strip of what you can do here, the nine checks with the last attack stopped
- * and the Judge's Challenge, the same enforcer bytecode on two ledgers, the live proof wall, and
- * your own agent. No pricing, testimonials or logo wall. `/?poster=1` renders the 3D stage alone
+ * Landing: the first screen says what the product is, offers the three actions and shows three live
+ * numbers beside the Mandate Orbit (poster first, 3D after load), with real receipts drifting past in
+ * a strip under it. Then, in the order a visitor would ask: six things to try (living tiles); a
+ * practice run of the rules they can drive (Rules Lab); the nine checks as a place to scroll through
+ * (3D, with the flat rail as the fallback) and the Judge's Challenge; a phone to say, see and seal
+ * their own agent on; the same enforcer bytecode on two ledgers; the live proof wall; and a closing
+ * call to action. No pricing, testimonials or logo wall. `/?poster=1` renders the 3D stage alone
  * for scripts/posters.mjs. Route changes crossfade through <ViewTransition> (unsupported browsers
  * just navigate).
  */
@@ -29,11 +35,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     <ViewTransition>
       <main id="main">
         <Hero />
-        <TryIt />
+        <LiveTicker />
+        <Bento />
+        <RulesLab />
         <ScalesPipeline />
+        <OwnAgent />
+        <ReceiptChain />
         <TwinChains />
         <ProofWall />
-        <OwnAgent />
+        <FinalCta />
       </main>
     </ViewTransition>
   );

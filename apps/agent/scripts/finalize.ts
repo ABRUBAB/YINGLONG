@@ -944,7 +944,7 @@ write(
     "uvx --from 'git+https://github.com/ABRUBAB/YINGLONG#subdirectory=tools/verify-py' yinglong verify nadia --chain anvil --offline",
     "```",
     "",
-    "Judge's Challenge: https://app.yinglong-agent.tech/challenge",
+    "Try to hack it (the Judge's Challenge): https://app.yinglong-agent.tech/challenge",
     "",
   ].join(nl),
 );

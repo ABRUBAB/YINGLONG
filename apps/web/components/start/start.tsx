@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemedImg } from "@/components/fx/themed-img";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -230,21 +231,25 @@ export function Start() {
 
   return (
     <div className="mx-auto w-full max-w-[1120px] px-4 pt-10 pb-20 sm:px-6 lg:px-8">
-      <header className="grid gap-4">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="eyebrow m-0 text-fg-muted">Try it yourself</p>
-            <h1 className="type-display m-0 mt-2 max-w-[20ch] text-[2.2rem] leading-[1.05] text-fg-0 sm:text-[2.8rem]">
-              Get your own AI agent in three steps.
-            </h1>
+      <header className="grid items-center gap-x-10 gap-y-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="grid gap-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="eyebrow m-0 text-fg-muted">Try it yourself</p>
+              <h1 className="type-display m-0 mt-2 max-w-[20ch] text-[2.2rem] leading-[1.05] text-fg-0 sm:text-[2.8rem]">
+                Get your own AI agent in three steps.
+              </h1>
+            </div>
+            <SampleBadge />
           </div>
-          <SampleBadge />
+          <p className="m-0 max-w-[52ch] text-15 text-fg-2 sm:text-18 sm:leading-[1.6]">
+            Say what your agent may spend, check the rules, then lock them with your fingerprint or face. After that it can only spend inside them. Test money only.
+          </p>
+          <Stepper phase={phase.at} />
         </div>
-        <p className="measure m-0 text-lead text-fg-2">
-          Tell your agent what it may spend, check the rules, then lock them with your phone&apos;s fingerprint or face unlock. After
-          that, your agent can only spend inside those rules. Test money only.
-        </p>
-        <Stepper phase={phase.at} />
+        <div className="hidden lg:block" aria-hidden="true">
+          <ThemedImg name="phone-key" alt="" width={640} height={440} className="yl-float h-auto w-full" />
+        </div>
       </header>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
@@ -382,10 +387,10 @@ export function Start() {
           ) : null}
           <p className="eyebrow m-0 text-fg-muted">Good to know</p>
           <ul className="m-0 grid list-none gap-3 p-0">
-            <li>Your fingerprint never leaves your phone. We only receive a public key, never anything that could sign for you.</li>
-            <li>Only your passkey controls your account. There is no password and no secret phrase to lose.</li>
-            <li>This uses test money on {ledgers ?? "a test blockchain"}. Nothing here is real money or touches a bank.</li>
-            <li>Your agent can pay a few sample shops: small amounts on its own, bigger ones only after you confirm. Anything else is blocked by the blockchain itself.</li>
+            <li>Your fingerprint never leaves your phone.</li>
+            <li>Only your passkey controls the account: no password to lose.</li>
+            <li>Test money only, on {ledgers ?? "a test blockchain"}.</li>
+            <li>Small payments run alone, bigger ones wait for you, everything else is blocked.</li>
           </ul>
           <div className="flex flex-wrap gap-1.5">
             <LabelChip>Test units only</LabelChip>

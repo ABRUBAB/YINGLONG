@@ -369,7 +369,8 @@ export function Supervisor() {
       <PageHeader
         eyebrow="Regulator view"
         title="Every AI agent, who it works for, and a pause button"
-        lead="This is what a regulator sees: every registered agent, who it acts for, who vouches for it, and whether its records check out. A regulator can pause any agent, but can never spend anyone's money. Press Verify on any row to check a record yourself."
+        lead="Every registered agent, who it acts for, who vouches for it, and whether its records check out. A regulator can pause an agent but can never spend. Press Verify on any row."
+        art="gates-glass"
         chips={
           <>
             <LabelChip dotted>Supervisor role played by the team</LabelChip>

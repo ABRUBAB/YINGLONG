@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { RingGlyph } from "@yinglong/ui";
-import { Mark, TeamMark, Wordmark } from "@/components/brand/mark";
+import { TeamMark } from "@/components/brand/mark";
 import { ArrowIcon, ButtonLink, ExternalIcon } from "@/components/ui/button";
 import { PillarGlyph } from "@/components/landing/pillar-glyph";
 import { SectionHead } from "@/components/landing/sections";
@@ -9,6 +9,9 @@ import { PasskeyIcon } from "@/components/shell/site-nav";
 import { REPO_URL } from "@/components/shell/site-footer";
 import { PILLARS } from "@/content/pillars";
 import { TEAM } from "@/content/team";
+import { TeamGrid } from "./team-grid";
+import { TeamPanels } from "./team-panels";
+import { ThemedImg } from "@/components/fx/themed-img";
 import { SITE } from "@/content/site-data";
 import { BuildTimeline } from "./timeline";
 import "./about.css";
@@ -44,12 +47,27 @@ const LINKS = [
   { href: "/start", label: "Your own agent", note: "Sign up with a passkey, test units only", external: false },
 ] as const;
 
-const ON_PAGE = [
-  ["#about-pillars-title", "How it works"],
-  ["#build-title", "The build"],
-  ["#stack-title", "Stack"],
-  ["#honesty-title", "Honest labels"],
-  ["#team-title", "Team and links"],
+const STORY = [
+  {
+    art: "phone-key",
+    h: "The problem",
+    p: "People now let AI agents pay for things. But a language model can be tricked by a fake invoice or one sneaky sentence, and a payment sent to the wrong place cannot be taken back.",
+  },
+  {
+    art: "gates-glass",
+    h: "The idea",
+    p: "So the AI never gets the last word. It can read, plan and ask. Plain rules that the owner wrote and locked decide what is allowed, and the blockchain checks them again.",
+  },
+  {
+    art: "receipts-glass",
+    h: "The proof",
+    p: "Every action leaves a receipt anyone can check, including the ones that were refused. You do not have to take our word for it.",
+  },
+] as const;
+
+const SCENARIOS = [
+  { tag: "Shown through, one", who: "A student in Hong Kong", what: "Nadia's agent pays rent and food on its own and asks before anything bigger. Fictional." },
+  { tag: "Shown through, two", who: "A company in Shenzhen", what: "A treasurer agent pays suppliers; big payments need two of three directors. Fictional." },
 ] as const;
 
 export function AboutPage() {
@@ -60,62 +78,102 @@ export function AboutPage() {
   return (
     <ViewTransition>
       <main id="main">
-        {/* Header: what it is, and who made it for which competition. */}
-        <section aria-labelledby="about-title" className="relative overflow-hidden border-b border-line-1 bg-bg-0 text-fg-1">
-          <div className="yl-container grid gap-10 pt-12 pb-12 lg:grid-cols-12 lg:gap-8 lg:pt-16 lg:pb-16">
-            <div className="lg:col-span-7">
-              <p className="yl-hero-in eyebrow m-0 flex items-center gap-3 text-fg-muted">
-                <span aria-hidden="true" className="h-px w-8 bg-line-3" />
-                About YINGLONG
-              </p>
-              <h1 id="about-title" className="type-hero m-0 mt-5 text-[2.25rem] text-fg-0 sm:text-[3rem] lg:text-[clamp(2.75rem,1rem+2.6vw,3.75rem)]">
-                <span className="yl-hero-line block" style={{ ["--d" as string]: "60ms" }}>
-                  An AI agent that pays for you
-                </span>
-                <span className="yl-hero-line block text-fg-2" style={{ ["--d" as string]: "140ms" }}>
-                  and proves it kept to your rules.
-                </span>
-              </h1>
-              <p className="yl-hero-in m-0 mt-5 max-w-[40rem] text-15 text-fg-2 sm:text-18 sm:leading-[1.6]" style={{ ["--d" as string]: "220ms" }}>
-                YINGLONG gives an AI agent its own ID, spending rules that only its owner can set (locked with a fingerprint or a secret key),
-                nine checks before any payment, and a receipt for every action that anyone can check on a blockchain. The same rule code runs
-                on a public blockchain and on a consortium blockchain
-                {twin && equal !== null ? (
-                  <>
-                    {" "}
-                    (<span className="font-mono text-fg-1">{equal}/{twin.enforcers.length}</span> rule programs with identical bytecode, from the
-                    deployment files)
-                  </>
-                ) : null}
-                .
-              </p>
-              <nav aria-label="On this page" className="yl-hero-in mt-6 flex flex-wrap gap-x-5 gap-y-2 text-13" style={{ ["--d" as string]: "280ms" }}>
-                {ON_PAGE.map(([href, label]) => (
-                  <a key={href} href={href} className="text-fg-2 underline decoration-line-3 underline-offset-4 hover:text-fg-0 hover:decoration-fg-1">
-                    {label}
-                  </a>
-                ))}
-              </nav>
-            </div>
-            <div className="yl-hero-in flex items-start lg:col-span-5 lg:justify-end" style={{ ["--d" as string]: "300ms" }}>
-              <div className="grid w-full max-w-[420px] gap-4 rounded-sheet border border-line-1 bg-bg-1 p-5">
-                <div className="flex items-center gap-4">
-                  <TeamMark size={48} className="text-fg-0" />
-                  <div>
-                    <p className="m-0 text-18 font-medium text-fg-0">Team {TEAM.name}</p>
-                    <p className="m-0 text-13 text-fg-muted">{TEAM.country}. A Shadow Chaser innovation.</p>
+        {/* Opening: one statement, set large. Then why we built it, the people, and the numbers: the order modern About pages share. */}
+        <section aria-labelledby="about-title" className="relative isolate overflow-hidden border-b border-line-1">
+          <div aria-hidden="true" className="yl-hero-glow" />
+          <div className="yl-container grid items-stretch gap-8 py-10 lg:grid-cols-12 lg:gap-10 lg:py-14">
+            <div className="grid content-between gap-8 lg:col-span-4">
+              <div className="grid content-start gap-5">
+                <p className="eyebrow m-0 flex items-center gap-3 text-fg-muted">
+                  <span aria-hidden="true" className="h-px w-8 bg-line-3" />
+                  About YINGLONG
+                </p>
+                <h1 id="about-title" className="type-display m-0 text-[clamp(2rem,1.2rem+2.2vw,3rem)] leading-[1.05] text-fg-0">
+                  An AI wallet you can <span className="text-fg-2">check, not just trust.</span>
+                </h1>
+                <p className="m-0 max-w-[40ch] text-15 text-fg-2 sm:text-18 sm:leading-[1.6]">
+                  YINGLONG lets an AI agent pay for you inside rules only you can change, and leaves a receipt for everything it does.
+                </p>
+              </div>
+              <dl className="m-0 grid gap-2.5 border-t border-line-1 pt-5 text-13">
+                {COMPETITION.map((c) => (
+                  <div key={c.term} className="grid grid-cols-[6.5rem_1fr] gap-3">
+                    <dt className="text-fg-muted">{c.term}</dt>
+                    <dd className="m-0 text-fg-1">{c.value}</dd>
                   </div>
+                ))}
+                <div className="grid grid-cols-[6.5rem_1fr] gap-3">
+                  <dt className="text-fg-muted">Made by</dt>
+                  <dd className="m-0 flex items-center gap-2 text-fg-1">
+                    <TeamMark size={18} decorative />
+                    Team {TEAM.name}, {TEAM.country}
+                  </dd>
                 </div>
-                <dl className="m-0 grid gap-2 border-t border-line-1 pt-4 text-13">
-                  {COMPETITION.map((c) => (
-                    <div key={c.term} className="grid grid-cols-[6.5rem_1fr] gap-3">
-                      <dt className="text-fg-muted">{c.term}</dt>
-                      <dd className="m-0 text-fg-1">{c.value}</dd>
-                    </div>
-                  ))}
-                </dl>
+              </dl>
+            </div>
+            <div className="lg:col-span-8">
+              <TeamPanels />
+              <div className="md:hidden">
+                <TeamGrid />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* 01 Why we built it. */}
+        <section aria-labelledby="why-title" className="yl-about-section border-t border-line-1">
+          <div className="yl-container grid gap-10 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:col-span-4 lg:self-start">
+              <SectionHead index="01" eyebrow="Why we built it" id="why-title" title="Money is where a trick hurts." />
+            </div>
+            <div className="grid gap-12 lg:col-span-8">
+              <ol className="m-0 grid list-none gap-4 p-0">
+                {STORY.map((b, i) => (
+                  <li key={b.h} className="yl-card yl-card--glass yl-reveal grid items-center gap-4 overflow-hidden p-4 sm:grid-cols-[220px_1fr] sm:gap-6 sm:p-5">
+                    <div className="hidden sm:block" aria-hidden="true">
+                      <ThemedImg name={b.art} alt="" width={640} height={440} className="h-auto w-full" />
+                    </div>
+                    <div className="grid gap-2">
+                      <p className="kicker m-0">{String(i + 1).padStart(2, "0")}</p>
+                      <h3 className="type-display m-0 text-h3 text-fg-0">{b.h}</h3>
+                      <p className="m-0 max-w-[52ch] text-15 text-fg-2">{b.p}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {SCENARIOS.map((c) => (
+                  <div key={c.who} className="yl-card yl-card--glass grid content-start gap-2 p-5">
+                    <p className="eyebrow m-0 text-fg-muted">{c.tag}</p>
+                    <p className="type-display m-0 text-22 text-fg-0">{c.who}</p>
+                    <p className="m-0 text-13 text-fg-2">{c.what}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="m-0 text-12 text-fg-muted">{COMPETITION.map((c) => `${c.term}: ${c.value}`).join(". ")}.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* The work in five numbers. */}
+        <section aria-label="The work in numbers" className="yl-about-section">
+          <div className="yl-container">
+            <dl className="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line-1 bg-line-1 sm:grid-cols-3 lg:grid-cols-5">
+              {[
+                { k: "Commits in the open", v: SITE.timeline ? String(SITE.timeline.count) : "95", tone: "var(--steel)" },
+                { k: "Pillars", v: String(PILLARS.length), tone: "var(--lime)" },
+                { k: "Checks before a payment", v: "9", tone: "var(--brass)" },
+                { k: "Blockchains", v: "2", tone: "var(--violet)" },
+                { k: "Rule programs identical on both", v: twin && equal !== null ? `${equal}/${twin.enforcers.length}` : "13/13", tone: "var(--seal)" },
+              ].map((f) => (
+                <div key={f.k} className="grid content-start gap-1.5 bg-bg-1 px-5 py-5">
+                  <dd className="m-0 font-mono text-[2.25rem] leading-none tabular" style={{ color: f.tone }}>
+                    {f.v}
+                  </dd>
+                  <dt className="text-12 text-fg-muted">{f.k}</dt>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
 
@@ -123,7 +181,7 @@ export function AboutPage() {
         <section aria-labelledby="about-pillars-title" className="yl-about-section">
           <div className="yl-container grid gap-8 lg:grid-cols-12 lg:gap-8">
             <SectionHead
-              index="01"
+              index="03"
               eyebrow="How it works"
               id="about-pillars-title"
               title="Five pillars"
@@ -143,10 +201,15 @@ export function AboutPage() {
                       <p className="eyebrow m-0 mt-0.5 text-fg-muted">{p.role}</p>
                     </div>
                   </div>
-                  <div className="grid gap-1">
-                    <h3 className="m-0 text-15 font-medium text-fg-0">{p.question}</h3>
-                    <p className="m-0 max-w-[64ch] text-13 leading-relaxed text-fg-2">{p.answer}</p>
-                  </div>
+                  <details className="group">
+                    <summary className="flex cursor-pointer list-none items-start justify-between gap-3 [&::-webkit-details-marker]:hidden">
+                      <h3 className="m-0 text-15 font-medium text-fg-0">{p.question}</h3>
+                      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" className="mt-0.5 shrink-0 text-fg-muted transition-transform duration-200 group-open:rotate-180">
+                        <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </summary>
+                    <p className="m-0 mt-2 max-w-[64ch] text-13 leading-relaxed text-fg-2">{p.answer}</p>
+                  </details>
                 </li>
               ))}
             </ol>
@@ -157,16 +220,24 @@ export function AboutPage() {
         <section aria-labelledby="build-title" className="yl-about-section border-y border-line-1 bg-bg-1">
           <div className="yl-container grid gap-8 lg:grid-cols-12 lg:gap-8">
             <SectionHead
-              index="02"
+              index="04"
               eyebrow="The build"
               id="build-title"
               title="How it came together, from the git history"
               lead="Every row is a commit in the public repository. Milestones are the commits that took a capability live end to end."
               className="lg:col-span-4"
             />
-            <div className="lg:col-span-8">
-              <BuildTimeline />
-            </div>
+            <details className="yl-card yl-card--glass group lg:col-span-8">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-15 font-medium text-fg-0 [&::-webkit-details-marker]:hidden">
+                Show the history, commit by commit
+                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" className="shrink-0 text-fg-muted transition-transform duration-200 group-open:rotate-180">
+                  <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </summary>
+              <div className="px-5 pb-5">
+                <BuildTimeline />
+              </div>
+            </details>
           </div>
         </section>
 
@@ -174,7 +245,7 @@ export function AboutPage() {
         <section aria-labelledby="stack-title" className="yl-about-section">
           <div className="yl-container grid gap-8 lg:grid-cols-12 lg:gap-8">
             <SectionHead
-              index="03"
+              index="05"
               eyebrow="Technology"
               id="stack-title"
               title="The stack"
@@ -204,7 +275,7 @@ export function AboutPage() {
         <section aria-labelledby="honesty-title" className="yl-about-section border-y border-line-1 bg-bg-1">
           <div className="yl-container grid gap-8 lg:grid-cols-12 lg:gap-8">
             <SectionHead
-              index="04"
+              index="06"
               eyebrow="Honest labels"
               id="honesty-title"
               title="What is real, and what is simulated"
@@ -224,49 +295,18 @@ export function AboutPage() {
           </div>
         </section>
 
-        {/* 05 Team and links. */}
-        <section aria-labelledby="team-title" className="yl-about-section">
+        {/* 07 Contact and links. */}
+        <section aria-labelledby="links-title" className="yl-about-section border-t border-line-1">
           <div className="yl-container grid gap-8 lg:grid-cols-12 lg:gap-8">
             <SectionHead
-              index="05"
-              eyebrow="Team and links"
-              id="team-title"
-              title={`Team ${TEAM.name}`}
-              lead={`An independent team from ${TEAM.country}. The team takes questions and reports through the repository's issues.`}
+              index="07"
+              eyebrow="Contact and links"
+              id="links-title"
+              title="Read it, run it, break it."
+              lead="The code, the documents and the proof are public. Questions and reports go through the repository issues."
               className="lg:col-span-4"
-            >
-              <div className="mt-2 flex items-center gap-3 text-fg-0">
-                <Mark size={24} decorative />
-                <Wordmark height={11} />
-              </div>
-            </SectionHead>
-            <div className="grid gap-8 sm:grid-cols-2 lg:col-span-8">
-              <ul className="m-0 grid list-none content-start gap-0 border-t border-line-2 p-0">
-                {TEAM.members.map((m) => (
-                  <li key={m.name} className="yl-reveal flex items-center gap-4 border-b border-line-1 py-3">
-                    <span aria-hidden="true" className="inline-flex size-10 shrink-0 items-center justify-center rounded-pill border border-line-2 bg-bg-2 font-mono text-13 text-fg-0">
-                      {m.name.slice(0, 2)}
-                    </span>
-                    <span className="grid min-w-0 flex-1 gap-0.5">
-                      <span className="flex flex-wrap items-center gap-2 text-15 font-medium text-fg-0">
-                        {m.name}
-                        {m.lead ? <span className="eyebrow rounded-pill border border-line-2 px-2 py-0.5 text-fg-2">Lead</span> : null}
-                      </span>
-                      <span className="text-13 text-fg-muted">{m.role}</span>
-                    </span>
-                    {m.links?.length ? (
-                      <span className="flex flex-wrap gap-3 text-13">
-                        {m.links.map((l) => (
-                          <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-fg-1 hover:text-fg-0">
-                            {l.label} <ExternalIcon />
-                            <span className="sr-only">(opens in a new tab)</span>
-                          </a>
-                        ))}
-                      </span>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
+            />
+            <div className="grid gap-8 lg:col-span-8">
               <ul className="m-0 grid list-none content-start gap-0 border-t border-line-2 p-0">
                 {LINKS.map((l) => {
                   const inner = (
@@ -294,15 +334,15 @@ export function AboutPage() {
                   );
                 })}
               </ul>
-            </div>
-            <div className="flex flex-wrap gap-3 lg:col-span-8 lg:col-start-5">
-              <ButtonLink href="/start" size="lg">
-                <PasskeyIcon size={16} />
-                Sign up with your passkey
-              </ButtonLink>
-              <ButtonLink href="/" variant="secondary" size="lg">
-                See the Mandate Orbit <ArrowIcon />
-              </ButtonLink>
+              <div className="flex flex-wrap gap-3">
+                <ButtonLink href="/start" size="lg">
+                  <PasskeyIcon size={16} />
+                  Create your agent
+                </ButtonLink>
+                <ButtonLink href="/challenge" variant="secondary" size="lg">
+                  Try to hack it <ArrowIcon />
+                </ButtonLink>
+              </div>
             </div>
           </div>
         </section>

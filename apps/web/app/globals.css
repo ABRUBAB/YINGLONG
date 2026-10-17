@@ -79,6 +79,14 @@
   --color-chrome-0: var(--chrome-0);
   --color-chrome-1: var(--chrome-1);
   --color-chrome-2: var(--chrome-2);
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-glow: var(--accent-glow);
+  --color-lime: var(--lime);
+  --color-lime-tint: var(--lime-tint);
+  --color-violet: var(--violet);
+  --color-violet-tint: var(--violet-tint);
   --color-steel: var(--steel);
   --color-steel-tint: var(--steel-tint);
   --color-brass: var(--brass);
@@ -178,8 +186,8 @@
     -moz-osx-font-smoothing: grayscale;
   }
   ::selection {
-    background: var(--fg-1);
-    color: var(--bg-0);
+    background: var(--accent);
+    color: var(--accent-fg);
   }
   :focus-visible {
     outline: 2px solid var(--focus);

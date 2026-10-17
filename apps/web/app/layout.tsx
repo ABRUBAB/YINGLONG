@@ -4,6 +4,9 @@ import "./globals.css";
 import { SessionSync } from "@/components/session";
 import { SiteNav } from "@/components/shell/site-nav";
 import { SiteFooter } from "@/components/shell/site-footer";
+import { FxLayer } from "@/components/fx/fx-layer";
+import { BootScreen } from "@/components/brand/loader";
+import { BootControl } from "@/components/fx/boot-control";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://app.yinglong-agent.tech"),
@@ -31,7 +34,7 @@ export const viewport: Viewport = {
 
 // Applies the saved theme and motion preference before first paint (wrapped: storage may be blocked). Without a
 // saved theme the device setting decides (tokens.css, prefers-color-scheme).
-const PREFS = `try{var d=document.documentElement,t=localStorage.getItem("yl-theme"),m=localStorage.getItem("yl-motion");if(t==="light"||t==="dark")d.dataset.theme=t;if(m==="off")d.dataset.motion="off";}catch(e){}`;
+const PREFS = `try{var d=document.documentElement,t=localStorage.getItem("yl-theme"),m=localStorage.getItem("yl-motion");if(t==="light"||t==="dark")d.dataset.theme=t;if(m==="off")d.dataset.motion="off";if(!sessionStorage.getItem("yl-boot")&&!navigator.webdriver&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&m!=="off"){d.dataset.boot="1";}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -45,6 +48,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a href="#main" className="yl-skip">
           Skip to content
         </a>
+        <BootScreen />
+        <BootControl />
+        <FxLayer />
         <SiteNav />
         {children}
         <SiteFooter />

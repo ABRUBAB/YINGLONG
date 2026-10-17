@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemedImg } from "@/components/fx/themed-img";
 import type { ReactNode } from "react";
 import { cn, StateRing } from "@yinglong/ui";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,9 @@ import { SampleBadge } from "@/components/data/parts";
 import { isSample } from "@/lib/api";
 import { formatTime } from "@/lib/format";
 import { clock, describeError, seconds, useElapsed, type Run } from "./run";
+
+/** One illustration per step of the demo: the chain, the phone, the vault, the nine checks, the two ledgers, the receipts. */
+const STEP_ART = ["chain-glass", "phone-key", "vault-glass", "gates-glass", "ledgers-twin", "receipts-glass"] as const;
 
 export const TOTAL_STEPS = 6;
 
@@ -69,7 +73,7 @@ export function Stage({
       aria-labelledby={`judge-step-${n}`}
       data-step={n}
       data-run={run.at}
-      className="mx-auto flex min-h-[calc(100svh-var(--nav-h))] w-full max-w-[1120px] flex-col gap-6 px-4 pt-6 pb-4 sm:px-6 sm:pt-8 lg:px-8"
+      className="mx-auto flex min-h-[calc(100svh-var(--nav-h))] w-full max-w-[1320px] flex-col gap-6 px-4 pt-6 pb-4 sm:px-6 sm:pt-8 lg:px-8"
     >
       <header className="grid gap-3">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
@@ -98,17 +102,22 @@ export function Stage({
       </header>
 
       <div className="grid flex-1 content-start gap-6">
-        <div className="grid gap-3">
-          <h1 id={`judge-step-${n}`} className="type-display m-0 max-w-[24ch] text-[1.9rem] leading-[1.06] text-fg-0 sm:text-[2.5rem]">
-            {title}
-          </h1>
-          {lead ? <p className="measure m-0 text-lead text-fg-2">{lead}</p> : null}
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="grid gap-3">
+            <h1 id={`judge-step-${n}`} className="type-display m-0 max-w-[24ch] text-[1.9rem] leading-[1.06] text-fg-0 sm:text-[2.5rem]">
+              {title}
+            </h1>
+            {lead ? <p className="m-0 max-w-[60ch] text-15 text-fg-2 sm:text-18 sm:leading-[1.6]">{lead}</p> : null}
+          </div>
+          <div className="hidden lg:block" aria-hidden="true">
+            <ThemedImg name={STEP_ART[(n - 1) % STEP_ART.length]!} alt="" width={640} height={440} className="yl-float h-auto w-full" />
+          </div>
         </div>
         {children}
       </div>
 
       <footer className="sticky bottom-0 z-10 -mx-4 border-t border-line-1 bg-bg-0 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="mx-auto flex w-full max-w-[1120px] flex-wrap items-center gap-3">
+        <div className="mx-auto flex w-full max-w-[1320px] flex-wrap items-center gap-3">
           {onBack ? (
             <Button variant="quiet" onClick={onBack}>
               Back

@@ -15,19 +15,21 @@
 | 2 | Open the one-page proof: sealed mandates, allowed payments, approved payments, on-chain refusals with typed errors, a 2-of-3 board resolution, a one-tap pause | [`PROOF.md`](../PROOF.md) |
 | 3 | Decode any FISCO BCOS transaction (FISCO has no public explorer, so we serve a read-only decoder) | `https://api.yinglong-agent.tech/v1/tx/fisco/<hash>` |
 | 4 | Re-verify a mandate yourself with the independent Python verifier (needs `uv`) | `uvx --from 'git+https://github.com/ABRUBAB/YINGLONG#subdirectory=tools/verify-py' yinglong verify nadia --chain anvil --offline` |
-| 5 | Attack the guest agent: type any attack; "bypass" pushes it raw to the chain and returns the revert hash | `https://app.yinglong-agent.tech/challenge` (API: `POST https://api.yinglong-agent.tech/v1/challenge/attempt`) |
+| 5 | Attack the guest agent on "Try to hack it": type any attack, or choose "Straight to the blockchain" to push it raw and get the revert hash back | `https://app.yinglong-agent.tech/challenge` (API: `POST https://api.yinglong-agent.tech/v1/challenge/attempt`) |
 | 6 | Read the security self-assessment (tiers + known risks) | [`docs/SECURITY_SELF_ASSESSMENT.md`](SECURITY_SELF_ASSESSMENT.md) |
 
 ## 2. What to click
 
 | Route | What you see | What to check |
 |---|---|---|
+| `/judge` | The 3-minute demo: six steps, no typing; each runs a real operation on the live service | Every number shows the call it came from and how long it took; a "Sample data" chip means a number is not live |
 | `/app` | Nadia's agent: activity table, Authority panel, Hash Ring | Each row has a state word and, if on chain, a hash with its ledger badge |
 | `/approve/[id]` | The approval card | The card decodes the call itself and only signs one of the six allowed message kinds |
 | `/treasury` | Lotus Lane Shenzhen (coin-free rail) and Hong Kong | 2-of-3 director queue; rail label under the entity switch |
 | `/supervisor` | Registry of agents; Verify drawer | Merkle path from a receipt to its anchor; "Pause agent" pauses, never spends |
+| `/about` | The team (portrait panels), why we built it and what is real | Names and roles match the registration form |
 | `/proof` | Proof Center | Every number carries its source |
-| `/challenge` | Judge's Challenge board | Which of the nine scales stopped each attack; revert hashes |
+| `/challenge` | Try to hack it (the Judge's Challenge): attack the agent, with the nine checks drawn as a row | Which of the nine scales stopped each attack; revert hashes |
 
 ## 3. What to verify
 

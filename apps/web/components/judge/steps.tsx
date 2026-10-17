@@ -64,7 +64,7 @@ export function IntroStep({ run, setRun, nav }: { run: Run<IntroData>; setRun: (
     <Stage
       n={1}
       title="Watch an AI agent pay inside its rules, on a real blockchain, in three minutes."
-      lead="One click at a time: you get your own agent with rules locked on chain, it pays a shop, it is blocked when tricked, and even a raw transaction is refused by the blockchain itself. Every number, hash and timer on these screens comes from the live service."
+      lead="You get your own agent, it pays a shop, it is blocked when tricked, and even a raw transaction is refused by the blockchain. Every number here comes from the live service."
       clockNode={nav.clockNode}
       run={run}
       onNext={nav.onNext}
@@ -114,11 +114,29 @@ export function IntroStep({ run, setRun, nav }: { run: Run<IntroData>; setRun: (
             Ledgers now: {d.health.ledgers.map((l) => `${l.badge} at block ${l.block}`).join("; ")} (GET /v1/health, version {d.health.version}).
           </p>
         ) : null}
+        <ol className="m-0 grid list-none gap-2 p-0 sm:grid-cols-3 lg:grid-cols-6" aria-label="The six steps">
+          {ROADMAP.map((r, i) => (
+            <li key={r.t} className="yl-card yl-card--glass grid content-start gap-1 p-3.5" style={{ ["--tone" as string]: r.tone }}>
+              <span className="font-mono text-11" style={{ color: "var(--tone)" }}>{`0${i + 1}`}</span>
+              <span className="text-13 font-medium text-fg-0">{r.t}</span>
+              <span className="text-12 leading-snug text-fg-muted">{r.d}</span>
+            </li>
+          ))}
+        </ol>
         <p className="m-0 text-13 text-fg-2">No typing is needed. Each step runs a real operation and shows what came back, with the time it took.</p>
       </div>
     </Stage>
   );
 }
+
+const ROADMAP = [
+  { t: "Look", d: "The live service answers.", tone: "var(--steel)" },
+  { t: "Your agent", d: "Rules locked on chain.", tone: "var(--accent-glow)" },
+  { t: "A payment", d: "Nine checks, then paid.", tone: "var(--lime)" },
+  { t: "A trick", d: "Blocked, with the reason.", tone: "var(--seal)" },
+  { t: "A raw send", d: "The chain refuses it.", tone: "var(--violet)" },
+  { t: "Check it", d: "Open the records yourself.", tone: "var(--brass)" },
+] as const;
 
 /* ------------------------------------------------------------------ step 2: your own agent */
 

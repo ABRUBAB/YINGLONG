@@ -35,6 +35,10 @@ test.describe("desktop", () => {
     await expect(page.getByRole("heading", { name: "Every transaction, checkable" })).toBeVisible();
     await expect(page.getByText("Audit proof: live service only").first()).toBeVisible();
 
+    // The two heaviest sections are folded until opened.
+    await page.locator("#ml > summary").click();
+    await page.locator("#bench > summary").click();
+
     // ML: tiles with intervals, the confusion matrix and the real training log drawn as a chart.
     await expect(page.getByRole("heading", { name: "How good is the AI safety model?" })).toBeVisible();
     await expect(page.getByText("96.7%").first()).toBeVisible();

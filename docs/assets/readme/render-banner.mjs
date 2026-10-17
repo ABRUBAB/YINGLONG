@@ -32,11 +32,11 @@ const poster = dataUri(resolve(root, "apps/web/public/posters/orbit-1440.webp"),
 const themes = {
   dark: {
     bg: "#0B0C0F", fg0: "#F6F7F9", muted: "#8A93A0", fg2: "#B3BAC4", line: "#272C34",
-    chrome: "#C9CFD6", steel: "#86AEDD", brass: "#D3B46B", panel: false,
+    chrome: "#C9CFD6", steel: "#CBFF3C", brass: "#FFB84D", panel: false,
   },
   light: {
     bg: "#F3F2EE", fg0: "#0B0B0A", muted: "#6B6A63", fg2: "#46453F", line: "#DCDAD3",
-    chrome: "#1D1C1A", steel: "#2E5C95", brass: "#7A5A10", panel: true,
+    chrome: "#1D1C1A", steel: "#2B3AE0", brass: "#C2410C", panel: true,
   },
 };
 

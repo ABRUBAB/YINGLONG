@@ -60,14 +60,15 @@ export interface NavItem {
   mobile?: boolean;
 }
 
+/**
+ * The workspace menu lists only the pages that open inside the workspace (they keep this side menu).
+ * Every other page of the site is in the top bar and the site menu, never here, so a click in this menu
+ * never drops the menu.
+ */
 export const NAV: NavItem[] = [
   { href: "/app", label: "Agent console", glyph: "console", mobile: true },
-  { href: "/start", label: "Write new rules", glyph: "studio", mobile: true },
   { href: "/treasury", label: "Company demo", glyph: "treasury", mobile: true },
   { href: "/supervisor", label: "Regulator", glyph: "supervisor", mobile: true },
-  { href: "/proof", label: "Proof", glyph: "proof" },
-  { href: "/city", label: "Live map", glyph: "city" },
-  { href: "/challenge", label: "Try to hack it", glyph: "challenge" },
 ];
 
 export function NavGlyph({ name, size = 16 }: { name: keyof typeof NAV_GLYPHS; size?: number }) {

@@ -2,10 +2,13 @@ import type { ReactNode } from "react";
 import { cn, LabelChip, OutputChip } from "@yinglong/ui";
 import type { Ledger, Narration } from "@/lib/api/view";
 import { LedgerChip, SampleBadge } from "./parts";
+import { ThemedImg } from "@/components/fx/themed-img";
+import type { HeroArt } from "@/components/fx/page-hero";
 
 /**
- * Page header pattern: where you are, the route title, one sentence on what
- * the page proves, then the honest-label chips. Actions sit to the right on wide screens.
+ * Page header pattern: where you are, the route title, one sentence on what the page proves, then the
+ * honest-label chips. Actions sit to the right on wide screens. With `art` the header is a glass banner
+ * with a small illustration in its own column (from 1024 px up; a static SVG, so it costs nothing).
  */
 export function PageHeader({
   eyebrow,
@@ -15,6 +18,7 @@ export function PageHeader({
   actions,
   children,
   className,
+  art,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -23,14 +27,15 @@ export function PageHeader({
   actions?: ReactNode;
   children?: ReactNode;
   className?: string;
+  art?: HeroArt;
 }) {
-  return (
-    <header className={cn("grid gap-3", className)}>
+  const text = (
+    <div className="grid min-w-0 gap-3">
       <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           <p className="eyebrow m-0 text-fg-muted">{eyebrow}</p>
-          <h1 className="m-0 mt-2 text-22 font-semibold text-balance text-fg-0 sm:text-26">{title}</h1>
-          {lead ? <p className="m-0 mt-2 max-w-[60ch] text-15 text-fg-2">{lead}</p> : null}
+          <h1 className="type-display m-0 mt-2 text-22 text-balance text-fg-0 sm:text-[1.9rem] sm:leading-tight">{title}</h1>
+          {lead ? <p className="m-0 mt-2 max-w-[56ch] text-15 text-fg-2">{lead}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
@@ -39,6 +44,18 @@ export function PageHeader({
         {chips}
       </div>
       {children}
+    </div>
+  );
+  if (!art) return <header className={cn("grid gap-3", className)}>{text}</header>;
+  return (
+    <header className={cn("yl-card yl-card--glass relative isolate overflow-hidden p-5 sm:p-7", className)}>
+      <div aria-hidden="true" className="yl-hero-glow" />
+      <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_240px]">
+        {text}
+        <div className="hidden lg:block">
+          <ThemedImg name={art} alt="" width={640} height={440} className="yl-float h-auto w-full" />
+        </div>
+      </div>
     </header>
   );
 }

@@ -11,6 +11,7 @@ import { ruleForError, SITE } from "@/content/site-data";
 import { ArrowIcon, ButtonLink } from "@/components/ui/button";
 import { Qr } from "@/components/qr";
 import { SectionHead } from "./sections";
+import { GatesStage } from "./gates-stage";
 import { useInView } from "./use-live";
 
 /**
@@ -68,7 +69,7 @@ export function ScalesPipeline() {
       <div className="yl-container">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
           <SectionHead
-            index="01"
+            index="02"
             eyebrow="How it works"
             id="scales-title"
             title="Nine checks before any money moves"
@@ -108,6 +109,11 @@ export function ScalesPipeline() {
         </div>
 
         <div className="mt-8">
+          <GatesStage
+            stop={stop}
+            counts={counts}
+            total={total}
+            fallback={
           <div
             key={runKey}
             ref={track}
@@ -153,6 +159,8 @@ export function ScalesPipeline() {
               })}
             </ol>
           </div>
+            }
+          />
 
           <div className="mt-6 border-t border-line-1 pt-5">
             {latest ? (

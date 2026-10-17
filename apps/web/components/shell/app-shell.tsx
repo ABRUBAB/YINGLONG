@@ -94,6 +94,16 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
           </ul>
         </nav>
         <div className="grid gap-3 border-t border-line-1 px-3 pt-3 pb-4 xl:px-4">
+          <Link
+            href="/"
+            title="Back to the site"
+            className="flex h-9 items-center justify-center gap-2 rounded-control text-13 text-fg-2 hover:bg-bg-2 hover:text-fg-0 xl:justify-start xl:px-3"
+          >
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+              <path d="M9.5 3.5L5 8l4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span className="sr-only xl:not-sr-only">Back to the site</span>
+          </Link>
           <div className="hidden flex-wrap items-center gap-1.5 xl:flex">
             {isSample ? <SampleDataChip /> : null}
             <span className="text-11 text-fg-muted">Test units only</span>
@@ -163,7 +173,7 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
         {/* Mobile tab bar */}
         <nav
           aria-label="Sections"
-          className="fixed inset-x-0 bottom-0 z-30 grid h-16 grid-cols-5 border-t border-line-2 bg-bg-1 px-1 pb-[env(safe-area-inset-bottom)] lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-30 grid h-16 grid-cols-4 border-t border-line-2 bg-bg-1 px-1 pb-[env(safe-area-inset-bottom)] lg:hidden"
         >
           {NAV.filter((n) => n.mobile).map((item) => {
             const active = isActive(pathname, item.href);
@@ -200,9 +210,11 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
               </button>
             </div>
           ) : (
-            <Link href="/proof" className="flex flex-col items-center justify-center gap-1 text-11 text-fg-muted">
-              <NavGlyph name="proof" size={18} />
-              Proof
+            <Link href="/" className="flex flex-col items-center justify-center gap-1 text-11 text-fg-muted">
+              <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
+                <path d="M2.5 7.5L8 3l5.5 4.5V13h-11z" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+              </svg>
+              Site
             </Link>
           )}
         </nav>
@@ -227,6 +239,12 @@ export function AppShell({ persona, children, live = "active" }: { persona: Pers
             </li>
           ))}
         </ul>
+        <Link href="/" onClick={() => setMenu(false)} className="mt-2 flex h-11 items-center gap-3 rounded-control px-3 text-15 text-fg-2 hover:bg-bg-3">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <path d="M9.5 3.5L5 8l4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Back to the site
+        </Link>
         <div className="mt-4 flex items-center gap-1 border-t border-line-1 pt-4">
           <ThemeToggle />
           <MotionToggle />

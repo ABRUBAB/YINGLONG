@@ -9,7 +9,7 @@ export const ROUTES = [
   { path: "/challenge", name: "challenge", heading: /Try to trick the agent/ },
   { path: "/city", name: "city", heading: /Every agent and payment, live/ },
   { path: "/start", name: "start", heading: /Get your own AI agent in three steps/ },
-  { path: "/about", name: "about", heading: /An AI agent that pays for you/ },
+  { path: "/about", name: "about", heading: /An AI wallet you can check/ },
 ] as const;
 
 export const WIDTHS = [375, 768, 1440] as const;

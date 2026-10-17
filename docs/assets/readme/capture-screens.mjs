@@ -16,22 +16,28 @@ const sharp = require("sharp");
 const base = (process.argv[2] ?? "https://app.yinglong-agent.tech").replace(/\/$/, "");
 const shots = [
   { name: "home", path: "/" },
+  { name: "home-light", path: "/", scheme: "light" },
+  { name: "judge", path: "/judge" },
   { name: "console", path: "/app" },
   { name: "treasury", path: "/treasury" },
   { name: "city", path: "/city" },
   { name: "proof", path: "/proof" },
   { name: "challenge", path: "/challenge" },
+  { name: "about", path: "/about" },
 ];
 
 const channel = process.env.PW_CHANNEL ?? "chrome";
 const browser = await chromium.launch(channel ? { channel } : {});
-const context = await browser.newContext({
-  viewport: { width: 1440, height: 900 },
-  deviceScaleFactor: 1,
-  colorScheme: "dark",
-});
 let total = 0;
 for (const s of shots) {
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    deviceScaleFactor: 1,
+    colorScheme: s.scheme ?? "dark",
+  });
+  await context.addInitScript((scheme) => {
+    try { localStorage.setItem("yl-theme", scheme); } catch {}
+  }, s.scheme ?? "dark");
   const page = await context.newPage();
   await page.goto(base + s.path, { waitUntil: "networkidle", timeout: 60000 }).catch(() => {});
   await page.evaluate(() => document.fonts.ready);
@@ -41,7 +47,7 @@ for (const s of shots) {
   await sharp(png).webp({ quality: 82, effort: 6 }).toFile(out);
   total += statSync(out).size;
   console.log("wrote", out);
-  await page.close();
+  await context.close();
 }
 await browser.close();
 console.log(`total ${(total / 1024).toFixed(0)} KiB`);

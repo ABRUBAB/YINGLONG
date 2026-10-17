@@ -4,20 +4,20 @@ import { cn } from "@yinglong/ui";
 
 /**
  * Buttons (shadcn API shape, ORBIT geometry): 6 px radius, never pill-shaped, never a hue.
- * primary = inverted monochrome; secondary = outlined with a 3:1 boundary; ghost = text only.
+ * primary = the mint accent; secondary = outlined with a 3:1 boundary; ghost = text only.
  */
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "quiet";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
   "inline-flex shrink-0 items-center justify-center gap-2 rounded-control font-medium whitespace-nowrap select-none " +
-  "yl-press transition-[background-color,border-color,color,opacity] duration-150 ease-out " +
+  "yl-press transition-[background-color,border-color,color,opacity,box-shadow,filter] duration-150 ease-out " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus " +
   "disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-fg-1 text-bg-0 hover:bg-fg-0 active:bg-fg-2",
-  secondary: "border border-line-3 text-fg-1 hover:border-fg-2 hover:bg-bg-2 active:bg-bg-3",
+  primary: "yl-btn-primary bg-accent text-accent-fg hover:brightness-110 active:brightness-95",
+  secondary: "border border-line-3 text-fg-1 hover:border-accent hover:bg-accent-tint hover:text-fg-0 active:bg-bg-3",
   ghost: "text-fg-1 hover:bg-bg-2 active:bg-bg-3",
   quiet: "text-fg-2 underline decoration-line-3 underline-offset-4 hover:text-fg-0 hover:decoration-fg-2",
 };

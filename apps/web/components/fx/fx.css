@@ -1,0 +1,1035 @@
+/*
+ * ORBIT Cinema: the site-wide effects layer. Everything here is decorative and sits behind or beside
+ * content: an ambient backdrop (aurora, dot grid, perspective floor, grain, pointer light), a scroll
+ * progress line, card glow that follows the pointer, and the shared motion for the landing's new
+ * sections. Only transform, opacity and SVG stroke animate. Every moving thing stops under
+ * prefers-reduced-motion and the page's Pause motion control, and nothing prints.
+ *
+ * Colour rule (Design System: "colour means something"): the backdrop is steel at low alpha plus
+ * greys. Jade, seal and brass appear only on states.
+ */
+
+:root {
+  --amb: 1; /* ambient strength: dark 1, light 0.55 */
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --amb: 1.2;
+  }
+}
+:root[data-theme="light"] {
+  --amb: 1.2;
+}
+:root[data-theme="dark"] {
+  --amb: 1;
+}
+
+/* ------------------------------------------------------------------ ambient backdrop */
+.yl-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+.yl-ambient__aurora {
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(38% 34% at 80% 10%, color-mix(in oklab, var(--accent-glow) calc(7% * var(--amb)), transparent), transparent 72%),
+    radial-gradient(34% 30% at 8% 30%, color-mix(in oklab, var(--violet) calc(6% * var(--amb)), transparent), transparent 72%),
+    radial-gradient(46% 38% at 62% 98%, color-mix(in oklab, var(--chrome-2) calc(7% * var(--amb)), transparent), transparent 72%);
+}
+.yl-ambient__dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--fg-2) 22%, transparent) 1px, transparent 1.4px);
+  background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(75% 60% at 50% 0%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(75% 60% at 50% 0%, #000 0%, transparent 78%);
+  opacity: 0.55;
+}
+.yl-ambient__floor {
+  position: absolute;
+  left: -60%;
+  right: -60%;
+  bottom: -4%;
+  height: 56vh;
+  overflow: hidden;
+  transform: perspective(520px) rotateX(64deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 82%);
+  mask-image: linear-gradient(to top, #000 0%, transparent 82%);
+  opacity: calc(0.7 * var(--amb));
+}
+.yl-ambient__floor::before {
+  content: "";
+  position: absolute;
+  inset: -64px 0 0;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--accent-glow) 14%, var(--line-2)) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--accent-glow) 14%, var(--line-2)) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.yl-ambient__grain {
+  position: absolute;
+  inset: 0;
+  opacity: calc(0.055 * var(--amb) + 0.01);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 180px 180px;
+}
+:root[data-theme="light"] .yl-ambient__grain {
+  filter: invert(1);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .yl-ambient__grain {
+    filter: invert(1);
+  }
+}
+.yl-ambient__light {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 760px;
+  height: 760px;
+  margin: -380px 0 0 -380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--fg-0) calc(7% * var(--amb)), transparent) 0%, transparent 62%);
+  transform: translate3d(50vw, 30vh, 0);
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+  will-change: transform;
+}
+.yl-ambient__light[data-on="true"] {
+  opacity: 1;
+}
+
+
+@keyframes yl-aurora {
+  to {
+    transform: translate3d(-4%, 3%, 0) scale(1.1) rotate(2.5deg);
+  }
+}
+@keyframes yl-floor {
+  to {
+    transform: translate3d(0, 64px, 0);
+  }
+}
+@media print {
+  .yl-ambient,
+  .yl-progress {
+    display: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ scroll progress */
+.yl-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 70;
+  height: 2px;
+  pointer-events: none;
+}
+.yl-progress > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--steel), var(--accent), var(--lime));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+/* ------------------------------------------------------------------ cards: light that follows the pointer */
+.yl-card {
+  isolation: isolate;
+  --mx: -400px;
+  --my: -400px;
+}
+.yl-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(280px circle at var(--mx) var(--my), var(--fg-1), transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+.yl-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(360px circle at var(--mx) var(--my), color-mix(in oklab, var(--fg-0) 6%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 240ms ease;
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .yl-card:hover::before,
+  .yl-card:hover::after {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ liquid glass, shadows */
+:root {
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.28), 0 14px 34px -18px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.3), 0 28px 60px -24px rgb(0 0 0 / 0.75);
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--accent) 30%, transparent), 0 20px 60px -26px color-mix(in oklab, var(--accent) 60%, transparent);
+  --glass-hi: color-mix(in oklab, #fff 42%, transparent);
+  --glass-lo: color-mix(in oklab, #000 34%, transparent);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --shadow-soft: 0 1px 2px rgb(18 35 27 / 0.08), 0 14px 34px -18px rgb(18 35 27 / 0.28);
+    --shadow-lift: 0 2px 4px rgb(18 35 27 / 0.1), 0 28px 60px -24px rgb(18 35 27 / 0.38);
+    --glass-hi: color-mix(in oklab, #fff 90%, transparent);
+    --glass-lo: color-mix(in oklab, #12231b 18%, transparent);
+  }
+}
+:root[data-theme="light"] {
+  --shadow-soft: 0 1px 2px rgb(18 35 27 / 0.08), 0 14px 34px -18px rgb(18 35 27 / 0.28);
+  --shadow-lift: 0 2px 4px rgb(18 35 27 / 0.1), 0 28px 60px -24px rgb(18 35 27 / 0.38);
+  --glass-hi: color-mix(in oklab, #fff 90%, transparent);
+  --glass-lo: color-mix(in oklab, #12231b 18%, transparent);
+}
+
+/* Liquid glass: a lit pane. Frosted blur and saturation, a bright top edge and a dark bottom edge
+   (the rim), a soft sheen, and a spot of light that follows the pointer (--mx, --my). */
+.yl-glass,
+.yl-liquid {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(420px circle at var(--mx, 30%) var(--my, -20%), color-mix(in oklab, var(--fg-0) 10%, transparent), transparent 60%),
+    linear-gradient(135deg, color-mix(in oklab, var(--fg-0) 11%, transparent), color-mix(in oklab, var(--fg-0) 3%, transparent) 55%, color-mix(in oklab, var(--fg-0) 2%, transparent));
+  border: 1px solid color-mix(in oklab, var(--fg-0) 15%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 1px 0 var(--glass-hi),
+    inset 0 -1px 0 var(--glass-lo),
+    inset 0 0 26px color-mix(in oklab, var(--fg-0) 3%, transparent),
+    var(--shadow-soft);
+}
+.yl-glass::before,
+.yl-liquid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(115deg, color-mix(in oklab, #fff 22%, transparent) 0%, transparent 28%, transparent 70%, color-mix(in oklab, #fff 8%, transparent) 100%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.yl-card {
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--fg-0) 7%, transparent), var(--shadow-soft);
+  transition:
+    border-color var(--dur-ui) ease,
+    box-shadow 260ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  a.yl-card:hover,
+  .yl-card[data-interactive]:hover {
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--fg-0) 9%, transparent), var(--shadow-lift), var(--shadow-glow);
+  }
+}
+/* Pointer ripple on the main buttons and glass panes: a drop in water. */
+.yl-btn-primary,
+.yl-liquid {
+  overflow: hidden;
+}
+.yl-ripple {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in oklab, var(--accent) 55%, transparent) 0%, color-mix(in oklab, var(--accent) 18%, transparent) 45%, transparent 68%);
+  transform: scale(0);
+  animation: yl-ripple 760ms var(--ease-out) forwards;
+}
+@keyframes yl-ripple {
+  60% {
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+:root[data-motion="off"] .yl-ripple {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .yl-ripple {
+    display: none;
+  }
+}
+
+/* Water: layered waves that drift sideways at different speeds. */
+.yl-wave {
+  display: block;
+  width: 100%;
+  height: clamp(56px, 8vw, 120px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.yl-wave svg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-wave svg {
+    animation: yl-drift var(--wave-s, 30s) linear infinite;
+  }
+  :root:not([data-motion="off"]) .yl-wave svg:nth-child(2) {
+    --wave-s: 22s;
+    animation-direction: reverse;
+  }
+  :root:not([data-motion="off"]) .yl-wave svg:nth-child(3) {
+    --wave-s: 15s;
+  }
+}
+@keyframes yl-drift {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Blockchain: blocks joined by a link that carries a moving pulse. */
+.yl-link {
+  position: relative;
+  width: 44px;
+  height: 2px;
+  flex: none;
+  align-self: center;
+  background: repeating-linear-gradient(90deg, var(--line-3) 0 4px, transparent 4px 8px);
+}
+.yl-link::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 14px;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-link::after {
+    opacity: 1;
+    animation: yl-pulse-link 2.4s var(--ease-in-out) infinite;
+  }
+}
+@keyframes yl-pulse-link {
+  from {
+    transform: translateX(-14px);
+  }
+  to {
+    transform: translateX(44px);
+  }
+}
+@keyframes yl-seal-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.yl-sealing {
+  transform-origin: 0 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-sealing {
+    animation: yl-seal-bar 1.2s var(--ease-out) both;
+  }
+}
+@keyframes yl-float {
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-float {
+    animation: yl-float 7s ease-in-out infinite;
+  }
+}
+.yl-page-art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 0;
+  width: min(62vw, 760px);
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(70% 70% at 62% 40%, #000 38%, transparent 100%);
+  mask-image: radial-gradient(70% 70% at 62% 40%, #000 38%, transparent 100%);
+  opacity: 0.8;
+}
+@media (max-width: 1023.98px) {
+  .yl-page-art {
+    opacity: 0.35;
+    width: 90vw;
+  }
+}
+
+/* ------------------------------------------------------------------ nav: glass, and the pill that follows the page you are on */
+.yl-sitenav {
+  background: color-mix(in oklab, var(--bg-0) 72%, transparent) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: background-color 240ms ease, border-color 240ms ease;
+}
+.yl-sitenav[data-scrolled="true"] {
+  background: color-mix(in oklab, var(--bg-0) 82%, transparent) !important;
+  box-shadow: 0 10px 40px -24px rgb(0 0 0 / 0.8), inset 0 -1px 0 color-mix(in oklab, var(--accent) 14%, transparent);
+}
+.yl-navpill {
+  position: absolute;
+  inset: 8px 0;
+  z-index: -1;
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--fg-0) 9%, transparent);
+  border: 1px solid color-mix(in oklab, var(--fg-0) 14%, transparent);
+}
+
+/* ------------------------------------------------------------------ hero extras */
+.yl-hero-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 80% at 78% 48%, color-mix(in oklab, var(--accent-glow) calc(3% * var(--amb)), transparent), transparent 70%),
+    radial-gradient(40% 50% at 20% 100%, color-mix(in oklab, var(--violet) calc(5% * var(--amb)), transparent), transparent 70%);
+}
+.yl-hero-beam {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 54%;
+  width: 28%;
+  z-index: -4;
+  pointer-events: none;
+  transform: skewX(-18deg);
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--fg-0) calc(5% * var(--amb)), transparent), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+}
+@keyframes yl-beam {
+  from {
+    transform: translate3d(-18%, 0, 0) skewX(-18deg);
+  }
+  to {
+    transform: translate3d(34%, 0, 0) skewX(-18deg);
+  }
+}
+/* Headline sheen: a chrome highlight crosses the second line once on load. */
+.yl-sheen {
+  background-image: linear-gradient(100deg, var(--fg-2) 0%, var(--fg-2) 38%, var(--lime) 50%, var(--accent) 56%, var(--fg-2) 66%, var(--fg-2) 100%);
+  background-size: 260% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-sheen {
+    animation: yl-sheen 2.4s 700ms var(--ease-out) both;
+  }
+}
+@keyframes yl-sheen {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+/* Floating receipt chips around the orbit */
+.yl-chip {
+  position: absolute;
+  width: min(300px, 44%);
+  padding: 14px 16px;
+  border-radius: 14px;
+  pointer-events: none;
+}
+.yl-chip__inner {
+  display: grid;
+  gap: 10px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-chip__inner {
+    animation: yl-chip-in 640ms var(--ease-out) both;
+  }
+}
+@keyframes yl-chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ------------------------------------------------------------------ live ticker */
+.yl-ticker {
+  position: relative;
+  border-block: 1px solid var(--line-1);
+  background: color-mix(in oklab, var(--bg-1) 55%, transparent);
+}
+.yl-ticker .yl-marquee {
+  --gap: 0.75rem;
+  padding-block: 12px;
+}
+
+/* ------------------------------------------------------------------ bento */
+.yl-tilt {
+  transition: transform 260ms var(--ease-out);
+}
+.yl-tilt[data-active="true"] {
+  transition: transform 80ms linear;
+}
+@keyframes yl-feed {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  6%,
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-feed-row {
+    animation: yl-feed 9s var(--ease-out) infinite;
+    animation-delay: calc(var(--i, 0) * 1.1s);
+  }
+}
+@keyframes yl-director {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  25%,
+  60% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-director {
+    animation: yl-director 6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 1.4s);
+  }
+}
+@keyframes yl-caret {
+  50% {
+    opacity: 0;
+  }
+}
+.yl-caret {
+  display: inline-block;
+  width: 0.5ch;
+  height: 1.05em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: currentColor;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-caret {
+    animation: yl-caret 1s steps(1) infinite;
+  }
+}
+
+/* ------------------------------------------------------------------ rules lab */
+.yl-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+.yl-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--fg-1) var(--fill, 50%), var(--line-2) var(--fill, 50%));
+}
+.yl-range::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--fg-1) var(--fill, 50%), var(--line-2) var(--fill, 50%));
+}
+.yl-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-0);
+  background: var(--fg-0);
+  box-shadow: 0 0 0 1px var(--line-3);
+  transition: transform 140ms var(--ease-out);
+}
+.yl-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-0);
+  background: var(--fg-0);
+  box-shadow: 0 0 0 1px var(--line-3);
+}
+.yl-range:active::-webkit-slider-thumb {
+  transform: scale(1.18);
+}
+.yl-range:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.yl-gate {
+  transition:
+    background-color 220ms var(--ease-out),
+    border-color 220ms var(--ease-out),
+    color 220ms var(--ease-out),
+    transform 260ms var(--ease-out);
+}
+.yl-gate[data-state="passed"] {
+  border-color: var(--chrome-1);
+  color: var(--fg-0);
+}
+.yl-gate[data-state="flagged"] {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+.yl-gate[data-state="asked"] {
+  border-color: var(--brass);
+  background: var(--brass-tint);
+  color: var(--brass);
+}
+.yl-gate[data-state="stopped"] {
+  border-color: var(--refused-bg);
+  background: var(--refused-bg);
+  color: var(--refused-fg);
+  transform: scale(1.08);
+}
+.yl-gate[data-state="current"] {
+  border-color: var(--fg-0);
+  transform: scale(1.1);
+}
+.yl-coin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 11.1111%;
+  pointer-events: none;
+  transition: transform var(--coin-ms, 380ms) var(--ease-in-out);
+}
+.yl-coin > span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--chrome-0), var(--chrome-2));
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--fg-0) 12%, transparent), 0 0 22px color-mix(in oklab, var(--fg-0) 35%, transparent);
+}
+.yl-coin[data-state="stopped"] > span {
+  background: var(--refused-fg);
+  box-shadow: 0 0 0 4px var(--refused-bg);
+}
+.yl-coin[data-state="done"] > span {
+  background: var(--jade);
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--jade) 25%, transparent), 0 0 26px color-mix(in oklab, var(--jade) 55%, transparent);
+}
+@keyframes yl-shard {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.4);
+  }
+}
+.yl-shard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  background: var(--refused-bg);
+  clip-path: polygon(50% 0, 100% 100%, 0 80%);
+  animation: yl-shard 700ms var(--ease-out) both;
+}
+:root[data-motion="off"] .yl-shard {
+  display: none;
+}
+@keyframes yl-verdict {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-verdict {
+    animation: yl-verdict 420ms var(--ease-out) both;
+  }
+}
+
+/* ------------------------------------------------------------------ nine gates (3D stage) */
+.yl-gates-stage {
+  position: relative;
+  height: 340vh;
+}
+.yl-gates-sticky {
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100svh - var(--nav-h));
+  min-height: 560px;
+  overflow: hidden;
+}
+.yl-gates-fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+}
+
+/* ------------------------------------------------------------------ hold to seal */
+.yl-seal-ring {
+  transform-origin: 50% 50%;
+}
+@keyframes yl-sealed {
+  0% {
+    transform: scale(1) rotate(0);
+  }
+  40% {
+    transform: scale(1.08) rotate(12deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-sealed {
+    animation: yl-sealed 700ms var(--ease-out) both;
+  }
+}
+@keyframes yl-pulse-ring {
+  from {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-pulse-ring {
+    animation: yl-pulse-ring 1.6s var(--ease-out) infinite;
+  }
+}
+
+/* ------------------------------------------------------------------ closing call to action */
+@keyframes yl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.yl-orbit-spin {
+  transform-origin: 50% 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-orbit-spin {
+    animation: yl-spin var(--spin, 60s) linear infinite;
+  }
+  :root:not([data-motion="off"]) .yl-orbit-spin[data-reverse="true"] {
+    animation-direction: reverse;
+  }
+}
+
+/* ------------------------------------------------------------------ footer wordmark */
+/* The name is an SVG text set to the width of its box (textLength), so it always fits and is never cut. */
+.yl-megamark text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 118%;
+  fill: color-mix(in oklab, var(--fg-0) 4%, transparent);
+  stroke: var(--line-3);
+  stroke-width: 1px;
+  transition: stroke 300ms ease, fill 300ms ease;
+}
+.yl-megamark:hover text {
+  stroke: var(--accent-glow);
+  fill: color-mix(in oklab, var(--accent-glow) 8%, transparent);
+}
+
+/* Reveal on scroll (motion library drives it; this is the no-JS and reduced-motion still state). */
+
+
+/* ------------------------------------------------------------------ accent details */
+.yl-btn-primary {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent-glow) 60%, transparent), 0 10px 34px -12px color-mix(in oklab, var(--accent-glow) 80%, transparent);
+}
+.yl-btn-primary:hover {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent-glow) 85%, transparent), 0 16px 48px -8px color-mix(in oklab, var(--accent-glow) 95%, transparent);
+}
+.yl-range::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, var(--accent) var(--fill, 50%), var(--line-2) var(--fill, 50%));
+}
+.yl-range::-moz-range-track {
+  background: linear-gradient(to right, var(--accent) var(--fill, 50%), var(--line-2) var(--fill, 50%));
+}
+.yl-range::-webkit-slider-thumb {
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 16px color-mix(in oklab, var(--accent) 55%, transparent);
+}
+.yl-range::-moz-range-thumb {
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.yl-gate[data-state="passed"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.yl-gate[data-state="current"] {
+  border-color: var(--accent);
+}
+.yl-coin > span {
+  background: radial-gradient(circle at 35% 30%, var(--chrome-0), var(--accent));
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent), 0 0 24px color-mix(in oklab, var(--accent) 55%, transparent);
+}
+
+/* Translucent card on the landing: shows the ambient light through it. */
+.yl-card--glass {
+  background: color-mix(in oklab, var(--bg-2) 82%, transparent);
+}
+
+/* Gradient text for the big moments: electric green into lime. */
+.yl-text-volt {
+  background-image: linear-gradient(95deg, var(--accent) 0%, var(--lime) 60%, var(--steel) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* A tile's own colour: set --tone on the tile and its glints follow. */
+.yl-tone {
+  --tone: var(--accent);
+}
+.yl-tone-lime {
+  --tone: var(--lime);
+}
+.yl-tone-cyan {
+  --tone: var(--steel);
+}
+.yl-tone-violet {
+  --tone: var(--violet);
+}
+.yl-tone-amber {
+  --tone: var(--brass);
+}
+.yl-tone-coral {
+  --tone: var(--seal);
+}
+.yl-card[class*="yl-tone"]::after {
+  background: radial-gradient(360px circle at var(--mx) var(--my), color-mix(in oklab, var(--tone) 14%, transparent), transparent 70%);
+}
+.yl-card[class*="yl-tone"]::before {
+  background: radial-gradient(280px circle at var(--mx) var(--my), var(--tone), transparent 70%);
+}
+.yl-tone-dot {
+  background: var(--tone);
+  box-shadow: 0 0 12px var(--tone);
+}
+
+/* Themed illustrations: the dark glass drawing by default, the ivory one in the light theme. */
+.yl-art-l {
+  display: none;
+}
+:root[data-theme="light"] .yl-art-d {
+  display: none;
+}
+:root[data-theme="light"] .yl-art-l {
+  display: block;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .yl-art-d {
+    display: none;
+  }
+  :root:not([data-theme="dark"]) .yl-art-l {
+    display: block;
+  }
+}
+
+/* Theme switch: the new theme spreads from the button as a circle. */
+html.yl-theme-switch::view-transition-old(root),
+html.yl-theme-switch::view-transition-new(root) {
+  animation: none !important;
+  mix-blend-mode: normal;
+}
+html.yl-theme-switch::view-transition-old(root) {
+  z-index: 1;
+}
+html.yl-theme-switch::view-transition-new(root) {
+  z-index: 2;
+  animation: yl-theme-reveal 760ms var(--ease-out) both !important;
+}
+@keyframes yl-theme-reveal {
+  from {
+    clip-path: circle(0 at var(--tx, 50%) var(--ty, 0));
+  }
+  to {
+    clip-path: circle(150vmax at var(--tx, 50%) var(--ty, 0));
+  }
+}
+
+/* Light theme: the same layout designed for paper. Soft coloured washes instead of glow, white glass with
+   a green-grey rim, and shadows tinted with ink rather than black. */
+:root[data-theme="light"] .yl-glass,
+:root[data-theme="light"] .yl-liquid {
+  background: linear-gradient(135deg, color-mix(in oklab, #fff 78%, transparent), color-mix(in oklab, #fff 46%, transparent));
+  border-color: color-mix(in oklab, var(--fg-0) 10%, transparent);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .yl-glass,
+  :root:not([data-theme="dark"]) .yl-liquid {
+    background: linear-gradient(135deg, color-mix(in oklab, #fff 78%, transparent), color-mix(in oklab, #fff 46%, transparent));
+    border-color: color-mix(in oklab, var(--fg-0) 10%, transparent);
+  }
+}
+
+/* ------------------------------------------------------------------ brand loader and first-visit screen */
+.yl-loader-ring {
+  transform-origin: 50% 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="off"]) .yl-loader-ring {
+    animation: yl-spin 6s linear infinite;
+  }
+}
+.yl-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  place-items: center;
+  background: var(--bg-0);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 520ms var(--ease-out), visibility 0s linear 520ms;
+}
+:root[data-boot="1"] .yl-boot {
+  display: grid;
+  /* safety net: if the script never runs, the screen leaves by itself after 4 seconds */
+  animation: yl-boot-fail 420ms ease-out 4s forwards;
+}
+:root[data-boot="done"] .yl-boot {
+  display: grid;
+  opacity: 0;
+  visibility: hidden;
+}
+.yl-boot-bar {
+  display: block;
+  width: 160px;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--line-2);
+  position: relative;
+}
+.yl-boot-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+  transform: translateX(-100%);
+  animation: yl-boot-bar 1.1s var(--ease-in-out) infinite;
+}
+.yl-boot-name {
+  animation: yl-boot-name 900ms var(--ease-out) both;
+}
+@keyframes yl-boot-bar {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes yl-boot-name {
+  from {
+    opacity: 0;
+    letter-spacing: 0.7em;
+  }
+}
+@keyframes yl-boot-fail {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media print {
+  .yl-boot {
+    display: none !important;
+  }
+}
+
+
+@media print {
+  details.yl-fold::details-content {
+    content-visibility: visible;
+    display: block;
+  }
+  details.yl-fold > summary span:last-child {
+    display: none;
+  }
+}
+
+/* Touch: every pressable control is at least 44 px tall on a touch screen (WCAG 2.5.5 target size), without
+   changing how it looks with a mouse. */
+@media (pointer: coarse) {
+  .yl-press,
+  button.yl-press,
+  a.yl-press {
+    min-height: 44px;
+  }
+  .yl-range {
+    height: 44px;
+  }
+  .yl-nav-menu,
+  [role="radio"],
+  [role="switch"] {
+    min-height: 44px;
+  }
+}
+/* Keyboard: the focus ring is never clipped by a card's rounded overflow. */
+:focus-visible {
+  outline-offset: 3px;
+}
+/* A page that scrolls under the sticky bar keeps anchors visible. */
+:target,
+[id] {
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}

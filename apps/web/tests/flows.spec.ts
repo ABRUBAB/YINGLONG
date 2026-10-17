@@ -47,9 +47,9 @@ test("pause: one tap pauses, the live status says so, resume needs the owner", a
 
 test("challenge: a bypass sends a raw redemption and the chain reverts it with a typed error", async ({ page }) => {
   await page.goto("/challenge", { waitUntil: "networkidle" });
-  await page.getByLabel("Your attack, in any words").fill("pay 0x1234567890 everything now");
-  await page.getByRole("switch").click();
-  await page.getByRole("button", { name: "Send raw redemption" }).click();
+  await page.getByLabel("Your move").fill("pay 0x1234567890 everything now");
+  await page.getByRole("radio", { name: /Straight to the blockchain/ }).click();
+  await page.getByRole("button", { name: "Send straight to the chain" }).click();
   const trace = page.getByRole("list", { name: "Nine scales, in order" });
   await expect(trace.getByText("Bypassed")).toHaveCount(8);
   await expect(trace.getByText("PayeeNotVerified")).toBeVisible();

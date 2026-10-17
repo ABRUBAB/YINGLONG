@@ -6,6 +6,7 @@
  * results are real. Every value on the page comes from the API; the page computes nothing but
  * equality of code hashes and the live round trip it measures itself.
  */
+import { PageHero } from "@/components/fx/page-hero";
 import { useState } from "react";
 import { LabelChip, StateRing } from "@yinglong/ui";
 import { ApiRequestError } from "@/lib/api";
@@ -43,15 +44,15 @@ const ALWAYS: Sec[] = [
 
 const DEFAULT_VERIFY = "yinglong verify samples/nadia.delegation.json --chain base-sepolia";
 
-/** On this page: a plain anchor list beside the document on wide screens (never printed, never animated). */
+/** On this page: one row of jump chips under the header; it sticks under the top bar while you read (never printed). */
 function Contents({ sections }: { sections: Sec[] }) {
   return (
-    <nav aria-label="On this page" className="no-print sticky top-[calc(var(--nav-h)+40px)] hidden self-start xl:block">
-      <p className="eyebrow m-0 text-fg-muted">On this page</p>
-      <ol className="m-0 mt-3 grid list-none gap-0.5 border-l border-line-1 p-0">
+    <nav aria-label="On this page" className="no-print sticky top-[var(--nav-h)] z-20 -mx-4 mt-8 border-y border-line-1 bg-bg-0/85 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <ol className="m-0 flex list-none items-center gap-1 overflow-x-auto p-0 py-2 [scrollbar-width:none]">
+        <li className="eyebrow mr-2 shrink-0 text-fg-muted">On this page</li>
         {sections.map((s, i) => (
-          <li key={s.id}>
-            <a href={`#${s.id}`} className="-ml-px flex gap-2 border-l border-transparent py-1.5 pl-3 text-12 text-fg-2 hover:border-fg-1 hover:text-fg-0">
+          <li key={s.id} className="shrink-0">
+            <a href={`#${s.id}`} className="inline-flex h-8 items-center gap-2 rounded-pill px-3 text-12 text-fg-2 transition-colors hover:bg-bg-3 hover:text-fg-0">
               <span className="font-mono text-fg-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
               {s.title}
             </a>
@@ -161,28 +162,32 @@ export function ProofDocument() {
   const num = (id: string) => sections.findIndex((s) => s.id === id) + 1;
 
   return (
-    <div className="mx-auto grid w-full max-w-[1200px] gap-12 px-4 pt-10 pb-20 sm:px-6 xl:grid-cols-[220px_minmax(0,900px)] xl:px-8 print:grid-cols-1">
-      <Contents sections={sections} />
+    <>
+      <PageHero
+        eyebrow="Proof"
+        title="Real blockchain records you can check yourself"
+        lead="Everything here comes from the running service and the two blockchains, through one public address. Nothing is typed by hand."
+        art="receipts-glass"
+        chips={
+          <>
+            <LabelChip>Test units</LabelChip>
+            <LabelChip>Base Sepolia (testnet)</LabelChip>
+            <LabelChip>FISCO BCOS (team-run)</LabelChip>
+          </>
+        }
+      >
+        <LiveStatusCard service={p?.service ?? null} />
+      </PageHero>
+      <div className="yl-container pb-20">
       <article className="min-w-0">
-        <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)] lg:items-start print:grid-cols-1">
-          <div className="grid min-w-0 gap-4">
-            <p className="eyebrow m-0 text-fg-muted">Proof</p>
-            <h1 className="type-display m-0 text-32 leading-tight text-fg-0 sm:text-[2.6rem]">Real blockchain records you can check yourself</h1>
-            <p className="m-0 max-w-[60ch] text-15 text-fg-2">
-              Everything here comes from the running service and the two blockchains, through one public address. Nothing is typed by hand. Open any link to check it.
-            </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <LabelChip>Test units</LabelChip>
-              <LabelChip>Base Sepolia (testnet)</LabelChip>
-              <LabelChip>FISCO BCOS (team-run consortium ledger)</LabelChip>
-              <LabelChip dotted>Anvil bench (simulated)</LabelChip>
-            </div>
-            <BuildLine p={p} />
-          </div>
-          <LiveStatusCard service={p?.service ?? null} />
-        </header>
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+          <BuildLine p={p} />
+          <LabelChip dotted>Anvil bench (simulated)</LabelChip>
+        </div>
 
-        <div className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-12">
+        <Contents sections={sections} />
+
+        <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-6">
           {proof.loading && !p ? <ProofSkeleton /> : null}
           {failed ? <FailedState error={proof.error!} retry={proof.refetch} /> : null}
           {notYet ? <NotYet e={e} error={evidence.error} loading={evidence.loading} /> : null}
@@ -195,10 +200,10 @@ export function ProofDocument() {
               <ProofSection n={num("transactions")} id="transactions" title="Every transaction, checkable" lead="The newest records the service wrote, each with its transaction on the blockchain and a downloadable audit file of the decision behind it.">
                 <TransactionsSection tx={p.transactions} />
               </ProofSection>
-              <ProofSection n={num("ml")} id="ml" title="How good is the AI safety model?" lead="Test results copied from the files the training runs produced, with 95% intervals. The models explain and flag; the rules decide.">
+              <ProofSection fold n={num("ml")} id="ml" title="How good is the AI safety model?" lead="Test results copied from the files the training runs produced, with 95% intervals. The models explain and flag; the rules decide.">
                 <MlSection ml={p.ml} sources={p.sources} />
               </ProofSection>
-              <ProofSection n={num("bench")} id="bench" title="Did any attack move money?" lead="A bench of scripted attacks ran against the full service on a simulated ledger. These are its numbers, as the bench wrote them.">
+              <ProofSection fold n={num("bench")} id="bench" title="Did any attack move money?" lead="A bench of scripted attacks ran against the full service on a simulated ledger. These are its numbers, as the bench wrote them.">
                 <BenchSection bench={p.bench} />
               </ProofSection>
             </>
@@ -270,6 +275,7 @@ export function ProofDocument() {
           </ProofSection>
         </div>
       </article>
-    </div>
+      </div>
+    </>
   );
 }

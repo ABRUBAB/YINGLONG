@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemedImg } from "@/components/fx/themed-img";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { cn, LabelChip, StateRing, shortHash } from "@yinglong/ui";
 import { getApi, isSample } from "@/lib/api";
@@ -133,15 +134,21 @@ export function AgentCity() {
   return (
     <div className="bg-bg-0 text-fg-1">
       <div className="yl-container pt-10 pb-6">
-        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+        <div className="yl-card yl-card--glass relative isolate mb-2 grid items-center gap-6 overflow-hidden p-5 sm:p-7 lg:grid-cols-[minmax(0,1fr)_260px]">
+          <div aria-hidden="true" className="yl-hero-glow" />
           <div className="min-w-0">
             <p className="eyebrow m-0 text-fg-muted">Live map</p>
-            <h1 className="m-0 mt-2 text-26 font-semibold text-fg-0">Every agent and payment, live</h1>
-            <p className="m-0 mt-2 max-w-[60ch] text-15 text-fg-2">
-              Top: Shenzhen, where companies pay through a bank-style system with no coins. Bottom: Hong Kong, with test money. Each card is a
-              person, a company, an AI agent or a shop; each line is a payment, drawn as it happens. Tap anything to see its details.
+            <h1 className="type-display m-0 mt-2 text-[1.9rem] leading-tight text-fg-0">Every agent and payment, live</h1>
+            <p className="m-0 mt-2 max-w-[56ch] text-15 text-fg-2">
+              Shenzhen on top, Hong Kong below. Each card is a person, a company, an AI agent or a shop; each line is a payment. Tap anything for details.
             </p>
           </div>
+          <div className="hidden lg:block" aria-hidden="true">
+            <ThemedImg name="city-glass" alt="" width={640} height={440} className="yl-float h-auto w-full" />
+          </div>
+        </div>
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+          <div className="min-w-0" />
           <div className="flex flex-wrap items-center gap-2">
             <SampleBadge />
             {!isSample && status ? (

@@ -43,7 +43,8 @@ export function Console() {
         <PageHeader
           eyebrow="Agent console"
           title={me.data ? me.data.displayName : "Console"}
-          lead={`Type a request below, like "Pay my rent" or "How much food budget is left?". ${me.data?.agentName ?? "The agent"} pays on its own when it is inside the rules, asks you first when it needs to, and refuses anything else. Every action leaves a receipt.`}
+          lead={`Ask for a payment or a balance, like "Pay my rent". ${me.data?.agentName ?? "The agent"} pays alone inside the rules, asks you first when it must, and refuses the rest.`}
+          art="receipts-glass"
           chips={
             <>
               {visitor ? <LabelChip>Your passkey account</LabelChip> : null}

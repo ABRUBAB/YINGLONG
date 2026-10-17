@@ -119,7 +119,7 @@ export function TwinChains() {
     <section aria-labelledby="twin-title" className="yl-landing-section yl-defer border-t border-line-1">
       <div ref={root} data-drawn={drawn ? "true" : "false"} className="yl-container grid gap-10 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-8">
         <SectionHead
-          index="02"
+          index="05"
           eyebrow="Two blockchains"
           id="twin-title"
           title="The same rules on two blockchains"

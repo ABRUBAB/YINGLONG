@@ -34,6 +34,6 @@ test.describe("phone", () => {
     for (const label of PAGES) await expect(sheet.getByRole("link", { name: new RegExp(`^${label}`) })).toBeVisible();
     await sheet.getByRole("link", { name: /^About/ }).click();
     await expect(page).toHaveURL(/\/about$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/An AI agent that pays for you/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/An AI wallet you can check/);
   });
 });
