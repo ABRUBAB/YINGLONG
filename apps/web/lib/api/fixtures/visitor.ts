@@ -5,7 +5,7 @@
  * signatures against the visitor's public key exactly as the HybridDeleGator would, before "sealing".
  * Nothing leaves the browser and every value is SAMPLE DATA.
  */
-import { encodeAbiParameters, encodeFunctionData, getAddress, keccak256, pad, stringToBytes, toHex, type Hex } from "viem";
+import { encodeAbiParameters, encodeFunctionData, getAddress, keccak256, pad, recoverAddress, stringToBytes, toHex, type Hex } from "viem";
 import {
   ACCOUNT_ABI,
   BATCH_DEFAULT_MODE,
@@ -78,6 +78,8 @@ export interface FixtureVisitor {
   credentialId: string;
   x: Hex;
   y: Hex;
+  /** Secret-key visitors (sample): the key's address; both seal signatures must recover to it. */
+  owner?: Hex;
   account: Hex;
   agentWallet: Hex;
   agentId: string;
@@ -140,7 +142,7 @@ function batch(calls: { to: Hex; data: Hex }[]): Hex {
 export function createFixtureVisitors() {
   const visitors = new Map<string, FixtureVisitor>();
 
-  function build(credentialId: string, x: Hex, y: Hex, token: string): FixtureVisitor {
+  function build(credentialId: string, x: Hex, y: Hex, token: string, owner?: Hex): FixtureVisitor {
     const id = visitorIdFor(credentialId, x, y);
     const account = derived(`yinglong:visitor:${id}:account`);
     const agentWallet = derived(`yinglong:visitor:${id}:agent`);
@@ -150,6 +152,7 @@ export function createFixtureVisitors() {
       credentialId,
       x,
       y,
+      owner,
       account,
       agentWallet,
       agentId: String(9000 + (parseInt(id.slice(2, 6), 16) % 900)),
@@ -249,7 +252,9 @@ export function createFixtureVisitors() {
   async function mustVerify(v: FixtureVisitor, digest: Hex, signature: string, what: string) {
     let ok = false;
     try {
-      ok = await verifyWebAuthnSignature(digest, signature as Hex, v.x, v.y);
+      ok = v.owner
+        ? (await recoverAddress({ hash: digest, signature: signature as Hex })).toLowerCase() === v.owner.toLowerCase()
+        : await verifyWebAuthnSignature(digest, signature as Hex, v.x, v.y);
     } catch {
       ok = false;
     }
@@ -262,9 +267,19 @@ export function createFixtureVisitors() {
     },
 
     /** After a reload the in-memory simulator is empty; the stored session rebuilds the sealed visitor. */
-    restore(s: { visitorId: string; token: string; credentialId: string; publicKey?: { x: string; y: string } }): FixtureVisitor | null {
+    restore(s: { visitorId: string; token: string; credentialId: string; publicKey?: { x: string; y: string }; method?: "passkey" | "key"; owner?: string }): FixtureVisitor | null {
       const known = visitors.get(s.visitorId);
       if (known) return known;
+      // A secret-key visitor (sample): rebuilt from the key's address alone.
+      if (s.method === "key" && s.owner && /^0x[0-9a-fA-F]{40}$/.test(s.owner)) {
+        const k = build(`key:${s.owner.toLowerCase()}`, "0x", "0x", s.token, s.owner as Hex);
+        if (k.id !== s.visitorId) return null;
+        k.sealedAt = new Date().toISOString();
+        k.publishTx = fiscoTx(`visitor:${k.id}:publish:1`).txHash as Hex;
+        receipt(k, { summary: "Mandate sealed with your secret key", tier: "T3", outcome: "confirmed", txHash: k.publishTx, explanation: "Mandate sealed (secret key): published on-chain with its full rule set." });
+        visitors.set(k.id, k);
+        return k;
+      }
       if (!s.publicKey) return null;
       const v = build(s.credentialId, s.publicKey.x as Hex, s.publicKey.y as Hex, s.token);
       if (v.id !== s.visitorId) return null;
@@ -275,14 +290,19 @@ export function createFixtureVisitors() {
       return v;
     },
 
-    signUp(req: { credentialId: string; publicKey: { x: string; y: string }; mandate?: unknown }): VisitorSignUp {
-      if (!/^[A-Za-z0-9_-]{16,512}$/.test(req.credentialId)) throw new ApiRequestError("credentialId must be the passkey's raw id in base64url", 400, "service_error");
-      if (!/^0x[0-9a-fA-F]{64}$/.test(req.publicKey.x) || !/^0x[0-9a-fA-F]{64}$/.test(req.publicKey.y)) {
+    signUp(req: { credentialId?: string; publicKey?: { x: string; y: string }; owner?: string; mandate?: unknown }): VisitorSignUp {
+      // Secret-key sign-up (sample): only the key's address arrives; the seal must carry two signatures that recover to it.
+      const owner = req.owner ? (req.owner as Hex) : undefined;
+      if (owner && !/^0x[0-9a-fA-F]{40}$/.test(owner)) throw new ApiRequestError("owner must be a 20-byte 0x address", 400, "service_error");
+      const credentialId = owner ? `key:${owner.toLowerCase()}` : (req.credentialId ?? "");
+      const publicKey = owner ? { x: "0x", y: "0x" } : (req.publicKey ?? { x: "", y: "" });
+      if (!owner && !/^[A-Za-z0-9_-]{16,512}$/.test(credentialId)) throw new ApiRequestError("credentialId must be the passkey's raw id in base64url", 400, "service_error");
+      if (!owner && (!/^0x[0-9a-fA-F]{64}$/.test(publicKey.x) || !/^0x[0-9a-fA-F]{64}$/.test(publicKey.y))) {
         throw new ApiRequestError("publicKey.x and publicKey.y must be 32-byte hex coordinates", 400, "service_error");
       }
-      const token = h(`visitor-token:${req.credentialId}:${Date.now()}:${Math.random()}`).slice(2, 34);
-      const prev = visitors.get(visitorIdFor(req.credentialId, req.publicKey.x, req.publicKey.y));
-      const v = prev ?? build(req.credentialId, req.publicKey.x as Hex, req.publicKey.y as Hex, token);
+      const token = h(`visitor-token:${credentialId}:${Date.now()}:${Math.random()}`).slice(2, 34);
+      const prev = visitors.get(visitorIdFor(credentialId, publicKey.x, publicKey.y));
+      const v = prev ?? build(credentialId, publicKey.x as Hex, publicKey.y as Hex, token, owner);
       if (prev) {
         // Same passkey again (after a revoke): same visitor id, a new mandate and a new token.
         v.round += 1;
@@ -306,7 +326,7 @@ export function createFixtureVisitors() {
         agent: { label: "Ying", wallet: v.agentWallet, agentId: v.agentId, identityCode: `YL-TEST-V${v.id.slice(2, 8).toUpperCase()}` },
         // A drafted mandate (sample) keeps the sentences the visitor saw; the sample caveats stay the standard ones.
         mandate: {
-          title: req.mandate ? "Your own mandate (sealed with your passkey)" : "Your mandate (sealed with your passkey)",
+          title: owner ? "Your mandate (sealed with your secret key)" : req.mandate ? "Your own mandate (sealed with your passkey)" : "Your mandate (sealed with your passkey)",
           sentences: (req.mandate as { decoded?: string[] } | undefined)?.decoded ?? VISITOR_SENTENCES,
           mandateHash: v.mandateHash,
           delegationHash: v.delegationHash,
@@ -358,9 +378,9 @@ export function createFixtureVisitors() {
         agentId: v.agentId,
         agentName: "Ying",
         jurisdiction: "hk",
-        signer: "passkey (WebAuthn)",
+        signer: v.owner ? "secret key (secp256k1, kept in this browser)" : "passkey (WebAuthn)",
         paused: v.paused,
-        passkeys: [{ keyId: v.credentialId, label: "This passkey" }],
+        passkeys: v.owner ? [] : [{ keyId: v.credentialId, label: "This passkey" }],
       };
     },
 

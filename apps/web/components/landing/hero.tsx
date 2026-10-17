@@ -14,6 +14,7 @@ import { PasskeyIcon } from "@/components/shell/site-nav";
 import { MotionToggle, useMotionOff, useTheme } from "@/components/preferences";
 import { HERO_RECEIPTS, remainingShare, sampleBench } from "./hero-data";
 import { OrbitSvg } from "./orbit-svg";
+import "./landing.css";
 
 // The 3D and shader chunks load only after first paint and idle, and never under reduced motion,
 // the Pause motion control, Save-Data, low device memory or without WebGL2 (the poster stays).
@@ -55,6 +56,33 @@ function useAfterLoad(): boolean {
   return ready;
 }
 
+/**
+ * Under 768 px the orbit sits below the first screen, so the 3D waits for the first scroll or two
+ * seconds of idle (the poster shows meanwhile); wider screens are ready at once.
+ */
+function usePhoneIdle(): boolean {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!window.matchMedia("(max-width: 767px)").matches) {
+      setReady(true);
+      return;
+    }
+    let done = false;
+    const go = () => {
+      if (done) return;
+      done = true;
+      setReady(true);
+    };
+    const t = setTimeout(go, 2000);
+    window.addEventListener("scroll", go, { once: true, passive: true });
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("scroll", go);
+    };
+  }, []);
+  return ready;
+}
+
 function useOnScreen<T extends Element>(ref: React.RefObject<T | null>): boolean {
   const [on, setOn] = useState(true);
   useEffect(() => {
@@ -74,9 +102,23 @@ const KIND_WORD: Record<OrbitSlot["kind"], string> = {
   refused: "Refused at the boundary",
 };
 
+type Shown = Receipt | Pick<Receipt, "receiptId" | "outcome" | "tier">;
+
+/** Receipts with a transaction on a ledger. Sample bench receipts count when their outcome settled or reverted on chain. */
+function onChainCount(list: Shown[]): number {
+  let n = 0;
+  for (const r of list) {
+    if ("txHash" in r) {
+      if (r.txHash) n++;
+    } else if (r.outcome === "confirmed" || r.outcome === "reverted") n++;
+  }
+  return n;
+}
+
 export function Hero({ poster = false }: { poster?: boolean }) {
   const motionOff = useMotionOff();
   const afterLoad = useAfterLoad();
+  const phoneIdle = usePhoneIdle();
   const section = useRef<HTMLElement>(null);
   const onScreen = useOnScreen(section);
   const pointer = useRef({ x: 0, y: 0 });
@@ -101,9 +143,12 @@ export function Hero({ poster = false }: { poster?: boolean }) {
   const budgetsQ = useAgent("budgets", (api) => api.budgets(), ["budgets", "receipts"]);
   const mandatesQ = useAgent("mandates", (api) => api.mandates(), ["mandates"]);
   const receipts: Receipt[] = useMemo(() => receiptsQ.data?.items ?? [], [receiptsQ.data]);
-  const shown = useMemo(() => (isSample ? [...receipts, ...sampleBench(Math.max(0, 120 - receipts.length))] : receipts), [receipts]);
+  const shown = useMemo<Shown[]>(() => (isSample ? [...receipts, ...sampleBench(Math.max(0, 120 - receipts.length))] : receipts), [receipts]);
   const slots = useMemo(() => orbitLayout(shown), [shown]);
   const summary = useMemo(() => orbitSummary(slots), [slots]);
+  const onChain = useMemo(() => onChainCount(shown), [shown]);
+  // The hero reads one page of receipts; a next cursor means the service holds more than shown.
+  const morePages = Boolean(receiptsQ.data?.nextCursor);
   const remaining = useMemo(() => remainingShare(budgetsQ.data ?? []), [budgetsQ.data]);
   const liveMandate = mandatesQ.data?.find((m) => m.status === "live");
   const delegationHash = liveMandate?.delegationHash ?? receipts[0]?.delegationHash ?? null;
@@ -116,7 +161,7 @@ export function Hero({ poster = false }: { poster?: boolean }) {
     }
   }, [delegationHash]);
   const latest = receipts[0];
-  const show3D = webglOk && (afterLoad || poster);
+  const show3D = webglOk && ((afterLoad && phoneIdle) || poster);
 
   useEffect(() => {
     const el = section.current;
@@ -208,37 +253,56 @@ export function Hero({ poster = false }: { poster?: boolean }) {
         </div>
       ) : null}
 
-      {/* First screen, full bleed: the text block and the orbit, nothing else. */}
+      {/* First screen, full bleed: what it is, what to do, three live numbers, and the orbit. */}
       <div className="yl-hero-grid relative">
-        <div className="yl-hero-text relative z-10">
+        <div className="yl-hero-text yl-hero-copy relative z-10">
           <p className="yl-hero-in eyebrow m-0 flex items-center gap-3 text-fg-muted" style={{ ["--d" as string]: "0ms" }}>
             <span aria-hidden="true" className="h-px w-8 bg-line-3" />
-            AI agents that pay for you, safely
+            An AI agent wallet with locked rules
           </p>
-          <h1 id="hero-title" className="type-hero yl-hero-h1 m-0 mt-6 text-fg-0">
+          <h1 id="hero-title" className="type-hero yl-hero-title m-0 mt-5 text-fg-0">
             <span className="yl-hero-line block" style={{ ["--d" as string]: "60ms" }}>
-              Always with you.
+              An AI agent that pays for you.
             </span>
-            <span className="yl-hero-line block text-fg-muted" style={{ ["--d" as string]: "140ms" }}>
-              Never beyond your rules.
+            <span className="yl-hero-line block text-fg-2" style={{ ["--d" as string]: "140ms" }}>
+              It cannot break your rules.
             </span>
           </h1>
-          <p className="yl-hero-in yl-hero-lead m-0 mt-7 text-fg-2" style={{ ["--d" as string]: "220ms" }}>
-            Let an AI agent pay for you, but only inside the spending rules you set. It cannot break them: the blockchain blocks anything
-            outside your rules, and every payment leaves a receipt anyone can check.
+          <p className="yl-hero-in yl-hero-sub m-0 mt-5 text-fg-2" style={{ ["--d" as string]: "220ms" }}>
+            You write spending rules in plain words and lock them with your fingerprint or a secret key. The agent pays inside them. The
+            blockchain blocks anything else and keeps a receipt for every action.
           </p>
-          <div className="yl-hero-in mt-9 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "280ms" }}>
-            <ButtonLink href="/start" size="lg">
+          <div className="yl-hero-in mt-6 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "280ms" }}>
+            <ButtonLink href="/judge" size="lg">
+              Start the 3-minute demo <ArrowIcon />
+            </ButtonLink>
+            <ButtonLink href="/start" variant="secondary" size="lg">
               <PasskeyIcon size={16} />
               Create your agent
             </ButtonLink>
-            <ButtonLink href="/app" variant="secondary" size="lg">
-              See a demo <ArrowIcon />
-            </ButtonLink>
-            <ButtonLink href="/proof" variant="quiet" size="lg" className="ml-1">
-              Check the proof
+            <ButtonLink href="/app" variant="quiet" size="lg" className="ml-1">
+              See a demo
             </ButtonLink>
           </div>
+
+          {/* Three live numbers, each with its source. Jade = inside the rules; seal = blocked. */}
+          <dl className="yl-hero-in yl-hero-tiles m-0 mt-6 grid grid-cols-3 border-y border-line-1" style={{ ["--d" as string]: "340ms" }} data-hero-tiles>
+            <HeroTile label="Inside the rules" value={summary.inside} tone="text-jade" source="confirmed, GET /v1/receipts" />
+            <HeroTile label="Attempts blocked" value={summary.refused} tone="text-seal" source="refused or reverted, GET /v1/receipts" divided />
+            <HeroTile label="Receipts on chain" value={onChain} suffix={morePages ? "+" : undefined} source="with a tx hash, GET /v1/receipts" divided />
+          </dl>
+          <p className="yl-hero-in m-0 mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-12 text-fg-muted" style={{ ["--d" as string]: "380ms" }}>
+            <LiveStatusO state="active" size={16} showWord className="text-fg-1" />
+            {latest ? (
+              <span>
+                Last receipt {formatTime(latest.timestamp, { date: false })} HKT <span className="font-mono text-fg-2">{shortHash(latest.receiptId, 6, 4)}</span>
+                {latest.ledgerBadge ? <span> on {latest.ledgerBadge}</span> : null}
+              </span>
+            ) : (
+              <span>Reading GET /v1/receipts</span>
+            )}
+            {isSample ? <SampleDataChip /> : null}
+          </p>
         </div>
         {/* The orbit column: the canvas fills it; the scene frames itself to the box. */}
         <div className="yl-hero-orbit" data-hero-orbit>
@@ -246,50 +310,29 @@ export function Hero({ poster = false }: { poster?: boolean }) {
         </div>
       </div>
 
-      {/* Below the first screen: what the orbit counts, what each object means, and the visible
-          pause for the looping scene. */}
+      {/* One hairline row under the first screen: what the ring draws, and the visible pause for
+          the looping scene. */}
       <div className="relative z-10 border-t border-line-1">
-        <div className="yl-container grid gap-8 py-10 lg:grid-cols-12 lg:gap-x-10">
-          <div className="grid content-start gap-5 lg:col-span-6">
-            <p className="eyebrow m-0 text-fg-muted">What the ring shows (live)</p>
-            <dl className="m-0 grid grid-cols-3 gap-x-6">
-              <HeroStat label="Requests inside the rules" value={summary.inside + summary.asked + summary.waiting} tone="text-jade" />
-              <HeroStat label="Attempts blocked" value={summary.refused} tone="text-seal" />
-              <HeroStat label="Budget left today" value={Math.round(remaining * 100)} suffix="%" />
-            </dl>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
-              <LiveStatusO state="active" size={18} showWord className="text-fg-1" />
-              {latest ? (
-                <span>
-                  Last receipt {formatTime(latest.timestamp, { date: false })} HKT <span className="font-mono text-fg-2">{shortHash(latest.receiptId, 6, 4)}</span>
-                  {latest.ledgerBadge ? <span> · {latest.ledgerBadge}</span> : null}
-                </span>
-              ) : (
-                <span>Reading GET /v1/receipts</span>
-              )}
-              {isSample ? <SampleDataChip /> : null}
-            </div>
-          </div>
-          <div className="grid content-start gap-5 lg:col-span-6">
-            <dl className="m-0 grid grid-cols-1 gap-x-6 gap-y-3 text-12 text-fg-muted sm:grid-cols-2">
-              <Key glyph={<circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.6" />} term="Ring" desc="the sealed mandate; bright arc = budget left" />
-              <Key glyph={<ellipse cx="8" cy="8" rx="5" ry="2.6" fill="currentColor" />} term="Coins" desc="receipts; nearer the ring = more authority needed" />
-              <Key glyph={<path d="M8 3l4 5-4 5-4-5z" fill="currentColor" opacity="0.6" />} term="Shards" desc="refused attempts; they never cross" />
-              <Key glyph={<circle cx="8" cy="8" r="3.6" fill="var(--steel)" />} term="Pearl" desc="the agent's on-chain identity" />
-            </dl>
-            <div className="flex flex-wrap items-center gap-1 text-12 text-fg-muted">
-              {show3D && !motionOff ? (
-                <button
-                  type="button"
-                  onClick={() => setPlayKey((k) => k + 1)}
-                  className="yl-press inline-flex h-8 items-center rounded-control px-2 text-12 text-fg-2 hover:bg-bg-3 hover:text-fg-0"
-                >
-                  Replay arrival
-                </button>
-              ) : null}
-              <MotionToggle />
-            </div>
-          </div>
+        <div className="yl-container flex flex-wrap items-center gap-x-6 gap-y-2 py-3 text-12 text-fg-muted">
+          <span className="eyebrow shrink-0">The ring, live</span>
+          <dl className="m-0 flex flex-wrap items-center gap-x-5 gap-y-1.5">
+            <Key glyph={<circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.6" />} term="Ring" desc="your sealed rules; bright arc = budget left" />
+            <Key glyph={<ellipse cx="8" cy="8" rx="5" ry="2.6" fill="currentColor" />} term="Coins" desc="receipts inside" />
+            <Key glyph={<path d="M8 3l4 5-4 5-4-5z" fill="currentColor" opacity="0.6" />} term="Shards" desc="blocked attempts; they never cross" />
+            <Key glyph={<circle cx="8" cy="8" r="3.6" fill="var(--steel)" />} term="Pearl" desc="the agent's on-chain identity" />
+          </dl>
+          <span className="ml-auto flex items-center gap-1">
+            {show3D && !motionOff ? (
+              <button
+                type="button"
+                onClick={() => setPlayKey((k) => k + 1)}
+                className="yl-press inline-flex h-8 items-center rounded-control px-2 text-12 text-fg-2 hover:bg-bg-3 hover:text-fg-0"
+              >
+                Replay arrival
+              </button>
+            ) : null}
+            <MotionToggle />
+          </span>
         </div>
       </div>
 
@@ -304,13 +347,28 @@ export function Hero({ poster = false }: { poster?: boolean }) {
   );
 }
 
-function HeroStat({ label, value, suffix, tone = "text-fg-0" }: { label: string; value: number; suffix?: string; tone?: string }) {
+function HeroTile({
+  label,
+  value,
+  suffix,
+  tone = "text-fg-0",
+  source,
+  divided,
+}: {
+  label: string;
+  value: number;
+  suffix?: string;
+  tone?: string;
+  source: string;
+  divided?: boolean;
+}) {
   return (
-    <div className="grid content-start gap-1.5">
-      <dt className="order-2 text-12 leading-snug text-fg-muted">{label}</dt>
-      <dd className={`order-1 m-0 font-mono text-26 leading-none sm:text-32 ${tone}`}>
+    <div className={cn("grid min-w-0 content-start gap-1 py-3 pr-3", divided && "border-l border-line-1 pl-3 sm:pl-4")}>
+      <dd className={cn("order-1 m-0 font-mono text-26 leading-none sm:text-32", tone)}>
         <NumberFlow value={value} suffix={suffix} />
       </dd>
+      <dt className="order-2 text-13 leading-snug font-medium text-fg-1">{label}</dt>
+      <dd className="order-3 m-0 font-mono text-11 leading-4 text-fg-muted [overflow-wrap:anywhere]">{source}</dd>
     </div>
   );
 }
@@ -318,7 +376,7 @@ function HeroStat({ label, value, suffix, tone = "text-fg-0" }: { label: string;
 function Key({ glyph, term, desc }: { glyph: React.ReactNode; term: string; desc: string }) {
   return (
     <div className="flex flex-wrap items-baseline gap-x-1.5">
-      <dt className="inline-flex items-center gap-2 font-medium text-fg-2">
+      <dt className="inline-flex items-center gap-1.5 font-medium text-fg-2">
         <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" className="shrink-0 self-center text-fg-1">
           {glyph}
         </svg>

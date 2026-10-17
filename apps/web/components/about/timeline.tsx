@@ -12,6 +12,9 @@ import { REPO_URL } from "@/components/shell/site-footer";
  * as git recorded it. The line beside the list fills with scroll (CSS scroll-driven animation).
  */
 
+/** Milestones shown before "Show all" (newest first, as git lists them). */
+const COMPACT_ROWS = 6;
+
 const TRACK_LABEL: Record<TimelineCommit["track"], string> = {
   contracts: "Contracts",
   ledgers: "Ledgers",
@@ -43,31 +46,33 @@ export function BuildTimeline() {
   }, [t]);
   if (!t) return <p className="m-0 text-13 text-fg-muted">The build history is generated from git at build time; this build had none.</p>;
 
-  const list = t.commits.filter((c) => (track === "all" ? showAll || c.milestone : c.track === track));
+  // Compact by default: the newest milestones only; "Show all" opens the whole history.
+  const filtered = t.commits.filter((c) => (track === "all" ? showAll || c.milestone : c.track === track));
+  const list = showAll || track !== "all" ? filtered : filtered.slice(0, COMPACT_ROWS);
   const first = parts(t.first);
   const last = parts(t.last);
   const milestones = t.commits.filter((c) => c.milestone).length;
 
   return (
-    <div className="grid gap-8">
-      <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-6 border-y border-line-1 py-6 sm:grid-cols-4">
+    <div className="grid gap-6">
+      <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-line-1 py-4 sm:grid-cols-4">
         <div className="grid gap-1">
           <dt className="order-2 text-12 text-fg-muted">commits in the public history</dt>
-          <dd className="order-1 m-0 font-mono text-32 leading-none text-fg-0">{t.count}</dd>
+          <dd className="order-1 m-0 font-mono text-26 leading-none text-fg-0">{t.count}</dd>
         </div>
         <div className="grid gap-1">
           <dt className="order-2 text-12 text-fg-muted">milestones (a capability live end to end)</dt>
-          <dd className="order-1 m-0 font-mono text-32 leading-none text-fg-0">{milestones}</dd>
+          <dd className="order-1 m-0 font-mono text-26 leading-none text-fg-0">{milestones}</dd>
         </div>
         <div className="grid gap-1">
           <dt className="order-2 text-12 text-fg-muted">first commit, {first.zone}</dt>
-          <dd className="order-1 m-0 font-mono text-18 leading-tight text-fg-0">
+          <dd className="order-1 m-0 font-mono text-15 leading-tight text-fg-0">
             {first.day} {first.time}
           </dd>
         </div>
         <div className="grid gap-1">
           <dt className="order-2 text-12 text-fg-muted">latest commit in this build, {last.zone}</dt>
-          <dd className="order-1 m-0 font-mono text-18 leading-tight text-fg-0">
+          <dd className="order-1 m-0 font-mono text-15 leading-tight text-fg-0">
             {last.day} {last.time}
           </dd>
         </div>
@@ -93,11 +98,11 @@ export function BuildTimeline() {
           {list.map((c) => {
             const p = parts(c.at);
             return (
-              <li key={c.hash} className={cn("yl-reveal relative grid gap-1 py-4", c.milestone ? "border-b border-line-1" : "py-2.5")}>
+              <li key={c.hash} className={cn("yl-reveal relative grid gap-0.5 border-b border-line-1", c.milestone ? "py-2.5" : "py-2")}>
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "absolute top-[1.35rem] -left-[29px] rounded-pill",
+                    "absolute top-[1rem] -left-[29px] rounded-pill",
                     c.milestone ? "size-3 border-2 border-bg-0 bg-fg-0 outline outline-1 outline-line-3" : "size-1.5 -left-[26px] bg-fg-muted",
                   )}
                 />
@@ -111,7 +116,7 @@ export function BuildTimeline() {
                     <span className="sr-only"> (opens the commit on GitHub in a new tab)</span>
                   </a>
                 </p>
-                <p className={cn("m-0 max-w-[72ch] [overflow-wrap:anywhere]", c.milestone ? "text-15 font-medium text-fg-0 sm:text-18 sm:leading-snug" : "text-13 text-fg-2")}>{c.subject}</p>
+                <p className={cn("m-0 max-w-[72ch] [overflow-wrap:anywhere]", c.milestone ? "text-13 font-medium text-fg-0 sm:text-15" : "text-13 text-fg-2")}>{c.subject}</p>
               </li>
             );
           })}
@@ -122,9 +127,9 @@ export function BuildTimeline() {
           type="button"
           onClick={() => setShowAll((v) => !v)}
           aria-expanded={showAll}
-          className="yl-press inline-flex h-10 w-fit items-center rounded-control border border-line-3 px-4 text-13 text-fg-1 hover:bg-bg-2"
+          className="yl-press inline-flex h-9 w-fit items-center rounded-control border border-line-3 px-3 text-13 text-fg-1 hover:bg-bg-2"
         >
-          {showAll ? "Show milestones only" : `Show all ${t.count} commits`}
+          {showAll ? `Show the latest ${Math.min(COMPACT_ROWS, milestones)} milestones only` : `Show all ${t.count} commits`}
         </button>
       ) : null}
       <p className="m-0 text-12 text-fg-muted">

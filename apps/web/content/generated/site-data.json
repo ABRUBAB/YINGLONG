@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-16T20:42:52.101Z",
+  "generatedAt": "2026-10-17T02:21:02.808Z",
   "timeline": {
-    "head": "30ee250",
-    "count": 89,
+    "head": "de63b3a",
+    "count": 94,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-17T02:28:57+06:00",
+    "last": "2026-10-17T08:11:53+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -629,6 +629,41 @@
         "subject": "No co-sign approval for a redemption the ledger refuses for another reason; proof lists payments and refusals before drills",
         "track": "evidence",
         "milestone": false
+      },
+      {
+        "hash": "bb338d0",
+        "at": "2026-10-17T02:56:24+06:00",
+        "subject": "Student console: live execution view of the nine checks with real timings, and distinct result states",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "8ebf4fd",
+        "at": "2026-10-17T07:59:33+06:00",
+        "subject": "Evidence: 17 Oct live run of the company scenario (director-approved invoice, velocity refusal, board resume and resolution) and the capability beats; 169 receipts",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "8e0bc14",
+        "at": "2026-10-17T08:01:36+06:00",
+        "subject": "Security review record: eight findings with severity, status and fix commits (three fixed, two open, three accepted); the review document is generated from it",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "a706b92",
+        "at": "2026-10-17T08:11:42+06:00",
+        "subject": "Signing guard decodes user operations; second-device login keeps the first session; refusal measures; sign-up stage keeps its height",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "de63b3a",
+        "at": "2026-10-17T08:11:53+06:00",
+        "subject": "Review record: YR-04 and YR-07 fixed in a706b92",
+        "track": "infra",
+        "milestone": false
       }
     ]
   },
@@ -886,16 +921,16 @@
     }
   ],
   "metrics": {
-    "generatedAt": "2026-10-16T19:16:29.874Z",
+    "generatedAt": "2026-10-17T02:00:57.823Z",
     "values": {
       "tests.total": "795",
       "tests.contracts": "390",
       "tests.failed": "0",
-      "evidence.receipts": "152",
+      "evidence.receipts": "169",
       "evidence.anchored_receipts": "134",
       "evidence.reverts": "11",
-      "evidence.refused_offchain": "37",
-      "evidence.tx_count": "140",
+      "evidence.refused_offchain": "41",
+      "evidence.tx_count": "151",
       "bytecode.equal": "13",
       "bytecode.total": "13",
       "time.pause.p50": "0.222",

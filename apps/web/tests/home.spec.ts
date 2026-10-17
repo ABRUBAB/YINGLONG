@@ -6,8 +6,10 @@
  *   back to the Menu button.
  * - Home and About: no element wider than the viewport escapes its clipping ancestor (the page-level
  *   overflow clip must never be what keeps a phone from zooming out), at 375, 390, 768 and 1440 px.
- * - Desktop hero: the orbit column never overlaps the text; text, actions and orbit fill the first
- *   screen and the counters sit below it.
+ * - Desktop hero: the orbit column never overlaps the text; the product line, the actions, the three
+ *   live tiles and the orbit all sit inside the first screen.
+ * - Phone hero (390x844): the product line, the primary action and at least one live number are in
+ *   the first screen, above the orbit.
  */
 import { test, expect, type Page } from "@playwright/test";
 import { ROUTES } from "./routes";
@@ -107,13 +109,35 @@ for (const [width, height] of [
       const textRight = Math.max(r(text).right, ...[...text.querySelectorAll("*")].map((e) => r(e).right));
       const orbit = r(document.querySelector(".yl-hero-orbit")!);
       const actions = [...text.querySelectorAll("a")].map((e) => r(e).bottom);
-      const below = [...document.querySelectorAll("p")].find((p) => p.textContent === "What the ring shows (live)")!;
-      return { textRight, orbit: orbit.toJSON(), actionsBottom: Math.max(...actions), belowTop: r(below).top, inner: innerHeight, innerWidth };
+      const tiles = r(document.querySelector("[data-hero-tiles]")!);
+      const h1 = r(document.querySelector("h1")!);
+      return { textRight, orbit: orbit.toJSON(), actionsBottom: Math.max(...actions), tilesBottom: tiles.bottom, h1Top: h1.top, inner: innerHeight, innerWidth };
     });
     expect(g.orbit.left, "the orbit column starts right of every text block").toBeGreaterThan(g.textRight);
     expect(g.orbit.width / g.innerWidth, "the orbit column takes about 56% of the width").toBeGreaterThan(0.45);
     expect(g.orbit.bottom, "the orbit fills the first screen and no more").toBeLessThanOrEqual(g.inner + 1);
+    expect(g.h1Top, "the product line starts in the first screen").toBeLessThan(g.inner / 2);
     expect(g.actionsBottom, "the actions are above the fold").toBeLessThan(g.inner);
-    expect(g.belowTop, "the counters are below the first screen").toBeGreaterThanOrEqual(g.inner - 1);
+    expect(g.tilesBottom, "the three live tiles are inside the first screen").toBeLessThanOrEqual(g.inner - 1);
   });
 }
+
+test.describe("phone first screen", () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
+  test("the product line, the primary action and a live number fit the first screen", async ({ page }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+    const g = await page.evaluate(() => {
+      const r = (e: Element) => e.getBoundingClientRect();
+      const h1 = r(document.querySelector("h1")!);
+      const primary = r([...document.querySelectorAll(".yl-hero-text a")].find((a) => a.getAttribute("href") === "/judge")!);
+      const tiles = [...document.querySelectorAll("[data-hero-tiles] dd")].map((e) => r(e).bottom);
+      const orbit = r(document.querySelector(".yl-hero-orbit")!);
+      return { h1Bottom: h1.bottom, primaryBottom: primary.bottom, firstTileBottom: Math.min(...tiles), orbitTop: orbit.top, inner: innerHeight, scrollWidth: document.documentElement.scrollWidth, innerWidth };
+    });
+    expect(g.scrollWidth, "no horizontal scroll").toBeLessThanOrEqual(g.innerWidth);
+    expect(g.h1Bottom, "the product line is in the first screen").toBeLessThan(g.inner);
+    expect(g.primaryBottom, "the primary action is in the first screen").toBeLessThan(g.inner);
+    expect(g.firstTileBottom, "at least one live number is in the first screen").toBeLessThan(g.inner);
+    expect(g.orbitTop, "the orbit comes after the numbers").toBeGreaterThan(g.firstTileBottom);
+  });
+});

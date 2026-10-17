@@ -1,6 +1,6 @@
 /** Every route the app serves, with the heading each one must show. */
 export const ROUTES = [
-  { path: "/", name: "home", heading: /Always with you/ },
+  { path: "/", name: "home", heading: /An AI agent that pays for you/ },
   { path: "/app", name: "app", heading: /Nadia Rahman/ },
   { path: "/treasury", name: "treasury", heading: /Lotus Lane/ },
   { path: "/supervisor", name: "supervisor", heading: /Every AI agent, who it works for/ },

@@ -1,0 +1,40 @@
+/* Landing-only rules. The shell CSS owns the hero grid (.yl-hero-grid, .yl-hero-text,
+   .yl-hero-orbit); these refine the first screen so the product line, the actions and the three
+   live tiles all fit above the fold at 1280x800 and up, and on a 390x844 phone. */
+
+/* Tighter vertical padding than the shell's default: the tiles must stay inside the first screen. */
+.yl-hero-text.yl-hero-copy {
+  padding-block: 2rem 1.5rem;
+}
+@media (min-width: 1024px) {
+  .yl-hero-text.yl-hero-copy {
+    padding-block: min(3vh, 1.5rem);
+  }
+}
+
+/* The product line: two display lines, sized so that with the lead, three buttons and the tiles
+   the block is about 700 px tall at 1280x800 and 720 px at 1440x900. On short screens the size
+   also follows the viewport height, so the block never grows past the first screen. */
+.yl-hero-title {
+  font-size: clamp(2.375rem, 0.8rem + 2.8vw, 4.25rem);
+}
+@media (min-width: 1024px) {
+  .yl-hero-title {
+    font-size: max(2.375rem, min(clamp(2.375rem, 0.8rem + 2.8vw, 4.25rem), calc((100svh - var(--nav-h)) * 0.07)));
+  }
+}
+.yl-hero-sub {
+  max-width: 46ch;
+  font-size: clamp(0.9375rem, 0.8rem + 0.35vw, 1.125rem);
+  line-height: 1.55;
+}
+
+/* Live tiles: a hairline row; numbers are mono with tabular figures (Design direction, section 3). */
+.yl-hero-tiles dd {
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+/* Landing sections sit closer together than the default marketing section (about 58 px at 1440). */
+.yl-landing-section {
+  padding-block: clamp(2.5rem, 1.25rem + 2.6vw, 4rem);
+}

@@ -22,7 +22,7 @@ import { useInView, useVisibleInterval } from "./use-live";
  */
 
 const POLL_MS = 15_000;
-const PER_LANE = 6;
+const PER_LANE = 4;
 
 interface WallRow {
   id: string;
@@ -126,13 +126,13 @@ export function ProofWall() {
   }, [lanes, q.data]);
 
   return (
-    <section ref={root} aria-labelledby="wall-title" className="yl-section yl-defer border-y border-line-1 bg-bg-1">
+    <section ref={root} aria-labelledby="wall-title" className="yl-landing-section yl-defer border-y border-line-1 bg-bg-1">
       <div className="yl-container">
         <SectionHead
-          index="07"
-          eyebrow="Live activity"
+          index="03"
+          eyebrow="As it happens"
           id="wall-title"
-          title="Every payment and every blocked attempt, as it happens"
+          title="Live activity on both chains"
           lead="The newest records from both blockchains. Each one says why it was allowed, or which rule blocked it."
         >
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-12 text-fg-muted">
@@ -141,7 +141,7 @@ export function ProofWall() {
           </div>
         </SectionHead>
         <ErrorLine error={q.error} />
-        <div className="mt-12 grid gap-3 lg:grid-cols-2">
+        <div className="mt-8 grid gap-3 lg:grid-cols-2">
           <Lane
             title="FISCO BCOS"
             badge="FISCO BCOS (team-run consortium ledger)"

@@ -9,6 +9,7 @@ import { explorerTxUrl } from "@/lib/chain";
 import { formatTime, LEDGER_SHORT } from "@/lib/format";
 import { ruleForError, SITE } from "@/content/site-data";
 import { ArrowIcon, ButtonLink } from "@/components/ui/button";
+import { Qr } from "@/components/qr";
 import { SectionHead } from "./sections";
 import { useInView } from "./use-live";
 
@@ -34,6 +35,7 @@ const OUTCOME_WORD: Record<ChallengeAttempt["outcome"], string> = {
 
 export function ScalesPipeline() {
   const q = useAgent("challenge-attempts", (api) => api.challengeAttempts(), ["challenge"]);
+  const session = useAgent("challenge-session", (api) => api.challengeSession(), ["challenge"]);
   const track = useRef<HTMLDivElement>(null);
   const inView = useInView(track);
   const [runKey, setRunKey] = useState(0);
@@ -62,23 +64,50 @@ export function ScalesPipeline() {
   const revertHref = latest?.revert ? explorerTxUrl(latest.revert.ledger, latest.revert.txHash, latest.revert.explorerUrl) : undefined;
 
   return (
-    <section aria-labelledby="scales-title" className="yl-section">
+    <section aria-labelledby="scales-title" className="yl-landing-section border-t border-line-1">
       <div className="yl-container">
-        <SectionHead
-          index="04"
-          eyebrow="Nine safety checks"
-          id="scales-title"
-          title="Every request passes nine safety checks before any money moves"
-          lead="AI can raise a warning, but only fixed rules can say no. Here is where the latest hacking attempt was stopped:"
-        >
-          {isSample ? (
-            <div className="mt-2">
-              <SampleDataChip />
-            </div>
-          ) : null}
-        </SectionHead>
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <SectionHead
+            index="01"
+            eyebrow="How it works"
+            id="scales-title"
+            title="Nine checks before any money moves"
+            lead="The AI can raise a warning, but only fixed rules can say no. The rail below shows where the latest hacking attempt was stopped."
+            className="lg:col-span-6"
+          >
+            {isSample ? (
+              <div className="mt-2">
+                <SampleDataChip />
+              </div>
+            ) : null}
+          </SectionHead>
 
-        <div className="mt-12">
+          {/* The Judge's Challenge, with the guest QR: the natural next step after seeing where an attack stopped. */}
+          <div className="grid content-start gap-3 border-t border-line-1 pt-6 lg:col-span-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
+            <p className="eyebrow m-0 text-fg-muted">Try to hack it</p>
+            <p className="m-0 text-18 leading-snug text-fg-0">Nothing you type can make the agent send money outside its rules. Try.</p>
+            <p className="m-0 max-w-[52ch] text-13 text-fg-2">
+              Type any trick (a fake invoice, &quot;ignore your instructions&quot;, an urgent request) and see which check stops it. Press
+              &quot;bypass&quot; to skip the AI and send the payment straight to the blockchain: it is still blocked, with proof.
+            </p>
+            <div className="mt-1 flex flex-wrap items-center gap-5">
+              <ButtonLink href="/challenge">
+                Open the challenge <ArrowIcon />
+              </ButtonLink>
+              <div className="flex items-center gap-3">
+                <div className="rounded-card border border-line-2 bg-bg-0 p-1.5">
+                  <Qr value={session.data?.joinUrl ?? "https://app.yinglong-agent.tech/challenge"} size={72} label="QR code for a guest mandate in the Judge's Challenge" />
+                </div>
+                <p className="m-0 grid gap-0.5 text-11 text-fg-muted">
+                  <span>Guest mandate, test units only</span>
+                  {session.data ? <span>{session.data.quota.perDay} attempts per guest per day</span> : null}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8">
           <div
             key={runKey}
             ref={track}
@@ -125,10 +154,9 @@ export function ScalesPipeline() {
             </ol>
           </div>
 
-          <div className="mt-10 grid gap-6 border-t border-line-1 pt-8 lg:grid-cols-12 lg:gap-8">
+          <div className="mt-6 border-t border-line-1 pt-5">
             {latest ? (
-              <>
-                <div className="grid content-start gap-2 lg:col-span-7">
+                <div className="grid content-start gap-2">
                   <p className="eyebrow m-0 text-fg-muted">Last attack stopped</p>
                   <p className="m-0 text-18 leading-snug text-fg-0">
                     {latest.family.charAt(0).toUpperCase() + latest.family.slice(1)}, stopped at scale {stop + 1}, {SCALE_NAMES[latest.stoppedAt!]}
@@ -170,22 +198,16 @@ export function ScalesPipeline() {
                       {total} stopped attempts listed by GET /v1/challenge/attempts
                     </span>
                   </p>
-                </div>
-                <div className="flex flex-wrap items-start gap-3 lg:col-span-5 lg:justify-end">
                   <button
                     type="button"
                     onClick={() => setRunKey((k) => k + 1)}
-                    className="yl-press inline-flex h-10 items-center gap-2 rounded-control border border-line-3 px-4 text-13 text-fg-1 hover:bg-bg-2"
+                    className="yl-press mt-2 inline-flex h-9 w-fit items-center gap-2 rounded-control border border-line-3 px-3 text-13 text-fg-1 hover:bg-bg-2"
                   >
                     Replay the request
                   </button>
-                  <ButtonLink href="/challenge" variant="secondary">
-                    Try an attack yourself <ArrowIcon />
-                  </ButtonLink>
                 </div>
-              </>
             ) : (
-              <p className="m-0 text-13 text-fg-muted lg:col-span-12">{q.loading ? "Reading GET /v1/challenge/attempts" : "No stopped attempts have been recorded yet."}</p>
+              <p className="m-0 text-13 text-fg-muted">{q.loading ? "Reading GET /v1/challenge/attempts" : "No stopped attempts have been recorded yet."}</p>
             )}
           </div>
         </div>

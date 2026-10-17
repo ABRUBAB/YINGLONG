@@ -1,6 +1,7 @@
 /** Every page of the site, in reading order. The top nav, the mobile sheet and the footer share it. */
 export const SITE_PAGES = [
   { href: "/", label: "Home", hint: "Start here: what this site does" },
+  { href: "/judge", label: "3-minute demo", hint: "One click at a time: your own agent pays, is blocked, and leaves real records" },
   { href: "/app", label: "Student demo", hint: "Nadia's AI agent pays her bills inside her rules" },
   { href: "/treasury", label: "Company demo", hint: "A company's AI treasurer, with directors' approval" },
   { href: "/supervisor", label: "Regulator", hint: "What a regulator sees, and how it can pause an agent" },

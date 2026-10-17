@@ -248,6 +248,29 @@ export function simulateDecision(text: string, opts: { bypass?: boolean; guest?:
       { plan: ["Check the food budget", "Pay Kowloon Fresh Market from the food lane", "Write and anchor the receipt"] },
     );
   }
+  if (/(coffee|arena cafe)/i.test(t)) {
+    // A visitor's own mandate (sample): Arena Cafe is a verified payee; alone the agent pays at most 20 at a time.
+    const v = value ?? parseUnits("4", THKD.decimals)!;
+    const alone = parseUnits("20", THKD.decimals)!;
+    const a = { value: v.toString(), decimals: THKD.decimals, symbol: THKD.symbol };
+    if (v > alone) {
+      return done(
+        "T2",
+        "awaiting_approval",
+        { ...intent("pay", "Coffee at Arena Cafe", "arena-cafe", "Arena Cafe", "food"), amount: a },
+        scales({ stopAt: "policy", stopKind: "escalated", error: "CoSignRequired", reason: "Above the 20.00 tHKD the agent may pay alone, so your key must co-sign." }),
+        "Arena Cafe is a verified payee, but the amount is above what the agent may pay alone.",
+      );
+    }
+    return done(
+      "T1",
+      "executable",
+      { ...intent("pay", "Coffee at Arena Cafe", "arena-cafe", "Arena Cafe", "food"), amount: a },
+      scales({}),
+      `Inside your rules: ${formatUnits(v, THKD.decimals)} tHKD to Arena Cafe, a verified payee, under the 20.00 tHKD the agent may pay alone.`,
+      { plan: ["Check the food budget", "Pay Arena Cafe from the food lane", "Write and anchor the receipt"] },
+    );
+  }
   return done(
     "ASK",
     "asking",

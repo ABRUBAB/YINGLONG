@@ -28,23 +28,23 @@ export function OwnAgent() {
   const mandatesQ = useAgent("mandates", (api) => api.mandates(), ["mandates"]);
   const hash = mandatesQ.data?.find((m) => m.status === "live")?.delegationHash ?? null;
   return (
-    <section aria-labelledby="own-title" className="yl-section yl-defer border-y border-line-1 bg-bg-1">
-      <div className="yl-container grid items-center gap-14 lg:grid-cols-12 lg:gap-8">
-        <div className="grid content-start gap-10 lg:col-span-7">
+    <section aria-labelledby="own-title" className="yl-landing-section yl-defer">
+      <div className="yl-container grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
+        <div className="grid content-start gap-8 lg:col-span-7">
           <SectionHead
-            index="09"
+            index="04"
             eyebrow="Your own agent"
             id="own-title"
             title="Get your own agent in about a minute"
             lead="Write your rules, lock them with your fingerprint or a secret key, and your agent gets its own ID and wallet. Only you can change its rules."
           />
-          <ol className="m-0 grid list-none gap-0 border-t border-line-2 p-0">
+          <ol className="m-0 grid list-none gap-0 border-t border-line-2 p-0 sm:grid-cols-3 sm:gap-x-6">
             {STEPS.map((s) => (
-              <li key={s.n} className="yl-reveal grid grid-cols-[3rem_1fr] gap-4 border-b border-line-1 py-5">
+              <li key={s.n} className="yl-reveal grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line-1 py-4 sm:grid-cols-1 sm:gap-2">
                 <span className="kicker pt-1">{s.n}</span>
                 <div>
                   <h3 className="type-display m-0 text-22 text-fg-0">{s.verb}</h3>
-                  <p className="m-0 mt-1.5 max-w-[52ch] text-15 text-fg-2">{s.text}</p>
+                  <p className="m-0 mt-1.5 max-w-[52ch] text-13 text-fg-2">{s.text}</p>
                 </div>
               </li>
             ))}
@@ -65,7 +65,7 @@ export function OwnAgent() {
         </div>
 
         <div className="flex justify-center lg:col-span-5" ref={phone}>
-          <div className="yl-phone relative w-[min(78vw,300px)] p-2.5" aria-hidden="true">
+          <div className="yl-phone relative w-[min(70vw,272px)] p-2.5" aria-hidden="true">
             <div className="yl-phone-screen relative flex h-full flex-col overflow-hidden">
               {/* status bar and the page behind the prompt */}
               <div className="flex items-center justify-between px-6 pt-4 font-mono text-[10px] text-fg-muted">

@@ -1,0 +1,5 @@
+/* About page: sections sit closer together than the default marketing section (about 56 px at
+   1440) so the whole page reads as one scannable sheet of hairline lists. */
+.yl-about-section {
+  padding-block: clamp(2.5rem, 1.5rem + 2.4vw, 4rem);
+}

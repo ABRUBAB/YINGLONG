@@ -14,6 +14,9 @@ const channel = process.env.PW_CHANNEL ?? "chrome";
 const LIVE = Boolean(process.env.AGENT_API_IT);
 // Separate ports so a running fixtures server is never reused for the live specs (and vice versa).
 const PORT = Number(process.env.E2E_PORT || (LIVE ? 3220 : 3210));
+// The fixtures build to serve (pnpm build:e2e writes .next-e2e). Parallel work uses its own E2E_DIST and E2E_PORT,
+// so two builds never overwrite each other and a test never runs against someone else's server.
+const DIST = process.env.E2E_DIST || ".next-e2e";
 
 export default defineConfig({
   testDir: "tests",
@@ -38,7 +41,7 @@ export default defineConfig({
     : {
         command: LIVE
           ? `next start --port ${PORT}`
-          : `node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures NEXT_DIST_DIR=.next-e2e -- next start --port ${PORT}`,
+          : `node scripts/with-env.mjs NEXT_PUBLIC_DATA_MODE=fixtures NEXT_DIST_DIR=${DIST} -- next start --port ${PORT}`,
         url: `http://localhost:${PORT}`,
         reuseExistingServer: true,
         timeout: 120_000,

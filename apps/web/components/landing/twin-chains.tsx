@@ -116,14 +116,15 @@ export function TwinChains() {
   const shown = active === null ? null : rows[active];
 
   return (
-    <section aria-labelledby="twin-title" className="yl-section yl-defer">
-      <div className="yl-container">
+    <section aria-labelledby="twin-title" className="yl-landing-section yl-defer border-t border-line-1">
+      <div ref={root} data-drawn={drawn ? "true" : "false"} className="yl-container grid gap-10 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-8">
         <SectionHead
-          index="06"
-          eyebrow="Same rules, two chains"
+          index="02"
+          eyebrow="Two blockchains"
           id="twin-title"
-          title="The same rules run on two different blockchains"
+          title="The same rules on two blockchains"
           lead="A public blockchain (Base) and a bank-style private blockchain (FISCO BCOS, used in China). Each ring is drawn from the fingerprint of our 13 rule programs on that chain. They match because the code is identical."
+          className="lg:col-span-5 lg:row-start-1"
         >
           {isSample ? (
             <div className="mt-2">
@@ -132,35 +133,34 @@ export function TwinChains() {
           ) : null}
         </SectionHead>
 
-        <div ref={root} data-drawn={drawn ? "true" : "false"} className="mt-12 grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
-          <figure className="m-0 grid grid-cols-2 items-center gap-3 sm:gap-8 lg:col-span-7">
-            <div className="grid justify-items-center gap-4">
-              <div className="yl-ring-in w-full max-w-[420px]" style={{ ["--d" as string]: "0ms" }}>
-                <Ring rows={rows} ledger="base" active={active} onHover={setActive} label={`Base Sepolia: code hashes of ${rows.length} enforcers`} />
-              </div>
-              <figcaption className="grid justify-items-center gap-0.5 text-center">
-                <span className="text-13 font-medium text-fg-0">Base Sepolia</span>
-                <span className="text-11 text-fg-muted">public testnet, chain 84532</span>
-              </figcaption>
+        <figure className="m-0 grid grid-cols-2 items-center gap-3 self-center sm:gap-8 lg:col-span-7 lg:col-start-6 lg:row-start-1">
+          <div className="grid justify-items-center gap-4">
+            <div className="yl-ring-in w-full max-w-[400px]" style={{ ["--d" as string]: "0ms" }}>
+              <Ring rows={rows} ledger="base" active={active} onHover={setActive} label={`Base Sepolia: code hashes of ${rows.length} enforcers`} />
             </div>
-            <div className="grid justify-items-center gap-4">
-              <div className="yl-ring-in w-full max-w-[420px]" style={{ ["--d" as string]: "140ms" }}>
-                <Ring rows={rows} ledger="fisco" active={active} onHover={setActive} label={`FISCO BCOS: code hashes of ${rows.length} enforcers`} />
-              </div>
-              <figcaption className="grid justify-items-center gap-0.5 text-center">
-                <span className="text-13 font-medium text-fg-0">FISCO BCOS</span>
-                <span className="text-11 text-fg-muted">team-run consortium ledger</span>
-              </figcaption>
+            <figcaption className="grid justify-items-center gap-0.5 text-center">
+              <span className="text-13 font-medium text-fg-0">Base Sepolia</span>
+              <span className="text-11 text-fg-muted">public testnet, chain 84532</span>
+            </figcaption>
+          </div>
+          <div className="grid justify-items-center gap-4">
+            <div className="yl-ring-in w-full max-w-[400px]" style={{ ["--d" as string]: "140ms" }}>
+              <Ring rows={rows} ledger="fisco" active={active} onHover={setActive} label={`FISCO BCOS: code hashes of ${rows.length} enforcers`} />
             </div>
-          </figure>
+            <figcaption className="grid justify-items-center gap-0.5 text-center">
+              <span className="text-13 font-medium text-fg-0">FISCO BCOS</span>
+              <span className="text-11 text-fg-muted">team-run consortium ledger</span>
+            </figcaption>
+          </div>
+        </figure>
 
-          <div className="grid content-start gap-6 lg:col-span-5">
+        <div className="grid content-start gap-5 lg:col-span-5 lg:col-start-1 lg:row-start-2">
             <p className="m-0 flex items-baseline gap-3">
-              <span className="font-mono text-[3.5rem] leading-none text-fg-0">
+              <span className="font-mono text-[3rem] leading-none text-fg-0">
                 {equal}
                 <span className="text-fg-muted">/{rows.length}</span>
               </span>
-              <span className="text-15 text-fg-2">enforcers with identical runtime bytecode</span>
+              <span className="text-15 text-fg-2">rule programs with identical bytecode on both chains</span>
             </p>
             <div className="min-h-[4.5rem] border-l border-line-2 pl-4 text-13" aria-live="polite">
               {shown ? (
@@ -173,7 +173,10 @@ export function TwinChains() {
                 <p className="m-0 text-fg-muted">Point at a sector or a row to compare one enforcer on both ledgers.</p>
               )}
             </div>
-            <ol className="m-0 grid list-none grid-cols-1 gap-0 border-t border-line-1 p-0 sm:grid-cols-2">
+        </div>
+
+        <div className="grid content-start gap-4 lg:col-span-7 lg:col-start-6 lg:row-start-2">
+            <ol className="m-0 grid list-none grid-cols-1 gap-0 border-t border-line-1 p-0 sm:grid-cols-2 lg:grid-cols-3">
               {rows.map((r, i) => (
                 <li key={r.name} className="border-b border-line-1">
                   <button
@@ -199,7 +202,6 @@ export function TwinChains() {
               {SITE.twin?.allContracts.compared} are identical; the ones that differ are framework and verifier contracts (
               {SITE.twin?.allContracts.differ.join(", ")}).
             </p>
-          </div>
         </div>
       </div>
     </section>
