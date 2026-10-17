@@ -34,7 +34,7 @@ export const viewport: Viewport = {
 
 // Applies the saved theme and motion preference before first paint (wrapped: storage may be blocked). Without a
 // saved theme the device setting decides (tokens.css, prefers-color-scheme).
-const PREFS = `try{var d=document.documentElement,t=localStorage.getItem("yl-theme"),m=localStorage.getItem("yl-motion");if(t==="light"||t==="dark")d.dataset.theme=t;if(m==="off")d.dataset.motion="off";if(!sessionStorage.getItem("yl-boot")&&!navigator.webdriver&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&m!=="off"){d.dataset.boot="1";}}catch(e){}`;
+const PREFS = `try{var d=document.documentElement,t=localStorage.getItem("yl-theme"),m=localStorage.getItem("yl-motion");if(t==="light"||t==="dark")d.dataset.theme=t;d.classList.toggle("dark",t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches));if(m==="off")d.dataset.motion="off";if(!sessionStorage.getItem("yl-boot")&&!navigator.webdriver&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&m!=="off"){d.dataset.boot="1";}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
