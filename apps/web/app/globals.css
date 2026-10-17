@@ -3,6 +3,7 @@
 @import "@yinglong/ui/orbit.css";
 
 @source "../../../packages/ui/src";
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ORBIT: no default palette, radius, shadow or blur can leak in. */
 @theme {

@@ -44,6 +44,26 @@ for (const width of WIDTHS) {
 
 test.describe("themes and print", () => {
   test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+  test("theme switch updates the page and saves the selected theme", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("yl-theme", "dark");
+    });
+    await page.goto("/", { waitUntil: "networkidle" });
+
+    const switchButton = page.getByRole("button", { name: "Dark theme" }).first();
+    await expect(switchButton).toBeVisible();
+    await expect(switchButton).toHaveAttribute("aria-pressed", "true");
+    await switchButton.click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(switchButton).toHaveAttribute("aria-pressed", "false");
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("yl-theme"))).toBe("light");
+
+    await switchButton.click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(switchButton).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("yl-theme"))).toBe("dark");
+  });
+
   test("light theme (paper by day) on the console passes axe", async ({ page }) => {
     await page.addInitScript(() => {
       try {

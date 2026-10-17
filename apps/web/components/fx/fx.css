@@ -886,28 +886,6 @@
   }
 }
 
-/* Theme switch: the new theme spreads from the button as a circle. */
-html.yl-theme-switch::view-transition-old(root),
-html.yl-theme-switch::view-transition-new(root) {
-  animation: none !important;
-  mix-blend-mode: normal;
-}
-html.yl-theme-switch::view-transition-old(root) {
-  z-index: 1;
-}
-html.yl-theme-switch::view-transition-new(root) {
-  z-index: 2;
-  animation: yl-theme-reveal 760ms var(--ease-out) both !important;
-}
-@keyframes yl-theme-reveal {
-  from {
-    clip-path: circle(0 at var(--tx, 50%) var(--ty, 0));
-  }
-  to {
-    clip-path: circle(150vmax at var(--tx, 50%) var(--ty, 0));
-  }
-}
-
 /* Light theme: the same layout designed for paper. Soft coloured washes instead of glow, white glass with
    a green-grey rim, and shadows tinted with ink rather than black. */
 :root[data-theme="light"] .yl-glass,

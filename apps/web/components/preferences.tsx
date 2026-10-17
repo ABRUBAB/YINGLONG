@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { cn } from "@yinglong/ui";
+import { SwitchButton } from "@/components/ui/switch-button";
 
 function read(key: string): string | null {
   try {
@@ -61,47 +62,26 @@ export function useTheme(): "dark" | "light" {
  */
 export function ThemeToggle({ className, compact }: { className?: string; compact?: boolean }) {
   const theme = useTheme();
-  const next = theme === "dark" ? "light" : "dark";
+  const motionOff = useMotionOff();
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
   return (
-    <button
-      type="button"
-      className={cn(
-        "yl-press inline-flex h-8 items-center gap-2 rounded-control text-12 text-fg-2 hover:bg-bg-3 hover:text-fg-0",
-        compact ? "w-8 justify-center border border-line-2" : "px-2",
-        className,
-      )}
-      aria-label={`Switch to the ${next} theme`}
-      title={`Switch to the ${next} theme`}
-      onClick={(e) => {
-        const apply = () => {
-          document.documentElement.dataset.theme = next;
-          write("yl-theme", next);
-        };
-        const doc = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<unknown> } };
+    <SwitchButton
+      theme={theme}
+      showLabel={!compact}
+      size={compact ? "sm" : "default"}
+      reveal={!motionOff}
+      motionOff={motionOff}
+      className={className}
+      onThemeChange={(next) => {
         const root = document.documentElement;
-        if (!doc.startViewTransition || root.dataset.motion === "off" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          apply();
-          return;
-        }
-        const r = e.currentTarget.getBoundingClientRect();
-        root.style.setProperty("--tx", `${Math.round(r.left + r.width / 2)}px`);
-        root.style.setProperty("--ty", `${Math.round(r.top + r.height / 2)}px`);
-        root.classList.add("yl-theme-switch");
-        doc.startViewTransition(apply).finished.finally(() => root.classList.remove("yl-theme-switch"));
+        root.dataset.theme = next;
+        root.style.colorScheme = next;
+        write("yl-theme", next);
       }}
-    >
-      <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
-        {theme === "dark" ? (
-          <>
-            <circle cx="8" cy="8" r="3" fill="currentColor" />
-            <path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-          </>
-        ) : (
-          <path d="M13.2 9.6A5.6 5.6 0 0 1 6.4 2.8a5.6 5.6 0 1 0 6.8 6.8z" fill="currentColor" />
-        )}
-      </svg>
-      {compact ? null : theme === "dark" ? "Light" : "Dark"}
-    </button>
+    />
   );
 }
 
