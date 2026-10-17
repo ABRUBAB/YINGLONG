@@ -105,11 +105,11 @@ test.describe("desktop", () => {
 
   test("the site nav lists the demo", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
-    const link = page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "3-minute demo", exact: true });
+    const link = page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "Walkthrough", exact: true });
     await expect(link).toHaveAttribute("href", "/judge");
     await link.click();
     await expect(page).toHaveURL(/\/judge$/);
-    await expect(page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "3-minute demo", exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "Walkthrough", exact: true })).toHaveAttribute("aria-current", "page");
   });
 });
 
@@ -129,8 +129,8 @@ test.describe("phone", () => {
     expect(w.scroll).toBeLessThanOrEqual(w.inner);
     await expect(page.getByRole("button", { name: "Make a payment" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Menu" }).click();
+    await page.getByRole("button", { name: "Explore" }).click();
     const sheet = page.getByRole("dialog");
-    await expect(sheet.getByRole("link", { name: /^3-minute demo/ })).toHaveAttribute("href", "/judge");
+    await expect(sheet.getByRole("link", { name: /^3-minute walkthrough/ })).toHaveAttribute("href", "/judge");
   });
 });

@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-17T19:32:01.025Z",
+  "generatedAt": "2026-10-17T19:44:13.473Z",
   "timeline": {
-    "head": "fb81837",
-    "count": 98,
+    "head": "b90f51e",
+    "count": 102,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-17T13:00:14+06:00",
+    "last": "2026-10-18T01:43:14+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -690,6 +690,34 @@
         "hash": "fb81837",
         "at": "2026-10-17T13:00:14+06:00",
         "subject": "gitleaks: allowlist the recorded beats file (public credential ids, no secrets)",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "6422a5f",
+        "at": "2026-10-18T00:42:22+06:00",
+        "subject": "updated the frontend design, added the updated navbar, the video play section, updated the names in the navbar, added a search option in the proof and some others features were added",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "ef58097",
+        "at": "2026-10-18T01:37:06+06:00",
+        "subject": "updated the mode transitions",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "bfed428",
+        "at": "2026-10-18T01:43:10+06:00",
+        "subject": "Merge shabab (redesign polish: navbar, video section, proof search) with fixes: first-visit screen waits for the 3D scene, regulator Verify always usable, progress panels for sign-up",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "b90f51e",
+        "at": "2026-10-18T01:43:14+06:00",
+        "subject": "Merge remote-tracking branch 'origin/shabab'",
         "track": "infra",
         "milestone": false
       }

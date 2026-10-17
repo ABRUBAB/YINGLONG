@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
+import { FILM_SRC } from "@/content/film";
 import { ArrowIcon, Button, ButtonLink, CloseIcon } from "@/components/ui/button";
 import "./video-experience.css";
 
@@ -15,25 +16,9 @@ type VideoExperienceProps = {
   size?: "md" | "lg";
 };
 
-/** True once the video file is confirmed to exist (a HEAD request answering with a video type). */
-export function useVideoAvailable(src: string): boolean {
-  const [available, setAvailable] = useState(false);
-  useEffect(() => {
-    let alive = true;
-    fetch(src, { method: "HEAD" })
-      .then((r) => alive && setAvailable(r.ok && (r.headers.get("content-type") ?? "").startsWith("video")))
-      .catch(() => undefined);
-    return () => {
-      alive = false;
-    };
-  }, [src]);
-  return available;
-}
-
 export function VideoExperience({ src, title, eyebrow, buttonLabel, captionsSrc, ctaHref, ctaLabel, size = "lg" }: VideoExperienceProps) {
   const [open, setOpen] = useState(false);
   // The film is added to /public/videos when it exists; until then no button is shown (never a dead player).
-  const available = useVideoAvailable(src);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
@@ -48,7 +33,7 @@ export function VideoExperience({ src, title, eyebrow, buttonLabel, captionsSrc,
     if (dialogRef.current?.open) dialogRef.current.close();
   }
 
-  if (!available) return null;
+  if (!FILM_SRC) return null;
 
   return (
     <>

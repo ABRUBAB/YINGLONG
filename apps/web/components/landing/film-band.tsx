@@ -1,12 +1,9 @@
-"use client";
-
-import { useVideoAvailable, VideoExperience } from "@/components/media/video-experience";
-
-const FILM = "/videos/yinglong-film.mp4";
+import { VideoExperience } from "@/components/media/video-experience";
+import { FILM_SRC } from "@/content/film";
 
 export function FilmBand() {
-  // The band appears only once the film file exists.
-  if (!useVideoAvailable(FILM)) return null;
+  // The band appears only once the film exists (content/film.ts).
+  if (!FILM_SRC) return null;
   return (
     <section aria-labelledby="film-title" className="border-y border-line-1 bg-bg-0 text-fg-1">
       <div className="yl-container grid justify-items-center gap-5 py-10 text-center sm:py-12">
@@ -24,7 +21,7 @@ export function FilmBand() {
           </p>
         </div>
         <VideoExperience
-          src={FILM}
+          src={FILM_SRC}
           eyebrow="YINGLONG project film"
           title="How YINGLONG keeps AI agents within your rules"
           buttonLabel="Watch the 4-minute film"

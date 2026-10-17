@@ -12,10 +12,11 @@
  *   the first screen, above the orbit.
  */
 import { test, expect, type Page } from "@playwright/test";
+import { FILM_SRC } from "../content/film";
 import { ROUTES } from "./routes";
 
 async function openMenu(page: Page) {
-  await page.getByRole("button", { name: "Menu", exact: true }).click();
+  await page.getByRole("button", { name: "Explore", exact: true }).click();
   const sheet = page.getByRole("dialog");
   await expect(sheet).toBeVisible();
   // Wait until the sheet has finished entering (its right edge rests on the viewport's right edge).
@@ -58,7 +59,7 @@ for (const width of [375, 390]) {
       }
       await page.keyboard.press("Escape");
       await expect(sheet).toBeHidden();
-      await expect(page.getByRole("button", { name: "Menu", exact: true })).toBeFocused();
+      await expect(page.getByRole("button", { name: "Explore", exact: true })).toBeFocused();
     });
   });
 }
@@ -144,6 +145,8 @@ test.describe("phone first screen", () => {
 
 test.describe("video experiences", () => {
   test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+  // The film buttons appear only once content/film.ts names the film file.
+  test.skip(!FILM_SRC, "no film file yet (content/film.ts)");
 
   for (const pageCase of [
     { path: "/", button: "Watch the 4-minute film", title: "How YINGLONG keeps AI agents within your rules" },
