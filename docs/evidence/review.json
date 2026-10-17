@@ -1,13 +1,25 @@
 {
   "schema": "yinglong.review/1",
   "about": "Internal review record read by apps/agent/scripts/finalize.ts into docs/SECURITY_REVIEW.md. Findings are written by the reviewers; counts and tables are generated from this file. Internal review by the YINGLONG team; no third-party audit has been performed.",
-  "commit": "8ebf4fd",
+  "commit": "a706b92",
   "date": "2026-10-17",
   "tools": [
-    { "name": "forge", "version": "1.8.5" },
-    { "name": "slither", "version": "0.11.6" },
-    { "name": "aderyn", "version": "0.6.8" },
-    { "name": "halmos", "version": "0.3.3" }
+    {
+      "name": "forge",
+      "version": "1.8.5"
+    },
+    {
+      "name": "slither",
+      "version": "0.11.6"
+    },
+    {
+      "name": "aderyn",
+      "version": "0.6.8"
+    },
+    {
+      "name": "halmos",
+      "version": "0.3.3"
+    }
   ],
   "findings": [
     {
@@ -51,11 +63,12 @@
       "title": "The web signing guard allows a user operation without decoding its calls",
       "severity": "medium",
       "component": "apps/web lib/signing-guard.ts",
-      "status": "open",
+      "status": "fixed",
       "description": "PackedUserOperation is on the allowlist for seal, resume and revoke, but the guard does not decode the inner calls against an allowlist, and an unknown message kind from the network throws instead of returning a typed refusal.",
       "impact": "The guard relies on the page's own decoding of what the user is shown; a compromised service could ask the passkey to sign a user operation with other calls. The account's enforcers still bound what an agent can do, and the user sees the decoded operation before signing.",
       "recommendation": "Decode the user operation's execution calls and accept only the publish, delegation, pause, resume and revoke calls to known contracts; return a typed refusal for unknown kinds.",
-      "resolution": "Planned before submission (owner: front end with back end)."
+      "resolution": "The guard decodes the user operation's execute call: it must send no value and may only call the account functions its kind needs (seal: publish, supersede, revoke, setPayees, setGuardian; revoke: revoke, disableDelegation; resume: untrip). Unknown kinds return KindMismatch. Unit tests cover a hidden transfer, a value-sending call and an unknown kind.",
+      "fixCommit": "a706b92"
     },
     {
       "id": "YR-05",
@@ -86,11 +99,12 @@
       "title": "Logging in on a second device ends the first device's session",
       "severity": "info",
       "component": "apps/agent visitors (loginVisitor)",
-      "status": "open",
+      "status": "fixed",
       "description": "Each login issues a new session token and stores only its hash, replacing the previous one.",
       "impact": "Usability: the first device is logged out without notice. No security impact.",
       "recommendation": "Keep a small set of session hashes per visitor, or tell the user that other devices were signed out.",
-      "resolution": "Open."
+      "resolution": "Log in again keeps the hashes of up to four earlier session tokens, so earlier devices stay logged in; visitor-key-e2e.mts pays with the first device's token after a second login.",
+      "fixCommit": "a706b92"
     },
     {
       "id": "YR-08",
