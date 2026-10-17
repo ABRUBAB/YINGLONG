@@ -3,9 +3,10 @@
 useDefault = true
 
 [allowlist]
-description = "Raw tool output (hex-heavy Foundry and Halmos dumps) and public ZK test vectors: no secrets by construction"
+description = "Raw tool output (hex-heavy Foundry and Halmos dumps), public ZK test vectors and the recorded live-run beats (public credential and transaction ids): no secrets by construction"
 paths = [
   '''contracts/reports/[^/]+\.raw\.json$''',
   '''contracts/test/vectors/''',
   '''ml/serving/models\.lock\.json$''',
+  '''apps/agent/data/beats[^/]*\.json$''',
 ]
