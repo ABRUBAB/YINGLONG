@@ -54,7 +54,7 @@ function MerklePath({ proof, steps, revealed, matches }: { proof: MerkleProof; s
         return (
           <li key={`${r.label}-${i}`} className="relative grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0">
             {i < rows.length - 1 ? <span aria-hidden="true" className="absolute top-5 bottom-0 left-[9.5px] w-px bg-line-2" /> : null}
-            <span className={cn("relative z-[1] mt-0.5 transition-colors duration-300", steel ? "text-steel" : shown ? "text-fg-1" : "text-fg-faint")}>
+            <span className={cn("relative z-[1] mt-0.5 transition-colors duration-300", steel ? "text-steel" : shown ? "text-fg-1" : "text-fg-muted")}>
               <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
                 <circle cx="10" cy="10" r="7.5" fill="var(--bg-1)" stroke="currentColor" strokeWidth="1.5" strokeDasharray={shown ? undefined : "2 2.4"} />
                 {steel ? <circle cx="16.5" cy="6.3" r="2.6" fill="currentColor" /> : null}

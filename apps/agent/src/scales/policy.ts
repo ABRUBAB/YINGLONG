@@ -21,6 +21,12 @@ export interface PolicyRefusal {
   rule: string;
   typedError: string;
   detail: string;
+  /**
+   * The numbers behind a limit refusal, for a reason meter: what this request needs, the sealed limit, and what is
+   * already used (integers as strings; `unit` says whether they are base units of the payment's asset, a count of
+   * payments, or a risk class). Absent for refusals that are not a limit.
+   */
+  measure?: { requested: string; limit: string; used?: string; unit: "base-units" | "payments" | "risk-class" };
 }
 
 export interface PolicyDecision {
@@ -52,7 +58,8 @@ export async function evaluatePolicy(args: {
   const rules: DecodedRule[] = delegation.caveats.map((c) => decodeCaveat(c, ctx.deployment));
   const dm = ctx.addr("DelegationManager");
   const lc = (a: string) => a.toLowerCase();
-  const refuse = (rule: string, typedError: string, detail: string) => refusals.push({ rule, typedError, detail });
+  const refuse = (rule: string, typedError: string, detail: string, measure?: PolicyRefusal["measure"]) =>
+    refusals.push(measure ? { rule, typedError, detail, measure } : { rule, typedError, detail });
 
   // Pause and binding.
   const paused = await ctx.read<boolean>({ address: ctx.addr("KillSwitchRegistry"), abi: abi.KillSwitchRegistryAbi, functionName: "isPaused", args: [account, agent] });
@@ -111,7 +118,7 @@ export async function evaluatePolicy(args: {
         if (lc(r.asset) !== lc(payment.asset)) break;
         if (payment.amount > r.t2Ceiling) {
           tier = "T3";
-          refuse("CoSignEnforcer", "AboveTierCeiling", `amount above the T2 ceiling of ${r.t2Ceiling}`);
+          refuse("CoSignEnforcer", "AboveTierCeiling", `amount above the T2 ceiling of ${r.t2Ceiling}`, { requested: String(payment.amount), limit: String(r.t2Ceiling), unit: "base-units" });
         }
         let threshold = r.newPayeeT1Cap;
         if (known) {
@@ -137,7 +144,13 @@ export async function evaluatePolicy(args: {
         reads[`spent:${cat}`] = spent.toString();
         if (cap === undefined) refuse("CategoryBudgetEnforcer", "CategoryBudgetExceeded", `no budget for category ${cat}`);
         else {
-          if (spent + payment.amount > cap) refuse("CategoryBudgetEnforcer", "CategoryBudgetExceeded", `${spent + payment.amount} would exceed the cap ${cap}`);
+          if (spent + payment.amount > cap)
+            refuse("CategoryBudgetEnforcer", "CategoryBudgetExceeded", `${spent + payment.amount} would exceed the cap ${cap}`, {
+              requested: String(payment.amount),
+              limit: String(cap),
+              used: String(spent),
+              unit: "base-units",
+            });
           const remaining = cap > spent ? cap - spent : 0n;
           maxAtRisk = maxAtRisk === undefined ? remaining : maxAtRisk + remaining;
         }
@@ -147,7 +160,13 @@ export async function evaluatePolicy(args: {
         if (lc(r.asset) !== lc(payment.asset)) break;
         const bal = await ctx.read<bigint>({ address: payment.asset, abi: abi.TestUnitsAbi, functionName: "balanceOf", args: [account] });
         reads[`balance:${payment.asset}`] = bal.toString();
-        if (bal < payment.amount || bal - payment.amount < r.amount) refuse("ReserveFloorEnforcer", "ReserveFloorBreached", `balance after ${bal - payment.amount} below floor ${r.amount}`);
+        if (bal < payment.amount || bal - payment.amount < r.amount)
+          refuse("ReserveFloorEnforcer", "ReserveFloorBreached", `balance after ${bal - payment.amount} below floor ${r.amount}`, {
+            requested: String(payment.amount),
+            limit: String(bal - r.amount > 0n ? bal - r.amount : 0n),
+            used: "0",
+            unit: "base-units",
+          });
         break;
       }
       case "velocity": {
@@ -157,14 +176,23 @@ export async function evaluatePolicy(args: {
         reads.velocityCount = String(count);
         reads.velocityOutflow = outflow.toString();
         const newOut = outflow + (lc(r.asset) === lc(payment.asset) ? payment.amount : 0n);
-        if (Number(count) + 1 > r.maxCount || newOut > r.maxOutflow) refuse("VelocityEnforcer", "VelocityExceeded", `${Number(count) + 1} payments, ${newOut} out in this window`);
+        if (Number(count) + 1 > r.maxCount || newOut > r.maxOutflow)
+          refuse(
+            "VelocityEnforcer",
+            "VelocityExceeded",
+            `${Number(count) + 1} payments, ${newOut} out in this window`,
+            Number(count) + 1 > r.maxCount
+              ? { requested: "1", limit: String(r.maxCount), used: String(count), unit: "payments" }
+              : { requested: String(newOut - outflow), limit: String(r.maxOutflow), used: String(outflow), unit: "base-units" },
+          );
         break;
       }
       case "suitability": {
         for (const p of new Set([payment.recipient, payment.beneficiary])) {
           const [listed, riskClass] = await ctx.read<[boolean, number]>({ address: ctx.addr("ProductRegistry"), abi: abi.ProductRegistryAbi, functionName: "productInfo", args: [p] });
           if (listed) reads[`riskClass:${p}`] = String(riskClass);
-          if (listed && Number(riskClass) > r.maxRiskClass) refuse("SuitabilityEnforcer", "UnsuitableProduct", `risk class ${riskClass} above ${r.maxRiskClass}`);
+          if (listed && Number(riskClass) > r.maxRiskClass)
+            refuse("SuitabilityEnforcer", "UnsuitableProduct", `risk class ${riskClass} above ${r.maxRiskClass}`, { requested: String(riskClass), limit: String(r.maxRiskClass), unit: "risk-class" });
         }
         break;
       }

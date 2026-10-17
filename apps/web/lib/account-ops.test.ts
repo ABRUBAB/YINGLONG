@@ -58,6 +58,23 @@ function withCalls(td: TypedData, calls: { to: Hex; data: Hex; value?: bigint }[
 const revokeCall = (hash: Hex, to: Hex = FISCO_DIRECTORY.MandateRegistry!) => ({ to, data: encodeFunctionData({ abi: MANDATE_REGISTRY_ABI, functionName: "revoke", args: [hash] }) });
 const disableCall = (d = delegation, to: Hex = FISCO_DIRECTORY.DelegationManager!) => ({ to, data: encodeFunctionData({ abi: DELEGATION_MANAGER_ABI, functionName: "disableDelegation", args: [d] }) });
 
+describe("signing guard: user operations are decoded", () => {
+  const td = revokeTypedData(ctx, delegation);
+  const sign = (t: TypedData, kind: "revoke" | "seal" | "resume" = "revoke") => guardSigningRequest({ kind, digest: typedDataDigest(t), typedData: t });
+  const transfer = { to: FISCO_DIRECTORY.MandateRegistry!, data: `0xa9059cbb${"00".repeat(64)}` as Hex };
+
+  it("refuses a call outside the kind's account functions, even with a matching digest", () => {
+    expect(sign(withCalls(td, [revokeCall(ctx.mandateHash), transfer]))).toMatchObject({ ok: false, code: "UnknownCall" });
+    expect(sign(withCalls(td, [revokeCall(ctx.mandateHash)]), "resume")).toMatchObject({ ok: false, code: "UnknownCall" });
+  });
+  it("refuses a user operation that sends value", () => {
+    expect(sign(withCalls(td, [{ ...revokeCall(ctx.mandateHash), value: 1n }], SINGLE_DEFAULT_MODE))).toMatchObject({ ok: false, code: "UnknownCall" });
+  });
+  it("refuses an unknown request kind instead of throwing", () => {
+    expect(guardSigningRequest({ kind: "transfer" as never, digest: typedDataDigest(td), typedData: td })).toMatchObject({ ok: false, code: "KindMismatch" });
+  });
+});
+
 describe("revoke review", () => {
   const td = revokeTypedData(ctx, delegation);
 

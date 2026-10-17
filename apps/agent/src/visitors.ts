@@ -55,7 +55,9 @@ const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
 
 export function visitorTokenOk(id: string, token: string | undefined): boolean {
   const v = visitorStore.get().visitors[id];
-  return !!v && !!v.sealedAt && !!token && keccak256(stringToBytes(token)) === v.tokenHash;
+  if (!v || !v.sealedAt || !token) return false;
+  const h = keccak256(stringToBytes(token));
+  return h === v.tokenHash || !!v.otherTokenHashes?.includes(h);
 }
 
 export async function registerVisitor(args: { credentialId?: string; x?: Hex; y?: Hex; owner?: Address; mandate?: unknown }) {
@@ -323,7 +325,10 @@ export async function loginVisitor(args: { nonce: Hex; issuedAt: string; signatu
   if (magic !== MAGIC_1271) throw new Error("the signature does not match this account");
   const token = randomBytes(24).toString("base64url");
   visitorStore.update((d) => {
-    d.visitors[v.id]!.tokenHash = keccak256(stringToBytes(token));
+    const rec = d.visitors[v.id]!;
+    // Keep the previous devices' sessions valid (at most four besides the newest).
+    rec.otherTokenHashes = [...(rec.otherTokenHashes ?? []), rec.tokenHash].filter(Boolean).slice(-4);
+    rec.tokenHash = keccak256(stringToBytes(token));
   });
   return {
     visitorId: v.id,

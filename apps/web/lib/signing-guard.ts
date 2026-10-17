@@ -3,8 +3,11 @@
  * passkey. It accepts exactly the typed messages in the allowlist and only when the 32-byte digest it
  * is asked to sign equals hashTypedData(typedData) recomputed here. EIP-3009 transfers, ERC-2612
  * Permit, Permit2, raw personal_sign and unknown EIP-712 domains are refused with a typed reason.
+ * A user operation is decoded too: it must send no value and may only call the account-management
+ * functions its kind needs (publish a mandate, set payees and guardian, revoke, resume).
  */
-import { hashTypedData, type Hex, type TypedDataDomain } from "viem";
+import { hashTypedData, toFunctionSelector, type AbiFunction, type Hex, type TypedDataDomain } from "viem";
+import { decodeExecuteCallData, DELEGATION_MANAGER_ABI, KILL_SWITCH_ABI, MANDATE_REGISTRY_ABI, PAYEE_BOOK_ABI } from "./account-ops";
 import type { SigningRequest, TypedData } from "./api/view";
 
 export const ALLOWED_PRIMARY_TYPES = [
@@ -27,9 +30,49 @@ const KIND_TYPES: Record<SigningRequest["kind"], readonly string[]> = {
   revoke: ["PackedUserOperation"],
 };
 
+/** The functions a user operation of each kind may call (the account's own management, never a transfer). */
+const KIND_CALLS: Partial<Record<SigningRequest["kind"], readonly string[]>> = {
+  seal: ["publish", "supersede", "revoke", "setPayees", "setGuardian"],
+  revoke: ["revoke", "disableDelegation"],
+  resume: ["untrip"],
+};
+
+let selectors: Map<string, string> | undefined;
+/** 4-byte selector -> function name, from the contract interfaces this page knows. */
+function knownSelectors(): Map<string, string> {
+  if (!selectors) {
+    selectors = new Map();
+    for (const abi of [MANDATE_REGISTRY_ABI, DELEGATION_MANAGER_ABI, PAYEE_BOOK_ABI, KILL_SWITCH_ABI] as readonly (readonly unknown[])[]) {
+      for (const item of abi as readonly AbiFunction[]) if (item.type === "function") selectors.set(toFunctionSelector(item).toLowerCase(), item.name);
+    }
+  }
+  return selectors;
+}
+
+/** Null when every call of the user operation is allowed for this kind, otherwise the reason it is not. */
+function userOpCallsProblem(kind: SigningRequest["kind"], td: TypedData): string | null {
+  const allowed = KIND_CALLS[kind];
+  if (!allowed) return `A ${kind} request never carries a user operation.`;
+  const callData = (td.message as Record<string, unknown>).callData;
+  if (typeof callData !== "string") return "The user operation has no call data.";
+  let calls;
+  try {
+    calls = decodeExecuteCallData(callData as Hex).calls;
+  } catch (e) {
+    return `The user operation's calls could not be decoded: ${(e as Error).message}`;
+  }
+  if (!calls.length) return "The user operation makes no call.";
+  for (const c of calls) {
+    if (c.value !== 0n) return "The user operation would send value; this account never signs a transfer this way.";
+    const name = knownSelectors().get(c.data.slice(0, 10).toLowerCase());
+    if (!name || !allowed.includes(name)) return `A ${kind} request may not call ${name ?? `the unknown function ${c.data.slice(0, 10)}`}.`;
+  }
+  return null;
+}
+
 export type GuardResult =
   | { ok: true; primaryType: string; computed: Hex }
-  | { ok: false; code: "UnknownMessageType" | "KindMismatch" | "DigestMismatch" | "MalformedTypedData"; reason: string; computed?: Hex };
+  | { ok: false; code: "UnknownMessageType" | "KindMismatch" | "UnknownCall" | "DigestMismatch" | "MalformedTypedData"; reason: string; computed?: Hex };
 
 function isIntType(t: string) {
   return /^u?int\d*$/.test(t);
@@ -69,8 +112,14 @@ export function guardSigningRequest(req: Pick<SigningRequest, "kind" | "digest" 
   if (!(ALLOWED_PRIMARY_TYPES as readonly string[]).includes(pt)) {
     return { ok: false, code: "UnknownMessageType", reason: `This account never signs "${pt}" messages.` };
   }
-  if (!KIND_TYPES[req.kind].includes(pt)) {
+  // A kind this page does not know (from a newer or compromised service) is refused, never thrown.
+  const kindTypes = (KIND_TYPES as Partial<Record<string, readonly string[]>>)[req.kind];
+  if (!kindTypes || !kindTypes.includes(pt)) {
     return { ok: false, code: "KindMismatch", reason: `A ${req.kind} request cannot carry a ${pt} message.` };
+  }
+  if (pt === "PackedUserOperation") {
+    const problem = userOpCallsProblem(req.kind, req.typedData);
+    if (problem) return { ok: false, code: "UnknownCall", reason: problem };
   }
   let computed: Hex;
   try {

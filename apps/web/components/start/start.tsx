@@ -248,7 +248,7 @@ export function Start() {
       </header>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
-        <div ref={flowRef} className="grid content-start gap-8" aria-live="polite">
+        <div ref={flowRef} className="grid min-h-[min(780px,85vh)] content-start gap-8 [overflow-anchor:none]" aria-live="polite" aria-busy={busy}>
           {phase.at === "intro" && session && !again ? (
             <section aria-labelledby="start-create" className="yl-card grid gap-4 p-5 sm:p-6">
               <h2 id="start-create" className="m-0 text-18 font-semibold text-fg-0">

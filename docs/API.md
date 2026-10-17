@@ -86,7 +86,7 @@ Returned by `ask`, `GET /v1/proposals/:id` and the attack route. The internal fi
 | `explanation` | object | `{text, aiGenerated, model?}` |
 | `payment` | object or absent | `{symbol, decimals, amount, payee: {id, label, address}, method}`; `method` is `transfer`, `transferAndCall` or `instruct` |
 | `simulation` | object or absent | `{ok, revert?: {name, args, message, raw}, block}` |
-| `policy` | object or absent | `{tier, refusals: {rule, typedError, detail}[], reasons, t1Threshold?, blockNumber, blockTimestamp, stateReads, stateReadsHash, maxFundsAtRisk?}` |
+| `policy` | object or absent | `{tier, refusals: {rule, typedError, detail, measure?}[], reasons, t1Threshold?, blockNumber, blockTimestamp, stateReads, stateReadsHash, maxFundsAtRisk?}` ; `measure` = `{requested, limit, used?, unit}` (integer strings; `unit` is `base-units`, `payments` or `risk-class`) on limit refusals (ceiling, category budget, reserve floor, velocity, suitability), for a reason meter |
 | `counterparty` | object or absent | `{address, inPayeeBook, category?, passport?: {agentId, status, attestedByTrusted}, lookAlikeOf?, sanctioned, verdict}`; `verdict` is `verified-payee`, `attested-agent`, `unverified`, `look-alike` or `sanctioned` |
 | `suitability` | object or absent | Sweeps into a product: the suitability explanation card (section 3.10) |
 | `answer` | object or absent | T0 answers (balances or recent activity) |

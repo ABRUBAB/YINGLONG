@@ -94,6 +94,7 @@ export const PAYEE_BOOK_ABI = [
 ] as const;
 
 export const KILL_SWITCH_ABI = [
+  { type: "function", name: "untrip", stateMutability: "nonpayable", inputs: [], outputs: [] },
   {
     type: "function",
     name: "setGuardian",

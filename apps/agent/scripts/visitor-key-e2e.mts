@@ -31,3 +31,6 @@ const login = await post("/v1/visitors/login", { nonce: ch.nonce, issuedAt: ch.i
 console.log("login", login.visitorId === reg.visitorId, login.method);
 const pay = await post(`/v1/principals/${reg.visitorId}/ask`, { text: "Buy a coffee at Arena Cafe for 5 HKD", autoExecute: true }, login.token);
 console.log("pay", pay.tier, pay.receipt?.outcome);
+// The first device's session survives the second device's login.
+const first = await post(`/v1/principals/${reg.visitorId}/ask`, { text: "Buy a coffee at Arena Cafe for 4 HKD", autoExecute: true }, reg.token);
+console.log("first device still logged in", first.tier, first.receipt?.outcome);

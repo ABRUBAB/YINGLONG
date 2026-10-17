@@ -109,6 +109,8 @@ export interface VisitorRecord {
   agentWallet: Address;
   agentId: bigint;
   tokenHash: Hex;
+  /** Hashes of other devices' session tokens from "log in again" (newest last, at most 4), so a second device does not log out the first. */
+  otherTokenHashes?: Hex[];
   createdAt: string;
   sealedAt?: string;
   /** Set when the visitor chose a secret key instead of a passkey: that key's address owns the account. */
