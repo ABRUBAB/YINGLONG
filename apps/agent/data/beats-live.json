@@ -701,5 +701,422 @@
     "tier": "T2",
     "txHash": "0x07e0fc08f98523b1428dde70ce3fafe6ec614c8b53453314f6c0d517431d2062",
     "ledger": "fisco"
+  },
+  {
+    "beat": "7 supplier invoice, two readers (FISCO coin-free rail)",
+    "at": "2026-10-17T01:57:16.173Z",
+    "proposal": "ca1253ff-68fb-4e39-bbe4-0ba1db2d2540",
+    "tier": "T2",
+    "decision": "needs_approval",
+    "stopped": [],
+    "explanation": "I can pay 42,000 CNY to Shenzhen Components, but it is above what I may do alone (50,000 CNY). Approve it on your phone if you want it. I also noticed: amount comes from an untrusted document."
+  },
+  {
+    "beat": "7 invoice approved by directors",
+    "at": "2026-10-17T01:57:16.972Z",
+    "outcome": "confirmed",
+    "tier": "T2",
+    "txHash": "0x0d52d018e31e3881e5cbb6faf6a87508ecf09c40b330fc4f81c5e2d9160643be",
+    "ledger": "fisco"
+  },
+  {
+    "beat": "8 urgency pressure (held by the sentinel)",
+    "at": "2026-10-17T01:57:18.428Z",
+    "proposal": "cdbf261e-b100-4dab-9b30-9cc589565389",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 9,000 CNY to Shenzhen Components. It is inside your mandate, so I can do it on my own; you will get a receipt."
+  },
+  {
+    "beat": "8 split payment 1/7",
+    "at": "2026-10-17T01:57:19.837Z",
+    "proposal": "7f803189-8efa-4df5-9127-74a4cb64f0f3",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 9,000 CNY to Shenzhen Components. It is inside your mandate, so I can do it on my own; you will get a receipt.",
+    "receipt": {
+      "outcome": "confirmed",
+      "tier": "T1",
+      "txHash": "0xc28fdfc2769f59f9fd36a862267e37a99e4430b3e176cfc5b582221ff6a8abec",
+      "ledger": "fisco"
+    }
+  },
+  {
+    "beat": "8 split payment 2/7",
+    "at": "2026-10-17T01:57:23.659Z",
+    "proposal": "cd93748c-d57d-4d55-b321-e3d1a7b73ad0",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 9,000 CNY to Shenzhen Components. It is inside your mandate, so I can do it on my own; you will get a receipt.",
+    "receipt": {
+      "outcome": "confirmed",
+      "tier": "T1",
+      "txHash": "0x598a52bd652c6daa34f54a00cc686027149314799c07cdca5ca7fb69fe3e37fb",
+      "ledger": "fisco"
+    }
+  },
+  {
+    "beat": "8 split payment 3/7",
+    "at": "2026-10-17T01:57:25.438Z",
+    "proposal": "a2cc6b14-3aa1-4fa6-a9a0-0a9146d9043f",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 9,000 CNY to Shenzhen Components. It is inside your mandate, so I can do it on my own; you will get a receipt.",
+    "receipt": {
+      "outcome": "confirmed",
+      "tier": "T1",
+      "txHash": "0xe1b0b1bd1edf24396579944b7f999263fed9f85a1fbbc37f13ac77c9264a9922",
+      "ledger": "fisco"
+    }
+  },
+  {
+    "beat": "8 split payment 4/7",
+    "at": "2026-10-17T01:57:48.379Z",
+    "proposal": "fd212b0a-e72e-46e0-bbf0-8ff95bb5d1f4",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 9,000 CNY to Shenzhen Components. It is inside your mandate, so I can do it on my own; you will get a receipt.",
+    "receipt": {
+      "outcome": "confirmed",
+      "tier": "T1",
+      "txHash": "0x0195eb1669329c66b1397be0448c297f6a9d3314c44a701676cdd8e6d3092e40",
+      "ledger": "fisco"
+    }
+  },
+  {
+    "beat": "8 split payment 5/7",
+    "at": "2026-10-17T01:57:51.801Z",
+    "proposal": "3ca64c9b-d614-4c95-ba5b-6e374a265aaf",
+    "tier": "ASK",
+    "decision": "ask",
+    "stopped": [],
+    "explanation": "Not sure, your call. I can only pay, escrow, sweep or convert inside your mandate; \"pause\" needs you."
+  },
+  {
+    "beat": "8 split payment 6/7",
+    "at": "2026-10-17T01:57:54.613Z",
+    "proposal": "abb2a910-6bce-4fab-9d1a-c19c3e4e1ff8",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 9,000 CNY to Shenzhen Components. It is inside your mandate, so I can do it on my own; you will get a receipt.",
+    "receipt": {
+      "outcome": "confirmed",
+      "tier": "T1",
+      "txHash": "0xb132a86147dddd8cb0045293eaae8890306448ba1baf5edbdbb65b919153559f",
+      "ledger": "fisco"
+    }
+  },
+  {
+    "beat": "8 split payment 7/7",
+    "at": "2026-10-17T01:57:58.028Z",
+    "proposal": "ad02eb4b-70fb-4855-8f39-9a8bbe092451",
+    "tier": "T4",
+    "decision": "refused",
+    "stopped": [
+      "5:Policy:stopped:VelocityExceeded",
+      "7:Simulate:stopped:VelocityExceeded",
+      "9:Chain:stopped"
+    ],
+    "explanation": "I did not pay 9,000 CNY to Shenzhen Components. The policy check refused it (VelocityExceeded): 7 payments, 9600000 out in this window.",
+    "breaker": {
+      "tripped": true,
+      "txHash": "0xdab28e2a9684009204edca67e66fbc2db502127f4a93daac8028d236fd21078d",
+      "reason": "VelocityExceeded: 7 payments, 9600000 out in this window"
+    }
+  },
+  {
+    "beat": "8 board resumes the agent (2 of 3)",
+    "at": "2026-10-17T01:57:58.587Z",
+    "id": "779a0a3f-ce75-4ade-886c-328ec2ae0bda",
+    "principal": "lotus-sz",
+    "ledger": "fisco",
+    "title": "Resume the treasurer after the velocity review",
+    "payee": {
+      "id": "kill_switch",
+      "label": "Resume the treasurer agent (untrip)",
+      "address": "0xA77e5C328A29b29dB6df21d0C479E0B01A53e558"
+    },
+    "amount": "0",
+    "decimals": 2,
+    "symbol": "CNY",
+    "op": {
+      "sender": "0xeAdfC5d330aB1872275b4fc00c1140669c5984b1",
+      "nonce": "7",
+      "initCode": "0x",
+      "callData": "0xe9ae5c53000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000038a77e5c328a29b29db6df21d0c479e0b01a53e558000000000000000000000000000000000000000000000000000000000000000021b7f6270000000000000000",
+      "accountGasLimits": "0x0000000000000000000000000016e360000000000000000000000000001e8480",
+      "preVerificationGas": "60000",
+      "gasFees": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "paymasterAndData": "0x",
+      "signature": "0x"
+    },
+    "digest": "0x4cfe0cd6c342b67f6ec8c084b1efc81221925062a5a8baf3cc802baf1145a675",
+    "threshold": 2,
+    "signatures": [
+      {
+        "director": "director-1",
+        "address": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC",
+        "signature": "0x7b2c0718dd4cba37fa823bec45fe1b8f917c92b243552e8ec1728415a488b54b3e8ab2dc4f73c95251f99c9fcd7bb2c00f31118c669b93bcf28d4e7429aaf5371b",
+        "signedAt": "2026-10-17T01:57:58.047Z"
+      },
+      {
+        "director": "director-3",
+        "address": "0xb3BEd54f01a4C91d3d1108D08d6f0e1bC08CF176",
+        "signature": "0xb3a5c1a6165a02d378ad21f5920d41c80310bd7d33d00a7370b3ce64b39bee2474514f46381a443801636a3313d45135b1bc37122a03fbedf13662b3b411e4121c",
+        "signedAt": "2026-10-17T01:57:58.149Z"
+      }
+    ],
+    "status": "executed",
+    "createdAt": "2026-10-17T01:57:57.940Z",
+    "txHash": "0xb735b112c99d246acdceb177abd9a6531907630723bf13b9f9a8457b38a3b286"
+  },
+  {
+    "beat": "9 equipment purchase above the ceiling (T3)",
+    "at": "2026-10-17T01:58:02.177Z",
+    "proposal": "02b5f9b7-6c0f-440e-afba-6082700931e6",
+    "tier": "T4",
+    "decision": "refused",
+    "stopped": [
+      "5:Policy:stopped:AboveTierCeiling",
+      "7:Simulate:stopped:AboveTierCeiling",
+      "8:Anomaly:escalated",
+      "9:Chain:stopped"
+    ],
+    "explanation": "I did not pay 300,000 CNY to Shenzhen Components. The policy check refused it (AboveTierCeiling): amount above the T2 ceiling of 20000000. I also noticed: amount is more than three times the largest past payment to this payee."
+  },
+  {
+    "beat": "9 board resolution executed (2 of 3 directors)",
+    "at": "2026-10-17T01:58:02.917Z",
+    "id": "ed7aefac-5bcf-471e-982b-b0465321bdab",
+    "principal": "lotus-sz",
+    "ledger": "fisco",
+    "title": "Equipment purchase: SMT line (board resolution)",
+    "payee": {
+      "id": "shenzhen_components",
+      "label": "Shenzhen Components",
+      "address": "0x4910d9e2545182d750f166421B5D6d07f8083a20"
+    },
+    "amount": "30000000",
+    "decimals": 2,
+    "symbol": "CNY",
+    "op": {
+      "sender": "0xeAdfC5d330aB1872275b4fc00c1140669c5984b1",
+      "nonce": "8",
+      "initCode": "0x",
+      "callData": "0xe9ae5c530000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000d8413a920c685778070fcc00c82718e0649e63ffb10000000000000000000000000000000000000000000000000000000000000000a755512d0000000000000000000000004910d9e2545182d750f166421b5d6d07f8083a200000000000000000000000000000000000000000000000000000000001c9c38094921456bdf8de1ec1b7a5c687e4fc14770f84f9f40f4a3d349f4d3a4ffde57f965188e4706f4c798284a23910ce1dbea6bd57ef82c61e2d0bae3fac3c94a585000000000000000000000000000000000000000000000000000000006adc10a60000000000000000",
+      "accountGasLimits": "0x0000000000000000000000000016e360000000000000000000000000001e8480",
+      "preVerificationGas": "60000",
+      "gasFees": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "paymasterAndData": "0x",
+      "signature": "0x"
+    },
+    "digest": "0x45fb88c1400b6579c7a923ff4b4f764dc4d6e1ac407b9a35185ab66533004769",
+    "threshold": 2,
+    "signatures": [
+      {
+        "director": "director-2",
+        "address": "0xf8aaf43E45142269F90AE7144F04DE5D31D73a57",
+        "signature": "0xb1d2418b246706614eb197fe480c404760440eecdddc6509c64cfd5611bc7d232e6347878e14907289eb9d72617b4fa90f92f7d3ee520577f4c3b2c518dd77751c",
+        "signedAt": "2026-10-17T01:58:02.205Z"
+      },
+      {
+        "director": "director-1",
+        "address": "0x0930e855a98BDD0d7335F8DE3A203F41B5A2ccfC",
+        "signature": "0x7635814eb379ec9d259796fa90e96896c32e73d4f13a0c3e7e419ed5a569df8a1382a24cd1a420c30d6a0ed69610bb442b4ac8319fcf00839ca58dcbbbf3c1851b",
+        "signedAt": "2026-10-17T01:58:02.430Z"
+      }
+    ],
+    "status": "executed",
+    "createdAt": "2026-10-17T01:58:02.087Z",
+    "txHash": "0x0631662548fb0ed4e15080f49f284f85f0030997cfe2e71babf82793fca42ddf"
+  },
+  {
+    "beat": "4 spending insights (T0, budgets read from the enforcer)",
+    "at": "2026-10-17T01:58:21.502Z",
+    "period": {
+      "start": "2026-10-17T00:00:00.000Z",
+      "end": "2026-10-18T00:00:00.000Z",
+      "lengthSeconds": 86400,
+      "secondsLeft": 79312,
+      "daysLeft": 1,
+      "timeCompressed": true
+    },
+    "categories": [
+      "rent:0/9500000000:due this period",
+      "food:0/3000000000:on track",
+      "tuition:0/12000000000:on track",
+      "treasury:0/5000000000:on track",
+      "services:0/200000000:on track",
+      "services:0/2500000000:on track"
+    ],
+    "topPayees": [],
+    "explanation": "Nadia Rahman, this budget period has one day left. You have not spent any money yet. Rent of 9,500 tHKD is due this period. Food, tuition, treasury, and services are on track. Your budgets are 3,000 tHKD for food, 12,000 tHKD for tuition, 5,000 tHKD for treasury, 200 tHKD for services, and 2,500 tUSD for services.",
+    "aiGenerated": true,
+    "model": "nvidia/nemotron-3.5-super-vl:free",
+    "provider": "openrouter"
+  },
+  {
+    "beat": "5 escrow released on HBU's enrolment attestation",
+    "at": "2026-10-17T01:58:21.999Z",
+    "escrowId": 1,
+    "state": "released",
+    "outcome": "confirmed",
+    "tier": "T3",
+    "txHash": "0x2f5295cd18054cd378d80615f3f0fef9f10212a74da9a73abda7f8523fc08c11",
+    "ledger": "fisco"
+  },
+  {
+    "beat": "5 coverage-gap card",
+    "at": "2026-10-17T01:58:22.129Z",
+    "summary": {
+      "protected": 1,
+      "unprotected": 1,
+      "settled": 0,
+      "gaps": 2
+    },
+    "gaps": [
+      "Harbour Homes (rent): unprotected",
+      "medical cover: none on record"
+    ]
+  },
+  {
+    "beat": "12 payment-reliability credential (fictional issuer)",
+    "at": "2026-10-17T01:58:22.402Z",
+    "credential": "0x7aef47eb5d32f4d28116babb5cfaab80473b1defdea9799f694fd62f711724a4",
+    "onTimePayments": 1,
+    "anchorReceipt": "0x14ab35a456326748bf2f4c03fb75ffda60967747b16b77a56d41e76c6a49e354",
+    "reused": false,
+    "valid": true,
+    "signatureValid": true,
+    "label": "test credential issued by a fictional bank; not a credit score"
+  },
+  {
+    "beat": "7 payroll run on the coin-free rail (FISCO)",
+    "at": "2026-10-17T01:58:23.639Z",
+    "proposal": "29313b81-bf34-48ac-8678-b84a743eb893",
+    "tier": "T4",
+    "decision": "refused",
+    "stopped": [
+      "5:Policy:stopped:VelocityExceeded",
+      "7:Simulate:stopped:VelocityExceeded",
+      "9:Chain:stopped"
+    ],
+    "explanation": "I did not pay 80,000 CNY to Staff payroll account. The policy check refused it (VelocityExceeded): 7 payments, 16700000 out in this window."
+  },
+  {
+    "beat": "9 30-day cash forecast",
+    "at": "2026-10-17T01:58:24.988Z",
+    "posted": "91300000",
+    "reserveFloor": "10000000",
+    "minBalance": "-44300000",
+    "firstBreach": {
+      "day": 19,
+      "date": "2026-11-05T01:58:23.000Z",
+      "balance": "8620000",
+      "shortfall": "1380000"
+    },
+    "velocity": {
+      "windowSeconds": "86400",
+      "windowEndsAt": "2026-10-18T00:00:00.000Z",
+      "maxCount": 6,
+      "used": 6,
+      "countLeft": 0,
+      "maxOutflow": "25000000",
+      "outflow": "8700000",
+      "outflowLeft": "16300000"
+    },
+    "flags": [
+      "Projected balance falls below the reserve floor on day 19: optional orders would be deferred or the board asked."
+    ],
+    "explanation": "Lotus Lane Trading (Shenzhen) Co. (fictional) has a posted balance of 913,000 CNY and a 30-day cash forecast. The lowest projected balance is -443,000 CNY, which is 543,000 CNY below the reserve floor of 100,000 CNY. The first projected breach of the floor occurs on day 19. Payroll runs of 120,000 CNY are scheduled for day 0 and day 30, and supplier payments average 37,200 CNY per day. There are 0 payments left today and an outflow left today of 163,000 CNY.",
+    "aiGenerated": true,
+    "model": "nvidia/nemotron-3.5-super-vl:free"
+  },
+  {
+    "beat": "10 suitability explanation card",
+    "at": "2026-10-17T01:58:26.035Z",
+    "proposal": "1fa23630-98e2-4f67-86f5-b3bb193c6647",
+    "tier": "T4",
+    "decision": "refused",
+    "stopped": [
+      "5:Policy:stopped:UnsuitableProduct",
+      "7:Simulate:stopped:UnsuitableProduct",
+      "8:Anomaly:escalated",
+      "9:Chain:stopped"
+    ],
+    "explanation": "I did not pay 10,000 tHKD to Test Growth Fund. The policy check refused it (UnsuitableProduct): risk class 5 above 2. I also noticed: first sweep into this product: you decide once, later sweeps can run alone.",
+    "suitability": {
+      "product": {
+        "id": "test_growth",
+        "label": "Test Growth Fund",
+        "address": "0x3F8f6975e51C638161CA1d88D89d878129d6E080",
+        "onChainName": "Test Growth Fund (risk class 5)",
+        "nameMatchesRegistry": true
+      },
+      "listed": true,
+      "riskClass": 5,
+      "riskLabel": "highest",
+      "mandateMaxRiskClass": 2,
+      "mandateMaxLabel": "low",
+      "verdict": "unsuitable",
+      "outcome": "refused",
+      "why": [
+        "Test Growth Fund is listed in the ProductRegistry with risk class 5 (highest).",
+        "The mandate allows products up to risk class 2 (low), the result of the suitability assessment sealed in it.",
+        "Class 5 is above 2: the SuitabilityEnforcer reverts this sweep with UnsuitableProduct, whatever the agent or anyone says."
+      ],
+      "source": {
+        "registry": "0xF0183445DDEE055a2D66b96191295567e90A536d",
+        "function": "productInfo",
+        "enforcer": "SuitabilityEnforcer",
+        "block": "571",
+        "ledger": "fisco"
+      },
+      "label": "Test products only; no real fund is represented. Risk classes are set by the test registry admin."
+    }
+  },
+  {
+    "beat": "10 suitability explanation card",
+    "at": "2026-10-17T01:58:27.316Z",
+    "proposal": "7a08234f-83bb-40ec-9436-a7810f809a6f",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 10,000 tHKD to Test Money Market Fund. It is inside your mandate, so I can do it on my own; you will get a receipt.",
+    "suitability": {
+      "product": {
+        "id": "test_mmf",
+        "label": "Test Money Market Fund",
+        "address": "0x281f32486d69fe6A5C38906430965C73238F55c6",
+        "onChainName": "Test Money Market Fund (risk class 2)",
+        "nameMatchesRegistry": true
+      },
+      "listed": true,
+      "riskClass": 2,
+      "riskLabel": "low",
+      "mandateMaxRiskClass": 2,
+      "mandateMaxLabel": "low",
+      "verdict": "suitable",
+      "outcome": "approved",
+      "why": [
+        "Test Money Market Fund is listed in the ProductRegistry with risk class 2 (low).",
+        "The mandate allows products up to risk class 2 (low), the result of the suitability assessment sealed in it.",
+        "Class 2 is within 2: the suitability rule allows this sweep; the other mandate rules still apply."
+      ],
+      "source": {
+        "registry": "0xF0183445DDEE055a2D66b96191295567e90A536d",
+        "function": "productInfo",
+        "enforcer": "SuitabilityEnforcer",
+        "block": "571",
+        "ledger": "fisco"
+      },
+      "label": "Test products only; no real fund is represented. Risk classes are set by the test registry admin."
+    }
   }
 ]

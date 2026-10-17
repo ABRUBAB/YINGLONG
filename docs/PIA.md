@@ -13,7 +13,7 @@
 |---|---|
 | Handler (today) | The YINGLONG team, as operator of a competition demo |
 | Handler (production) | The deploying institution; this document would be redone by it |
-| Assessed release | <!-- gen:meta.release_tag -->dfb141e<!-- /gen --> at commit <!-- gen:meta.commit -->dfb141e126a33f902aa25b341d181a694ed911b8 (working tree had uncommitted changes)<!-- /gen --> |
+| Assessed release | <!-- gen:meta.release_tag -->bb338d0<!-- /gen --> at commit <!-- gen:meta.commit -->bb338d0a6c634d327bb3acfd70e70f4d406deb83 (working tree had uncommitted changes)<!-- /gen --> |
 | Related | `docs/SECURITY_SELF_ASSESSMENT.md` chapter 6 (controls C-DP-01 to C-DP-10), `docs/COMPLIANCE_MATRIX.md` |
 
 Article summaries below are our reading of the statute [S, secondary source: our summary; verify against the authoritative text before quoting]. This assessment is not legal advice.

@@ -11,9 +11,9 @@
 
 | Field | Value |
 |---|---|
-| Release | <!-- gen:meta.release_tag -->dfb141e<!-- /gen --> |
-| Commit assessed | <!-- gen:meta.commit -->dfb141e126a33f902aa25b341d181a694ed911b8 (working tree had uncommitted changes)<!-- /gen --> |
-| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-16T19:16:29.874Z<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->bb338d0<!-- /gen --> |
+| Commit assessed | <!-- gen:meta.commit -->bb338d0a6c634d327bb3acfd70e70f4d406deb83 (working tree had uncommitted changes)<!-- /gen --> |
+| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-17T01:58:48.019Z<!-- /gen --> |
 | Owners | R4 (AI security) and R2 (contracts), per plan section 17 |
 | Companion documents | `docs/THREAT_MODEL.md`, `docs/PIA.md`, `docs/INCIDENT_RESPONSE.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/SECURITY_REVIEW.md` |
 
@@ -150,7 +150,7 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | ID | Control | Implemented by | Verified by | Bench family or suite |
 |---|---|---|---|---|
 | C-IN-01 | Fail-closed startup: models, prompts, schemas, policy and the enforcer table are SHA-256 pinned; any mismatch stops the runtime; the hashes go into the passport and every `planHash` | `apps/agent` provenance registry, `packages/provenance` | Tampered-prompt startup test | CI |
-| C-IN-02 | Deterministic deployment: own CREATE2 factory from a fresh deployer at nonce 0; solc 0.8.23, `evm_version = london`, `bytecode_hash = "none"`, `cbor_metadata = false` [V, `contracts/foundry.toml`]; deployer keeps no admin role (result: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 546); Base Sepolia not deployed<!-- /gen -->) | Deployment scripts, `deployments/*/v2.json` | Post-deploy role scan | CI |
+| C-IN-02 | Deterministic deployment: own CREATE2 factory from a fresh deployer at nonce 0; solc 0.8.23, `evm_version = london`, `bytecode_hash = "none"`, `cbor_metadata = false` [V, `contracts/foundry.toml`]; deployer keeps no admin role (result: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 572); Base Sepolia not deployed<!-- /gen -->) | Deployment scripts, `deployments/*/v2.json` | Post-deploy role scan | CI |
 | C-IN-03 | Signed enforcer table (addresses + code hashes); its hash sits in the passport; `yinglong verify` compares `extcodehash` on both ledgers | `packages/mandate`, `tools/verify-py`, `YinglongPassportRegistry` | Bytecode equality: <!-- gen:bytecode.equal -->13<!-- /gen --> of <!-- gen:bytecode.total -->13<!-- /gen --> enforcers | CI |
 | C-IN-04 | Account initialisation: HybridDeleGator with owner `address(0)` and two passkeys (phone + laptop), deployed in the first sponsored user operation; passkey RP ID fixed to `yinglong-agent.tech` | `apps/web` onboarding, framework HybridDeleGator | Onboarding e2e test | — |
 | C-IN-05 | FISCO initialisation: standard (non-SM) build only (an SM build replaces KECCAK256 with SM3 and breaks every EIP-712 check [S, secondary source]); chain ID 0 ledger profile; YINGLONG domains add a salt; feature flags verified on the chain | `contracts-fisco/`, `infra/` | Ledger-profile golden tests | — |
@@ -162,7 +162,7 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | C-IN-11 | `PayeeBook` enum: the intent's recipient is a `PayeeBook` id or `NEW_PAYEE_REQUEST`; the model cannot emit an address; a new payee is always a T3 request | `packages/mandate` intent schema | Schema tests | TXT, `lookalike_address` |
 | C-IN-12 | Two-reader agreement on tainted financial fields (amount, payee), including the vision reader; readers of different model families; disagreement → T? | `apps/agent` readers | Bench | `visual_injection` |
 | C-IN-13 | Untrusted protocol input: x402 `description`, A2A card fields, token names, invoice memos are untrusted; A2A cards canonicalised (RFC 8785) and JWS ES256-signed; `kid` and JWKS hash in the passport | `apps/agent`, `apps/services`, `YinglongPassportRegistry` | Card-verification tests | TXT, S-ID, S-X402 |
-| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->`9ec88d3cbdb166b0bd51030992f3f70da02faaf155eac4878a99d1f1c42fe8f1` (docs/evidence/sbom.cdx.json, 334 components; pnpm 12.11.2 sbom (CycloneDX 1.6) + uv 0.12.19 (bea138450 2026-09-24 x86_64-pc-windows-msvc) export (CycloneDX 1.5))<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
+| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->`0c5bf87d3180a5587054dc6d93bef532a48bd13c4765add051a30e85e068c7af` (docs/evidence/sbom.cdx.json, 334 components; pnpm 12.11.2 sbom (CycloneDX 1.6) + uv 0.12.19 (bea138450 2026-09-24 x86_64-pc-windows-msvc) export (CycloneDX 1.5))<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
 | C-IN-15 | Device capture: the quarantined readers never use screen or microphone capture; they read only files the user supplies (BFIA device-capture requirement [S, secondary source]) | `apps/agent` readers | Code review | — |
 
 ---
