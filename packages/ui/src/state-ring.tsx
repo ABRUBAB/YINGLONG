@@ -174,18 +174,19 @@ export function StateRing({ state, size = 16, label, error, hash, href, glyphOnl
     return (
       <span
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-pill bg-refused-bg py-0.5 pr-2.5 pl-1 align-middle font-medium leading-none whitespace-nowrap text-refused-fg",
+          "inline-flex max-w-full min-w-0 gap-2 rounded-pill bg-refused-bg px-2.5 py-1.5 align-middle font-medium text-refused-fg",
+          error ? "items-start whitespace-normal leading-snug" : "items-center whitespace-nowrap leading-none",
           text,
           className,
         )}
       >
-        <RingGlyph state="refused" size={size} />
-        <span className={glyphOnly ? "sr-only" : undefined}>
+        <RingGlyph state="refused" size={size} className={error ? "mt-0.5" : undefined} />
+        <span className={cn("min-w-0", glyphOnly ? "sr-only" : error ? "[overflow-wrap:anywhere]" : undefined)}>
           {word}
           {error ? (
             <>
               <span aria-hidden="true"> &middot; </span>
-              <span className="font-mono">{error}</span>
+              <span className="font-mono [overflow-wrap:anywhere]">{error}</span>
             </>
           ) : null}
         </span>

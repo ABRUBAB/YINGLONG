@@ -401,9 +401,9 @@
 }
 .yl-navpill {
   position: absolute;
-  inset: 8px 0;
+  inset: 0;
   z-index: -1;
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-pill);
   background: color-mix(in oklab, var(--fg-0) 9%, transparent);
   border: 1px solid color-mix(in oklab, var(--fg-0) 14%, transparent);
 }

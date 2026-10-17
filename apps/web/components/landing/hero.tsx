@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { cn, hashRingGeometry, LiveStatusO, SampleDataChip, shortHash } from "@yinglong/ui";
 import { useAgent } from "@/lib/api/hooks";
-import { isSample } from "@/lib/api";
+import { CONSOLE_PRINCIPAL, isSample } from "@/lib/api";
 import { formatTime } from "@/lib/format";
 import { orbitLayout, orbitSummary, type OrbitSlot } from "@/lib/orbit-layout";
 import type { Receipt } from "@/lib/api/view";
@@ -42,6 +42,11 @@ function useAfterLoad(): boolean {
   const [ready, setReady] = useState(false);
   useEffect(() => {
     let cancelled = false;
+    // Behind the first-visit screen the scene starts at once, so it is already drawn and moving when the screen leaves.
+    if (document.documentElement.dataset.boot === "1") {
+      setReady(true);
+      return;
+    }
     const go = () => {
       const idle = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
       if (idle) idle(() => !cancelled && setReady(true), { timeout: 1500 });
@@ -140,9 +145,31 @@ export function Hero({ poster = false }: { poster?: boolean }) {
 
   useEffect(() => setWebglOk(poster || canRender3D(motionOff)), [motionOff, poster]);
 
-  const receiptsQ = useAgent("hero-receipts", (api) => api.receipts({ limit: HERO_RECEIPTS }), ["receipts"]);
+  // The public hero demonstrates Nadia's live activity even when this browser has a separate visitor agent.
+  const receiptsQ = useAgent("hero-receipts", (api) => api.receipts({ limit: HERO_RECEIPTS, principal: CONSOLE_PRINCIPAL }), ["receipts"]);
   const budgetsQ = useAgent("budgets", (api) => api.budgets(), ["budgets", "receipts"]);
   const mandatesQ = useAgent("mandates", (api) => api.mandates(), ["mandates"]);
+  const refresh = useRef({ receipts: receiptsQ.refetch, budgets: budgetsQ.refetch, mandates: mandatesQ.refetch });
+  refresh.current = { receipts: receiptsQ.refetch, budgets: budgetsQ.refetch, mandates: mandatesQ.refetch };
+
+  // The live adapter is a request/response API. Keep the orbit current while it is visible, and
+  // retry a failed first read so a transient outage cannot leave the guide rings empty indefinitely.
+  useEffect(() => {
+    if (isSample) return;
+    const update = () => {
+      if (document.visibilityState !== "visible") return;
+      refresh.current.receipts();
+      refresh.current.budgets();
+      refresh.current.mandates();
+    };
+    const id = window.setInterval(update, 15_000);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, []);
+
   const receipts: Receipt[] = useMemo(() => receiptsQ.data?.items ?? [], [receiptsQ.data]);
   const shown = useMemo<Shown[]>(() => (isSample ? [...receipts, ...sampleBench(Math.max(0, 120 - receipts.length))] : receipts), [receipts]);
   const slots = useMemo(() => orbitLayout(shown), [shown]);
@@ -163,6 +190,22 @@ export function Hero({ poster = false }: { poster?: boolean }) {
   }, [delegationHash]);
   const latest = receipts[0];
   const show3D = webglOk && ((afterLoad && phoneIdle) || poster);
+
+  // Tell the first-visit screen to wait for the scene's first frame (components/fx/boot-control.tsx).
+  useEffect(() => {
+    if (poster) return;
+    const root = document.documentElement;
+    if (root.dataset.boot !== "1") return;
+    if (!webglOk || !phoneIdle) {
+      root.removeAttribute("data-hero-wait");
+      window.dispatchEvent(new Event("yl:hero-ready"));
+      return;
+    }
+    if (drawn) {
+      root.removeAttribute("data-hero-wait");
+      window.dispatchEvent(new Event("yl:hero-ready"));
+    } else root.dataset.heroWait = "1";
+  }, [poster, webglOk, phoneIdle, drawn]);
 
   useEffect(() => {
     const el = section.current;

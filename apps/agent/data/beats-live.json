@@ -1118,5 +1118,18 @@
       },
       "label": "Test products only; no real fund is represented. Risk classes are set by the test registry admin."
     }
+  },
+  {
+    "beat": "7 payroll run on the coin-free rail (FISCO)",
+    "at": "2026-10-17T19:32:11.112Z",
+    "proposal": "27a190e2-d099-4c60-a2f8-9983a73adb44",
+    "tier": "T4",
+    "decision": "refused",
+    "stopped": [
+      "5:Policy:stopped:Paused",
+      "7:Simulate:stopped:Paused",
+      "9:Chain:stopped"
+    ],
+    "explanation": "I did not pay 80,000 CNY to Staff payroll account. The policy check refused it (Paused): the account is paused or the agent is halted."
   }
 ]

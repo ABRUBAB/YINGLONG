@@ -26,6 +26,7 @@ import { useVisitorSession } from "@/components/session";
 import { Button, buttonClass } from "@/components/ui/button";
 import { SampleBadge, TxLink } from "@/components/data/parts";
 import { SayStep, SeeStep } from "./say-see";
+import { Working } from "./working";
 
 type Phase =
   | { at: "intro" }
@@ -297,6 +298,13 @@ export function Start() {
                 standardLabel="Skip and use simple ready-made rules"
                 disabled={!supported}
               />
+              {phase.at === "drafting" ? (
+                <Working
+                  title="Reading your rules"
+                  doing={["Turning your words into exact rules", "Checking every number against the safety limits"]}
+                  typical="Usually 2 to 10 seconds. Nothing is created or signed yet."
+                />
+              ) : null}
             </>
           ) : null}
 
@@ -321,15 +329,23 @@ export function Start() {
           ) : null}
 
           {phase.at === "registering" ? (
-            <div role="status" className="grid gap-2">
-              <p className="m-0 flex items-center gap-2 text-15 text-fg-1">
-                <StateRing state="pending" size={20} glyphOnly label="Working" /> Creating your account. This takes about 10 seconds.
-              </p>
-              <p className="m-0 text-13 text-fg-muted">
-                We are setting up an account that only your passkey can control, giving your agent an ID, and adding some test money to
-                play with.
-              </p>
-            </div>
+            <Working
+              title="Creating your account"
+              doing={[
+                "Setting up an account that only your key can control",
+                "Giving your agent its own ID and wallet",
+                "Adding some test money to play with",
+              ]}
+              typical="Usually 10 to 20 seconds."
+            />
+          ) : null}
+
+          {phase.at === "signing" && phase.step === "sealing" ? (
+            <Working
+              title="Locking your rules on the blockchain"
+              doing={["Checking your signature on your account", "Writing your rules into a blockchain transaction", "Waiting for the blockchain to confirm it"]}
+              typical="Usually 5 to 15 seconds."
+            />
           ) : null}
 
           {phase.at === "review" || phase.at === "half" || phase.at === "signing" ? (

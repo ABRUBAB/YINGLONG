@@ -9,6 +9,7 @@ import { ProofWall } from "@/components/landing/proof-wall";
 import { OwnAgent } from "@/components/landing/own-agent";
 import { FinalCta } from "@/components/landing/final-cta";
 import { ReceiptChain } from "@/components/landing/receipt-chain";
+import { FilmBand } from "@/components/landing/film-band";
 
 /**
  * Landing: the first screen says what the product is, offers the three actions and shows three live
@@ -36,6 +37,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       <main id="main">
         <Hero />
         <LiveTicker />
+        <FilmBand />
         <Bento />
         <RulesLab />
         <ScalesPipeline />

@@ -9,7 +9,7 @@ import { cn } from "@yinglong/ui";
 import { Mark, Wordmark } from "@/components/brand/mark";
 import { ButtonLink, CloseIcon } from "@/components/ui/button";
 import { MotionToggle, ThemeToggle } from "@/components/preferences";
-import { MY_AGENT, pageActive, SIGN_UP, SITE_PAGES } from "./pages";
+import { DESKTOP_PAGES, EXPLORE_PAGES, MY_AGENT, pageActive, SIGN_UP, SITE_PAGES, TRY_PAGES } from "./pages";
 import { useVisitorSession } from "@/components/session";
 import { clearVisitorSession } from "@/lib/api/session";
 import "./site.css";
@@ -25,8 +25,8 @@ function MenuIcon() {
 }
 
 /**
- * The global navigation bar (on every route, from the root layout). Wide screens list every page
- * with an underline for the current one; below 1280 px the list moves into a sheet. Navigation is a
+ * The global navigation bar (on every route, from the root layout). Wide screens show direct links
+ * to every destination; below 1280 px the same pages move into a categorized sheet. Navigation is a
  * high-frequency action, so nothing in the bar animates except the sheet itself.
  *
  * The sheet (Base UI Dialog, modal): never wider than the viewport (`min(100vw, 22rem)` from the
@@ -49,7 +49,7 @@ export function SiteNav() {
   }, []);
   // Workspace routes (the in-app rail spans the full width) get a full-width bar to match.
   const workspace = WORKSPACE.some((w) => pageActive(pathname, w));
-  const activeHref = SITE_PAGES.find((p) => pageActive(pathname, p.href))?.href ?? null;
+  const activeHref = DESKTOP_PAGES.find((p) => pageActive(pathname, p.href))?.href ?? null;
   const pillAt = hover ?? activeHref;
   return (
     <header
@@ -62,9 +62,9 @@ export function SiteNav() {
           <Wordmark height={11} className="text-fg-0" />
         </Link>
 
-        <nav aria-label="Site" className="hidden h-full items-stretch xl:flex">
-          <ul className="m-0 flex list-none items-stretch gap-0.5 p-0" onPointerLeave={() => setHover(null)}>
-            {SITE_PAGES.map((p) => {
+        <nav aria-label="Site" className="yl-nav-dock hidden h-10 items-center xl:flex">
+          <ul className="m-0 flex list-none items-center gap-1 p-1" onPointerLeave={() => setHover(null)}>
+            {DESKTOP_PAGES.map((p) => {
               const active = pageActive(pathname, p.href);
               return (
                 <li key={p.href} className="flex" onPointerEnter={() => setHover(p.href)}>
@@ -74,9 +74,8 @@ export function SiteNav() {
                     onFocus={() => setHover(p.href)}
                     onBlur={() => setHover(null)}
                     className={cn(
-                      "relative isolate flex items-center rounded-control px-2.5 text-13 transition-colors duration-150",
-                      active || pillAt === p.href ? "text-fg-0" : "text-fg-2",
-                      active && "font-medium",
+                      "yl-nav-link relative isolate inline-flex h-8 items-center rounded-pill px-2 text-11 transition-colors 2xl:px-2.5 2xl:text-12",
+                      active ? "is-active" : "text-fg-2 hover:text-fg-0",
                     )}
                   >
                     {pillAt === p.href ? (
@@ -88,7 +87,6 @@ export function SiteNav() {
                       />
                     ) : null}
                     {p.label}
-                    {active ? <span aria-hidden="true" className="absolute inset-x-2.5 -bottom-px h-px bg-fg-0" /> : null}
                   </Link>
                 </li>
               );
@@ -113,9 +111,9 @@ export function SiteNav() {
             </ButtonLink>
           )}
           <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger className="yl-press inline-flex h-9 items-center gap-2 rounded-control border border-line-3 px-3 text-13 text-fg-1 hover:bg-bg-2 xl:hidden">
+            <Dialog.Trigger className="yl-press yl-mobile-menu-trigger inline-flex h-9 items-center gap-2 rounded-pill border border-line-2 px-3 text-12 font-medium text-fg-1 hover:bg-bg-2 xl:hidden">
               <MenuIcon />
-              Menu
+              Explore
             </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Backdrop className="yl-navsheet-backdrop" />
@@ -126,7 +124,7 @@ export function SiteNav() {
                       <Mark size={22} decorative />
                       <span>YINGLONG</span>
                     </Dialog.Title>
-                    <Dialog.Description className="mt-1 mb-0 text-13 text-fg-muted">Every page of the demo</Dialog.Description>
+                    <Dialog.Description className="mt-1 mb-0 text-13 text-fg-muted">Choose what you want to explore</Dialog.Description>
                   </div>
                   <Dialog.Close
                     className="-mt-1 -mr-2 inline-flex size-10 shrink-0 items-center justify-center rounded-control text-fg-2 hover:bg-bg-3 hover:text-fg-0"
@@ -136,25 +134,21 @@ export function SiteNav() {
                   </Dialog.Close>
                 </div>
                 <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
-                  <nav aria-label="Site">
-                    <ul className="m-0 grid list-none gap-0.5 p-0">
-                      {SITE_PAGES.map((p) => {
-                        const active = pageActive(pathname, p.href);
-                        return (
-                          <li key={p.href}>
-                            <Link
-                              href={p.href}
-                              onClick={() => setOpen(false)}
-                              aria-current={active ? "page" : undefined}
-                              className="grid min-w-0 gap-0.5 rounded-control px-3 py-2.5 hover:bg-bg-3 aria-[current=page]:bg-bg-3"
-                            >
-                              <span className="text-15 font-medium text-fg-0">{p.label}</span>
-                              <span className="text-12 text-fg-muted">{p.hint}</span>
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                  <nav aria-label="Site" className="grid gap-5">
+                    <section aria-labelledby="menu-primary">
+                      <h2 id="menu-primary" className="eyebrow m-0 px-3 pb-2 text-fg-muted">Explore YINGLONG</h2>
+                      <ul className="m-0 grid list-none gap-0.5 p-0">
+                        {SITE_PAGES.map((p) => <MenuItem key={p.href} page={p} active={pageActive(pathname, p.href)} onNavigate={() => setOpen(false)} />)}
+                      </ul>
+                    </section>
+                    <section aria-labelledby="menu-try">
+                      <h2 id="menu-try" className="eyebrow m-0 px-3 pb-2 text-fg-muted">Demos</h2>
+                      <ul className="m-0 grid list-none gap-0.5 p-0">{TRY_PAGES.map((p) => <MenuItem key={p.href} page={p} active={pageActive(pathname, p.href)} onNavigate={() => setOpen(false)} />)}</ul>
+                    </section>
+                    <section aria-labelledby="menu-explore">
+                      <h2 id="menu-explore" className="eyebrow m-0 px-3 pb-2 text-fg-muted">Explore</h2>
+                      <ul className="m-0 grid list-none gap-0.5 p-0">{EXPLORE_PAGES.map((p) => <MenuItem key={p.href} page={p} active={pageActive(pathname, p.href)} onNavigate={() => setOpen(false)} />)}</ul>
+                    </section>
                   </nav>
                 </div>
                 <div className="grid gap-4 border-t border-line-1 px-5 pt-4 pb-5">
@@ -193,6 +187,17 @@ export function SiteNav() {
         </div>
       </div>
     </header>
+  );
+}
+
+function MenuItem({ page, active, onNavigate }: { page: { href: string; label: string; hint: string }; active: boolean; onNavigate: () => void }) {
+  return (
+    <li>
+      <Link href={page.href} onClick={onNavigate} aria-current={active ? "page" : undefined} className="yl-nav-mobile-link">
+        <span>{page.label}</span>
+        <small>{page.hint}</small>
+      </Link>
+    </li>
   );
 }
 

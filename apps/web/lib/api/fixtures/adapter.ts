@@ -184,7 +184,7 @@ export function createFixtureApi(): AgentApi {
         explanation: d.explanation,
       });
     },
-    receipts: (opts = {}) => ({ items: (visitor()?.receipts ?? state.receipts).slice(0, opts.limit ?? 50), nextCursor: null }),
+    receipts: (opts = {}) => ({ items: (opts.principal ? state.receipts : visitor()?.receipts ?? state.receipts).slice(0, opts.limit ?? 50), nextCursor: null }),
     receipt: (id) => {
       const r = state.receipts.find((x) => x.receiptId.toLowerCase() === id.toLowerCase());
       if (!r) throw notFound("Receipt");

@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-17T04:22:30.350Z",
+  "generatedAt": "2026-10-17T19:32:01.025Z",
   "timeline": {
-    "head": "e7928fc",
-    "count": 95,
+    "head": "fb81837",
+    "count": 98,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-17T08:51:12+06:00",
+    "last": "2026-10-17T13:00:14+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -669,6 +669,27 @@
         "hash": "e7928fc",
         "at": "2026-10-17T08:51:12+06:00",
         "subject": "Home says what it is in the first screen; shorter home and About; Judge Mode: a guided 3-minute demo with real operations",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "bad8fc2",
+        "at": "2026-10-17T12:45:05+06:00",
+        "subject": "Web redesign: new look, light theme, one navigation, illustrated pages, About with the team",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "ccd1af6",
+        "at": "2026-10-17T12:53:05+06:00",
+        "subject": "README: screenshots taken from the live site (real data)",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "fb81837",
+        "at": "2026-10-17T13:00:14+06:00",
+        "subject": "gitleaks: allowlist the recorded beats file (public credential ids, no secrets)",
         "track": "infra",
         "milestone": false
       }

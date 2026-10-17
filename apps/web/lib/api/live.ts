@@ -963,7 +963,7 @@ export function createLiveApi(baseUrl: string): AgentApi {
       if (!r.receipt) throw new ApiRequestError("The agent service returned no receipt.", 502, "no_receipt");
       return mapReceipt(r.receipt);
     },
-    receipts: async (opts = {}) => ({ items: await receiptsOf(cp(), opts.limit ?? 50), nextCursor: null }),
+    receipts: async (opts = {}) => ({ items: await receiptsOf(opts.principal ?? cp(), opts.limit ?? 50), nextCursor: null }),
     receipt: async (id) => mapReceipt(await call(W.WireReceipt, "GET", `/v1/receipts/${enc(id)}`)),
     receiptProof: async (id) => {
       const p = await call(W.WireProof, "GET", `/proof/${enc(id)}?verify=1`);

@@ -151,7 +151,8 @@ function VerifyDrawer({ agent, onClose }: { agent: RegistryAgent | null; onClose
     resolve(getApi().agentReceipts(agent.agentId)).then(
       (list) => {
         setReceipts(list);
-        setPick(list.find((r) => r.anchor) ?? list[0] ?? null);
+        // The list does not say which receipts are anchored (the proof route does), so offer a payment or the newest.
+        setPick(list.find((r) => r.anchor) ?? list.find((r) => r.outcome === "confirmed") ?? list[0] ?? null);
       },
       (e: Error) => setError(e),
     );
@@ -213,7 +214,7 @@ function VerifyDrawer({ agent, onClose }: { agent: RegistryAgent | null; onClose
                 <span className="min-w-0">
                   <span className="block truncate text-fg-1">{r.summary}</span>
                   <span className="block text-11 text-fg-muted">
-                    {formatTime(r.timestamp)} {r.anchor ? "· anchored" : "· not anchored yet"}
+                    {formatTime(r.timestamp)}{r.anchor ? " · anchored" : ""}
                   </span>
                 </span>
                 <ReceiptOutcomeRing r={r} />
@@ -222,11 +223,16 @@ function VerifyDrawer({ agent, onClose }: { agent: RegistryAgent | null; onClose
           </fieldset>
         ) : null}
         {pick ? (
-          <Button onClick={() => void verify()} disabled={busy || !pick.anchor} className="justify-self-start">
-            {busy ? "Fetching" : pick.anchor ? "Fetch roots and verify" : "Not anchored yet"}
+          <Button onClick={() => void verify()} disabled={busy} aria-busy={busy} className="justify-self-start">
+            {busy ? "Fetching the proof..." : proof ? "Verify again" : "Fetch roots and verify"}
           </Button>
         ) : null}
-        {proof && v ? (
+        {proof && !proof.anchors.length ? (
+          <p role="status" className="m-0 text-13 text-fg-2">
+            This receipt is not in an anchored batch yet. Receipts are grouped and written to the blockchain every few minutes: try again soon, or pick an older receipt.
+          </p>
+        ) : null}
+        {proof && v && proof.anchors.length ? (
           <div className="grid gap-4">
             <MerklePath proof={proof} steps={v.steps} revealed={revealed} matches={v.matches} />
             {revealed >= 2 + proof.path.length + proof.anchors.length ? (
