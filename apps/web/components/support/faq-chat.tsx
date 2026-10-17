@@ -310,7 +310,7 @@ const JUDGE_FAQS = FAQS.filter((faq) => faq.audience === "judge");
 const FEATURED_JUDGE_FAQS = JUDGE_FAQS.slice(0, 3);
 const FEATURED_COMMON_FAQS = POPULAR.slice(0, 2);
 const COMMON_FAQS = FAQS.filter((faq) => !faq.audience);
-const MORE_COMMON_FAQS = COMMON_FAQS.filter((faq) => !FEATURED_COMMON_FAQS.includes(faq));
+const MORE_COMMON_FAQS = COMMON_FAQS.filter((faq) => !POPULAR.includes(faq));
 const MORE_JUDGE_FAQS = JUDGE_FAQS.filter((faq) => !FEATURED_JUDGE_FAQS.includes(faq));
 
 function faq(question: string): Faq {
@@ -459,6 +459,7 @@ export function FaqChat() {
   const [open, setOpen] = useState(false);
   const [section, setSection] = useState<"everyone" | "judges">("everyone");
   const [showQuestionList, setShowQuestionList] = useState(false);
+  const [askedInEveryoneSection, setAskedInEveryoneSection] = useState(false);
   const [askedInJudgeSection, setAskedInJudgeSection] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
@@ -469,11 +470,16 @@ export function FaqChat() {
   const nextId = useRef(1);
   const endRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
-  const availableFeaturedJudgeFaqs = FEATURED_JUDGE_FAQS.filter((faq) => !askedFaqQuestions.has(faq.question));
-  const availableFeaturedCommonFaqs = POPULAR.filter((faq) => !askedFaqQuestions.has(faq.question));
-  const availableCommonFaqs = COMMON_FAQS.filter((faq) => !askedFaqQuestions.has(faq.question));
-  const availableMoreJudgeFaqs = MORE_JUDGE_FAQS.filter((faq) => !askedFaqQuestions.has(faq.question));
-  const availableMoreCommonFaqs = MORE_COMMON_FAQS.filter((faq) => !askedFaqQuestions.has(faq.question));
+  const latestSuggestionMessage = [...messages].reverse().find((message) => message.from === "assistant" && message.suggestions);
+  const visibleSuggestedQuestions = new Set((latestSuggestionMessage?.suggestions ?? [])
+    .filter((faq) => !askedFaqQuestions.has(faq.question))
+    .map((faq) => faq.question));
+  const isAvailable = (faq: Faq) => !askedFaqQuestions.has(faq.question) && !visibleSuggestedQuestions.has(faq.question);
+  const availableFeaturedJudgeFaqs = FEATURED_JUDGE_FAQS.filter(isAvailable);
+  const availableFeaturedCommonFaqs = POPULAR.filter(isAvailable);
+  const availableCommonFaqs = COMMON_FAQS.filter(isAvailable);
+  const availableMoreJudgeFaqs = (askedInJudgeSection ? JUDGE_FAQS : MORE_JUDGE_FAQS).filter(isAvailable);
+  const availableMoreCommonFaqs = (section === "judges" || askedInEveryoneSection ? COMMON_FAQS : MORE_COMMON_FAQS).filter(isAvailable);
   const hasMoreQuestions = section === "judges"
     ? availableMoreJudgeFaqs.length + availableCommonFaqs.length > 0
     : availableMoreCommonFaqs.length > 0;
@@ -490,6 +496,7 @@ export function FaqChat() {
     loadingRef.current = true;
     setShowQuestionList(false);
     if (section === "judges") setAskedInJudgeSection(true);
+    else setAskedInEveryoneSection(true);
     const faq = findFaq(question);
     if (faq) setAskedFaqQuestions((current) => new Set(current).add(faq.question));
     const visitor: Message = { id: nextId.current++, from: "visitor", text: question };
@@ -605,13 +612,13 @@ export function FaqChat() {
                   </div> : null}
                 </div>
               ) : (
-                <div className="grid gap-1.5">
+                !askedInEveryoneSection ? <div className="grid gap-1.5">
                   {availableFeaturedCommonFaqs.map((faq) => (
                     <button key={faq.question} type="button" disabled={loading} onClick={() => void ask(faq.question)} className="min-h-10 rounded-control border border-line-2 px-3 py-2 text-left text-12 text-fg-1 hover:border-focus hover:bg-bg-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50">
                       {faq.question}
                     </button>
                   ))}
-                </div>
+                </div> : null
               )}
               {hasMoreQuestions ? <button type="button" aria-expanded={showQuestionList} aria-controls="yl-faq-question-list" onClick={() => setShowQuestionList((shown) => !shown)} className="min-h-8 rounded-control px-2 text-left text-12 font-medium text-fg-1 hover:bg-bg-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
                 {showQuestionList ? "Show fewer questions" : "More suggested questions"}
