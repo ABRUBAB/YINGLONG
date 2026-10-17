@@ -6,17 +6,17 @@
 1. This is a self-review in audit format by the people who wrote the code; it is not independent and it is not an audit.
 2. Scope: YINGLONG's own contracts, the agent signer and signing-domain guard, the policy mirror, the mandate compiler and both verifiers; the MetaMask Delegation Framework is out of scope (its own audit reports ship with it).
 3. Method: manual review against a fixed checklist, static analysis, fuzzing and invariant campaigns, bounded symbolic execution, differential testing of the policy mirror against the contracts, and a threat-model walkthrough.
-4. Findings by severity: <!-- gen:review.count.critical -->not yet measured<!-- /gen --> critical, <!-- gen:review.count.high -->not yet measured<!-- /gen --> high, <!-- gen:review.count.medium -->not yet measured<!-- /gen --> medium, <!-- gen:review.count.low -->not yet measured<!-- /gen --> low, <!-- gen:review.count.info -->not yet measured<!-- /gen --> informational; <!-- gen:review.fixed -->not yet measured<!-- /gen --> fixed, <!-- gen:review.open -->not yet measured<!-- /gen --> open, <!-- gen:review.wontfix -->not yet measured<!-- /gen --> accepted.
+4. Findings by severity: <!-- gen:review.count.critical -->0<!-- /gen --> critical, <!-- gen:review.count.high -->0<!-- /gen --> high, <!-- gen:review.count.medium -->2<!-- /gen --> medium, <!-- gen:review.count.low -->4<!-- /gen --> low, <!-- gen:review.count.info -->2<!-- /gen --> informational; <!-- gen:review.fixed -->3 (YR-01 in `4d402b6`, YR-02 in `4d402b6`, YR-03 in `30ee250`)<!-- /gen --> fixed, <!-- gen:review.open -->2 (YR-04, YR-07)<!-- /gen --> open, <!-- gen:review.wontfix -->3<!-- /gen --> accepted.
 5. Section 7 lists the issues we chose not to fix and why; known risks KR-01 to KR-19 are in `docs/SECURITY_SELF_ASSESSMENT.md`.
 
 
 | Field | Value |
 |---|---|
-| Commit reviewed | <!-- gen:review.commit -->not yet measured<!-- /gen --> |
-| Review completed | <!-- gen:review.date -->not yet measured<!-- /gen --> |
-| Release | <!-- gen:meta.release_tag -->bb338d0<!-- /gen --> |
+| Commit reviewed | <!-- gen:review.commit -->8ebf4fd<!-- /gen --> |
+| Review completed | <!-- gen:review.date -->2026-10-17<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->8ebf4fd<!-- /gen --> |
 | Reviewers | YINGLONG team members (roles R2 contracts, R4 AI security; read-only reviewer sessions at the planned review gate) |
-| Tool versions used | <!-- gen:review.tools.versions -->Slither: 0.11.6; forge: forge 1.8.5; Halmos: halmos 0.3.3<!-- /gen --> |
+| Tool versions used | <!-- gen:review.tools.versions -->forge 1.8.5; slither 0.11.6; aderyn 0.6.8; halmos 0.3.3<!-- /gen --> |
 
 ---
 
@@ -86,13 +86,81 @@
 
 ## 5. Findings
 
-<!-- gen:review.findings.table -->not yet measured<!-- /gen -->
+<!-- gen:review.findings.table -->
+
+| ID | Title | Severity | Component | Status | Fix commit |
+|---|---|---|---|---|---|
+| YR-01 | Starting a sign-up with an existing account's public key reset that account | medium | apps/agent visitors (registerVisitor) | fixed | `4d402b6` |
+| YR-02 | Login challenge did not bind the issue time and chain id it handed out | low | apps/agent visitors (loginChallenge, loginVisitor) | fixed | `4d402b6` |
+| YR-03 | A co-sign approval was created for a payment the ledger refuses for another reason | low | apps/agent pipeline (ask) | fixed | `30ee250` |
+| YR-04 | The web signing guard allows a user operation without decoding its calls | medium | apps/web lib/signing-guard.ts | open | - |
+| YR-05 | MandateRegistry.canExecute reports no live mandate after the newer of two live mandates is revoked | low | contracts MandateRegistry | wontfix | - |
+| YR-06 | ProductRegistry.allProducts lists a product twice after delist and relist | low | contracts ProductRegistry | wontfix | - |
+| YR-07 | Logging in on a second device ends the first device's session | info | apps/agent visitors (loginVisitor) | open | - |
+| YR-08 | Login challenges and sign-ups in progress are kept in memory | info | apps/agent visitors | wontfix | - |
+<!-- /gen -->
 
 Columns: ID, title, severity, component, status (fixed, acknowledged, open), fix commit.
 
 ## 6. Finding details
 
-<!-- gen:review.findings.details -->not yet measured<!-- /gen -->
+<!-- gen:review.findings.details -->
+**YR-01. Starting a sign-up with an existing account's public key reset that account** (medium, fixed)
+
+- Description: POST /v1/visitors overwrote the stored visitor record (new session token, sealed flag cleared) before any signature proved control of the key. The passkey public key and the secret-key owner address are public, so anyone could start such a sign-up.
+- Impact: Denial of service: the real owner's session stopped working and log in again refused the account until it sealed again. No funds or authority could be taken: sealing still needs the key.
+- Recommendation: Keep a sealed account's record and session unchanged until the new seal verifies on the account itself.
+- Resolution: The pending sign-up now holds its own record and token; the stored record is replaced only after the seal verifies (ERC-1271 on the account). apps/agent/scripts/visitor-key-e2e.mts re-registers an address as a stranger would and still logs in and pays.
+
+**YR-02. Login challenge did not bind the issue time and chain id it handed out** (low, fixed)
+
+- Description: Only the nonce and its expiry were stored; the signed message was rebuilt from the issue time sent back by the client and the chain id of the account's ledger.
+- Impact: Low: the nonce was already single-use and expired after 5 minutes, so replay was not possible; the message a user signed could differ from the one issued.
+- Recommendation: Store the issue time and chain id with the nonce and rebuild the message from the stored values.
+- Resolution: Challenges store {expires, issuedAt, chainId}; a mismatching issue time or ledger is refused.
+
+**YR-03. A co-sign approval was created for a payment the ledger refuses for another reason** (low, fixed)
+
+- Description: When the simulation reverted for a reason other than the missing co-signature (for example VelocityExceeded), an escalated request still produced an approval request.
+- Impact: The user could approve a payment that would then revert on chain: a confusing approval, no loss of funds (the enforcers refuse it).
+- Recommendation: Create an approval only when the simulation succeeds or fails solely with CoSignRequired.
+- Resolution: The approval is created only for an approvable simulation.
+
+**YR-04. The web signing guard allows a user operation without decoding its calls** (medium, open)
+
+- Description: PackedUserOperation is on the allowlist for seal, resume and revoke, but the guard does not decode the inner calls against an allowlist, and an unknown message kind from the network throws instead of returning a typed refusal.
+- Impact: The guard relies on the page's own decoding of what the user is shown; a compromised service could ask the passkey to sign a user operation with other calls. The account's enforcers still bound what an agent can do, and the user sees the decoded operation before signing.
+- Recommendation: Decode the user operation's execution calls and accept only the publish, delegation, pause, resume and revoke calls to known contracts; return a typed refusal for unknown kinds.
+- Resolution: Planned before submission (owner: front end with back end).
+
+**YR-05. MandateRegistry.canExecute reports no live mandate after the newer of two live mandates is revoked** (low, wontfix)
+
+- Description: One liveMandateOfAgent slot per account and agent, while two lineages may each hold a live mandate; revoking the newer one clears the slot although the older one is still live (test_finding_canExecuteAfterRevokingNewerOfTwoLiveMandates, skipped).
+- Impact: View only: the read interface answers (false, NO_LIVE_MANDATE) for an agent that can still redeem. Enforcement is unaffected: MandateBindingEnforcer checks each mandate's own status.
+- Recommendation: Track live mandates per lineage, or recompute the slot on revoke.
+- Resolution: Accepted for this release.
+
+**YR-06. ProductRegistry.allProducts lists a product twice after delist and relist** (low, wontfix)
+
+- Description: list() appends to the product array whenever the product is not currently listed, so delist followed by list duplicates it (test_finding_relistAfterDelistDuplicatesAllProducts, skipped).
+- Impact: View only: allProducts() returns duplicates. Suitability enforcement reads the product mapping and is unaffected.
+- Recommendation: Append only on the first listing, or de-duplicate in the view.
+- Resolution: Accepted for this release.
+
+**YR-07. Logging in on a second device ends the first device's session** (info, open)
+
+- Description: Each login issues a new session token and stores only its hash, replacing the previous one.
+- Impact: Usability: the first device is logged out without notice. No security impact.
+- Recommendation: Keep a small set of session hashes per visitor, or tell the user that other devices were signed out.
+- Resolution: Open.
+
+**YR-08. Login challenges and sign-ups in progress are kept in memory** (info, wontfix)
+
+- Description: Open login challenges and pending seals live in process memory.
+- Impact: A service restart asks a visitor in the middle of a login or sign-up to start it again. No data is lost: sealed accounts are stored on disk and on chain.
+- Recommendation: Persist them with their expiry if restarts become frequent.
+- Resolution: Accepted.
+<!-- /gen -->
 
 ## 7. Issues we chose not to fix, and why
 
@@ -111,7 +179,14 @@ Known at design time and carried into the review:
 | Reentrancy is bounded, not absent | Allowlisted targets may call back by design | `nonReentrant` on every YINGLONG target; state updated before execution; tests with a malicious token |
 | Full caveat arrays are public on Base (DC-08) | Round-trip verification needs them public | Fictional personas only; private mandates available |
 
-Found during this review and accepted: <!-- gen:review.wontfix.table -->not yet measured<!-- /gen -->
+Found during this review and accepted: <!-- gen:review.wontfix.table -->
+
+| ID | Title | Severity | Reason |
+|---|---|---|---|
+| YR-05 | MandateRegistry.canExecute reports no live mandate after the newer of two live mandates is revoked | low | The deployed bytecode is frozen and cited by the execution evidence on two ledgers; the defect affects a read-only helper, not enforcement. Fix in the next contract version. |
+| YR-06 | ProductRegistry.allProducts lists a product twice after delist and relist | low | Frozen, evidence-cited bytecode; read-only helper; the front end de-duplicates. |
+| YR-08 | Login challenges and sign-ups in progress are kept in memory | info | Both expire within 15 minutes; a restart costs one retry and keeps the attack surface small. |
+<!-- /gen -->
 
 ## 8. Automated results
 

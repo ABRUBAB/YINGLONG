@@ -11,9 +11,9 @@
 
 | Field | Value |
 |---|---|
-| Release | <!-- gen:meta.release_tag -->bb338d0<!-- /gen --> |
-| Commit assessed | <!-- gen:meta.commit -->bb338d0a6c634d327bb3acfd70e70f4d406deb83 (working tree had uncommitted changes)<!-- /gen --> |
-| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-17T01:58:48.019Z<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->8ebf4fd<!-- /gen --> |
+| Commit assessed | <!-- gen:meta.commit -->8ebf4fd46f79bacab07fb3b08ec824553ba43f7d (working tree had uncommitted changes)<!-- /gen --> |
+| Numbers generated at | <!-- gen:meta.generated_at -->2026-10-17T02:00:57.823Z<!-- /gen --> |
 | Owners | R4 (AI security) and R2 (contracts), per plan section 17 |
 | Companion documents | `docs/THREAT_MODEL.md`, `docs/PIA.md`, `docs/INCIDENT_RESPONSE.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/SECURITY_REVIEW.md` |
 
@@ -162,7 +162,7 @@ Vocabulary used in the UI and the Judge's Challenge [I]: **"Refused"** only for 
 | C-IN-11 | `PayeeBook` enum: the intent's recipient is a `PayeeBook` id or `NEW_PAYEE_REQUEST`; the model cannot emit an address; a new payee is always a T3 request | `packages/mandate` intent schema | Schema tests | TXT, `lookalike_address` |
 | C-IN-12 | Two-reader agreement on tainted financial fields (amount, payee), including the vision reader; readers of different model families; disagreement → T? | `apps/agent` readers | Bench | `visual_injection` |
 | C-IN-13 | Untrusted protocol input: x402 `description`, A2A card fields, token names, invoice memos are untrusted; A2A cards canonicalised (RFC 8785) and JWS ES256-signed; `kid` and JWKS hash in the passport | `apps/agent`, `apps/services`, `YinglongPassportRegistry` | Card-verification tests | TXT, S-ID, S-X402 |
-| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->`0c5bf87d3180a5587054dc6d93bef532a48bd13c4765add051a30e85e068c7af` (docs/evidence/sbom.cdx.json, 334 components; pnpm 12.11.2 sbom (CycloneDX 1.6) + uv 0.12.19 (bea138450 2026-09-24 x86_64-pc-windows-msvc) export (CycloneDX 1.5))<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
+| C-IN-14 | Supply chain: pinned lockfiles, `--ignore-scripts`, SBOM (hash <!-- gen:sbom.sha256 -->`1c76265ae52464da4ecd090fef4760b89a541da8d9fee33dee813270638ef114` (docs/evidence/sbom.cdx.json, 334 components; pnpm 12.11.2 sbom (CycloneDX 1.6) + uv 0.12.19 (bea138450 2026-09-24 x86_64-pc-windows-msvc) export (CycloneDX 1.5))<!-- /gen -->), framework submodule pinned at v1.3.0 [V, repo], no third-party skills or MCP servers in the signing path, CI rules gate for Chinese characters, AI attribution and secrets [V, `scripts/check-rules.mjs`] | CI, `scripts/` | CI jobs | CI |
 | C-IN-15 | Device capture: the quarantined readers never use screen or microphone capture; they read only files the user supplies (BFIA device-capture requirement [S, secondary source]) | `apps/agent` readers | Code review | — |
 
 ---
