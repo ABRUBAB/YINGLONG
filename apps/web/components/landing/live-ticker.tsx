@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { cn, RingGlyph, shortHash } from "@yinglong/ui";
+import { CONSOLE_PRINCIPAL } from "@/lib/api";
 import { useAgent } from "@/lib/api/hooks";
 import type { Receipt } from "@/lib/api/view";
 import { receiptState } from "./receipt-state";
@@ -15,7 +16,7 @@ const SHOWN = 14;
  * with the page's Pause motion control (the control sits in the strip just above).
  */
 export function LiveTicker() {
-  const q = useAgent("hero-receipts", (api) => api.receipts({ limit: 200 }), ["receipts"]);
+  const q = useAgent("hero-receipts", (api) => api.receipts({ limit: 200, principal: CONSOLE_PRINCIPAL }), ["receipts"]);
   const items = useMemo<Receipt[]>(() => (q.data?.items ?? []).filter((r) => r.summary).slice(0, SHOWN), [q.data]);
   if (items.length < 4) return null;
 

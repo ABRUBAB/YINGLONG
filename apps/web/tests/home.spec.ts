@@ -141,3 +141,28 @@ test.describe("phone first screen", () => {
     expect(g.orbitTop, "the orbit comes after the numbers").toBeGreaterThan(g.firstTileBottom);
   });
 });
+
+test.describe("video experiences", () => {
+  test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+
+  for (const pageCase of [
+    { path: "/", button: "Watch the 4-minute film", title: "How YINGLONG keeps AI agents within your rules" },
+    { path: "/app", button: "Watch the student demo", title: "Nadia's student agent" },
+    { path: "/challenge", button: "Watch the challenge demo", title: "See how the agent responds to an attack" },
+  ]) {
+    test(`${pageCase.path}: opens and closes its video without navigating away`, async ({ page }) => {
+      await page.goto(pageCase.path, { waitUntil: "networkidle" });
+      const trigger = page.getByRole("button", { name: pageCase.button });
+      await trigger.click();
+
+      const dialog = page.getByRole("dialog", { name: pageCase.title });
+      await expect(dialog).toBeVisible();
+      await expect(dialog.locator("video")).toHaveAttribute("controls", "");
+      expect(new URL(page.url()).pathname).toBe(pageCase.path);
+
+      await page.keyboard.press("Escape");
+      await expect(dialog).toBeHidden();
+      await expect(trigger).toBeFocused();
+    });
+  }
+});

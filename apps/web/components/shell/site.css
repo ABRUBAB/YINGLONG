@@ -17,6 +17,61 @@ body {
 }
 
 /* ------------------------------------------------------------------ nav sheet */
+.yl-sitenav {
+  background: color-mix(in oklab, var(--bg-0) 86%, transparent);
+  backdrop-filter: blur(16px);
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+.yl-sitenav[data-scrolled="true"] {
+  background: color-mix(in oklab, var(--bg-0) 94%, transparent);
+  border-color: var(--line-2);
+}
+.yl-nav-dock {
+  padding: 3px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--bg-1) 88%, transparent);
+}
+.yl-nav-link:focus-visible,
+.yl-nav-mobile-link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.yl-nav-link.is-active {
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+}
+.yl-nav-mobile-link {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: var(--radius-control);
+  color: var(--fg-0);
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+.yl-nav-mobile-link:hover,
+.yl-nav-mobile-link[aria-current="page"] {
+  background: var(--bg-3);
+}
+.yl-nav-mobile-link[aria-current="page"] span {
+  color: var(--accent);
+}
+.yl-nav-mobile-link span {
+  font-size: 14px;
+  font-weight: 550;
+}
+.yl-nav-mobile-link small {
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.yl-mobile-menu-trigger {
+  background: var(--bg-1);
+}
+
 .yl-navsheet-backdrop {
   position: fixed;
   inset: 0;
@@ -31,7 +86,7 @@ body {
   right: 0;
   bottom: 0;
   /* At most the viewport: 100vw follows the device width even if the layout viewport grows. */
-  width: min(100vw, 22rem);
+  width: min(100vw, 25rem);
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -52,6 +107,12 @@ body {
   .yl-navsheet {
     border-top-left-radius: var(--radius-sheet);
     border-bottom-left-radius: var(--radius-sheet);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yl-sitenav,
+  .yl-nav-mobile-link {
+    transition: none;
   }
 }
 .yl-navsheet[data-starting-style],

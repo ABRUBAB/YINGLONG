@@ -77,7 +77,7 @@ export interface AgentApi {
   ask(req: AskRequest): Promise<Decision>;
   /** T0/T1 only: the agent executes the proposal it was allowed to make. */
   execute(proposalId: string): Promise<Receipt>;
-  receipts(opts?: { limit?: number }): MaybePromise<ReceiptPage>;
+  receipts(opts?: { limit?: number; principal?: string }): MaybePromise<ReceiptPage>;
   receipt(receiptId: string): MaybePromise<Receipt>;
   receiptProof(receiptId: string): MaybePromise<MerkleProof>;
   /** Read-only transaction view for ledgers without a public explorer (FISCO, Anvil bench). */

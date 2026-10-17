@@ -13,12 +13,25 @@ const Num = ({ children }: { children: ReactNode }) => <span className="font-mon
 /** "Same code on both blockchains": the server's bytecode comparison, drawn, and the contracts behind it. */
 export function ChainSection({ chain }: { chain: ProofBundle["chain"] }) {
   const [all, setAll] = useState(false);
+  const [search, setSearch] = useState("");
   const { ledgers, bytecode, pairs } = chain;
   const enforcers = pairs.filter((p) => p.enforcer);
   const both = pairs.filter((p) => p.identical !== null);
   const enfBoth = enforcers.filter((p) => p.identical !== null);
   const enfSame = enfBoth.filter((p) => p.identical).length;
   const shown = all || !enforcers.length ? pairs : enforcers;
+  const terms = search.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const filtered = (terms.length ? pairs : shown).filter((p) => {
+    const searchable = [
+      p.name,
+      p.enforcer ? "rule enforcer" : "framework test contract",
+      p.identical === null ? "one ledger" : p.identical ? "same code identical" : "differs different code",
+      ...p.on.flatMap((entry) => [entry.ledger, entry.address, entry.codeHash]),
+    ]
+      .join(" ")
+      .toLowerCase();
+    return terms.every((term) => searchable.includes(term));
+  });
   const hidden = pairs.length - shown.length;
   const hiddenDiffer = pairs.filter((p) => !shown.includes(p) && p.identical === false).length;
 
@@ -62,6 +75,25 @@ export function ChainSection({ chain }: { chain: ProofBundle["chain"] }) {
       </div>
 
       {pairs.length ? (
+        <div className="grid gap-2 sm:max-w-xl">
+          <label htmlFor="proof-contract-search" className="text-12 text-fg-muted">
+            Search contracts
+          </label>
+          <input
+            id="proof-contract-search"
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search contract, ledger, address, or code hash"
+            className="h-10 w-full rounded-control border border-line-2 bg-bg-2 px-3 text-13 text-fg-0 placeholder:text-fg-muted focus-visible:outline-2 focus-visible:outline-accent"
+          />
+          <p aria-live="polite" className="m-0 text-12 text-fg-muted">
+            {filtered.length} of {terms.length ? pairs.length : shown.length} contracts shown
+          </p>
+        </div>
+      ) : null}
+
+      {filtered.length ? (
         <ScrollTable label="Contracts on both ledgers (scrolls sideways on small screens)" minWidth={760}>
           <thead>
             <tr>
@@ -76,7 +108,7 @@ export function ChainSection({ chain }: { chain: ProofBundle["chain"] }) {
             </tr>
           </thead>
           <tbody>
-            {shown.map((p) => (
+            {filtered.map((p) => (
               <tr key={p.name}>
                 <td className="text-fg-1">
                   <span className="font-mono text-12">{p.name}</span>
@@ -118,11 +150,13 @@ export function ChainSection({ chain }: { chain: ProofBundle["chain"] }) {
             ))}
           </tbody>
         </ScrollTable>
+      ) : pairs.length ? (
+        <Note>No contracts match your search.</Note>
       ) : (
         <Note>The server did not list any contracts.</Note>
       )}
 
-      {hidden > 0 || all ? (
+      {!terms.length && (hidden > 0 || all) ? (
         <div className="no-print flex flex-wrap items-center gap-3">
           <Button variant="secondary" size="sm" aria-expanded={all} onClick={() => setAll((v) => !v)}>
             {all ? `Show the ${enforcers.length} rule enforcers only` : `Show all ${pairs.length} contracts`}

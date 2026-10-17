@@ -50,6 +50,23 @@ test.describe("desktop", () => {
     await expect(page.getByRole("heading", { name: "Did any attack move money?" })).toBeVisible();
     await expect(page.getByRole("region", { name: /Bench results by attack family/ }).getByRole("row")).toHaveCount(14);
   });
+
+  test("search filters the contracts table, including contracts hidden by default", async ({ page }) => {
+    await page.goto("/proof", { waitUntil: "networkidle" });
+
+    const search = page.getByRole("searchbox", { name: "Search contracts" });
+    await expect(search).toBeVisible();
+    const contracts = page.getByRole("region", { name: /Contracts on both ledgers/ });
+    await search.fill("dElEgAtIoNmAnAgEr fisco");
+    await expect(page.getByText("1 of 46 contracts shown")).toBeVisible();
+    await expect(contracts.getByRole("row")).toHaveCount(2);
+    await expect(contracts.getByText("DelegationManager")).toBeVisible();
+    await expect(contracts.getByText("CategoryBudgetEnforcer")).not.toBeVisible();
+
+    await search.fill("nothing matches");
+    await expect(page.getByText("0 of 46 contracts shown")).toBeVisible();
+    await expect(page.getByText("No contracts match your search.")).toBeVisible();
+  });
 });
 
 test.describe("phone", () => {

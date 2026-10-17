@@ -58,20 +58,20 @@
     --chrome-0: oklch(14.91% 0.0021 106.65); /* #0B0B0A */
     --chrome-1: oklch(38.94% 0.0100 99.12); /* #46453F */
     --chrome-2: oklch(52.30% 0.0108 100.14); /* #6B6A63 */
-    --accent: oklch(46.87% 0.2446 268.89); /* #2B3AE0 */
-    --accent-tint: oklch(92.93% 0.0299 279.62); /* #E3E6FC */
+    --accent: oklch(46.77% 0.1186 125.71); /* #4A6500 */
+    --accent-tint: oklch(95.18% 0.0399 116.35); /* #EDF3D5 */
     --accent-fg: oklch(100.00% 0.0000 0.00); /* #FFFFFF */
-    --accent-glow: oklch(58.60% 0.2264 272.70); /* #5565FF */
-    --lime: oklch(55.34% 0.1739 38.40); /* #C2410C */
-    --lime-tint: oklch(95.07% 0.0271 60.37); /* #FDEBDD */
+    --accent-glow: oklch(63.05% 0.1598 125.64); /* #729900 */
+    --lime: oklch(52.30% 0.1319 125.29); /* #587600 */
+    --lime-tint: oklch(95.18% 0.0399 116.35); /* #EDF3D5 */
     --violet: oklch(52.84% 0.2359 304.09); /* #8B2FD6 */
     --violet-tint: oklch(93.60% 0.0336 310.72); /* #F1E4FB */
     --steel: oklch(49.85% 0.0878 219.62); /* #0B6E85 */
     --steel-tint: oklch(93.44% 0.0242 212.90); /* #D8EEF3 */
     --brass: oklch(48.84% 0.0943 82.59); /* #7A5A10 */
     --brass-tint: oklch(95.18% 0.0299 92.32); /* #F6EFD9 */
-    --jade: oklch(51.09% 0.0861 186.39); /* #0F766E */
-    --jade-tint: oklch(94.26% 0.0214 186.01); /* #DDF1EE */
+    --jade: oklch(51.18% 0.1224 152.97); /* #187A43 */
+    --jade-tint: oklch(94.21% 0.0281 158.68); /* #DDF2E5 */
     --seal: oklch(50.27% 0.1768 24.81); /* #B3262B */
     --seal-tint: oklch(93.27% 0.0231 17.57); /* #F8E3E3 */
     --canvas: oklch(100.00% 0.0000 0.00); /* #FFFFFF */
@@ -99,20 +99,20 @@
   --chrome-0: oklch(14.91% 0.0021 106.65); /* #0B0B0A */
   --chrome-1: oklch(38.94% 0.0100 99.12); /* #46453F */
   --chrome-2: oklch(52.30% 0.0108 100.14); /* #6B6A63 */
-  --accent: oklch(46.87% 0.2446 268.89); /* #2B3AE0 */
-  --accent-tint: oklch(92.93% 0.0299 279.62); /* #E3E6FC */
+  --accent: oklch(46.77% 0.1186 125.71); /* #4A6500 */
+  --accent-tint: oklch(95.18% 0.0399 116.35); /* #EDF3D5 */
   --accent-fg: oklch(100.00% 0.0000 0.00); /* #FFFFFF */
-  --accent-glow: oklch(58.60% 0.2264 272.70); /* #5565FF */
-  --lime: oklch(55.34% 0.1739 38.40); /* #C2410C */
-  --lime-tint: oklch(95.07% 0.0271 60.37); /* #FDEBDD */
+  --accent-glow: oklch(63.05% 0.1598 125.64); /* #729900 */
+  --lime: oklch(52.30% 0.1319 125.29); /* #587600 */
+  --lime-tint: oklch(95.18% 0.0399 116.35); /* #EDF3D5 */
   --violet: oklch(52.84% 0.2359 304.09); /* #8B2FD6 */
   --violet-tint: oklch(93.60% 0.0336 310.72); /* #F1E4FB */
   --steel: oklch(49.85% 0.0878 219.62); /* #0B6E85 */
   --steel-tint: oklch(93.44% 0.0242 212.90); /* #D8EEF3 */
   --brass: oklch(48.84% 0.0943 82.59); /* #7A5A10 */
   --brass-tint: oklch(95.18% 0.0299 92.32); /* #F6EFD9 */
-  --jade: oklch(51.09% 0.0861 186.39); /* #0F766E */
-  --jade-tint: oklch(94.26% 0.0214 186.01); /* #DDF1EE */
+  --jade: oklch(51.18% 0.1224 152.97); /* #187A43 */
+  --jade-tint: oklch(94.21% 0.0281 158.68); /* #DDF2E5 */
   --seal: oklch(50.27% 0.1768 24.81); /* #B3262B */
   --seal-tint: oklch(93.27% 0.0231 17.57); /* #F8E3E3 */
   --canvas: oklch(100.00% 0.0000 0.00); /* #FFFFFF */
@@ -181,20 +181,20 @@
     --chrome-0: oklch(14.91% 0.0021 106.65); /* #0B0B0A */
     --chrome-1: oklch(38.94% 0.0100 99.12); /* #46453F */
     --chrome-2: oklch(52.30% 0.0108 100.14); /* #6B6A63 */
-    --accent: oklch(46.87% 0.2446 268.89); /* #2B3AE0 */
-    --accent-tint: oklch(92.93% 0.0299 279.62); /* #E3E6FC */
+    --accent: oklch(46.77% 0.1186 125.71); /* #4A6500 */
+    --accent-tint: oklch(95.18% 0.0399 116.35); /* #EDF3D5 */
     --accent-fg: oklch(100.00% 0.0000 0.00); /* #FFFFFF */
-    --accent-glow: oklch(58.60% 0.2264 272.70); /* #5565FF */
-    --lime: oklch(55.34% 0.1739 38.40); /* #C2410C */
-    --lime-tint: oklch(95.07% 0.0271 60.37); /* #FDEBDD */
+    --accent-glow: oklch(63.05% 0.1598 125.64); /* #729900 */
+    --lime: oklch(52.30% 0.1319 125.29); /* #587600 */
+    --lime-tint: oklch(95.18% 0.0399 116.35); /* #EDF3D5 */
     --violet: oklch(52.84% 0.2359 304.09); /* #8B2FD6 */
     --violet-tint: oklch(93.60% 0.0336 310.72); /* #F1E4FB */
     --steel: oklch(49.85% 0.0878 219.62); /* #0B6E85 */
     --steel-tint: oklch(93.44% 0.0242 212.90); /* #D8EEF3 */
     --brass: oklch(48.84% 0.0943 82.59); /* #7A5A10 */
     --brass-tint: oklch(95.18% 0.0299 92.32); /* #F6EFD9 */
-    --jade: oklch(51.09% 0.0861 186.39); /* #0F766E */
-    --jade-tint: oklch(94.26% 0.0214 186.01); /* #DDF1EE */
+    --jade: oklch(51.18% 0.1224 152.97); /* #187A43 */
+    --jade-tint: oklch(94.21% 0.0281 158.68); /* #DDF2E5 */
     --seal: oklch(50.27% 0.1768 24.81); /* #B3262B */
     --seal-tint: oklch(93.27% 0.0231 17.57); /* #F8E3E3 */
     --canvas: oklch(100.00% 0.0000 0.00); /* #FFFFFF */

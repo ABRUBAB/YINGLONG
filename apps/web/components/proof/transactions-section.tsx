@@ -58,7 +58,7 @@ export function TransactionsSection({ tx }: { tx: ProofBundle["transactions"] })
                 <LedgerChip ledger={t.ledger} compact />
                 {t.tier ? <TierBadge tier={t.tier} /> : null}
               </div>
-              <p className="m-0 line-clamp-3 text-13 text-fg-1">{t.title || "Untitled record"}</p>
+              <p className="m-0 min-w-0 line-clamp-3 text-13 text-fg-1 [overflow-wrap:anywhere]">{t.title || "Untitled record"}</p>
               <div>
                 <Outcome t={t} />
               </div>

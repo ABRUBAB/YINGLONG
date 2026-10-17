@@ -20,4 +20,4 @@ export function getApi(): AgentApi {
 export const isSample = DATA_MODE === "fixtures";
 
 export type { AgentApi, DataMode } from "./client";
-export { ApiRequestError } from "./client";
+export { ApiRequestError, CONSOLE_PRINCIPAL } from "./client";

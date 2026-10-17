@@ -21,6 +21,7 @@ import { InsightsPanel } from "./insights";
 import { CoveragePanel, EscrowsPanel } from "./protection";
 import { CredentialsPanel } from "./credentials";
 import { HealthLine } from "@/components/data/health-line";
+import { VideoExperience } from "@/components/media/video-experience";
 
 type Tab = "activity" | "mandates";
 
@@ -54,15 +55,26 @@ export function Console() {
             </>
           }
           actions={
-            <button
-              type="button"
-              onClick={() => setSheet(true)}
-              className="yl-press inline-flex h-8 items-center gap-2 rounded-control border border-line-3 px-3 text-13 text-fg-1 lg:hidden"
-              aria-haspopup="dialog"
-            >
-              <StateRing state={me.data?.paused ? "paused" : live ? "sealed" : "expired"} size={16} glyphOnly label="Mandate" />
-              Authority
-            </button>
+            <>
+              <VideoExperience
+                src="/videos/student-demo.mp4"
+                eyebrow="Student demo"
+                title="Nadia's student agent"
+                buttonLabel="Watch the student demo"
+                ctaHref="/start"
+                ctaLabel="Create your own agent"
+                size="md"
+              />
+              <button
+                type="button"
+                onClick={() => setSheet(true)}
+                className="yl-press inline-flex h-8 items-center gap-2 rounded-control border border-line-3 px-3 text-13 text-fg-1 lg:hidden"
+                aria-haspopup="dialog"
+              >
+                <StateRing state={me.data?.paused ? "paused" : live ? "sealed" : "expired"} size={16} glyphOnly label="Mandate" />
+                Authority
+              </button>
+            </>
           }
         >
           <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-13 text-fg-muted">

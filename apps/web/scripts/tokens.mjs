@@ -7,9 +7,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const TOKENS = {
-  // ORBIT Volt (17 Oct 2026). Dark: a lime-yellow green (#CBFF3C). Light: a separate design, deep ultramarine with a burnt-orange highlight on warm paper.
-  // ORBIT Volt (17 Oct 2026): the dark and ash base stays. On top of it, an electric green accent
-  // (#3DE35B) and a small family of supporting colours, used only for actions, states and highlights. Colour still carries state: electric green = brand, action and "inside the
+  // ORBIT Volt (17 Oct 2026). Charcoal and warm paper surfaces share a green action identity; light mode uses a darker olive for contrast.
+  // The supporting colours are reserved for actions, states and highlights. Colour still carries state: electric green = brand, action and "inside the
   // rules"; cyan = written on a ledger; amber = waiting on a person; coral = the seal; violet = the
   // AI screen; lime = highlights; the inverted chip = refused.
   dark: {
@@ -68,20 +67,20 @@ export const TOKENS = {
     "chrome-0": "#0B0B0A",
     "chrome-1": "#46453F",
     "chrome-2": "#6B6A63",
-    accent: "#2B3AE0",
-    "accent-tint": "#E3E6FC",
+    accent: "#4A6500",
+    "accent-tint": "#EDF3D5",
     "accent-fg": "#FFFFFF",
-    "accent-glow": "#5565FF",
-    lime: "#C2410C",
-    "lime-tint": "#FDEBDD",
+    "accent-glow": "#729900",
+    lime: "#587600",
+    "lime-tint": "#EDF3D5",
     violet: "#8B2FD6",
     "violet-tint": "#F1E4FB",
     steel: "#0B6E85",
     "steel-tint": "#D8EEF3",
     brass: "#7A5A10",
     "brass-tint": "#F6EFD9",
-    jade: "#0F766E",
-    "jade-tint": "#DDF1EE",
+    jade: "#187A43",
+    "jade-tint": "#DDF2E5",
     seal: "#B3262B",
     "seal-tint": "#F8E3E3",
     canvas: "#FFFFFF",
