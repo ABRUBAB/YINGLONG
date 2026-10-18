@@ -86,19 +86,25 @@ export function Stage({
           </p>
           {clockNode}
         </div>
-        <ol aria-label="Progress" className="m-0 grid list-none gap-1 p-0" style={{ gridTemplateColumns: `repeat(${TOTAL_STEPS}, minmax(0, 1fr))` }}>
-          {Array.from({ length: TOTAL_STEPS }, (_, i) => {
-            const k = i + 1;
-            return (
-              <li
-                key={k}
-                aria-current={k === n ? "step" : undefined}
-                aria-label={`Step ${k}${k < n ? ", done" : k === n ? ", now" : ""}`}
-                className={cn("h-[3px] rounded-pill", k < n ? "bg-fg-0" : k === n ? "bg-fg-2" : "bg-line-2")}
-              />
-            );
-          })}
-        </ol>
+        <div className="grid gap-2 rounded-card border border-line-1 bg-bg-1 px-3 py-3 sm:px-4">
+          <div className="flex items-center justify-between gap-3 text-12">
+            <span className="font-medium text-fg-1">Demo progress</span>
+            <span className="font-mono text-fg-muted tabular">{String(n).padStart(2, "0")} / {String(TOTAL_STEPS).padStart(2, "0")}</span>
+          </div>
+          <ol aria-label="Progress" className="m-0 grid list-none gap-1.5 p-0" style={{ gridTemplateColumns: `repeat(${TOTAL_STEPS}, minmax(0, 1fr))` }}>
+            {Array.from({ length: TOTAL_STEPS }, (_, i) => {
+              const k = i + 1;
+              return (
+                <li
+                  key={k}
+                  aria-current={k === n ? "step" : undefined}
+                  aria-label={`Step ${k}${k < n ? ", done" : k === n ? ", now" : ""}`}
+                  className={cn("h-1.5 rounded-pill transition-colors", k < n ? "bg-jade" : k === n ? "bg-accent" : "bg-line-2")}
+                />
+              );
+            })}
+          </ol>
+        </div>
       </header>
 
       <div className="grid flex-1 content-start gap-6">

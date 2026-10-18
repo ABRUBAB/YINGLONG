@@ -30,16 +30,16 @@ export function PageHeader({
   art?: HeroArt;
 }) {
   const text = (
-    <div className="grid min-w-0 gap-3">
+    <div className="grid min-w-0 gap-4">
       <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           <p className="eyebrow m-0 text-fg-muted">{eyebrow}</p>
-          <h1 className="type-display m-0 mt-2 text-22 text-balance text-fg-0 sm:text-[1.9rem] sm:leading-tight">{title}</h1>
-          {lead ? <p className="m-0 mt-2 max-w-[56ch] text-15 text-fg-2">{lead}</p> : null}
+          <h1 className="type-display m-0 mt-2 max-w-[24ch] text-[clamp(1.5rem,1.1rem+1.2vw,2rem)] leading-[1.08] text-balance text-fg-0">{title}</h1>
+          {lead ? <p className="m-0 mt-3 max-w-[58ch] text-15 leading-relaxed text-fg-2">{lead}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 border-t border-line-1 pt-3">
         <SampleBadge />
         {chips}
       </div>
@@ -90,17 +90,17 @@ export function Panel({
 }) {
   return (
     <section aria-labelledby={id} className={cn("yl-card yl-enter min-w-0", tone === "brass" && "border-brass/50", className)}>
-      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-b border-line-1 px-4 py-3.5 sm:px-5">
+      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-b border-line-1 bg-bg-2/55 px-4 py-4 sm:px-5">
         <div className="min-w-0">
           {eyebrow ? <p className="eyebrow m-0 text-fg-muted">{eyebrow}</p> : null}
-          <h2 id={id} className={cn("m-0 text-15 font-semibold text-fg-0", eyebrow && "mt-1")}>
+          <h2 id={id} className={cn("m-0 text-15 font-semibold leading-snug text-fg-0 sm:text-18", eyebrow && "mt-1")}>
             {title}
           </h2>
           {meta ? <div className="mt-1 text-12 text-fg-muted">{meta}</div> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
-      <div className={cn("px-4 py-4 sm:px-5", bodyClassName)}>{children}</div>
+      <div className={cn("px-4 py-5 sm:px-5", bodyClassName)}>{children}</div>
       {footer ? <div className="border-t border-line-1 px-4 py-3 text-11 leading-relaxed text-fg-muted sm:px-5">{footer}</div> : null}
     </section>
   );

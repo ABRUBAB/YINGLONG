@@ -38,3 +38,57 @@
 .yl-landing-section {
   padding-block: clamp(2.5rem, 1.25rem + 2.6vw, 4rem);
 }
+
+/* Give the long landing page a steadier reading rhythm. The faint top wash separates each
+   interactive chapter while leaving the established palette and section backgrounds intact. */
+.yl-defer {
+  background-image: linear-gradient(180deg, color-mix(in oklab, var(--bg-1) 22%, transparent), transparent 11rem);
+}
+.yl-section-head {
+  position: relative;
+  isolation: isolate;
+}
+.yl-section-head > p:first-child {
+  letter-spacing: 0.035em;
+}
+.yl-section-head h2 {
+  max-width: 17ch;
+  line-height: 1.08;
+  text-wrap: balance;
+  letter-spacing: -0.025em;
+}
+.yl-section-head > p:not(:first-child) {
+  text-wrap: pretty;
+}
+
+/* Cards gain a little definition on hover and keyboard focus without changing their behavior. */
+.yl-defer .yl-card {
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+.yl-defer a.yl-card:hover,
+.yl-defer a.yl-card:focus-visible {
+  border-color: color-mix(in oklab, var(--accent) 42%, var(--line-2));
+  box-shadow: 0 12px 36px color-mix(in oklab, var(--bg-0) 70%, transparent);
+}
+.yl-defer a.yl-card:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 639px) {
+  .yl-landing-section {
+    padding-block: 2.75rem;
+  }
+  .yl-section-head {
+    gap: 0.8rem;
+  }
+  .yl-section-head h2 {
+    max-width: 14ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yl-defer .yl-card {
+    transition: none;
+  }
+}

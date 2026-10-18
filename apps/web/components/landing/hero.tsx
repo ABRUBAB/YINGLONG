@@ -310,8 +310,8 @@ export function Hero({ poster = false }: { poster?: boolean }) {
             </span>
           </h1>
           <p className="yl-hero-in yl-hero-sub m-0 mt-5 text-fg-2" style={{ ["--d" as string]: "220ms" }}>
-            You write spending rules in plain words and lock them with your fingerprint or a secret key. The agent pays inside them. The
-            blockchain blocks anything else and keeps a receipt for every action.
+            Set spending rules in plain words, then lock them with your passkey or a secret key. The agent can pay within those limits; anything
+            outside them is blocked and recorded in a receipt you can check.
           </p>
           <div className="yl-hero-in mt-6 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "280ms" }}>
             <Magnetic>

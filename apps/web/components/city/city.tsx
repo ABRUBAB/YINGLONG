@@ -190,7 +190,7 @@ export function AgentCity() {
         {model ? (
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
             <section aria-labelledby="city-map-title" className="grid min-w-0 content-start gap-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-card border border-line-1 bg-bg-1 px-4 py-3">
                 <h2 id="city-map-title" className="m-0 text-15 font-semibold text-fg-0">
                   The map
                 </h2>
@@ -207,7 +207,7 @@ export function AgentCity() {
                   ]}
                 />
               </div>
-              <div ref={wrapRef} className="min-w-0">
+              <div ref={wrapRef} className="min-w-0 overflow-hidden rounded-b-card border-x border-b border-line-1 bg-bg-1">
                 {layout ? (
                   <CityMap
                     model={model}
@@ -223,7 +223,10 @@ export function AgentCity() {
                   <div className="h-[640px] rounded-sheet border border-line-2 bg-bg-1" aria-hidden="true" />
                 )}
               </div>
-              <Legend />
+              <div className="rounded-card border border-line-1 bg-bg-1 px-4 py-3">
+                <p className="eyebrow m-0 mb-2 text-fg-muted">Map key</p>
+                <Legend />
+              </div>
             </section>
 
             <aside aria-labelledby="city-inspector" className="grid min-w-0 content-start gap-6 lg:sticky lg:top-[calc(var(--nav-h)+16px)] lg:max-h-[calc(100dvh-var(--nav-h)-32px)] lg:overflow-y-auto">

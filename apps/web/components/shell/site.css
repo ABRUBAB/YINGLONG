@@ -33,9 +33,16 @@ body {
   background: color-mix(in oklab, var(--bg-1) 88%, transparent);
 }
 .yl-nav-link:focus-visible,
-.yl-nav-mobile-link:focus-visible {
+.yl-nav-mobile-link:focus-visible,
+.yl-brand-link:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
+}
+.yl-brand-link {
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.yl-brand-link:hover {
+  background: var(--bg-2);
 }
 .yl-nav-link.is-active {
   background: var(--accent);
@@ -111,7 +118,8 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .yl-sitenav,
-  .yl-nav-mobile-link {
+  .yl-nav-mobile-link,
+  .yl-brand-link {
     transition: none;
   }
 }

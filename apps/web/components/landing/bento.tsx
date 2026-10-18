@@ -263,7 +263,7 @@ export function Bento() {
     <section aria-labelledby="try-title" className="yl-defer relative py-14 sm:py-20">
       <div className="yl-container grid gap-8 lg:gap-10">
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
-          <div className="grid gap-3">
+          <div className="yl-section-head grid gap-3">
             <p className="eyebrow m-0 flex items-center gap-3 text-fg-muted">
               <span aria-hidden="true" className="h-px w-6 bg-line-3" />
               What you can do here

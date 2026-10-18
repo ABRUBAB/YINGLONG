@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/shell/site-footer";
 import { FxLayer } from "@/components/fx/fx-layer";
 import { BootScreen } from "@/components/brand/loader";
 import { BootControl } from "@/components/fx/boot-control";
+import { FaqChat } from "@/components/support/faq-chat";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://app.yinglong-agent.tech"),
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {children}
         <SiteFooter />
         <SessionSync />
+        <FaqChat />
       </body>
     </html>
   );

@@ -60,12 +60,14 @@ const STEPS = [
 function Stepper({ phase }: { phase: Phase["at"] }) {
   const current = phase === "intro" || phase === "drafting" || phase === "error" ? 1 : phase === "see" ? 2 : 3;
   return (
-    <ol className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0" aria-label="Steps">
+    <ol className="m-0 grid list-none gap-2 rounded-card border border-line-1 bg-bg-1 p-3 sm:grid-cols-3 sm:gap-3 sm:p-4" aria-label="Steps">
       {STEPS.map((s) => (
-        <li key={s.n} aria-current={s.n === current ? "step" : undefined} className="flex items-center gap-2.5 text-13">
-          <span className={s.n <= current ? "font-mono text-fg-0" : "font-mono text-fg-muted"}>{String(s.n).padStart(2, "0")}</span>
-          <span className={s.n === current ? "font-medium text-fg-0" : "text-fg-muted"}>
-            {s.label} <span className="font-normal text-fg-muted">{s.hint}</span>
+        <li key={s.n} aria-current={s.n === current ? "step" : undefined} className="grid min-w-0 gap-2">
+          <span className={`h-1 rounded-pill ${s.n < current ? "bg-jade" : s.n === current ? "bg-accent" : "bg-line-2"}`} aria-hidden="true" />
+          <span className="flex items-baseline gap-2 text-13">
+            <span className={s.n <= current ? "font-mono text-fg-0" : "font-mono text-fg-muted"}>{String(s.n).padStart(2, "0")}</span>
+            <span className={s.n === current ? "font-medium text-fg-0" : "text-fg-muted"}>{s.label}</span>
+            <span className="truncate text-12 font-normal text-fg-muted">{s.hint}</span>
           </span>
         </li>
       ))}

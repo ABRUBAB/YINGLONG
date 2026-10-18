@@ -308,7 +308,7 @@ export function RulesLab() {
   );
 
   return (
-    <section aria-labelledby="lab-title" className="yl-defer relative border-t border-line-1 py-14 sm:py-20">
+    <section id="rules-lab" aria-labelledby="lab-title" className="yl-defer relative border-t border-line-1 py-14 sm:py-20">
       <div className="yl-container grid gap-8 lg:gap-10">
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
           <SectionHead
