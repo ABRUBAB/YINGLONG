@@ -1,3 +1,4 @@
+import { forecastModel } from "./forecast-model";
 import type { Address, Hex } from "viem";
 import { abi } from "@yinglong/sdk";
 import { decodeCaveat, formatUnits, type Mandate } from "@yinglong/mandate";
@@ -195,11 +196,24 @@ export async function forecastFor(id: PrincipalId, opts: { name: string; days?: 
   }
 
   const fc = computeForecast({ now, horizonDays: Math.min(Math.max(opts.days ?? 30, 1), 90), symbol: asset.symbol, decimals: asset.decimals, posted, pending, floor, payroll, supplierTrailing30 });
+  // Percentile bands from the trained forecaster, when the model service answers (advisory; the projection above stays the base).
+  const payrollByDay = new Map<number, bigint>();
+  for (const e of fc.events) if (e.kind === "payroll") payrollByDay.set(e.day, (payrollByDay.get(e.day) ?? 0n) + e.amount);
+  const modelBands = await forecastModel({
+    nowMs: Number(now) * 1000,
+    decimals: asset.decimals,
+    posted,
+    floor,
+    payments: rows.filter((r) => r.principal === id && r.payment?.symbol === asset.symbol),
+    payrollByDay,
+    supplierPerDay: fc.supplierRunRatePerDay,
+    horizonDays: fc.horizonDays,
+  });
   const explanation: Narration = await narrate({
     purpose: "Explain this company's 30-day cash forecast to its directors.",
     facts: forecastFacts(opts.name, fc, velocity),
     fallback: forecastTemplate(opts.name, fc),
     enabled: !!opts.explain,
   });
-  return { ...fc, velocity, ledger: st.ledger, block: block.number, rail: isCpi ? "coin-free instructions (e-CNY-style simulator)" : "test token", explanation, label: FORECAST_LABEL };
+  return { ...fc, modelBands, velocity, ledger: st.ledger, block: block.number, rail: isCpi ? "coin-free instructions (e-CNY-style simulator)" : "test token", explanation, label: FORECAST_LABEL };
 }

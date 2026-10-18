@@ -99,7 +99,7 @@ services:
     mem_limit: 3g
     memswap_limit: 3g
     environment:
-      YL_MODELS: ${YL_MODELS:-m1}
+      YL_MODELS: ${YL_MODELS:-m1,m3,m5}
       YL_ORT_THREADS: "2"
       HF_TOKEN_FILE: /run/secrets/hf-token.txt
     command: ["uvicorn", "app:app", "--host", "127.0.0.1", "--port", "8090", "--workers", "1"]

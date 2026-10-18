@@ -148,7 +148,7 @@ test.describe("video experiences", () => {
   // The video buttons are always on their pages. A window plays its file once content/film.ts lists it; until
   // then it says the video will be uploaded soon.
   for (const pageCase of [
-    { path: "/", button: "Watch the 4-minute film", title: "How YINGLONG keeps AI agents within your rules", src: "/videos/yinglong-film.mp4" },
+    { path: "/", button: "Watch the 5-minute film", title: "How YINGLONG keeps AI agents within your rules", src: "/videos/yinglong-film.mp4" },
     { path: "/app", button: "Watch the student demo", title: "Nadia's student agent", src: "/videos/student-demo.mp4" },
     { path: "/challenge", button: "Watch the challenge demo", title: "See how the agent responds to an attack", src: "/videos/hack-demo.mp4" },
   ]) {

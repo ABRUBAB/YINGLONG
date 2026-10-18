@@ -110,7 +110,7 @@ A dark and ash base with one lime-green accent, a separate ultramarine light the
   <tr>
     <td colspan="2" valign="top">
       <a href="https://app.yinglong-agent.tech/about"><img src="docs/assets/readme/screen-about.webp" width="100%" alt="About: the team"></a>
-      <br><sub><b>About.</b> The five people behind it, as portrait panels that open on hover or tap, then why we built it and what is real.</sub>
+      <br><sub><b>About.</b> The five people behind it (Team Shadow Chaser), as portrait panels that open on hover or tap, then why we built it and what is real.</sub>
     </td>
   </tr>
 </table>
@@ -166,6 +166,19 @@ flowchart LR
     </td>
   </tr>
 </table>
+
+## The models
+
+Four small models sit around the rules. They can only make the agent more careful, never less: a model can raise a payment to "ask you" or refuse it, and it can never approve what the rules forbid. If a model does not answer, the rule-based check still runs and says so.
+
+| Model | Job | Where it runs |
+|---|---|---|
+| Sentinel (mmBERT, ONNX int8) | Spots hidden instructions and tricks in text | Live, in the model service |
+| Behaviour model (isolation forest + LightGBM + conformal) | Flags an unusual payment for this person | Live, scale 8 |
+| Cash forecaster (LightGBM quantile) | The 30-day balance band in the treasury | Live, treasury forecast |
+| Intent model (Qwen LoRA adapters) | Reads a plain request into a payment | Trained and published. The live agent reads requests with a hosted Qwen model (Alibaba Cloud), then the rule parser; the adapters are the local fallback, ready for a llama.cpp server |
+
+The public weights, adapters and model cards are on Hugging Face. The 300-attack benchmark was run again on 18 Oct 2026: 0 of 300 moved money outside the rules.
 
 ## Evidence
 
@@ -236,7 +249,7 @@ yinglong verify-tx <hash> --chain fisco --rpc https://api.yinglong-agent.tech/rp
 | `apps/services`, `apps/ecny-sim`, `apps/indexer` | Agent City service agents (x402), e-CNY-style simulator, anchoring and breaker |
 | `apps/web` | The interface |
 | `tools/verify-py` | `yinglong verify`, the independent Python verifier |
-| `ml/`, `bench/` | Injection sentinel, intent model, YINGLONG-Bench |
+| `ml/`, `bench/` | Injection sentinel, behaviour model, cash forecaster, intent model, model service, YINGLONG-Bench |
 | `infra/` | FISCO BCOS chain, edge, application stack |
 
 Read more: [Technical](docs/TECHNICAL.md) &middot; [Enforcers](docs/ENFORCERS.md) &middot; [API](docs/API.md) &middot; [Security self-assessment](docs/SECURITY_SELF_ASSESSMENT.md) &middot; [Threat model](docs/THREAT_MODEL.md) &middot; [Compliance matrix](docs/COMPLIANCE_MATRIX.md) &middot; [PIA](docs/PIA.md) &middot; [Incident response](docs/INCIDENT_RESPONSE.md) &middot; [Contributing](CONTRIBUTING.md)

@@ -20,6 +20,7 @@ import { DATA_DIR, DocStore } from "./store";
 import { understand, type Intent, type UnderstandResult } from "./understand/intent";
 import { finalTier } from "./tiers";
 import { suitabilityCard, type SuitabilityCard } from "./suitability";
+import { anomalyModel } from "./scales/anomaly-model";
 import { config, nextCosignNonce, principalHandle, stateOf, type PrincipalId, type PrincipalState } from "./world";
 import { resolve } from "node:path";
 
@@ -395,6 +396,27 @@ export async function ask(id: PrincipalId, text: string, attachments: { kind: "i
     if (intent.kind === "sweep" && past.length === 0) {
       anomaly = "first sweep into this product: you decide once, later sweeps can run alone";
       aiFlags.push(anomaly);
+    }
+  }
+  // The behaviour model (M3) adds a second opinion; it can only escalate, and the rules above ran first.
+  if (payment && assetDoc) {
+    const m3 = await anomalyModel({
+      archetype: cfg.kind === "company" ? "sme" : "student",
+      history: receiptLog.all().filter((r) => r.principal === id),
+      payee: payment.beneficiary,
+      amount: payment.amount,
+      decimals: assetDoc.decimals,
+      t1Threshold: policy?.t1Threshold,
+      now: new Date(),
+      untrusted: attachments.length > 0,
+      scheduled: intent.kind === "schedule",
+    });
+    if (m3) {
+      const pv = m3.pValue.toFixed(3);
+      if (m3.escalate && anomaly.startsWith("within")) {
+        anomaly = `behaviour model: unusual action (p = ${pv}, flag below ${m3.alpha.toFixed(3)})`;
+        aiFlags.push(anomaly);
+      } else if (anomaly.startsWith("within")) anomaly = `within your usual pattern (behaviour model p = ${pv})`;
     }
   }
   record({ n: 8, name: "Anomaly", status: anomaly.startsWith("within") ? "passed" : "escalated", reason: anomaly });

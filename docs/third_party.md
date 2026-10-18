@@ -145,7 +145,7 @@ No Aceternity or React Bits code is used.
 | Piece | Source | Licence | Used for |
 |---|---|---|---|
 | Glass illustrations (`apps/web/public/art/*.svg`, nine scenes, dark and light) | Drawn for this project by script (originals; no stock images, no third-party files) | Project licence (Apache-2.0) | Landing sections, inner-page banners, the water shader picture |
-| Team portraits (`apps/web/public/team/p1b.webp`, `p2-p5.webp`) | Photographs of the five team members, supplied by the team lead for this site; cropped to 4:5, two backgrounds removed | Personal photographs: not covered by the Apache-2.0 licence; the lead decides whether they stay published | About page |
+| Team portraits (`apps/web/public/team/p1c.webp`, `p2-p5.webp`) | Photographs of the five team members, supplied by the team lead for this site; cropped to 4:5, two backgrounds removed | Personal photographs: not covered by the Apache-2.0 licence; the lead decides whether they stay published | About page |
 | Fonts (Hubot Sans, Geist, Geist Mono, Anek Bangla) | SIL Open Font Licence 1.1, files and licence texts in `apps/web/public/fonts` | OFL-1.1 | All text |
 
 ## 4. Models
