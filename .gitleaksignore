@@ -1,3 +1,6 @@
 # Reviewed gitleaks findings, recorded by fingerprint (commit:file:rule:line). None are needed today:
 # raw Foundry test output, public ZK test vectors and the model SHA-256 lock file are allowlisted by
 # path in .gitleaks.toml.
+# 18 Oct: Next.js dev-server preview keys, random values generated on every dev start, inside a build folder that was committed by mistake in 6422a5f (now removed and ignored). Not secrets.
+6422a5fa539007544c0016be8c21b68621953b70:apps/web/.next-walkthrough/dev/server/preview-props.json:generic-api-key:3
+6422a5fa539007544c0016be8c21b68621953b70:apps/web/.next-walkthrough/dev/server/preview-props.json:generic-api-key:4
