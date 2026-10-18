@@ -26,9 +26,9 @@ export const TEAM = {
   members: [
     {
       name: "Abdullah Rubab",
-      role: "Team lead",
-      bio: "Leads the build and the submission, and owns the agent service and the evidence.",
-      photo: "/team/p1.webp",
+      role: "Team lead, AI and ML",
+      bio: "Leads the build and the submission, designs the AI and machine-learning parts, and owns the agent service and the evidence.",
+      photo: "/team/p1b.webp",
       tone: "accent",
       lead: true,
       links: [{ label: "GitHub", href: "https://github.com/ABRUBAB" }],
