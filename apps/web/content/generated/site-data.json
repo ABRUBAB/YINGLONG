@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-17T19:44:13.473Z",
+  "generatedAt": "2026-10-18T05:59:36.009Z",
   "timeline": {
-    "head": "b90f51e",
-    "count": 102,
+    "head": "bdd2a29",
+    "count": 108,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-18T01:43:14+06:00",
+    "last": "2026-10-18T11:56:35+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -718,6 +718,48 @@
         "hash": "b90f51e",
         "at": "2026-10-18T01:43:14+06:00",
         "subject": "Merge remote-tracking branch 'origin/shabab'",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "8344fae",
+        "at": "2026-10-18T02:49:07+06:00",
+        "subject": "Tests follow the new navbar (short top-bar labels, Explore menu, walkthrough entry); film switch in content/film.ts instead of a probing request",
+        "track": "evidence",
+        "milestone": false
+      },
+      {
+        "hash": "6d31fcc",
+        "at": "2026-10-18T04:01:43+06:00",
+        "subject": "Add a site-aware FAQ chatbot with judge mode",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "0c5bc98",
+        "at": "2026-10-18T04:06:19+06:00",
+        "subject": "fix(web): remove duplicate chatbot suggestions",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "d8897c8",
+        "at": "2026-10-18T10:18:03+06:00",
+        "subject": "Secret scan: record two reviewed false positives (Next.js dev preview keys in a build folder committed by mistake and since removed)",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "27140e4",
+        "at": "2026-10-18T11:32:48+06:00",
+        "subject": "footer design updated by fixing some linkup issues and a decorated design",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "bdd2a29",
+        "at": "2026-10-18T11:56:35+06:00",
+        "subject": "Merge origin/shabab: site FAQ chatbot, footer redesign",
         "track": "infra",
         "milestone": false
       }
