@@ -1131,5 +1131,20 @@
       "9:Chain:stopped"
     ],
     "explanation": "I did not pay 80,000 CNY to Staff payroll account. The policy check refused it (Paused): the account is paused or the agent is halted."
+  },
+  {
+    "beat": "7 payroll run on the coin-free rail (FISCO)",
+    "at": "2026-10-18T08:06:48.659Z",
+    "proposal": "65cb7313-8807-40d0-8e2d-e27cd9bcf4c2",
+    "tier": "T1",
+    "decision": "execute",
+    "stopped": [],
+    "explanation": "Ready to pay 80,000 CNY to Staff payroll account. It is inside your mandate, so I can do it on my own; you will get a receipt.",
+    "receipt": {
+      "outcome": "confirmed",
+      "tier": "T1",
+      "txHash": "0x103feb34207724ac8ea80e6db11f3aafcbd6f071584d874a0130a5f0434f5249",
+      "ledger": "fisco"
+    }
   }
 ]

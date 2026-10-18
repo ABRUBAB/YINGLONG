@@ -1,6 +1,6 @@
 {
-  "startedAt": "2026-10-16T08:03:41.918Z",
-  "commit": "8812f4ef7d4de50ab73e039eb2b473ba0fedae6e",
+  "startedAt": "2026-10-18T08:48:04.999Z",
+  "commit": "da04d171e5328bc020daa530c70c31e42ae2452d",
   "workingTreeChanges": true,
   "agentVersion": "0.10.0",
   "ledger": {
@@ -20,8 +20,8 @@
   ],
   "principals": {
     "nadia": {
-      "account": "0xe1Ae389fd5b6166f12c7037379FcFa80a8Abea8e",
-      "mandateHash": "0xb45c18e10d0ac04a621dc4dd41da7e12a7e15d1e38c37433f1ad92faf293eaba",
+      "account": "0x0fB1C5423ADeBfd2EA088A6E4E6874083Cb44D7F",
+      "mandateHash": "0xc5b8914e808edbd2391711c18aabd4c154de810e25259ad434a9b656d48c4714",
       "payees": [
         "harbour_homes",
         "hbu_bursar",
@@ -40,8 +40,8 @@
       ]
     },
     "lotus-sz": {
-      "account": "0xfEdf55ade8B2069FD9E86fA96174B80891151258",
-      "mandateHash": "0x68a1c1acd77e9061b8929551eada843e629faee37f48a8b5fbe44f2f5ba59d35",
+      "account": "0x07b7a3d0fEe7492e32079772E1a309BF02C54E9A",
+      "mandateHash": "0x95920e1c24e3ffe2b9b833f3c135927e1569d2a4ed1eaf7c3bb515093c46fe61",
       "payees": [
         "shenzhen_components",
         "staff_payroll",
@@ -54,8 +54,8 @@
       ]
     },
     "lotus-hk": {
-      "account": "0xb9A1b6BE9eb835623CAD2D5DB5bfbe25b778c981",
-      "mandateHash": "0xd2b3b9472dafd1246f59b0715231c852809955e08e3dd83c886fb9bc599c3150",
+      "account": "0x9100A6373833FbcAeD06506C74b3a38a30756E5C",
+      "mandateHash": "0x0a5ee9cce6a1ee7959b99ac5632a5ea41c45175017741a2e49fceaf865a08a95",
       "payees": [
         "kowloon_forwarders",
         "test_mmf",

@@ -1,6 +1,6 @@
 {
   "schema": "yinglong.bench.control/1",
-  "generatedAt": "2026-10-16T08:39:44.559Z",
+  "generatedAt": "2026-10-18T09:26:12.743Z",
   "baseline": "B3: stock enforcers only (AllowedTargets, AllowedMethods, ValueLte, ERC20TransferAmount cap of 20,000 tHKD); hijacked agent key, raw redemption to the attacker address",
   "n": 105,
   "outOfMandate": 90,
