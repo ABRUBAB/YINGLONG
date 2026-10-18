@@ -18,6 +18,8 @@
 
 ## 0. Reading this document
 
+This is the full reference. The three-part summary for reviewers is [ARCHITECTURE.md](ARCHITECTURE.md) (system architecture), [CORE_ALGORITHMS.md](CORE_ALGORITHMS.md) (algorithms and models) and [SECURITY_DESIGN.md](SECURITY_DESIGN.md) (security design).
+
 | Label | Meaning |
 |---|---|
 | **Test units** | `tHKD`, `tUSD` (`contracts/src/rails/TestUnits.sol`) and coin-free CNY instructions have no monetary value |
@@ -134,7 +136,7 @@ flowchart TB
 | `packages/mandate` | Schema, canonical JSON, compiler, decompiler, round-trip check, Hash Ring, scenario mandates | `src/*.ts` |
 | `packages/sdk` | Ledger profiles, deployments, ABIs, accounts and user operations, receipts, Merkle, revert decoding, key loading | `src/*.ts` |
 | `packages/provenance` | `Tagged<T>`, opaque handles, the prompt guard | `src/index.ts` |
-| `ml/serving` | M1 injection sentinel (ONNX int8) and other advisory models | `app.py` |
+| `ml/serving` | The model service: M1 injection sentinel (ONNX int8, `/sentinel`), M3 behaviour anomaly (`/anomaly`) and M5 cash-flow forecast (`/forecast`); each model pinned by SHA-256 in `models.lock.json`; all advisory | `app.py` |
 | `contracts` | Foundry project: registries, enforcers, rails, ZK router and enforcer, deploy script, tests | `src`, `test`, `script` |
 | `contracts-fisco` | FISCO probe, framework spike, code-hash comparison | `script/*.mjs`, `reports/*.json` |
 | `circuits` | Noir circuit, prover, verifier export, manifest | `mandate_compliance`, `prover`, `MANIFEST.json` |
@@ -178,7 +180,7 @@ flowchart TD
 | 5 | Policy | `scales/policy.ts` `evaluatePolicy()` | A deterministic TypeScript mirror of the enforcers, decoding the same caveat bytes and reading the same on-chain counters (`spentNow`, `usage`, `isPaused`, `isLive`, `lookup`, `isTrustedAgentWallet`, `productInfo`, `railKindOf`, balances); returns T1, T2, T3 or T4 with typed refusals, `blockNumber`, `blockTimestamp`, `stateReads` and `stateReadsHash` | **Yes** (T4, T3) |
 | 6 | Counterparty | `scales/counterparty.ts` `checkCounterparty()` | PayeeBook entry, passport and trusted-issuer attestation, a look-alike check against the payee book (same first and last four hex characters) and a small local demo sanctions list; verdicts `verified-payee`, `attested-agent`, `unverified`, `look-alike`, `sanctioned` | **Yes** (`sanctioned`, `look-alike` give T4) |
 | 7 | Simulate | `chain/mandates.ts` `simulateRedemption()` | `eth_call` of `DelegationManager.redeemDelegations` from the agent address at the latest block; the result must agree with the tier (T1 succeeds, T2 reverts `CoSignRequired`, T3/T4 revert); a T1 disagreement becomes ASK | No, asks |
-| 8 | Anomaly | inline in `ask()` | Rules over the receipt log: an amount above three times the largest past confirmed payment to the same payee (with at least two past payments) is flagged, and so is the first sweep into a product ("you decide once, later sweeps can run alone") | No, escalates |
+| 8 | Anomaly | inline in `ask()`, `scales/anomaly-model.ts` | Rules over the receipt log: an amount above three times the largest past confirmed payment to the same payee (with at least two past payments) is flagged, and so is the first sweep into a product ("you decide once, later sweeps can run alone"). Then the behaviour model M3: 23 features computed from the receipt log are sent to `SENTINEL_URL/anomaly` (3 s timeout); a conformal p-value below alpha raises the tier by one and adds the reason; if the service does not answer, the rule result stands and the proposal says so | No, escalates |
 | 9 | Chain | `DelegationManager` and the enforcers | At redemption every caveat runs again; a refusal reverts with a typed error, recovered by `replayRevert` (`eth_call` at the parent block) | **Yes** (final) |
 
 After the tier is fixed, the proposal is stored (`apps/agent/data/proposals.json`) and:
@@ -321,7 +323,7 @@ The ten invariants of the design, and the evidence in the repository at this com
 | Issuers `issuer-hbu`, `issuer-harbour-digital-bank` | Attest passports | Anything else | `YinglongPassportRegistry.attest` |
 | Deployer `deployer` | Deploy; remains minter of the test units and admin of `ProductRegistry` | n/a | `DeployYinglong.s.sol` |
 
-Keys are testnet keys loaded at runtime from a file outside the repository (`packages/sdk/src/server.ts`, `YINGLONG_SECRETS`); deployer roles after setup: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 572); Base Sepolia not deployed<!-- /gen -->.
+Keys are testnet keys loaded at runtime from a file outside the repository (`packages/sdk/src/server.ts`, `YINGLONG_SECRETS`); deployer roles after setup: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 663); Base Sepolia not deployed<!-- /gen -->.
 
 ### 3.7 Pause, revoke, re-seal, rotate
 
@@ -405,7 +407,7 @@ How YINGLONG adapts: legacy transactions with gas price 0 (`txOpts`), revert rea
 | Re-implements | canonical JSON, mandate hash, compiler, delegation hash (`EncoderLib` twin), decompiler, Hash Ring, receipt EIP-712 hash, `docHash`, sorted-pair Merkle | the same, independently |
 | Agreement tests | golden writer `packages/mandate/scripts/golden.ts` | `tests/test_golden.py` (byte-for-byte caveats, delegation hash, rules, sentences, ring geometry), `tests/test_ts_vectors.py` (canonical JSON incl. UTF-16 key order, delegation hashes, mandate variants, compile errors, receipts, receipt chain, Merkle) |
 
-Golden files on which both agree: <!-- gen:verify.golden.n -->2<!-- /gen -->; property cases: <!-- gen:verify.property.n -->67<!-- /gen -->; agreement: <!-- gen:verify.agreement -->agree: 2 golden files (packages/mandate vitest and 59 pytest cases) and 67 cross-implementation vector cases generated by the TypeScript reference and checked by the Python verifier (22 pytest cases) for the ledger profiles anvil, fisco; 0 disagreements; the base-sepolia profile is not in the shared vectors<!-- /gen -->.
+Golden files on which both agree: <!-- gen:verify.golden.n -->not yet measured<!-- /gen -->; property cases: <!-- gen:verify.property.n -->67<!-- /gen -->; agreement: <!-- gen:verify.agreement -->DISAGREE or failing: golden failing, vectors ok<!-- /gen -->.
 
 ### 5.3 The Hash Ring
 
@@ -476,9 +478,10 @@ The schema is sent as a strict JSON schema; output that fails zod validation is 
 
 ### 7.4 Model provider chain with deterministic fallback (`apps/agent/src/llm/provider.ts`)
 
-1. OpenRouter, models in order from `modelChain()` (overridable with `OPENROUTER_MODELS`), with `response_format: json_schema` (strict), `provider.require_parameters: true`, temperature 0 and a fixed seed; at most two attempts per model; a model answering 402 or 429 is skipped for 30 minutes or 1 minute.
-2. A local llama-server (`LLAMA_URL`, for example the fine-tuned GGUF intent model) with the same JSON schema.
-3. Otherwise `null`, and the caller falls back to deterministic code: `ruleParse` for intents, the regex reader for documents. `LLM_DISABLED=1` forces this path.
+1. Alibaba Cloud Model Studio (DashScope, international region; Qwen models, `DASHSCOPE_MODELS`), through its OpenAI-compatible endpoint with the same strict JSON schema, when a key file is configured. The provider order reported by `/v1/health` is `dashscope`, `openrouter`, `llama-server` (when configured), `rules`.
+2. OpenRouter, models in order from `modelChain()` (overridable with `OPENROUTER_MODELS`), with `response_format: json_schema` (strict), `provider.require_parameters: true`, temperature 0 and a fixed seed; at most two attempts per model; a model answering 402 or 429 is skipped for 30 minutes or 1 minute.
+3. A local llama-server (`LLAMA_URL`, for example the fine-tuned GGUF intent model) with the same JSON schema.
+4. Otherwise `null`, and the caller falls back to deterministic code: `ruleParse` for intents, the regex reader for documents. `LLM_DISABLED=1` forces this path.
 
 Every proposal records `understanding.via` (`llm` or `rules`), model, provider, latency and prompt hash, and every receipt commits to an `aigc` block naming the model. `GET /v1/health` reports which providers are configured, never the keys. Free API models may log prompts, which is why scale 1 scrubs personal data first.
 
@@ -598,16 +601,16 @@ Public endpoints: `https://app.yinglong-agent.tech` (web app) and `https://api.y
 | Foundry `NadiaMandateTest` | `cd contracts && forge test --match-contract NadiaMandateTest` | Every rule and tier of the student mandate through the real DelegationManager and a passkey HybridDeleGator: T1 payments, each T4 typed revert, T2 co-sign (replay, binding to the exact execution, ECDSA never valid), pause by relayed passkey signature, guardian, supervisor halt, revoke, re-seal keeps budgets, key-compromise drill, escrow, signed quote and `QuoteExpired` | <!-- gen:tests.forge.nadia -->30<!-- /gen --> |
 | Foundry ZK suites | `cd contracts && forge test --match-path "test/zk/*"` | `ZKMandateEnforcerTest`, `ZKMandateEnforcerDMTest`, `ZKVerifierRouterTest` with real proofs | 59 of 59 at the last manifest run (`circuits/MANIFEST.json`) |
 | All Foundry | `cd contracts && forge test` | | <!-- gen:tests.contracts -->390<!-- /gen --> |
-| vitest `packages/mandate` | `pnpm --filter @yinglong/mandate test` | Canonical JSON, compiler order and determinism, one-word sensitivity, decompiler sentences, round trip, tamper detection, Hash Ring, parity with `getDelegationHash` when Anvil runs | <!-- gen:tests.vitest.mandate -->13<!-- /gen --> |
-| vitest `apps/services` | `pnpm --filter @yinglong/services test` | x402 challenge, seller-settled payment, reuse refused, `QuoteExpired`, agent-card verification (Pearl River accepted, Mirage refused) | <!-- gen:tests.vitest.services -->5<!-- /gen --> |
-| vitest `apps/indexer` | `pnpm --filter @yinglong/indexer test` | Batch anchoring with on-chain proof verification; read-only FISCO proxy (writes refused, log bounds, rate limit) | <!-- gen:tests.vitest.indexer -->7<!-- /gen --> |
-| vitest `apps/ecny-sim` | `pnpm --filter @yinglong/ecny-sim test` | Conditional instructions executed or rejected with reason codes; statements | <!-- gen:tests.vitest.ecny_sim -->6<!-- /gen --> |
+| vitest `packages/mandate` | `pnpm --filter @yinglong/mandate test` | Canonical JSON, compiler order and determinism, one-word sensitivity, decompiler sentences, round trip, tamper detection, Hash Ring, parity with `getDelegationHash` when Anvil runs | <!-- gen:tests.vitest.mandate -->12 passed, 1 failed<!-- /gen --> |
+| vitest `apps/services` | `pnpm --filter @yinglong/services test` | x402 challenge, seller-settled payment, reuse refused, `QuoteExpired`, agent-card verification (Pearl River accepted, Mirage refused) | <!-- gen:tests.vitest.services -->0 (5 skipped)<!-- /gen --> |
+| vitest `apps/indexer` | `pnpm --filter @yinglong/indexer test` | Batch anchoring with on-chain proof verification; read-only FISCO proxy (writes refused, log bounds, rate limit) | <!-- gen:tests.vitest.indexer -->5 passed, 2 failed<!-- /gen --> |
+| vitest `apps/ecny-sim` | `pnpm --filter @yinglong/ecny-sim test` | Conditional instructions executed or rejected with reason codes; statements | <!-- gen:tests.vitest.ecny_sim -->2 passed, 4 failed<!-- /gen --> |
 | `circuits/prover` (node test runner through tsx) | `pnpm --dir circuits test` | Poseidon2 golden values TypeScript = circuit, false statements refused, prove and verify, vk equality | <!-- gen:tests.node.prover -->12<!-- /gen --> |
 | `apps/agent`, `apps/signer` | none yet | The pipeline, the monotonic-safety rule and the signer guard have no unit tests at this commit; they are exercised end to end by the scripts below | n/a |
 | nargo | `cd circuits/mandate_compliance && nargo test` | Golden hashes, valid payment, cap exceeded, payee not listed, expired, u128 overflow | <!-- gen:tests.nargo.circuit -->not run: nargo is not installed on the evidence host<!-- /gen --> |
-| pytest `tools/verify-py` | `cd tools/verify-py && uv run pytest` | Golden and TypeScript-vector agreement, unit tests, CLI, ledger integration | <!-- gen:tests.pytest.verify_py -->108 (7 skipped)<!-- /gen --> |
+| pytest `tools/verify-py` | `cd tools/verify-py && uv run pytest` | Golden and TypeScript-vector agreement, unit tests, CLI, ledger integration | <!-- gen:tests.pytest.verify_py -->106 passed, 8 failed (1 skipped)<!-- /gen --> |
 
-Totals: vitest <!-- gen:tests.ts -->176<!-- /gen -->, pytest <!-- gen:tests.py -->108<!-- /gen -->, all suites <!-- gen:tests.total -->795<!-- /gen -->. Coverage of `contracts/src`: <!-- gen:coverage.contracts -->lines 100% (856/856), statements 100% (1048/1048), branches 99.49% (197/198), functions 100% (183/183) of contracts/src (forge 1.8.5 coverage)<!-- /gen -->. Slither high findings open: <!-- gen:static.slither.high -->0 (raw high 0; Slither 0.11.6, 102 detectors over contracts/src)<!-- /gen -->.
+Totals: vitest <!-- gen:tests.ts -->174<!-- /gen -->, pytest <!-- gen:tests.py -->106<!-- /gen -->, all suites <!-- gen:tests.total -->804<!-- /gen -->. Coverage of `contracts/src`: <!-- gen:coverage.contracts -->lines 100% (856/856), statements 100% (1048/1048), branches 99.49% (197/198), functions 100% (183/183) of contracts/src (forge 1.8.5 coverage)<!-- /gen -->. Slither high findings open: <!-- gen:static.slither.high -->0 (raw high 0; Slither 0.11.6, 102 detectors over contracts/src)<!-- /gen -->.
 
 **End-to-end scripts.**
 
@@ -627,11 +630,11 @@ Totals: vitest <!-- gen:tests.ts -->176<!-- /gen -->, pytest <!-- gen:tests.py -
 |---|---|---|
 | Mandate sealed and published with its full caveat array (base-sepolia) | base-sepolia | `0xc356baed1def52b262943d1e82a9f32dc9e204f7bdb6a9910ac03a9663531658` |
 | Mandate sealed and published with its full caveat array (fisco) | fisco | `0xc0e294dd54638c004a05d34e17f4df802f22af4e0e1e5ecc34c0dfbf0d2d4bc9` |
-| Allowed payment inside the mandate (T1) | FISCO BCOS (team-run consortium ledger) | [`0xce31b345c9...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xce31b345c9bb3db83aca2acf62c050c3a72b191d17b18d606af45d68500d41e9) |
+| Allowed payment inside the mandate (T1) | FISCO BCOS (team-run consortium ledger) | [`0x136c17b51f...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x136c17b51fc41bdc79cadf5567391e9efbc41f51689767ecd994073032d36bd7) |
 | Payment approved on the user's passkey (T2; the signature is checked on-chain through ERC-1271) | FISCO BCOS (team-run consortium ledger) | [`0xd5b0910681...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xd5b0910681a50d532435a9663865a4d6e10c1edb763acccf36fbc350b5dec845) |
 | Company payment approved by 2 of 3 directors (T2) | FISCO BCOS (team-run consortium ledger) | [`0x0d52d018e3...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x0d52d018e31e3881e5cbb6faf6a87508ecf09c40b330fc4f81c5e2d9160643be) |
 | Service fee paid over x402: single-use, exact-amount ERC-7710 child delegation, settled by the seller | FISCO BCOS (team-run consortium ledger) | [`0x013f174786...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x013f17478632b332ba097c1f6f0bdfde95f0b21907c92f28d1402b62d9b746fd) |
-| Attack reverted on-chain: PayeeNotVerified | FISCO BCOS (team-run consortium ledger) | [`0x7a5cea350e...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x7a5cea350e905cb7eaaa697e114113b7054e33821dc611537c7f4f1d47dda6aa) |
+| Attack reverted on-chain: PayeeNotVerified | FISCO BCOS (team-run consortium ledger) | [`0xa483f085b7...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xa483f085b7a3ad007bdbbd590a3781f8b7f4f68b22f823f9f70defdad2a21751) |
 | Budget enforced on-chain: CategoryBudgetExceeded | FISCO BCOS (team-run consortium ledger) | [`0x1fca3c8df9...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x1fca3c8df9f6aee3d4c65fc7ffea94875d09ee21c1679efb38f50eb3b1002800) |
 | Unsuitable product refused on-chain: UnsuitableProduct | FISCO BCOS (team-run consortium ledger) | [`0xc772bde0c9...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xc772bde0c9b97ea4e670473ead5e82bbca9a3f3f5c1cec2a3423f47a14b67da5) |
 | Velocity breach trips the circuit breaker | FISCO BCOS (team-run consortium ledger) | [`0x530b0d70a3...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x530b0d70a32a2f88526dce04cefdb0dee8e833d34993704f7de07c5dcb6abda6) |
@@ -639,7 +642,7 @@ Totals: vitest <!-- gen:tests.ts -->176<!-- /gen -->, pytest <!-- gen:tests.py -
 | One-tap pause signed by the principal and relayed (T3) | FISCO BCOS (team-run consortium ledger) | [`0x9c1bcf9112...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x9c1bcf91123790d69c2f791ff05ddc851301a1dc8ef9cf85de2c34e79dda4b2f) |
 | Mandate revoked and delegation disabled in one user operation (T3) | FISCO BCOS (team-run consortium ledger) | [`0xb6343af3a3...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xb6343af3a3f2986401b5aabb9bd1d5ae1d31070b3687462e90b5fb532fe7554e) |
 | Mandate sealed by a visitor's own passkey (WebAuthn) on a fresh account | FISCO BCOS (team-run consortium ledger) | [`0x0f066362b2...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x0f066362b20bf469bd0f092a3ef32774a756ce6d91220c37584aec93aad56798) |
-| Company payment on the coin-free rail (FISCO) | FISCO BCOS (team-run consortium ledger) | [`0xb132a86147...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xb132a86147dddd8cb0045293eaae8890306448ba1baf5edbdbb65b919153559f) |
+| Company payment on the coin-free rail (FISCO) | FISCO BCOS (team-run consortium ledger) | [`0x103feb3420...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x103feb34207724ac8ea80e6db11f3aafcbd6f071584d874a0130a5f0434f5249) |
 | Same treasurer agent re-sealed for Hong Kong: payment on the HK rail | FISCO BCOS (team-run consortium ledger) | [`0x0dc69b4bd8...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x0dc69b4bd8d3f291680d285f78fb0d3a3a1b91c16f0401177c7ce3d2da5b58c3) |
 | Receipts anchored on-chain as one Merkle root (indexer) | FISCO BCOS (team-run consortium ledger) | [`0xabfd11de2b...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xabfd11de2b3e953db56a904d4625c2061787287958c4f80b9f49dae7024a0500) |
 | Supervisor pause of an agent identity (pause only, never spend) | FISCO BCOS (team-run consortium ledger) | [`0x7cac0cf62d...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x7cac0cf62dadf0f4cc721c2d9e6076bf1c7d9e77de1124932d915192fe071703) |
@@ -653,7 +656,7 @@ Totals: vitest <!-- gen:tests.ts -->176<!-- /gen -->, pytest <!-- gen:tests.py -
 | One-tap pause, passkey signature relayed (fisco) | fisco | `0x0a95302cffbd30984e70ee998c83c47dc8279350f0186720e9ce470dce958a9d` |
 <!-- /gen -->
 
-Every row of every run is in `docs/EXECUTION_EVIDENCE.md`. Transactions with receipts on the public and consortium ledgers: <!-- gen:evidence.tx_count -->151<!-- /gen -->; reverted on-chain: <!-- gen:evidence.reverts -->11<!-- /gen -->; refused before signing: <!-- gen:evidence.refused_offchain -->41<!-- /gen -->. Bench (attacks against the full system): out-of-mandate movements <!-- gen:bench.oom.count -->0<!-- /gen --> in <!-- gen:bench.attacks.n -->300<!-- /gen --> runs.
+Every row of every run is in `docs/EXECUTION_EVIDENCE.md`. Transactions with receipts on the public and consortium ledgers: <!-- gen:evidence.tx_count -->175<!-- /gen -->; reverted on-chain: <!-- gen:evidence.reverts -->14<!-- /gen -->; refused before signing: <!-- gen:evidence.refused_offchain -->44<!-- /gen -->. Bench (attacks against the full system): out-of-mandate movements <!-- gen:bench.oom.count -->0<!-- /gen --> in <!-- gen:bench.attacks.n -->300<!-- /gen --> runs.
 
 ---
 

@@ -46,8 +46,8 @@ The same caveat bytecode runs on the Base Sepolia public testnet and on our team
 <table>
   <tr>
     <td align="center" width="25%"><h3><!-- gen:tests.contracts -->390<!-- /gen --></h3><sub>Foundry contract tests</sub></td>
-    <td align="center" width="25%"><h3><!-- gen:tests.py -->108<!-- /gen --></h3><sub>Python verifier tests</sub></td>
-    <td align="center" width="25%"><h3><!-- gen:tests.ts -->176<!-- /gen --></h3><sub>TypeScript tests</sub></td>
+    <td align="center" width="25%"><h3><!-- gen:tests.py -->106<!-- /gen --></h3><sub>Python verifier tests</sub></td>
+    <td align="center" width="25%"><h3><!-- gen:tests.ts -->174<!-- /gen --></h3><sub>TypeScript tests</sub></td>
     <td align="center" width="25%"><h3><!-- gen:chain.bytecode.equal -->38<!-- /gen --> / <!-- gen:chain.bytecode.total -->46<!-- /gen --></h3><sub>contracts with identical bytecode<br>(<!-- gen:chain.bytecode.pair -->Base Sepolia vs FISCO BCOS<!-- /gen -->)</sub></td>
   </tr>
 </table>
@@ -189,11 +189,11 @@ Generated, never typed. One page: [PROOF.md](PROOF.md).
 |---|---|---|
 | Mandate sealed and published with its full caveat array (base-sepolia) | base-sepolia | `0xc356baed1def52b262943d1e82a9f32dc9e204f7bdb6a9910ac03a9663531658` |
 | Mandate sealed and published with its full caveat array (fisco) | fisco | `0xc0e294dd54638c004a05d34e17f4df802f22af4e0e1e5ecc34c0dfbf0d2d4bc9` |
-| Allowed payment inside the mandate (T1) | FISCO BCOS (team-run consortium ledger) | [`0xce31b345c9...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xce31b345c9bb3db83aca2acf62c050c3a72b191d17b18d606af45d68500d41e9) |
+| Allowed payment inside the mandate (T1) | FISCO BCOS (team-run consortium ledger) | [`0x136c17b51f...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x136c17b51fc41bdc79cadf5567391e9efbc41f51689767ecd994073032d36bd7) |
 | Payment approved on the user's passkey (T2; the signature is checked on-chain through ERC-1271) | FISCO BCOS (team-run consortium ledger) | [`0xd5b0910681...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xd5b0910681a50d532435a9663865a4d6e10c1edb763acccf36fbc350b5dec845) |
 | Company payment approved by 2 of 3 directors (T2) | FISCO BCOS (team-run consortium ledger) | [`0x0d52d018e3...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x0d52d018e31e3881e5cbb6faf6a87508ecf09c40b330fc4f81c5e2d9160643be) |
 | Service fee paid over x402: single-use, exact-amount ERC-7710 child delegation, settled by the seller | FISCO BCOS (team-run consortium ledger) | [`0x013f174786...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x013f17478632b332ba097c1f6f0bdfde95f0b21907c92f28d1402b62d9b746fd) |
-| Attack reverted on-chain: PayeeNotVerified | FISCO BCOS (team-run consortium ledger) | [`0x7a5cea350e...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x7a5cea350e905cb7eaaa697e114113b7054e33821dc611537c7f4f1d47dda6aa) |
+| Attack reverted on-chain: PayeeNotVerified | FISCO BCOS (team-run consortium ledger) | [`0xa483f085b7...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xa483f085b7a3ad007bdbbd590a3781f8b7f4f68b22f823f9f70defdad2a21751) |
 | Budget enforced on-chain: CategoryBudgetExceeded | FISCO BCOS (team-run consortium ledger) | [`0x1fca3c8df9...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x1fca3c8df9f6aee3d4c65fc7ffea94875d09ee21c1679efb38f50eb3b1002800) |
 | Unsuitable product refused on-chain: UnsuitableProduct | FISCO BCOS (team-run consortium ledger) | [`0xc772bde0c9...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xc772bde0c9b97ea4e670473ead5e82bbca9a3f3f5c1cec2a3423f47a14b67da5) |
 | Velocity breach trips the circuit breaker | FISCO BCOS (team-run consortium ledger) | [`0x530b0d70a3...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x530b0d70a32a2f88526dce04cefdb0dee8e833d34993704f7de07c5dcb6abda6) |
@@ -201,7 +201,7 @@ Generated, never typed. One page: [PROOF.md](PROOF.md).
 | One-tap pause signed by the principal and relayed (T3) | FISCO BCOS (team-run consortium ledger) | [`0x9c1bcf9112...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x9c1bcf91123790d69c2f791ff05ddc851301a1dc8ef9cf85de2c34e79dda4b2f) |
 | Mandate revoked and delegation disabled in one user operation (T3) | FISCO BCOS (team-run consortium ledger) | [`0xb6343af3a3...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xb6343af3a3f2986401b5aabb9bd1d5ae1d31070b3687462e90b5fb532fe7554e) |
 | Mandate sealed by a visitor's own passkey (WebAuthn) on a fresh account | FISCO BCOS (team-run consortium ledger) | [`0x0f066362b2...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x0f066362b20bf469bd0f092a3ef32774a756ce6d91220c37584aec93aad56798) |
-| Company payment on the coin-free rail (FISCO) | FISCO BCOS (team-run consortium ledger) | [`0xb132a86147...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xb132a86147dddd8cb0045293eaae8890306448ba1baf5edbdbb65b919153559f) |
+| Company payment on the coin-free rail (FISCO) | FISCO BCOS (team-run consortium ledger) | [`0x103feb3420...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x103feb34207724ac8ea80e6db11f3aafcbd6f071584d874a0130a5f0434f5249) |
 | Same treasurer agent re-sealed for Hong Kong: payment on the HK rail | FISCO BCOS (team-run consortium ledger) | [`0x0dc69b4bd8...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x0dc69b4bd8d3f291680d285f78fb0d3a3a1b91c16f0401177c7ce3d2da5b58c3) |
 | Receipts anchored on-chain as one Merkle root (indexer) | FISCO BCOS (team-run consortium ledger) | [`0xabfd11de2b...`](https://app.yinglong-agent.tech/proof/tx/fisco/0xabfd11de2b3e953db56a904d4625c2061787287958c4f80b9f49dae7024a0500) |
 | Supervisor pause of an agent identity (pause only, never spend) | FISCO BCOS (team-run consortium ledger) | [`0x7cac0cf62d...`](https://app.yinglong-agent.tech/proof/tx/fisco/0x7cac0cf62dadf0f4cc721c2d9e6076bf1c7d9e77de1124932d915192fe071703) |
@@ -215,7 +215,7 @@ Generated, never typed. One page: [PROOF.md](PROOF.md).
 | One-tap pause, passkey signature relayed (fisco) | fisco | `0x0a95302cffbd30984e70ee998c83c47dc8279350f0186720e9ce470dce958a9d` |
 <!-- /gen -->
 
-Full table: [docs/EXECUTION_EVIDENCE.md](docs/EXECUTION_EVIDENCE.md). Contracts and tests: <!-- gen:tests.contracts -->390<!-- /gen --> Foundry tests (including 59 with real zero-knowledge proofs), <!-- gen:tests.py -->108<!-- /gen --> Python verifier tests. Bytecode equality across ledgers: <!-- gen:chain.bytecode.equal -->38<!-- /gen --> of <!-- gen:chain.bytecode.total -->46<!-- /gen --> deployed contracts identical (<!-- gen:chain.bytecode.pair -->Base Sepolia vs FISCO BCOS<!-- /gen -->).
+Full table: [docs/EXECUTION_EVIDENCE.md](docs/EXECUTION_EVIDENCE.md). Contracts and tests: <!-- gen:tests.contracts -->390<!-- /gen --> Foundry tests (including 59 with real zero-knowledge proofs), <!-- gen:tests.py -->106<!-- /gen --> Python verifier tests. Bytecode equality across ledgers: <!-- gen:chain.bytecode.equal -->38<!-- /gen --> of <!-- gen:chain.bytecode.total -->46<!-- /gen --> deployed contracts identical (<!-- gen:chain.bytecode.pair -->Base Sepolia vs FISCO BCOS<!-- /gen -->).
 
 ## Verify it yourself
 
@@ -252,7 +252,7 @@ yinglong verify-tx <hash> --chain fisco --rpc https://api.yinglong-agent.tech/rp
 | `ml/`, `bench/` | Injection sentinel, behaviour model, cash forecaster, intent model, model service, YINGLONG-Bench |
 | `infra/` | FISCO BCOS chain, edge, application stack |
 
-Read more: [Technical](docs/TECHNICAL.md) &middot; [Enforcers](docs/ENFORCERS.md) &middot; [API](docs/API.md) &middot; [Security self-assessment](docs/SECURITY_SELF_ASSESSMENT.md) &middot; [Threat model](docs/THREAT_MODEL.md) &middot; [Compliance matrix](docs/COMPLIANCE_MATRIX.md) &middot; [PIA](docs/PIA.md) &middot; [Incident response](docs/INCIDENT_RESPONSE.md) &middot; [Contributing](CONTRIBUTING.md)
+Read more: [Architecture](docs/ARCHITECTURE.md) &middot; [Core algorithms](docs/CORE_ALGORITHMS.md) &middot; [Security design](docs/SECURITY_DESIGN.md) &middot; [Technical (full reference)](docs/TECHNICAL.md) &middot; [Enforcers](docs/ENFORCERS.md) &middot; [API](docs/API.md) &middot; [Security self-assessment](docs/SECURITY_SELF_ASSESSMENT.md) &middot; [Threat model](docs/THREAT_MODEL.md) &middot; [Compliance matrix](docs/COMPLIANCE_MATRIX.md) &middot; [PIA](docs/PIA.md) &middot; [Incident response](docs/INCIDENT_RESPONSE.md) &middot; [Contributing](CONTRIBUTING.md)
 
 </details>
 
