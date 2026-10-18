@@ -1,5 +1,5 @@
 /**
- * The 3-minute demo (/judge) against the fixtures build: six steps, no typing. Step 2 creates a
+ * The 3-minute walkthrough (/judge) against the fixtures build: six steps, no typing. Step 2 creates a
  * secret-key test account in the browser (no passkey, so no virtual authenticator), the sample
  * service verifies both seal signatures against the key's address, and every later step shows what
  * the (simulated) service answered, labelled sample data.

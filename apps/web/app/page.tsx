@@ -18,20 +18,12 @@ import { FilmBand } from "@/components/landing/film-band";
  * practice run of the rules they can drive (Rules Lab); the nine checks as a place to scroll through
  * (3D, with the flat rail as the fallback) and the Judge's Challenge; a phone to say, see and seal
  * their own agent on; the same enforcer bytecode on two ledgers; the live proof wall; and a closing
- * call to action. No pricing, testimonials or logo wall. `/?poster=1` renders the 3D stage alone
- * for scripts/posters.mjs. Route changes crossfade through <ViewTransition> (unsupported browsers
- * just navigate).
+ * call to action. No pricing, testimonials or logo wall. Route changes crossfade through <ViewTransition>
+ * (unsupported browsers just navigate). The page is static (no per-request work): it is served from the cache
+ * at once, so the first-visit screen is never followed by a second loading screen. The poster stage for
+ * scripts/posters.mjs lives at /poster.
  */
-export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const sp = await searchParams;
-  if (sp.poster === "1") {
-    return (
-      <main id="main" data-poster className="min-h-dvh bg-bg-0">
-        <h1 className="sr-only">An AI agent that pays for you. It cannot break your rules.</h1>
-        <Hero poster />
-      </main>
-    );
-  }
+export default function Home() {
   return (
     <ViewTransition>
       <main id="main">

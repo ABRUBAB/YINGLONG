@@ -18,7 +18,7 @@
 <p align="center">
   <a href="https://app.yinglong-agent.tech"><b>Live app</b></a>
   &nbsp;&middot;&nbsp;
-  <a href="https://app.yinglong-agent.tech/judge"><b>3-minute demo</b></a>
+  <a href="https://app.yinglong-agent.tech/judge"><b>3-minute walkthrough</b></a>
   &nbsp;&middot;&nbsp;
   <a href="https://app.yinglong-agent.tech/start"><b>Sign up with your passkey</b></a>
   &nbsp;&middot;&nbsp;
@@ -56,7 +56,7 @@ The same caveat bytecode runs on the Base Sepolia public testnet and on our team
 
 ## Try it in 60 seconds
 
-1. **Take the 3-minute demo** at [`/judge`](https://app.yinglong-agent.tech/judge): six steps, no typing. Each step runs a real operation on the live service and shows what came back, with the time it took. Or open Nadia's console at [`/app`](https://app.yinglong-agent.tech/app): every row carries a state word, a tier and, when it is on chain, a hash with its ledger badge.
+1. **Take the 3-minute walkthrough** at [`/judge`](https://app.yinglong-agent.tech/judge): six steps, no typing. Each step runs a real operation on the live service and shows what came back, with the time it took. Or open Nadia's console at [`/app`](https://app.yinglong-agent.tech/app): every row carries a state word, a tier and, when it is on chain, a hash with its ledger badge.
 2. **Sign up with your passkey** at [`/start`](https://app.yinglong-agent.tech/start). No password: your device's WebAuthn passkey seals your own mandate on the team-run FISCO BCOS chain, in test units.
 3. **Ask Ying to pay** inside the mandate. Code and the chain decide; the AI only proposes and explains.
 4. **Try to hack it** at [`/challenge`](https://app.yinglong-agent.tech/challenge): type any attack, or choose "Straight to the blockchain" to push a raw transaction past the AI and get the revert hash back. The Rules Lab on the home page lets you practise the nine checks first.
@@ -79,8 +79,8 @@ A dark and ash base with one lime-green accent, a separate ultramarine light the
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://app.yinglong-agent.tech/judge"><img src="docs/assets/readme/screen-judge.webp" width="100%" alt="The 3-minute demo"></a>
-      <br><sub><b>3-minute demo.</b> Six steps with no typing: look, make an agent, pay, get tricked, send a raw transaction, check the records.</sub>
+      <a href="https://app.yinglong-agent.tech/judge"><img src="docs/assets/readme/screen-judge.webp" width="100%" alt="The 3-minute walkthrough"></a>
+      <br><sub><b>3-minute walkthrough.</b> Six steps with no typing: look, make an agent, pay, get tricked, send a raw transaction, check the records.</sub>
     </td>
     <td width="50%" valign="top">
       <a href="https://app.yinglong-agent.tech/challenge"><img src="docs/assets/readme/screen-challenge.webp" width="100%" alt="Try to hack it"></a>

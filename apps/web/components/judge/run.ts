@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { MaybePromise } from "@/lib/api/client";
 
 /**
- * One step of the 3-minute demo: idle until it is shown, then running (with the real elapsed time and
+ * One step of the 3-minute walkthrough: idle until it is shown, then running (with the real elapsed time and
  * whatever the task has reported so far), then done or stopped with the service's own error. The
  * result lives in the page, so going Back and forward again never re-runs a step.
  */

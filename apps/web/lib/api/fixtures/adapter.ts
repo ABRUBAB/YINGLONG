@@ -395,7 +395,7 @@ export function createFixtureApi(): AgentApi {
     contractDirectory: async (ledger) => (ledger === "fisco" ? FISCO_DIRECTORY : BASE_DIRECTORY),
     visitorSignUp: async (req) => {
       await wait(900);
-      // A secret key made in this browser (the 3-minute demo): only its address arrives, as on the live service.
+      // A secret key made in this browser (the 3-minute walkthrough): only its address arrives, as on the live service.
       if (req.owner) return visitors.signUp({ owner: req.owner, mandate: req.mandate });
       if (!req.credentialId || !req.publicKey) throw new ApiRequestError("sample data supports passkey sign-up only", 400, "service_error");
       return visitors.signUp({ credentialId: req.credentialId, publicKey: req.publicKey, mandate: req.mandate });

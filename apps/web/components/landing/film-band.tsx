@@ -25,7 +25,7 @@ export function FilmBand() {
           title="How YINGLONG keeps AI agents within your rules"
           buttonLabel="Watch the 4-minute film"
           ctaHref="/judge"
-          ctaLabel="Try the interactive demo"
+          ctaLabel="Take the 3-minute walkthrough"
         />
       </div>
     </section>

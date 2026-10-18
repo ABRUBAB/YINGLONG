@@ -1,18 +1,15 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
-import { useMotionOff } from "@/components/preferences";
+import { createElement, type ReactNode } from "react";
+import { cn } from "@yinglong/ui";
 
 /**
- * Scroll reveal: the block rises 18 px and fades in once, when about 15% of it is in view. Stagger a
- * group by giving each child a growing `delay` (30 to 80 ms apart, at most about eight). With
- * reduced motion or Pause motion the content is simply there.
+ * Scroll reveal: the block rises a little and fades in as it enters the screen. It is pure CSS (`.yl-reveal`,
+ * a scroll-driven animation in globals.css), so the content is already in the page the moment the HTML
+ * arrives: nothing waits for scripts to start and then pops in. Browsers without scroll-driven animations,
+ * reduced motion and Pause motion simply show the content. `delay` and `y` are kept so existing callers
+ * still compile; the CSS timeline follows the scroll, so a delay has nothing to wait for.
  */
 export function Reveal({
   children,
-  delay = 0,
-  y = 18,
   className,
   as = "div",
 }: {
@@ -22,20 +19,5 @@ export function Reveal({
   className?: string;
   as?: "div" | "li" | "section" | "p" | "span";
 }) {
-  const reduce = useReducedMotion();
-  const off = useMotionOff();
-  const Tag = motion[as];
-  if (reduce || off) return <Tag className={className}>{children}</Tag>;
-  return (
-    <Tag
-      className={className}
-      data-reveal
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.7, delay, ease: [0.23, 1, 0.32, 1] }}
-    >
-      {children}
-    </Tag>
-  );
+  return createElement(as, { className: cn("yl-reveal", className) }, children);
 }

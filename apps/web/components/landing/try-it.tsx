@@ -6,7 +6,7 @@ import { ArrowIcon } from "@/components/ui/button";
  * sees every interaction the site offers and where it is.
  */
 const THINGS = [
-  { href: "/judge", title: "Start the 3-minute demo", body: "The whole system, one click at a time, for a judge." },
+  { href: "/judge", title: "Start the 3-minute walkthrough", body: "The whole system, one click at a time, for a judge." },
   { href: "/start", title: "Create your own agent", body: "Write rules in plain English and lock them with your fingerprint." },
   { href: "/app", title: "See a student's agent", body: "It pays rent and food on its own and asks first for anything bigger." },
   { href: "/treasury", title: "See a company's treasurer", body: "Suppliers and payroll; big payments need two of three directors." },

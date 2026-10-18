@@ -78,7 +78,7 @@ export function Stage({
       <header className="grid gap-3">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <p className="eyebrow m-0 flex flex-wrap items-center gap-x-3 gap-y-1 text-fg-muted">
-            <span>3-minute demo</span>
+            <span>3-minute walkthrough</span>
             <span className="font-mono text-fg-2">
               Step {n} of {TOTAL_STEPS}
             </span>

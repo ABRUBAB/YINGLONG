@@ -316,7 +316,7 @@ export function Hero({ poster = false }: { poster?: boolean }) {
           <div className="yl-hero-in mt-6 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "280ms" }}>
             <Magnetic>
               <ButtonLink href="/judge" size="lg">
-                Start the 3-minute demo <ArrowIcon />
+                Start the 3-minute walkthrough <ArrowIcon />
               </ButtonLink>
             </Magnetic>
             <Magnetic>

@@ -280,7 +280,7 @@ export function Bento() {
             href="/judge"
             tone="accent"
             tag="Guided, 3 minutes"
-            title="Start the 3-minute demo"
+            title="Start the 3-minute walkthrough"
             body="The whole system one click at a time: your own agent pays, gets blocked, and leaves real records."
             delay={0}
             className="lg:col-span-7 lg:row-span-2"

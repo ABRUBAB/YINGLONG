@@ -22,7 +22,7 @@
 
 | Route | What you see | What to check |
 |---|---|---|
-| `/judge` | The 3-minute demo: six steps, no typing; each runs a real operation on the live service | Every number shows the call it came from and how long it took; a "Sample data" chip means a number is not live |
+| `/judge` | The 3-minute walkthrough: six steps, no typing; each runs a real operation on the live service | Every number shows the call it came from and how long it took; a "Sample data" chip means a number is not live |
 | `/app` | Nadia's agent: activity table, Authority panel, Hash Ring | Each row has a state word and, if on chain, a hash with its ledger badge |
 | `/approve/[id]` | The approval card | The card decodes the call itself and only signs one of the six allowed message kinds |
 | `/treasury` | Lotus Lane Shenzhen (coin-free rail) and Hong Kong | 2-of-3 director queue; rail label under the entity switch |
