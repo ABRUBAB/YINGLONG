@@ -71,7 +71,7 @@ function morph(frames: Snapshot, toDark: boolean) {
 
 let revealRunning = false;
 
-function revealFrom(button: HTMLElement, apply: () => void) {
+export function revealFrom(button: HTMLElement, apply: () => void) {
   const doc = document as Document & { activeViewTransition?: unknown };
   if (
     typeof doc.startViewTransition !== "function" ||

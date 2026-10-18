@@ -3,6 +3,7 @@ import { RingGlyph } from "@yinglong/ui";
 import { Mark, TeamMark, Wordmark } from "@/components/brand/mark";
 import { ExternalIcon } from "@/components/ui/button";
 import { SIGN_UP } from "./pages";
+import { ThemeCord } from "./theme-cord";
 
 export const REPO_URL = "https://github.com/ABRUBAB/YINGLONG";
 
@@ -52,7 +53,7 @@ export function SiteFooter() {
   return (
     <footer className="yl-sitefooter no-print border-t border-line-1 bg-bg-0 text-fg-1">
       <div className="yl-container grid gap-9 py-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:py-12">
-        <div className="grid content-start gap-4 sm:col-span-2 lg:col-span-4">
+        <div className="grid content-start gap-4 sm:col-span-2 lg:col-span-3">
           <Link href="/" className="flex w-fit items-center gap-2.5 rounded-control" aria-label="YINGLONG home">
             <Mark size={30} decorative className="text-fg-0" />
             <Wordmark height={12} className="text-fg-0" />
@@ -63,12 +64,12 @@ export function SiteFooter() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-8 sm:col-span-2 lg:col-span-5 lg:grid-cols-2">
+        <div className="grid grid-cols-2 gap-8 sm:col-span-2 lg:col-span-4 lg:grid-cols-2">
           <FooterLinks title="Product" links={PRODUCT_LINKS} />
           <FooterLinks title="Explore" links={PROJECT_LINKS} />
         </div>
 
-        <nav aria-label="Resources" className="grid content-start gap-3 lg:col-span-3">
+        <nav aria-label="Resources" className="grid content-start gap-3 lg:col-span-2">
           <p className="eyebrow m-0 text-fg-muted">Resources</p>
           <ul className="m-0 grid list-none gap-2 p-0 text-13">
             {RESOURCES.map((r) => (
@@ -85,6 +86,10 @@ export function SiteFooter() {
             ))}
           </ul>
         </nav>
+
+        <div className="grid content-start gap-2 sm:col-span-2 lg:col-span-3 lg:justify-items-end">
+          <ThemeCord className="w-40" />
+        </div>
 
         <div className="grid content-start gap-3 border-t border-line-1 pt-6 text-12 text-fg-muted sm:col-span-2 lg:col-span-12 lg:grid-cols-[8rem_1fr] lg:items-start lg:pt-5">
           <p className="eyebrow m-0 text-fg-muted">Honest labels</p>

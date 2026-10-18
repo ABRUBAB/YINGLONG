@@ -64,6 +64,32 @@ test.describe("themes and print", () => {
     await expect.poll(() => page.evaluate(() => localStorage.getItem("yl-theme"))).toBe("dark");
   });
 
+  test("the footer pull cord switches the theme the same way (keyboard)", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("yl-theme", "dark");
+    });
+    await page.goto("/", { waitUntil: "networkidle" });
+
+    const lamp = page.getByRole("switch", { name: "Daylight" });
+    await lamp.scrollIntoViewIfNeeded();
+    await expect(lamp).toHaveAttribute("aria-checked", "false");
+    await lamp.focus();
+    await page.keyboard.press("Space");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(lamp).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByRole("button", { name: "Dark theme" }).first()).toHaveAttribute("aria-pressed", "false");
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("yl-theme"))).toBe("light");
+
+    await page.keyboard.press("Space");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(lamp).toHaveAttribute("aria-checked", "false");
+  });
+
+  test("glitch text keeps one readable heading (screen readers hear it once)", async ({ page }) => {
+    await page.goto("/challenge", { waitUntil: "networkidle" });
+    await expect(page.getByRole("heading", { level: 1, name: "Try to trick the agent." })).toBeVisible();
+  });
+
   test("light theme (paper by day) on the console passes axe", async ({ page }) => {
     await page.addInitScript(() => {
       try {

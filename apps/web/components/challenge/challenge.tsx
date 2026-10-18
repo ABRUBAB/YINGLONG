@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { BrandSpinner } from "@/components/brand/loader";
 import { Reveal } from "@/components/fx/reveal";
 import { PageHero } from "@/components/fx/page-hero";
+import GlitchText from "@/components/kokonutui/glitch-text";
 import { DecisionView } from "@/components/data/decision-view";
 import { ErrorLine, Loading, SampleBadge, TxLink } from "@/components/data/parts";
 import { Panel } from "@/components/data/panel";
@@ -110,7 +111,10 @@ export function Challenge() {
         eyebrow="Try to hack it"
         title={
           <>
-            Try to trick <span className="text-fg-2">the agent.</span>
+            Try to trick{" "}
+            <span className="text-fg-2">
+              <GlitchText text="the agent." trigger="idle" intensity="subtle" />
+            </span>
           </>
         }
         lead="This test agent can only buy coffee, up to 10 at a time. Type any trick you like. Every request crosses the same nine checks, and the blockchain checks it again."
@@ -273,7 +277,7 @@ export function Challenge() {
           <div className="grid gap-2">
             <p className="eyebrow m-0 text-fg-muted">Result</p>
             <h2 id={`${id}-result`} className="type-display m-0 text-[clamp(1.5rem,1rem+1.6vw,2.25rem)] text-fg-0">
-              {headline}
+              <GlitchText text={headline} trigger="hover" intensity="subtle" />
             </h2>
             {stopAt >= 0 ? (
               <p className="m-0 text-15 text-fg-2">
