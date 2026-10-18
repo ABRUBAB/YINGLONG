@@ -2,8 +2,7 @@ import { VideoExperience } from "@/components/media/video-experience";
 import { FILM_SRC } from "@/content/film";
 
 export function FilmBand() {
-  // The band appears only once the film exists (content/film.ts).
-  if (!FILM_SRC) return null;
+  // The film window says "will be uploaded soon" until the file is listed in content/film.ts.
   return (
     <section aria-labelledby="film-title" className="border-y border-line-1 bg-bg-0 text-fg-1">
       <div className="yl-container grid justify-items-center gap-5 py-10 text-center sm:py-12">

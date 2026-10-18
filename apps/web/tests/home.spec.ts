@@ -12,7 +12,7 @@
  *   the first screen, above the orbit.
  */
 import { test, expect, type Page } from "@playwright/test";
-import { FILM_SRC } from "../content/film";
+import { isUploaded } from "../content/film";
 import { ROUTES } from "./routes";
 
 async function openMenu(page: Page) {
@@ -145,13 +145,12 @@ test.describe("phone first screen", () => {
 
 test.describe("video experiences", () => {
   test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
-  // The film buttons appear only once content/film.ts names the film file.
-  test.skip(!FILM_SRC, "no film file yet (content/film.ts)");
-
+  // The video buttons are always on their pages. A window plays its file once content/film.ts lists it; until
+  // then it says the video will be uploaded soon.
   for (const pageCase of [
-    { path: "/", button: "Watch the 4-minute film", title: "How YINGLONG keeps AI agents within your rules" },
-    { path: "/app", button: "Watch the student demo", title: "Nadia's student agent" },
-    { path: "/challenge", button: "Watch the challenge demo", title: "See how the agent responds to an attack" },
+    { path: "/", button: "Watch the 4-minute film", title: "How YINGLONG keeps AI agents within your rules", src: "/videos/yinglong-film.mp4" },
+    { path: "/app", button: "Watch the student demo", title: "Nadia's student agent", src: "/videos/student-demo.mp4" },
+    { path: "/challenge", button: "Watch the challenge demo", title: "See how the agent responds to an attack", src: "/videos/hack-demo.mp4" },
   ]) {
     test(`${pageCase.path}: opens and closes its video without navigating away`, async ({ page }) => {
       await page.goto(pageCase.path, { waitUntil: "networkidle" });
@@ -160,7 +159,11 @@ test.describe("video experiences", () => {
 
       const dialog = page.getByRole("dialog", { name: pageCase.title });
       await expect(dialog).toBeVisible();
-      await expect(dialog.locator("video")).toHaveAttribute("controls", "");
+      if (isUploaded(pageCase.src)) await expect(dialog.locator("video")).toHaveAttribute("controls", "");
+      else {
+        await expect(dialog.getByText("This video will be uploaded soon.")).toBeVisible();
+        await expect(dialog.locator("video")).toHaveCount(0);
+      }
       expect(new URL(page.url()).pathname).toBe(pageCase.path);
 
       await page.keyboard.press("Escape");

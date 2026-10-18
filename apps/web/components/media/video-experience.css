@@ -41,6 +41,22 @@
   animation: yl-video-reveal 320ms ease-out both;
 }
 
+/* Shown instead of the player until the video file is uploaded: the same frame, so nothing jumps later. */
+.yl-video-soon {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-height: min(70dvh, 48rem);
+  aspect-ratio: 16 / 9;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--bg-1);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-card);
+}
+
 @starting-style {
   .yl-video-dialog[open] {
     border-color: transparent;

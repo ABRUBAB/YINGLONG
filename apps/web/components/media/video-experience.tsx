@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-import { FILM_SRC } from "@/content/film";
+import { isUploaded } from "@/content/film";
 import { ArrowIcon, Button, ButtonLink, CloseIcon } from "@/components/ui/button";
 import "./video-experience.css";
 
@@ -18,7 +18,8 @@ type VideoExperienceProps = {
 
 export function VideoExperience({ src, title, eyebrow, buttonLabel, captionsSrc, ctaHref, ctaLabel, size = "lg" }: VideoExperienceProps) {
   const [open, setOpen] = useState(false);
-  // The film is added to /public/videos when it exists; until then no button is shown (never a dead player).
+  // The button is always there. Until the file is uploaded (content/film.ts) the window says so instead of playing.
+  const uploaded = isUploaded(src);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
@@ -32,8 +33,6 @@ export function VideoExperience({ src, title, eyebrow, buttonLabel, captionsSrc,
   function closeVideo() {
     if (dialogRef.current?.open) dialogRef.current.close();
   }
-
-  if (!FILM_SRC) return null;
 
   return (
     <>
@@ -73,10 +72,17 @@ export function VideoExperience({ src, title, eyebrow, buttonLabel, captionsSrc,
               <CloseIcon />
             </button>
           </header>
-          <video key={src} className="yl-video-player" src={open ? src : undefined} controls autoPlay playsInline preload="metadata" aria-label={title}>
-            {captionsSrc ? <track kind="captions" src={captionsSrc} srcLang="en" label="English" default /> : null}
-            Your browser does not support HTML video.
-          </video>
+          {uploaded ? (
+            <video key={src} className="yl-video-player" src={open ? src : undefined} controls autoPlay playsInline preload="metadata" aria-label={title}>
+              {captionsSrc ? <track kind="captions" src={captionsSrc} srcLang="en" label="English" default /> : null}
+              Your browser does not support HTML video.
+            </video>
+          ) : (
+            <div className="yl-video-soon" role="status">
+              <p className="m-0 text-18 font-semibold text-fg-0 sm:text-22">This video will be uploaded soon.</p>
+              <p className="m-0 text-13 text-fg-2 sm:text-15">Please check back shortly.</p>
+            </div>
+          )}
           {ctaHref && ctaLabel ? (
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="m-0 text-12 text-fg-muted">Continue exploring YINGLONG.</p>
