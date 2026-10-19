@@ -40,6 +40,8 @@ services:
       # to the labelled regex sentinel if it is down or slow; it can only raise a tier.
       SENTINEL_URL: http://127.0.0.1:8090
       # Alibaba Cloud Model Studio (DashScope, Qwen) key: bare key value, written by scripts/vps-deploy.mjs --secrets.
+      # Cerebras Inference (Qwen 3.8 27B): bare key value, written by scripts/vps-deploy.mjs --secrets. First provider.
+      CEREBRAS_KEY_FILE: /run/secrets/cerebras.txt
       DASHSCOPE_KEY_FILE: /run/secrets/dashscope.txt
       DASHSCOPE_BASE_URL: ${DASHSCOPE_BASE_URL:-https://dashscope-intl.aliyuncs.com/compatible-mode/v1}
     volumes:
@@ -47,6 +49,7 @@ services:
       - /opt/yinglong/secrets/testnet-keys.json:/run/secrets/testnet-keys.json:ro
       - /opt/yinglong/secrets/openrouter.txt:/run/secrets/openrouter.txt:ro
       - /opt/yinglong/secrets/dashscope.txt:/run/secrets/dashscope.txt:ro
+      - /opt/yinglong/secrets/cerebras.txt:/run/secrets/cerebras.txt:ro
       - /opt/yinglong/data/agent:/data
     depends_on: [signer]
   services:

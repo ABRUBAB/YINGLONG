@@ -59,9 +59,11 @@ describe("DashScope key file", () => {
 });
 
 describe("provider order", () => {
-  it("DashScope first, then OpenRouter free models only", () => {
+  it("Cerebras first, then DashScope, then OpenRouter free models only", () => {
     const t = textModels();
-    expect(t[0]!.provider).toBe("dashscope");
+    expect(t[0]!.provider).toBe("cerebras");
+    expect(t[0]!.model).toBe("qwen-3.8-27b");
+    expect(t.find((m) => m.provider !== "cerebras")!.provider).toBe("dashscope");
     const or = t.filter((m) => m.provider === "openrouter");
     expect(or.length).toBeGreaterThan(1);
     expect(or.every((m) => m.model.endsWith(":free"))).toBe(true);

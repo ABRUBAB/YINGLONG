@@ -13,10 +13,10 @@ import { repoRoot } from "@yinglong/sdk/server";
  *   4. null -> deterministic fallback in the caller (the rule parser, template text)
  * Keys are read at runtime from files outside the repository and are never logged or returned.
  */
-export type ProviderName = "dashscope" | "openrouter" | "llama-server";
+export type ProviderName = "cerebras" | "dashscope" | "openrouter" | "llama-server";
 
 export interface ModelRef {
-  provider: "dashscope" | "openrouter";
+  provider: "cerebras" | "dashscope" | "openrouter";
   model: string;
   /** Model family, used to pick a second reader from a different family. */
   family: string;
@@ -54,6 +54,31 @@ function openRouterKey(): string | undefined {
     }
   }
   return undefined;
+}
+
+/** Cerebras Inference key: CEREBRAS_API_KEY, CEREBRAS_KEY_FILE (bare key, or any text holding one csk- key), or in
+ * development the key file next to the repository. Read at runtime, never logged. */
+let cbCache: { key?: string; at: number } | undefined;
+function cerebrasKey(): string | undefined {
+  if (process.env.CEREBRAS_DISABLED === "1") return undefined;
+  if (process.env.CEREBRAS_API_KEY) return process.env.CEREBRAS_API_KEY;
+  if (cbCache && Date.now() - cbCache.at < 300_000) return cbCache.key;
+  const candidates = process.env.CEREBRAS_KEY_FILE ? [process.env.CEREBRAS_KEY_FILE] : [resolve(repoRoot(), "..", "AI_LLM_API_KEY.txt")];
+  let key: string | undefined;
+  for (const p of candidates) {
+    try {
+      if (existsSync(p)) key = readFileSync(p, "utf8").match(/csk-[A-Za-z0-9]+/)?.[0];
+    } catch {
+      key = undefined;
+    }
+    if (key) break;
+  }
+  cbCache = { key, at: Date.now() };
+  return key;
+}
+
+export function cerebrasBaseUrl(): string {
+  return (process.env.CEREBRAS_BASE_URL ?? "https://api.cerebras.ai/v1").replace(/\/$/, "");
 }
 
 /**
@@ -149,6 +174,8 @@ const freeOnly = (refs: ModelRef[]) => (process.env.OPENROUTER_ALLOW_PAID === "1
  * accept a seed.
  */
 export function textModels(): ModelRef[] {
+  // Cerebras first: Qwen 3.8 27B at about 1,850 tokens/s with strict structured outputs.
+  const cb = parseList("cerebras", process.env.CEREBRAS_MODELS ?? "qwen-3.8-27b", "schema");
   const ds = parseList("dashscope", process.env.DASHSCOPE_MODELS ?? "qwen3.8-flash,qwen-plus", "object");
   const or = freeOnly(
     parseList(
@@ -158,11 +185,12 @@ export function textModels(): ModelRef[] {
       "schema",
     ),
   );
-  return [...ds, ...or];
+  return [...cb, ...ds, ...or];
 }
 
 /** Vision-capable models for quarantined image readers; the second reader is taken from a different family. */
 export function visionModels(): ModelRef[] {
+  const cb = parseList("cerebras", process.env.CEREBRAS_VISION_MODELS ?? "qwen-3.8-27b", "schema");
   const ds = parseList("dashscope", process.env.DASHSCOPE_VISION_MODELS ?? "qwen3-vl-plus", "object");
   const or = freeOnly(
     parseList(
@@ -172,7 +200,7 @@ export function visionModels(): ModelRef[] {
       "schema",
     ),
   );
-  return [...ds, ...or];
+  return [...cb, ...ds, ...or];
 }
 
 /** Back-compatible name: the text model chain. */
@@ -185,7 +213,7 @@ const lastErrors = new Map<string, { status: number | string; code?: string; at:
 const keyOf = (r: ModelRef) => `${r.provider}:${r.model}`;
 
 function configured(p: ModelRef["provider"]): boolean {
-  return p === "dashscope" ? !!dashscopeKey() : !!openRouterKey();
+  return p === "cerebras" ? !!cerebrasKey() : p === "dashscope" ? !!dashscopeKey() : !!openRouterKey();
 }
 
 class CallError extends Error {
@@ -213,9 +241,14 @@ function withSchemaInstruction(messages: LlmMessage[], jsonSchema: object): LlmM
 }
 
 async function chatCall(ref: ModelRef, messages: LlmMessage[], schemaName: string, jsonSchema: object, timeoutMs: number): Promise<string> {
-  const key = ref.provider === "dashscope" ? dashscopeKey() : openRouterKey();
+  const key = ref.provider === "cerebras" ? cerebrasKey() : ref.provider === "dashscope" ? dashscopeKey() : openRouterKey();
   if (!key) throw new CallError("no-key", undefined, `no ${ref.provider} key`);
-  const url = ref.provider === "dashscope" ? `${dashscopeBaseUrl()}/chat/completions` : "https://openrouter.ai/api/v1/chat/completions";
+  const url =
+    ref.provider === "cerebras"
+      ? `${cerebrasBaseUrl()}/chat/completions`
+      : ref.provider === "dashscope"
+        ? `${dashscopeBaseUrl()}/chat/completions`
+        : "https://openrouter.ai/api/v1/chat/completions";
   const body: Record<string, unknown> = {
     model: ref.model,
     messages: ref.json === "object" ? withSchemaInstruction(messages, jsonSchema) : messages,
@@ -225,7 +258,8 @@ async function chatCall(ref: ModelRef, messages: LlmMessage[], schemaName: strin
   };
   // Extraction and short paragraphs: no thinking phase (faster, and reasoning models otherwise sometimes spend the
   // whole budget thinking and return empty content).
-  if (ref.provider === "dashscope") body.enable_thinking = false;
+  if (ref.provider === "cerebras") body.reasoning_effort = "none";
+  else if (ref.provider === "dashscope") body.enable_thinking = false;
   else {
     body.provider = { require_parameters: true };
     body.reasoning = { enabled: false };
@@ -351,6 +385,7 @@ export function _resetProviderState(): void {
   tripped.clear();
   lastErrors.clear();
   dsCache = undefined;
+  cbCache = undefined;
 }
 
 /** For /v1/health: which providers are configured and usable, in fallback order (never keys or key paths). */
@@ -364,15 +399,26 @@ export function providerStatus() {
     });
   const text = textModels();
   const vision = visionModels();
+  const cb = { text: text.filter((r) => r.provider === "cerebras"), vision: vision.filter((r) => r.provider === "cerebras") };
   const ds = { text: text.filter((r) => r.provider === "dashscope"), vision: vision.filter((r) => r.provider === "dashscope") };
   const or = { text: text.filter((r) => r.provider === "openrouter"), vision: vision.filter((r) => r.provider === "openrouter") };
+  const cbOn = configured("cerebras");
   const dsOn = configured("dashscope");
   const orOn = configured("openrouter");
   const usable = text.find((r) => configured(r.provider) && (tripped.get(keyOf(r)) ?? 0) <= now);
   const status = (on: boolean, refs: ModelRef[]) => (!on ? "not configured" : refs.some((r) => (tripped.get(keyOf(r)) ?? 0) <= now) ? "ready" : "cooling down");
   return {
-    order: ["dashscope", "openrouter", ...(process.env.LLAMA_URL ? ["llama-server"] : []), "rules"],
+    order: ["cerebras", "dashscope", "openrouter", ...(process.env.LLAMA_URL ? ["llama-server"] : []), "rules"],
     providers: [
+      {
+        name: "cerebras",
+        label: "Cerebras Inference (Qwen 3.8 27B), OpenAI-compatible endpoint",
+        configured: cbOn,
+        endpoint: new URL(cerebrasBaseUrl()).host,
+        status: status(cbOn, cb.text),
+        models: describe(cb.text),
+        vision: describe(cb.vision),
+      },
       {
         name: "dashscope",
         label: "Alibaba Cloud Model Studio (DashScope, Qwen), OpenAI-compatible endpoint",
@@ -395,6 +441,7 @@ export function providerStatus() {
       { name: "rules", label: "deterministic rule parser and template text", configured: true, status: "ready" },
     ],
     // Back-compatible summary fields (the web health line shows provider + model).
+    cerebras: cbOn,
     dashscope: dsOn,
     openrouter: orOn,
     llama: !!process.env.LLAMA_URL,

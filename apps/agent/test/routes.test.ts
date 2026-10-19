@@ -61,10 +61,10 @@ describe("new routes: auth and validation (no ledger needed)", () => {
   it("health lists the providers in fallback order without secrets", async () => {
     const r = await json(await req("GET", "/v1/health"));
     const providers = r.providers as { order: string[]; list: { name: string; configured: boolean }[] };
-    expect(providers.order[0]).toBe("dashscope");
+    expect(providers.order[0]).toBe("cerebras");
     expect(providers.order[providers.order.length - 1]).toBe("rules");
-    expect(providers.list.map((p) => p.name)).toEqual(["dashscope", "openrouter", "llama-server", "rules"]);
-    expect(JSON.stringify(r)).not.toMatch(/sk-(ws|or)-/);
+    expect(providers.list.map((p) => p.name)).toEqual(["cerebras", "dashscope", "openrouter", "llama-server", "rules"]);
+    expect(JSON.stringify(r)).not.toMatch(/sk-(ws|or)-|csk-/);
     expect((r.models as { intent: { model: string } }).intent.model).toBe("deterministic rule parser");
   });
 });

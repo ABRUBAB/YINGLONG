@@ -56,6 +56,20 @@ if (process.argv.includes("--secrets")) {
   } else {
     console.log("no DashScope key export found next to the repository: skipped");
   }
+  // Cerebras key: the csk- key in the LLM key file next to the repository (found by pattern), written as the bare
+  // value to a private temp file, copied, then deleted. Never printed.
+  const llmFile = resolve(root, "..", "AI_LLM_API_KEY.txt");
+  const cbKey = existsSync(llmFile) ? readFileSync(llmFile, "utf8").match(/csk-[A-Za-z0-9]+/)?.[0] : undefined;
+  if (cbKey) {
+    const f = join(tmp, "cerebras.txt");
+    writeFileSync(f, cbKey, { mode: 0o600 });
+    scp(f, "/tmp/cerebras.txt");
+    rmSync(f, { force: true });
+    ssh("sudo mv /tmp/cerebras.txt /opt/yinglong/secrets/cerebras.txt && sudo chown 1000:1000 /opt/yinglong/secrets/cerebras.txt && sudo chmod 600 /opt/yinglong/secrets/cerebras.txt");
+    console.log("Cerebras key file installed on the VPS");
+  } else {
+    console.log("no Cerebras key in AI_LLM_API_KEY.txt: skipped");
+  }
   // HuggingFace READ token for the ml service (private model repos): the file next to the repository is copied as is
   // (never read, printed or logged here) to a root-owned-by-uid-1000 file that the ml container mounts read-only.
   const hf = resolve(root, "..", "HF_AC_token.txt");
@@ -70,6 +84,7 @@ if (process.argv.includes("--secrets")) {
 // The agent mounts the DashScope key file; make sure the path exists as a file (an absent bind source would
 // become a directory). An empty file means "not configured".
 ssh("sudo test -f /opt/yinglong/secrets/dashscope.txt || (sudo touch /opt/yinglong/secrets/dashscope.txt && sudo chown 1000:1000 /opt/yinglong/secrets/dashscope.txt && sudo chmod 600 /opt/yinglong/secrets/dashscope.txt)");
+ssh("sudo test -f /opt/yinglong/secrets/cerebras.txt || (sudo touch /opt/yinglong/secrets/cerebras.txt && sudo chown 1000:1000 /opt/yinglong/secrets/cerebras.txt && sudo chmod 600 /opt/yinglong/secrets/cerebras.txt)");
 // The ml service mounts the HuggingFace token file; keep the path a file (empty = no token; the models volume may
 // already hold the verified files).
 ssh("sudo test -f /opt/yinglong/secrets/hf-token.txt || (sudo touch /opt/yinglong/secrets/hf-token.txt && sudo chown 1000:1000 /opt/yinglong/secrets/hf-token.txt && sudo chmod 600 /opt/yinglong/secrets/hf-token.txt)");
