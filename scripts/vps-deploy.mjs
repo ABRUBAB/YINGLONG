@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Ship the committed repository to the VPS and restart the stack:
 //   git bundle -> scp -> reset /opt/yinglong/src -> docker compose up --build (app) -> reload edge.
-// Usage: node scripts/vps-deploy.mjs [--edge] [--secrets]
+// Usage: node scripts/vps-deploy.mjs [--edge] [--secrets] [--videos <folder>]
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -88,6 +88,16 @@ ssh("sudo test -f /opt/yinglong/secrets/cerebras.txt || (sudo touch /opt/yinglon
 // The ml service mounts the HuggingFace token file; keep the path a file (empty = no token; the models volume may
 // already hold the verified files).
 ssh("sudo test -f /opt/yinglong/secrets/hf-token.txt || (sudo touch /opt/yinglong/secrets/hf-token.txt && sudo chown 1000:1000 /opt/yinglong/secrets/hf-token.txt && sudo chmod 600 /opt/yinglong/secrets/hf-token.txt)");
+// The film and demo clips (yinglong-film.mp4, student-demo.mp4, hack-demo.mp4) are not in git: copied to the edge,
+// which serves /videos/* as plain files.
+const vi = process.argv.indexOf("--videos");
+if (vi > 0) {
+  const dir = resolve(process.argv[vi + 1] ?? "");
+  const files = readdirSync(dir).filter((n) => /^(yinglong-film|student-demo|hack-demo)\.mp4$/.test(n));
+  ssh("set -e; sudo mkdir -p /opt/yinglong/edge/videos && sudo chown $(id -u):$(id -g) /opt/yinglong/edge/videos");
+  for (const f of files) scp(join(dir, f), `/opt/yinglong/edge/videos/${f}`);
+  console.log(`videos uploaded: ${files.join(", ") || "none found"}`);
+}
 if (process.argv.includes("--edge")) {
   ssh("set -e; mkdir -p /opt/yinglong/edge && cp -r /opt/yinglong/src/infra/edge/. /opt/yinglong/edge/ && cd /opt/yinglong/edge && docker compose up -d --force-recreate 2>&1 | tail -2");
 }

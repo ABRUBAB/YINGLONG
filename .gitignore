@@ -83,3 +83,6 @@ apps/agent/data/receipts*.jsonl
 
 # local archive folder (never pushed)
 _archive/
+
+# Film and demo clips are served by the edge, never committed
+apps/web/public/videos/

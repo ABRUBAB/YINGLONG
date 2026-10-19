@@ -9,6 +9,7 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./site:/srv/app:ro
+      - ./videos:/srv/videos:ro
       - caddy_data:/data
       - caddy_config:/config
 volumes:

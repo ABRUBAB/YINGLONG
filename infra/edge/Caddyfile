@@ -22,6 +22,12 @@ app.yinglong-agent.tech {
 	import security
 	header X-Frame-Options "DENY"
 	encode zstd gzip
+	# The film and demo clips: plain files (with range requests) from the edge, kept out of git and the web image.
+	handle /videos/* {
+		header Cache-Control "public, max-age=3600"
+		root * /srv
+		file_server
+	}
 	# The web app (Next.js) on 127.0.0.1:3000; while it is not running, serve the static placeholder.
 	reverse_proxy 127.0.0.1:3000
 	handle_errors 502 503 {
