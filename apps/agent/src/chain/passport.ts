@@ -30,7 +30,11 @@ export async function ensurePassport(
   if (agentId === 0n) {
     await ctx.ensureGas(ctx.roleAddress("agent-owner"), 3_000_000_000_000_000n);
     const next = await ctx.read<bigint>({ address: registry, abi: abi.YinglongPassportRegistryAbi, functionName: "nextAgentId" });
-    const now = BigInt(Math.floor(Date.now() / 1000));
+    // The registry checks the deadline against block time, which can run ahead of the wall clock (local bench time jumps).
+    const head = await ctx.pub.getBlock();
+    const chainNow = ctx.profile.timeUnit === "ms" ? head.timestamp / 1000n : head.timestamp;
+    const wallNow = BigInt(Math.floor(Date.now() / 1000));
+    const now = chainNow > wallNow ? chainNow : wallNow;
     const deadline = ctx.profile.timeUnit === "ms" ? (now + 3600n) * 1000n : now + 3600n;
     const digest = await ctx.read<Hex>({
       address: registry,
