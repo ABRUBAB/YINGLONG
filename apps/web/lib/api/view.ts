@@ -1025,6 +1025,16 @@ export const CashForecast = z.object({
   label: z.string(),
   ledger: Ledger,
   block: z.string().nullable(),
+  /** Advisory percentile bands from the trained M5 model, in whole units (absent when the model service is off). */
+  modelBands: z
+    .object({
+      model: z.string(),
+      label: z.string(),
+      pBreach14d: z.number().nullable().optional(),
+      days: z.array(z.object({ day: z.number().int(), date: z.string(), q05: z.number(), q50: z.number(), q95: z.number() })),
+    })
+    .nullable()
+    .optional(),
 });
 export type CashForecast = z.infer<typeof CashForecast>;
 

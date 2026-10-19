@@ -46,8 +46,12 @@ export function ForecastChart({ f }: { f: CashForecast }) {
   const geo = useMemo(() => {
     const bal = f.daily.map((d) => BigInt(d.balance));
     const floor = BigInt(f.reserveFloor.value);
-    let lo = bal.reduce((a, b) => (b < a ? b : a), floor);
-    let hi = bal.reduce((a, b) => (b > a ? b : a), floor);
+    // Model bands arrive in whole units; convert to base units (money stays bigint).
+    const toUnits = (v: number) => BigInt(Math.round(v * 10 ** Math.min(f.decimals, 6))) * 10n ** BigInt(Math.max(0, f.decimals - 6));
+    const bands = (f.modelBands?.days ?? []).filter((d) => d.day <= f.horizonDays).map((d) => ({ day: d.day, lo: toUnits(d.q05), mid: toUnits(d.q50), hi: toUnits(d.q95) }));
+    const all = [...bal, ...bands.flatMap((d) => [d.lo, d.hi])];
+    let lo = all.reduce((a, b) => (b < a ? b : a), floor);
+    let hi = all.reduce((a, b) => (b > a ? b : a), floor);
     const step = niceStep(hi - lo || 1n, 4);
     lo = (lo / step - (lo < 0n || lo % step !== 0n ? 1n : 0n)) * step;
     if (lo < 0n && bal.every((b) => b >= 0n)) lo = 0n;
@@ -69,7 +73,9 @@ export function ForecastChart({ f }: { f: CashForecast }) {
     });
     const every = W < 520 ? 10 : 7;
     const xTicks = [...Array.from({ length: Math.floor(f.horizonDays / every) + 1 }, (_, i) => i * every).filter((d) => f.horizonDays - d >= every / 2), f.horizonDays];
-    return { x, y, path, below: below.join(" "), floorY: y(floor), ticks, xTicks, bal, PAD };
+    const band = bands.length > 1 ? `M${bands.map((d) => `${x(d.day).toFixed(1)} ${y(d.hi).toFixed(1)}`).join(" L")} L${[...bands].reverse().map((d) => `${x(d.day).toFixed(1)} ${y(d.lo).toFixed(1)}`).join(" L")} Z` : "";
+    const median = bands.length > 1 ? bands.map((d, i) => `${i ? "L" : "M"}${x(d.day).toFixed(1)} ${y(d.mid).toFixed(1)}`).join(" ") : "";
+    return { x, y, path, below: below.join(" "), floorY: y(floor), ticks, xTicks, bal, PAD, band, median };
   }, [f, W, H]);
   const PAD = geo.PAD;
 
@@ -160,6 +166,9 @@ export function ForecastChart({ f }: { f: CashForecast }) {
               </text>
             </g>
           ))}
+          {/* Advisory model band (M5, 5th to 95th percentile): drawn under the deterministic line, which decides */}
+          {geo.band ? <path d={geo.band} fill="var(--brass)" fillOpacity="0.14" stroke="none" /> : null}
+          {geo.median ? <path d={geo.median} fill="none" stroke="var(--brass)" strokeWidth="1.25" strokeDasharray="4 4" /> : null}
           {/* Projected balance */}
           <path d={geo.path} pathLength={1} className="yl-draw" fill="none" stroke="var(--steel)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
           {geo.below ? <path d={geo.below} fill="none" stroke="var(--bg-1)" strokeWidth="2.5" /> : null}

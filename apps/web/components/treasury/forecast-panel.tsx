@@ -36,7 +36,7 @@ export function ForecastPanel({ entityId }: { entityId: string }) {
           "Cash forecast"
         )
       }
-      meta={f ? <span>{f.rail}. Deterministic projection; nothing here is a model output except the labelled paragraph.</span> : null}
+      meta={f ? <span>{f.rail}. Deterministic projection{f.modelBands ? "; the amber band is the M5 model's 5th to 95th percentile and only advises" : ""}; nothing else here is a model output except the labelled paragraph.</span> : null}
       footer={f ? f.label : null}
       tone={f?.firstBreach ? "brass" : undefined}
     >
@@ -84,6 +84,16 @@ export function ForecastPanel({ entityId }: { entityId: string }) {
           </dl>
 
           <ForecastChart f={f} />
+          {f.modelBands ? (
+            <p className="m-0 flex flex-wrap items-center gap-x-4 gap-y-1 text-12 text-fg-muted">
+              <span className="flex items-center gap-2">
+                <span aria-hidden="true" className="inline-block h-0.5 w-5 bg-steel" /> projected balance (decides)
+              </span>
+              <span className="flex items-center gap-2">
+                <span aria-hidden="true" className="inline-block h-3 w-5 rounded-sm bg-brass/25" /> {f.modelBands.model}: 5th to 95th percentile (advises)
+              </span>
+            </p>
+          ) : null}
 
           {f.flags.length ? (
             <ul className="m-0 grid list-none gap-1 p-0">
