@@ -7,10 +7,11 @@ import { repoRoot } from "@yinglong/sdk/server";
  * Structured-output LLM access with a fixed fallback chain. The model can only ever return JSON matching a
  * closed schema; invalid output is retried at most twice per model, then the next model is tried, and finally
  * the caller falls back to deterministic code (the receipt records which path and which model produced it).
- *   1. Alibaba Cloud Model Studio (DashScope, Qwen models) through its OpenAI-compatible endpoint
- *   2. OpenRouter, free models only (ids ending in ":free") unless OPENROUTER_ALLOW_PAID=1
- *   3. a local llama-server (our fine-tuned intent model, GGUF) if LLAMA_URL is set (text only)
- *   4. null -> deterministic fallback in the caller (the rule parser, template text)
+ *   1. Cerebras Inference (Qwen 3.8 27B, strict json_schema) through its OpenAI-compatible endpoint
+ *   2. Alibaba Cloud Model Studio (DashScope, Qwen models); configured, but the account is not activated (403)
+ *   3. OpenRouter, free models only (ids ending in ":free") unless OPENROUTER_ALLOW_PAID=1
+ *   4. a local llama-server (our fine-tuned intent model, GGUF) if LLAMA_URL is set (text only)
+ *   5. null -> deterministic fallback in the caller (the rule parser, template text)
  * Keys are read at runtime from files outside the repository and are never logged or returned.
  */
 export type ProviderName = "cerebras" | "dashscope" | "openrouter" | "llama-server";
@@ -168,7 +169,7 @@ function parseList(provider: ModelRef["provider"], list: string, defaultJson: Mo
 const freeOnly = (refs: ModelRef[]) => (process.env.OPENROUTER_ALLOW_PAID === "1" ? refs : refs.filter((r) => r.model.endsWith(":free")));
 
 /**
- * Text models in fallback order. DashScope: Qwen flash first (fast JSON), Qwen plus second; json_object mode
+ * Text models in fallback order. Cerebras: Qwen 3.8 27B, strict schema. DashScope: Qwen flash first (fast JSON), Qwen plus second; json_object mode
  * with the schema in the prompt. OpenRouter: free models checked against the live list (16 Oct 2026); the
  * NVIDIA and dots models support strict structured outputs, the Gemma models only json_object; dots does not
  * accept a seed.

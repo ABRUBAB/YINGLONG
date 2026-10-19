@@ -116,7 +116,7 @@ Art. 38 permits providing personal information abroad only under a listed mechan
 | FISCO BCOS chain and regulator node | Same VPS (Hong Kong) | **Yes**, for the same reason | Fictional data only | Consortium nodes operated in the mainland |
 | Base Sepolia | Public network, global replication | **Yes** (publication) | Addresses, hashes and mandate terms of fictional personas | Mainland profile publishes nothing personal on public chains; anchors carry Merkle roots only |
 | Model APIs on the international profile (OpenRouter) | Outside the mainland | Yes | Not used by the mainland profile | Same |
-| DashScope on the mainland profile | The plan names the international region [plan section 10.3] | **Yes** | Not yet used with real data | Mainland region or the on-device model (DC-07) |
+| Cerebras (US-hosted) and DashScope on the mainland profile | Cerebras is the first provider and runs in the United States; the plan names the DashScope international region [plan section 10.3] | **Yes** | Not yet used with real data | Mainland region or the on-device model (DC-07) |
 | DeepSeek direct, on-device intent model | Domestic provider / user's device | No [I, endpoint location to be confirmed] | Mainland profile default | Same, plus filed-model check |
 | Sanctions screening | Local mirror on our server | No export of addresses to screening services | As designed | Jurisdiction-appropriate lists (DC-10) |
 | Video hosting (YouTube, Bilibili) | Global platforms | Yes, for any filmed person | Consent from any non-team person filmed | — |
@@ -177,4 +177,4 @@ For the competition demo the residual personal-information risk is low, because 
 | Confirm retention periods marked [I] | Lead |
 | Scrub public corpora before training | R4 |
 | Consent text for the video participant and the Judge's Challenge | R5 |
-| DashScope region and DeepSeek endpoint location for the mainland profile | R3 |
+| Cerebras (US-hosted), DashScope region and DeepSeek endpoint location for the mainland profile | R3 |

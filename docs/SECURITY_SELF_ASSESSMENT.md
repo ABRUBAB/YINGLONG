@@ -362,7 +362,7 @@ What a receipt proves and does not prove:
 | DC-04 | Who lifts a `supervisorPause` | Not specified; a pause that nobody can lift is a permanent freeze | Define: supervisor lifts its own pause; the user cannot override a supervisory pause; both events receipted |
 | DC-05 | Guardian powers | Guardian can pause, veto and start delayed recovery; recovery is not in the contract list | Specify the recovery contract and delay, or drop recovery and state KR-09 plainly |
 | DC-06 | Issuer key compromise | Trusted issuers are sealed in each mandate, so removing a compromised issuer needs every user to re-seal (T3) | Registry-level issuer status checked by `VerifiedPayeeEnforcer`, or accept re-seal (playbook 3) |
-| DC-07 | Mainland-profile data residency | The VPS is in Azure East Asia (Hong Kong) and the plan's DashScope endpoint is the international region; both are outside the mainland | Production: mainland hosting and the mainland model region; today: fictional data only (PIA section 6) |
+| DC-07 | Mainland-profile data residency | The VPS is in Azure East Asia (Hong Kong) and the language-model endpoints (Cerebras, a US-hosted service, and the plan's DashScope international region) are outside the mainland | Production: mainland hosting and the mainland model region; today: fictional data only (PIA section 6) |
 | DC-08 | Public caveat arrays | Publishing full caveat arrays on Base reveals a real user's spending rules and payees | Production default: private mandate (ZK) or consortium-only publication |
 | DC-09 | Passkey RP origin integrity | Any script running on `yinglong-agent.tech` can ask the authenticator to sign any challenge; the authenticator does not show typed data | Strict CSP, no third-party scripts, Subresource Integrity, no off-origin requests; production: an account that validates ERC-1271 only for allowlisted domains [I] |
 | DC-10 | Sanctions lists for the mainland profile | Applying foreign sanctions lists to mainland users may raise issues under the *Anti-Foreign Sanctions Law of the People's Republic of China* (2021; our translation of the title) [U, unverified; needs legal review] | Legal review before any mainland production use; demo uses public lists on fictional data only |
@@ -383,7 +383,7 @@ What a receipt proves and does not prove:
 | Identity | `identityCode` placeholder "YL-TEST-..." | An issued identity code under the GB/Z 185-2026 series |
 | Attestations | Fictional issuers (Harbour Digital Bank, Harbour Bay University) | Licensed bank or regulated issuers |
 | Sanctions | Local mirror of public lists | Licensed screening provider and jurisdiction-appropriate lists (DC-10) |
-| Models | Synthetic training data; OpenRouter, local and DashScope endpoints | Filed domestic models on the mainland; model-risk management and monitoring |
+| Models | Synthetic training data; Cerebras, OpenRouter, local and DashScope endpoints | Filed domestic models on the mainland; model-risk management and monitoring |
 | Privacy | Fictional personas; mandate terms public on Base | Private mandates by default; mainland residency; consent management; deletion process |
 | Governance of halts | Team holds every key | Bank + operator + regulator multisig with documented procedures |
 | Monitoring | Breaker watcher and indexer | 24/7 monitoring and incident handling |

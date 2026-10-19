@@ -161,7 +161,7 @@ No Aceternity or React Bits code is used.
 | `amazon/chronos-2` | M5 cash-flow forecaster | Not yet recorded | [U] |
 | Llama Prompt Guard 2 86M, Horizon-Labs prompt-injection guard, Wolf Defender, protectai v2 | Sentinel baselines only | Not yet recorded | [U] |
 | A Bangla/Banglish injection detector and an mmBERT-based v5 guard (both published on HuggingFace) | Evaluation reference only; never in training or the held-out set | Not yet recorded | [U] per plan |
-| Hosted models via OpenRouter, DashScope, DeepSeek | Inference | Providers' terms; free endpoints may log prompts (KR-14) | [S] |
+| Hosted models via Cerebras, OpenRouter, DashScope, DeepSeek | Inference | Providers' terms; free endpoints may log prompts (KR-14) | [S] |
 
 Recorded at download (repo id, revision, SHA-256, licence from the card): <!-- gen:thirdparty.models.table -->Read from the ML register and manifests at generation (third-party revisions as recorded by the ML workstream; our own models with the hashes in their manifests):
 
@@ -286,7 +286,7 @@ Cited for interoperability, never as endorsement: ERC-8004 (Draft), ERC-7710, ER
 |---|---|---|
 | Kaggle | Training and bench compute | One account per person; each teammate runs their own notebooks [S] |
 | HuggingFace | Model and private dataset hosting | Tokens kept outside the repository |
-| OpenRouter, DashScope, DeepSeek | Model inference | Free endpoints may log prompts (KR-14); mainland profile uses domestic endpoints (see DC-07) |
+| Cerebras, OpenRouter, DashScope, DeepSeek | Model inference | Free endpoints may log prompts (KR-14); mainland profile uses domestic endpoints (see DC-07) |
 | Microsoft Azure | VPS (East Asia) | Student credit |
 | MetaMask x402 facilitator (development host) | x402 settlement on Base Sepolia | Third-party service; fallback seller-settled |
 | Coinbase CDP and Circle faucets, Pimlico, Etherscan API | Testnet funds, bundler, contract verification | Free tiers |

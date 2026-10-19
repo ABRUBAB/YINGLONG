@@ -176,7 +176,7 @@ Four small models sit around the rules. They can only make the agent more carefu
 | Sentinel (mmBERT, ONNX int8) | Spots hidden instructions and tricks in text | Live, in the model service |
 | Behaviour model (isolation forest + LightGBM + conformal) | Flags an unusual payment for this person | Live, scale 8 |
 | Cash forecaster (LightGBM quantile) | The 30-day balance band in the treasury | Live, treasury forecast |
-| Intent model (Qwen LoRA adapters) | Reads a plain request into a payment | Trained and published. The live agent reads requests with a hosted Qwen model (Alibaba Cloud), then the rule parser; the adapters are the local fallback, ready for a llama.cpp server |
+| Intent model (Qwen LoRA adapters) | Reads a plain request into a payment | Trained and published. The live agent reads requests with Qwen 3.8 27B on Cerebras, then the rule parser; the adapters are the local fallback, ready for a llama.cpp server |
 
 The public weights, adapters and model cards are on Hugging Face. The 300-attack benchmark was run again on 18 Oct 2026: 0 of 300 moved money outside the rules.
 

@@ -38,7 +38,7 @@ flowchart LR
 | Layer | What is in it |
 |---|---|
 | Interface | The web app (home, start, mandate studio, console, approve, challenge, treasury, supervisor, city, proof, judge, about), the API under `/v1`, and the Python verifier |
-| Agent | The nine checks; understanding with hosted Qwen, a fallback model and a rule parser; board proposals, approvals and receipts |
+| Agent | The nine checks; understanding with Qwen 3.8 27B on Cerebras, fallback models and a rule parser; board proposals, approvals and receipts |
 | Models (advisory only) | M1 injection sentinel, M3 behaviour anomaly, M5 cash-flow forecast, served by `ml/serving` |
 | Signing | `apps/signer` (guard, re-simulation, the agent key); the owner's passkey or the 2-of-3 directors sign user operations |
 | Ledgers | FISCO BCOS 3.17.1 (four sealers and one observer node, team-run) and Base Sepolia (public testnet) |
@@ -103,7 +103,7 @@ The same compiled caveats run on every ledger. Our contracts avoid immutables, s
 | Application | Docker Compose | Services `signer`, `agent`, `services`, `ecny-sim`, `indexer`, `ml`, `web`; keys mounted read-only from outside the repository |
 | FISCO nodes | systemd units | One unit per node, backups, a status script |
 | Shipping | `scripts/vps-deploy.mjs` | A `git bundle` of the committed repository is sent to the host and rebuilt with Docker |
-| Language models | Alibaba Cloud Model Studio (Qwen), OpenRouter, or a local llama.cpp server | The understanding step, in that order, with a deterministic rule parser as the last fallback |
+| Language models | Cerebras Inference (Qwen 3.8 27B), Alibaba Cloud Model Studio (configured, not activated), OpenRouter free models, or a local llama.cpp server | The understanding step, in that order, with a deterministic rule parser as the last fallback |
 
 The model service loads three models on the host (`m1`, `m3`, `m5`); its health endpoint lists each model's SHA-256. The intent adapters (Qwen LoRA) are trained and published but are not the deployed first choice, because the single host is sized for the three smaller models.
 

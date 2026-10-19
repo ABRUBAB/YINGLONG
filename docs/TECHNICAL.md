@@ -478,10 +478,11 @@ The schema is sent as a strict JSON schema; output that fails zod validation is 
 
 ### 7.4 Model provider chain with deterministic fallback (`apps/agent/src/llm/provider.ts`)
 
-1. Alibaba Cloud Model Studio (DashScope, international region; Qwen models, `DASHSCOPE_MODELS`), through its OpenAI-compatible endpoint with the same strict JSON schema, when a key file is configured. The provider order reported by `/v1/health` is `dashscope`, `openrouter`, `llama-server` (when configured), `rules`.
-2. OpenRouter, models in order from `modelChain()` (overridable with `OPENROUTER_MODELS`), with `response_format: json_schema` (strict), `provider.require_parameters: true`, temperature 0 and a fixed seed; at most two attempts per model; a model answering 402 or 429 is skipped for 30 minutes or 1 minute.
-3. A local llama-server (`LLAMA_URL`, for example the fine-tuned GGUF intent model) with the same JSON schema.
-4. Otherwise `null`, and the caller falls back to deterministic code: `ruleParse` for intents, the regex reader for documents. `LLM_DISABLED=1` forces this path.
+1. Cerebras Inference (model `qwen-3.8-27b`, `CEREBRAS_MODELS`; also used for vision), through its OpenAI-compatible endpoint (`CEREBRAS_BASE_URL`, default `https://api.cerebras.ai/v1`) with the same strict JSON schema (`response_format: json_schema`), `reasoning_effort: "none"` and temperature 0. The key comes from `CEREBRAS_API_KEY` or the file named by `CEREBRAS_KEY_FILE` (on the VPS `/run/secrets/cerebras.txt`, mounted read-only); `CEREBRAS_DISABLED=1` turns it off and the test suite sets it. Measured live: about 0.6 s per request (598 ms on 19 Oct 2026).
+2. Alibaba Cloud Model Studio (DashScope, international region; Qwen models, `DASHSCOPE_MODELS`), through its OpenAI-compatible endpoint, when a key file is configured. The account is not activated (it answers 403 "Unpurchased"), so it is skipped for 30 minutes at a time. The provider order reported by `/v1/health` is `cerebras`, `dashscope`, `openrouter`, `llama-server` (when configured), `rules`.
+3. OpenRouter, models in order from `modelChain()` (overridable with `OPENROUTER_MODELS`), with `response_format: json_schema` (strict), `provider.require_parameters: true`, temperature 0 and a fixed seed; at most two attempts per model; a model answering 402 or 429 is skipped for 30 minutes or 1 minute.
+4. A local llama-server (`LLAMA_URL`, for example the fine-tuned GGUF intent model) with the same JSON schema.
+5. Otherwise `null`, and the caller falls back to deterministic code: `ruleParse` for intents, the regex reader for documents. `LLM_DISABLED=1` forces this path.
 
 Every proposal records `understanding.via` (`llm` or `rules`), model, provider, latency and prompt hash, and every receipt commits to an `aigc` block naming the model. `GET /v1/health` reports which providers are configured, never the keys. Free API models may log prompts, which is why scale 1 scrubs personal data first.
 
