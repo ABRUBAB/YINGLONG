@@ -2,7 +2,7 @@
 
 Generated from the HuggingFace Hub by `ml/scripts/registry.py` and rendered by `ml/scripts/render_readme.py`.
 Revisions and SHA-256 values below are read from the Hub and from the files themselves, never typed by hand.
-All repositories are private for now (the lead decides when to make them public). Weights are never committed to git.
+The repositories below are the private training originals. Clean public copies with model cards (lead approved 18 and 19 Oct 2026): `ABRUBAB/yinglong-sentinel-mmbert-base`, `-sentinel-mmbert-small`, `-intent-qwen3-4b`, `-intent-qwen3.5-2b`, `-intent-qwen3-1.7b`, `-behaviour-anomaly` (M3 in safe formats, no pickle; checked to score identically to `m3_models.pkl`) and `-cash-forecaster` (M5). The live service loads the hash-pinned private revisions. Weights are never committed to git.
 
 <!-- BEGIN:models_registry -->
 ### `ABRUBAB/yl-sentinel-mmbert-base` (model, private)
@@ -73,7 +73,7 @@ M4 zero-shot google/gemma-4-E2B-it results. Revision `de8863c64f4f8bcc67b9bcb7f8
 
 ### `ABRUBAB/yl-cpu-models` (model, private)
 
-M3 anomaly and M5 LightGBM quantile models. Public copies since 19 Oct 2026: `ABRUBAB/yinglong-behaviour-anomaly` (M3 in safe formats: LightGBM text, skops isolation forests, JSON calibration; checked to score identically to `m3_models.pkl` on 4,000 rows) and `ABRUBAB/yinglong-cash-forecaster` (the same eleven M5 files). The live service still loads this private revision. Revision `9499d5575e0816414495c2533528ecdd3c0d7590` (last modified 2026-10-15 23:42:49).
+M3 anomaly and M5 LightGBM quantile models. Revision `9499d5575e0816414495c2533528ecdd3c0d7590` (last modified 2026-10-15 23:42:49).
 
 | file | bytes | SHA-256 |
 |---|---|---|
