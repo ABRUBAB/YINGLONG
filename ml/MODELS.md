@@ -73,7 +73,7 @@ M4 zero-shot google/gemma-4-E2B-it results. Revision `de8863c64f4f8bcc67b9bcb7f8
 
 ### `ABRUBAB/yl-cpu-models` (model, private)
 
-M3 anomaly and M5 LightGBM quantile models. Revision `9499d5575e0816414495c2533528ecdd3c0d7590` (last modified 2026-10-15 23:42:49).
+M3 anomaly and M5 LightGBM quantile models. Public copies since 19 Oct 2026: `ABRUBAB/yinglong-behaviour-anomaly` (M3 in safe formats: LightGBM text, skops isolation forests, JSON calibration; checked to score identically to `m3_models.pkl` on 4,000 rows) and `ABRUBAB/yinglong-cash-forecaster` (the same eleven M5 files). The live service still loads this private revision. Revision `9499d5575e0816414495c2533528ecdd3c0d7590` (last modified 2026-10-15 23:42:49).
 
 | file | bytes | SHA-256 |
 |---|---|---|

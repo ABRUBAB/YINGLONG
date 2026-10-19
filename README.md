@@ -178,7 +178,7 @@ Four small models sit around the rules. They can only make the agent more carefu
 | Cash forecaster (LightGBM quantile) | The 30-day balance band in the treasury | Live, treasury forecast |
 | Intent model (Qwen LoRA adapters) | Reads a plain request into a payment | Trained and published. The live agent reads requests with Qwen 3.8 27B on Cerebras, then the rule parser; the adapters are the local fallback, ready for a llama.cpp server |
 
-The public weights, adapters and model cards are on Hugging Face. The 300-attack benchmark was run again on 18 Oct 2026: 0 of 300 moved money outside the rules.
+All four are public on Hugging Face with model cards: [sentinel](https://huggingface.co/ABRUBAB/yinglong-sentinel-mmbert-base) ([small](https://huggingface.co/ABRUBAB/yinglong-sentinel-mmbert-small)), [behaviour model](https://huggingface.co/ABRUBAB/yinglong-behaviour-anomaly), [cash forecaster](https://huggingface.co/ABRUBAB/yinglong-cash-forecaster) and the intent adapters ([Qwen3-4B](https://huggingface.co/ABRUBAB/yinglong-intent-qwen3-4b), [Qwen3.5-2B](https://huggingface.co/ABRUBAB/yinglong-intent-qwen3.5-2b), [Qwen3-1.7B](https://huggingface.co/ABRUBAB/yinglong-intent-qwen3-1.7b)). The behaviour model is published in safe formats (no pickle) and checked to score exactly like the live copy. The 300-attack benchmark was run again on 18 Oct 2026: 0 of 300 moved money outside the rules.
 
 ## Evidence
 
