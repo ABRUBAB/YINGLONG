@@ -54,7 +54,7 @@ if the request was ambiguous and tier is not T3/T4: tier = ASK
 | **Anomaly** | A rule over the receipt log (an amount above three times the largest past payment to the same payee; the first sweep into a product), then the behaviour model M3 (section 7.2); both can only escalate |
 | **Chain** | The DelegationManager runs every caveat again; a refusal reverts with a typed error |
 
-The understanding step uses, in order: Qwen 3.8 27B on Cerebras (about 0.6 s per request, strict JSON schema), then Alibaba Cloud Model Studio (configured, but its account is not activated, so it is skipped), OpenRouter free models, a local llama.cpp model (the fine-tuned adapters, when served), and finally a deterministic rule parser. A model error produces a wrong *proposal*, which the owner sees and the checks above still test; it cannot produce a wrong *payment*.
+The understanding step uses, in order: Qwen 3.8 27B on Cerebras (strict JSON schema; each proposal records its latency in `understanding.latencyMs`), then Alibaba Cloud Model Studio (configured, but its account is not activated, so it is skipped), OpenRouter free models, a local llama.cpp model (the fine-tuned adapters, when served), and finally a deterministic rule parser. A model error produces a wrong *proposal*, which the owner sees and the checks above still test; it cannot produce a wrong *payment*.
 
 ## 4. On-chain algorithms (the caveat enforcers)
 
