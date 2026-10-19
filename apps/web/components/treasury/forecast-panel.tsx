@@ -87,11 +87,9 @@ export function ForecastPanel({ entityId }: { entityId: string }) {
           {f.modelBands ? (
             <p className="m-0 flex flex-wrap items-center gap-x-4 gap-y-1 text-12 text-fg-muted">
               <span className="flex items-center gap-2">
-                <span aria-hidden="true" className="inline-block h-0.5 w-5 bg-steel" /> projected balance (decides)
+                <span aria-hidden="true" className="inline-block h-3 w-5 rounded-sm bg-brass/25" /> {f.modelBands.model}: 5th to 95th percentile (advises only)
               </span>
-              <span className="flex items-center gap-2">
-                <span aria-hidden="true" className="inline-block h-3 w-5 rounded-sm bg-brass/25" /> {f.modelBands.model}: 5th to 95th percentile (advises)
-              </span>
+              <span>The model learned from businesses with normal incoming payments; the steel line counts only the flows we know, and it decides.</span>
             </p>
           ) : null}
 
