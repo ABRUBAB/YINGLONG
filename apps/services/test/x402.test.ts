@@ -144,8 +144,8 @@ describe("x402 exact / erc7710 seller-settled round trip", () => {
     const body = (await res.json()) as { quote: Record<string, string>; transferAndCallData: Hex };
     const quotesAddr = deps.ledger.addr("SignedQuoteSettlement");
 
-    // Warp past the quote expiry (120 s default + margin).
-    await deps.ledger.pub.request({ method: "evm_increaseTime" as never, params: [600] as never });
+    // Warp well past the quote expiry (the configured TTL plus a margin; warping by exactly the TTL lands on the boundary).
+    await deps.ledger.pub.request({ method: "evm_increaseTime" as never, params: [deps.config.quoteTtlSeconds + 120] as never });
     await deps.ledger.pub.request({ method: "evm_mine" as never, params: [] as never });
     await mintTo(deps.ledger, tUSD, account.address, amountIn);
     const convExec = singleExecution(tUSD, encodeFunctionData({ abi: TRANSFER_AND_CALL_ABI, functionName: "transferAndCall", args: [quotesAddr, amountIn, body.transferAndCallData] }));
