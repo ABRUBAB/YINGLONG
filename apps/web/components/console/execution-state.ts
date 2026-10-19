@@ -233,7 +233,8 @@ export function takeaway(kind: ResultKind, d: Decision | null, receipt: Receipt 
   const at = deciding ? `check ${deciding.n}, ${deciding.name}` : null;
   switch (kind) {
     case "verified": {
-      const lines = [receipt?.outcome === "pending" ? `Sent ${what}. Waiting for the block.` : `Paid ${what}.`];
+      // Without a receipt nothing was sent from this page (shared demo account): say "allowed", never "paid".
+      const lines = [!receipt ? `Allowed: ${what}. Inside every rule.` : receipt.outcome === "pending" ? `Sent ${what}. Waiting for the block.` : `Paid ${what}.`];
       lines.push(total !== null ? `All nine checks passed in ${formatMs(total)}.` : "All nine checks passed.");
       if (receipt?.outcome === "confirmed" && receipt.txHash) lines.push("The receipt is on chain.");
       return lines;
@@ -247,7 +248,10 @@ export function takeaway(kind: ResultKind, d: Decision | null, receipt: Receipt 
     case "reserved":
       return [at ? `Stopped at ${at}.` : "Reserved for you.", "Only you can do this on your own account.", "Nothing was signed."];
     case "approval":
-      return [deciding?.reason ?? "Inside your rules, but above your ask threshold.", "Your passkey must approve it before anything moves."];
+      return [
+        deciding?.reason && !/CoSignRequired/.test(deciding.reason) ? deciding.reason : `Inside your rules, but ${what} is above what Ying may pay alone.`,
+        "Your passkey must approve it before anything moves.",
+      ];
     case "question":
       return ["Ying did not guess.", d.question ?? d.explanation].slice(0, 3);
     case "answer":
