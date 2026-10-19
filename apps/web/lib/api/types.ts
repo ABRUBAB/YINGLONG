@@ -683,6 +683,11 @@ export const WireForecast = z.object({
   rail: z.string(),
   explanation: WireNarration,
   label: z.string(),
+  /** Advisory M5 percentile bands in whole units; absent when the model service is off. */
+  modelBands: z
+    .object({ model: z.string(), label: z.string(), pBreach14d: z.number().nullable().optional(), days: z.array(z.object({ day: z.number().int(), date: z.string(), q05: z.number(), q50: z.number(), q95: z.number() })) })
+    .nullable()
+    .optional(),
 });
 
 export const WireSuitability = z.object({

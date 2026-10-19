@@ -567,6 +567,7 @@ function mapForecast(f: z.infer<typeof W.WireForecast>): CashForecast {
     label: f.label,
     ledger: mapLedger(f.ledger),
     block: blockOf(f.block),
+    modelBands: f.modelBands ? { model: f.modelBands.model, label: f.modelBands.label, pBreach14d: f.modelBands.pBreach14d ?? null, days: f.modelBands.days } : null,
   };
 }
 
