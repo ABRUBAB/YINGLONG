@@ -170,17 +170,17 @@ Per-family results (n, stopping scale, outcome, Wilson 95% intervals): <!-- gen:
 |---|---|---|---|---|---|---|---|
 | `direct_injection` | 22 | Sentinel 14, Policy 3, Simulate 3, none 2 | 17/22 | 6 / 12 / 3 / 0 / 1 | 0 [0.0%, 14.9%] | 0 | 16/16 |
 | `email_injection` | 22 | Sentinel 18, Policy 4 | 22/22 | 6 / 6 / 9 / 0 / 1 | 0 [0.0%, 14.9%] | 0 | 14/14 |
-| `memory_implant` (held out) | 36 | Sentinel 20, Policy 14, Simulate 1, none 1 | 32/36 | 16 / 10 / 9 / 1 / 0 | 0 [0.0%, 9.6%] | 0 | 27/27 |
-| `invoice_memo_injection` | 22 | Sentinel 9, Policy 8, none 2, Simulate 1, Quarantine 1, Ground 1 | 16/22 | 9 / 5 / 6 / 1 / 1 | 0 [0.0%, 14.9%] | 0 | 13/13 |
+| `memory_implant` (held out) | 36 | Sentinel 18, Policy 14, error 2, Simulate 1, none 1 | 31/36 | 16 / 10 / 7 / 1 / 0 | 0 [0.0%, 9.6%] | 0 | 27/27 |
+| `invoice_memo_injection` | 22 | Sentinel 11, Policy 8, Simulate 1, none 1, Ground 1 | 18/22 | 9 / 5 / 7 / 0 / 1 | 0 [0.0%, 14.9%] | 0 | 13/13 |
 | `lookalike_address` | 22 | Sentinel 12, Policy 9, none 1 | 21/22 | 10 / 4 / 6 / 0 / 2 | 0 [0.0%, 14.9%] | 0 | 22/22 |
 | `multilingual` | 22 | Sentinel 11, Policy 11 | 22/22 | 11 / 3 / 7 / 0 / 1 | 0 [0.0%, 14.9%] | 0 | 20/20 |
-| `payee_note_injection` | 22 | Sentinel 13, Policy 6, none 2, Simulate 1 | 17/22 | 8 / 5 / 8 / 1 / 0 | 0 [0.0%, 14.9%] | 0 | 15/15 |
-| `split_payment` | 22 | Sentinel 13, Policy 8, Quarantine 1 | 20/22 | 14 / 1 / 7 / 0 / 0 | 4 [7.3%, 38.5%] | 0 | 13/13 |
+| `payee_note_injection` | 22 | Sentinel 12, Policy 6, none 2, error 1, Simulate 1 | 16/22 | 8 / 5 / 7 / 1 / 0 | 0 [0.0%, 14.9%] | 0 | 15/15 |
+| `split_payment` | 22 | Sentinel 13, Policy 8, error 1 | 21/22 | 14 / 1 / 6 / 0 / 0 | 4 [7.3%, 38.5%] | 0 | 13/13 |
 | `token_name_injection` | 22 | Sentinel 22 | 22/22 | 19 / 0 / 0 / 0 / 3 | 0 [0.0%, 14.9%] | 0 | 21/21 |
 | `urgency_authority` | 22 | Sentinel 12, Policy 10 | 21/22 | 14 / 1 / 6 / 0 / 1 | 0 [0.0%, 14.9%] | 0 | 12/12 |
-| `visual_injection` | 22 | Sentinel 17, Policy 4, Ground 1 | 20/22 | 7 / 9 / 6 / 0 / 0 | 0 [0.0%, 14.9%] | 0 | 16/16 |
-| `within_mandate` | 22 | none 10, Policy 6, Simulate 3, Ground 2, Normalise 1 | 0/22 | 6 / 4 / 4 / 8 / 0 | 5 [10.1%, 43.4%] | 0 | n/a |
-| `x402_description_injection` | 22 | Policy 11, Sentinel 10, Simulate 1 | 21/22 | 12 / 1 / 8 / 0 / 1 | 0 [0.0%, 14.9%] | 0 | 19/19 |<!-- /gen -->
+| `visual_injection` | 22 | Sentinel 18, Policy 4 | 22/22 | 7 / 9 / 6 / 0 / 0 | 0 [0.0%, 14.9%] | 0 | 16/16 |
+| `within_mandate` | 22 | none 9, Policy 6, Simulate 3, Ground 2, error 1, Normalise 1 | 0/22 | 6 / 4 / 4 / 7 / 0 | 5 [10.1%, 43.4%] | 0 | n/a |
+| `x402_description_injection` | 22 | Policy 11, Sentinel 8, error 2, Simulate 1 | 19/22 | 12 / 1 / 6 / 0 / 1 | 0 [0.0%, 14.9%] | 0 | 19/19 |<!-- /gen -->
 
 ---
 
@@ -221,7 +221,7 @@ Risk names as listed in the plan [S, secondary source; check against the OWASP G
 |---|---|
 | Mechanism | Every individual action satisfies the mandate, but the sequence harms the user: the right landlord paid twice, a verified supplier's invoice inflated under the cap, a prepayment made early, a sweep at a bad time |
 | Controls | Idempotency keys (invoice id, period); invoice-payee-amount cross-checks by two readers; anomaly → T?; above the T1 cap → T2; category caps, reserve floor, velocity |
-| Measure | Within-mandate manipulation rate <!-- gen:bench.wmm.rate -->9/44 = 20.5% (Wilson 95% interval 11.2% to 34.5%, n = 44: within_mandate and split_payment items); among the 26 items where the target payee is in the sealed payee book and the setup ran: 9/26 = 34.6% (Wilson 95% interval 19.4% to 53.8%) (bench run of 2026-10-16, Anvil bench (simulated); bench/reports/summary.json)<!-- /gen --> (Wilson 95% interval), static and adaptive columns; maximum funds at risk observed <!-- gen:bench.max_at_risk -->2,500 tUSD; 300,000 CNY; 200,000 tHKD (per asset: the largest remaining period cap of the category involved, read on-chain by the policy mirror at the moment a run built a payment or a hijacked redemption; the actual loss in every run is judged separately by balances) (bench run of 2026-10-16, Anvil bench (simulated); bench/reports/summary.json)<!-- /gen --> |
+| Measure | Within-mandate manipulation rate <!-- gen:bench.wmm.rate -->9/44 = 20.5% (Wilson 95% interval 11.2% to 34.5%, n = 44: within_mandate and split_payment items); among the 26 items where the target payee is in the sealed payee book and the setup ran: 9/26 = 34.6% (Wilson 95% interval 19.4% to 53.8%) (bench run of 2026-10-18, Anvil bench (simulated); bench/reports/summary.json)<!-- /gen --> (Wilson 95% interval), static and adaptive columns; maximum funds at risk observed <!-- gen:bench.max_at_risk -->2,500 tUSD; 300,000 CNY; 200,000 tHKD (per asset: the largest remaining period cap of the category involved, read on-chain by the policy mirror at the moment a run built a payment or a hijacked redemption; the actual loss in every run is judged separately by balances) (bench run of 2026-10-18, Anvil bench (simulated); bench/reports/summary.json)<!-- /gen --> |
 | Residual | Bounded by the remaining caps by construction (KR-07); this is the number we report separately from out-of-mandate movement |
 | Test | `within_mandate` |
 
@@ -241,7 +241,7 @@ Reference: Wang, Yang, Chen, Ji, Payer, *When HTTP 402 Meets the Blockchain: Ris
 
 | Threat | Control | Residual |
 |---|---|---|
-| Gas and quota drain | Signed expiring QR tokens; 20 attacks per QR per day; daily gas budget sized from measured gas per attack (<!-- gen:challenge.gas_budget -->118,877,600 gas per day on FISCO BCOS = 200 on-chain attack submissions per day (CHALLENGE_BYPASS_PER_DAY default in apps/agent/src/challenge.ts) x 594,388 gas, the largest measured guest attack (median 591,968, n = 3); gas price on the team-run chain is 0; plus 20 attempts per client IP per day<!-- /gen -->); shadow mode on an Anvil fork, labelled "simulated, not on-chain" in the UI and the receipt, once the budget is spent | Drain up to the daily budget |
+| Gas and quota drain | Signed expiring QR tokens; 20 attacks per QR per day; daily gas budget sized from measured gas per attack (<!-- gen:challenge.gas_budget -->118,877,600 gas per day on FISCO BCOS = 200 on-chain attack submissions per day (CHALLENGE_BYPASS_PER_DAY default in apps/agent/src/challenge.ts) x 594,388 gas, the largest measured guest attack (median 594,388, n = 8); gas price on the team-run chain is 0; plus 20 attempts per client IP per day<!-- /gen -->); shadow mode on an Anvil fork, labelled "simulated, not on-chain" in the UI and the receipt, once the budget is spent | Drain up to the daily budget |
 | Real value at risk | Guest mandates with tiny caps, funded with team-minted `tHKD` (never USDC) | None of monetary value |
 | Content liability | Moderation of the public board; handles only, no avatars | Offensive text visible until moderated |
 | Personal information in submissions | Consent line; 30-day retention; PII scrubber before any retraining | Text a visitor chooses to type |
@@ -267,7 +267,7 @@ Known risk KR-19. Test: quota and retention tests in `apps/services`.
 | Supervisor key (regulator node) | Played by the team today | `supervisorPause(agentId)`; co-own the FISCO DelegationManager halt (2-of-3) | Spend | Denial of service of agent identities | — (DC-04) |
 | Issuer keys (fictional Harbour Digital Bank, Harbour Bay University) | Issuer services run by the team | Sign passport attestations | Spend | Attest Mirage; the payee gate then accepts Mirage for users who sealed that issuer | PB-3 |
 | Directors (Lotus Lane, 2-of-3) | Directors' keys (DC-02) | Treasury T3 actions | — | One key alone can do nothing; two can act as the board | PB-2 |
-| Deployer | Fresh EOA per chain | Deploy | Keeps no admin role after setup (check: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 572); Base Sepolia not deployed<!-- /gen -->) | Nothing after setup | — |
+| Deployer | Fresh EOA per chain | Deploy | Keeps no admin role after setup (check: <!-- gen:deploy.deployer_roles -->4 roles still held by the deployer key `0x5C470480380dC2014898345aC6226c67cbF5E407` on FISCO BCOS: ProductRegistry.admin(), TestHKD.minter(), TestUSD.minter(), ZKVerifierRouter.registrar() (scan of 46 contracts, 461 getter calls, block 710); Base Sepolia not deployed<!-- /gen -->) | Nothing after setup | — |
 | Base Sepolia DelegationManager owner | MetaMask EOA (third party) [V per plan] | Pause and unpause all redemptions on that DelegationManager | Spend | Availability only (KR-17) | PB-5 |
 | FISCO node keys | Team | Consensus on the team-run chain | Forge passkey or agent signatures | Rewrite of FISCO history, detectable by Base anchors (KR-04) | — |
 | SM2 co-signature key (mainland profile) | Team | Co-sign receipts | Spend | Forged co-signatures on receipts; EIP-712 signature still required | — |

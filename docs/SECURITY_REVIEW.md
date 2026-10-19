@@ -6,15 +6,15 @@
 1. This is a self-review in audit format by the people who wrote the code; it is not independent and it is not an audit.
 2. Scope: YINGLONG's own contracts, the agent signer and signing-domain guard, the policy mirror, the mandate compiler and both verifiers; the MetaMask Delegation Framework is out of scope (its own audit reports ship with it).
 3. Method: manual review against a fixed checklist, static analysis, fuzzing and invariant campaigns, bounded symbolic execution, differential testing of the policy mirror against the contracts, and a threat-model walkthrough.
-4. Findings by severity: <!-- gen:review.count.critical -->0<!-- /gen --> critical, <!-- gen:review.count.high -->0<!-- /gen --> high, <!-- gen:review.count.medium -->2<!-- /gen --> medium, <!-- gen:review.count.low -->4<!-- /gen --> low, <!-- gen:review.count.info -->2<!-- /gen --> informational; <!-- gen:review.fixed -->3 (YR-01 in `4d402b6`, YR-02 in `4d402b6`, YR-03 in `30ee250`)<!-- /gen --> fixed, <!-- gen:review.open -->2 (YR-04, YR-07)<!-- /gen --> open, <!-- gen:review.wontfix -->3<!-- /gen --> accepted.
+4. Findings by severity: <!-- gen:review.count.critical -->0<!-- /gen --> critical, <!-- gen:review.count.high -->0<!-- /gen --> high, <!-- gen:review.count.medium -->2<!-- /gen --> medium, <!-- gen:review.count.low -->4<!-- /gen --> low, <!-- gen:review.count.info -->2<!-- /gen --> informational; <!-- gen:review.fixed -->5 (YR-01 in `4d402b6`, YR-02 in `4d402b6`, YR-03 in `30ee250`, YR-04 in `a706b92`, YR-07 in `a706b92`)<!-- /gen --> fixed, <!-- gen:review.open -->0<!-- /gen --> open, <!-- gen:review.wontfix -->3<!-- /gen --> accepted.
 5. Section 7 lists the issues we chose not to fix and why; known risks KR-01 to KR-19 are in `docs/SECURITY_SELF_ASSESSMENT.md`.
 
 
 | Field | Value |
 |---|---|
-| Commit reviewed | <!-- gen:review.commit -->8ebf4fd<!-- /gen --> |
+| Commit reviewed | <!-- gen:review.commit -->a706b92<!-- /gen --> |
 | Review completed | <!-- gen:review.date -->2026-10-17<!-- /gen --> |
-| Release | <!-- gen:meta.release_tag -->8ebf4fd<!-- /gen --> |
+| Release | <!-- gen:meta.release_tag -->7ff0e17<!-- /gen --> |
 | Reviewers | YINGLONG team members (roles R2 contracts, R4 AI security; read-only reviewer sessions at the planned review gate) |
 | Tool versions used | <!-- gen:review.tools.versions -->forge 1.8.5; slither 0.11.6; aderyn 0.6.8; halmos 0.3.3<!-- /gen --> |
 
@@ -93,10 +93,10 @@
 | YR-01 | Starting a sign-up with an existing account's public key reset that account | medium | apps/agent visitors (registerVisitor) | fixed | `4d402b6` |
 | YR-02 | Login challenge did not bind the issue time and chain id it handed out | low | apps/agent visitors (loginChallenge, loginVisitor) | fixed | `4d402b6` |
 | YR-03 | A co-sign approval was created for a payment the ledger refuses for another reason | low | apps/agent pipeline (ask) | fixed | `30ee250` |
-| YR-04 | The web signing guard allows a user operation without decoding its calls | medium | apps/web lib/signing-guard.ts | open | - |
+| YR-04 | The web signing guard allows a user operation without decoding its calls | medium | apps/web lib/signing-guard.ts | fixed | `a706b92` |
 | YR-05 | MandateRegistry.canExecute reports no live mandate after the newer of two live mandates is revoked | low | contracts MandateRegistry | wontfix | - |
 | YR-06 | ProductRegistry.allProducts lists a product twice after delist and relist | low | contracts ProductRegistry | wontfix | - |
-| YR-07 | Logging in on a second device ends the first device's session | info | apps/agent visitors (loginVisitor) | open | - |
+| YR-07 | Logging in on a second device ends the first device's session | info | apps/agent visitors (loginVisitor) | fixed | `a706b92` |
 | YR-08 | Login challenges and sign-ups in progress are kept in memory | info | apps/agent visitors | wontfix | - |
 <!-- /gen -->
 
@@ -126,12 +126,12 @@ Columns: ID, title, severity, component, status (fixed, acknowledged, open), fix
 - Recommendation: Create an approval only when the simulation succeeds or fails solely with CoSignRequired.
 - Resolution: The approval is created only for an approvable simulation.
 
-**YR-04. The web signing guard allows a user operation without decoding its calls** (medium, open)
+**YR-04. The web signing guard allows a user operation without decoding its calls** (medium, fixed)
 
 - Description: PackedUserOperation is on the allowlist for seal, resume and revoke, but the guard does not decode the inner calls against an allowlist, and an unknown message kind from the network throws instead of returning a typed refusal.
 - Impact: The guard relies on the page's own decoding of what the user is shown; a compromised service could ask the passkey to sign a user operation with other calls. The account's enforcers still bound what an agent can do, and the user sees the decoded operation before signing.
 - Recommendation: Decode the user operation's execution calls and accept only the publish, delegation, pause, resume and revoke calls to known contracts; return a typed refusal for unknown kinds.
-- Resolution: Planned before submission (owner: front end with back end).
+- Resolution: The guard decodes the user operation's execute call: it must send no value and may only call the account functions its kind needs (seal: publish, supersede, revoke, setPayees, setGuardian; revoke: revoke, disableDelegation; resume: untrip). Unknown kinds return KindMismatch. Unit tests cover a hidden transfer, a value-sending call and an unknown kind.
 
 **YR-05. MandateRegistry.canExecute reports no live mandate after the newer of two live mandates is revoked** (low, wontfix)
 
@@ -147,12 +147,12 @@ Columns: ID, title, severity, component, status (fixed, acknowledged, open), fix
 - Recommendation: Append only on the first listing, or de-duplicate in the view.
 - Resolution: Accepted for this release.
 
-**YR-07. Logging in on a second device ends the first device's session** (info, open)
+**YR-07. Logging in on a second device ends the first device's session** (info, fixed)
 
 - Description: Each login issues a new session token and stores only its hash, replacing the previous one.
 - Impact: Usability: the first device is logged out without notice. No security impact.
 - Recommendation: Keep a small set of session hashes per visitor, or tell the user that other devices were signed out.
-- Resolution: Open.
+- Resolution: Log in again keeps the hashes of up to four earlier session tokens, so earlier devices stay logged in; visitor-key-e2e.mts pays with the first device's token after a second login.
 
 **YR-08. Login challenges and sign-ups in progress are kept in memory** (info, wontfix)
 
@@ -193,7 +193,7 @@ Found during this review and accepted: <!-- gen:review.wontfix.table -->
 | Area | Result |
 |---|---|
 | Static analysis | Slither high open: <!-- gen:static.slither.high -->0 (raw high 0; Slither 0.11.6, 102 detectors over contracts/src)<!-- /gen -->; medium open: <!-- gen:static.slither.medium -->0 (raw medium 14, of which 14 triaged as false positives with reasons in contracts/reports/slither.json)<!-- /gen -->; Aderyn high open: <!-- gen:static.aderyn.high -->0 (Aderyn aderyn 0.6.8 (built from the v0.6.8 source release with the local Windows portability patch reports/aderyn-windows.patch))<!-- /gen --> |
-| Tests | <!-- gen:tests.total -->795<!-- /gen --> passing, <!-- gen:tests.failed -->0<!-- /gen --> failing |
+| Tests | <!-- gen:tests.total -->830<!-- /gen --> passing, <!-- gen:tests.failed -->0<!-- /gen --> failing |
 | Contract coverage | <!-- gen:coverage.contracts -->lines 100% (856/856), statements 100% (1048/1048), branches 99.49% (197/198), functions 100% (183/183) of contracts/src (forge 1.8.5 coverage)<!-- /gen --> |
 | Invariants | <!-- gen:invariants.table -->Foundry campaign 128 runs x 64 calls; symbolic results from contracts/reports/symbolic.json:
 

@@ -2,7 +2,7 @@
  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
  "bomFormat": "CycloneDX",
  "specVersion": "1.6",
- "serialNumber": "urn:uuid:4655ae4d-b6be-5bb0-8451-5d0b5d0a2c77",
+ "serialNumber": "urn:uuid:3cced2e2-c8ef-5aad-8fc5-b2b448a09003",
  "version": 1,
  "metadata": {
   "lifecycles": [
@@ -28761,22 +28761,11 @@
   },
   {
    "ref": "pkg:npm/%40yinglong/mandate@0.1.0",
-   "dependsOn": [
-    "pkg:npm/%40types/node@24.19.2",
-    "pkg:npm/%40yinglong/sdk@0.1.0",
-    "pkg:npm/typescript@5.9.3",
-    "pkg:npm/viem@2.57.7",
-    "pkg:npm/vitest@5.0.5",
-    "pkg:npm/zod@4.6.7"
-   ]
+   "dependsOn": []
   },
   {
    "ref": "pkg:npm/%40yinglong/provenance@0.1.0",
-   "dependsOn": [
-    "pkg:npm/%40types/node@24.19.2",
-    "pkg:npm/typescript@5.9.3",
-    "pkg:npm/vitest@5.0.5"
-   ]
+   "dependsOn": []
   },
   {
    "ref": "pkg:npm/%40yinglong/sdk@0.1.0",
@@ -28789,7 +28778,15 @@
   },
   {
    "ref": "pkg:npm/%40yinglong/ui@0.1.0",
-   "dependsOn": []
+   "dependsOn": [
+    "pkg:npm/%40noble/hashes@2.4.0",
+    "pkg:npm/%40types/node@24.19.2",
+    "pkg:npm/%40types/react@19.3.0",
+    "pkg:npm/react@19.3.1",
+    "pkg:npm/tsx@4.23.15",
+    "pkg:npm/typescript@5.9.3",
+    "pkg:npm/vitest@5.0.5"
+   ]
   },
   {
    "ref": "pkg:npm/abitype@1.2.3",

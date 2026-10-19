@@ -1,11 +1,11 @@
 {
   "schema": "yinglong.site-data/1",
-  "generatedAt": "2026-10-18T05:59:36.009Z",
+  "generatedAt": "2026-10-19T11:37:04.705Z",
   "timeline": {
-    "head": "bdd2a29",
-    "count": 108,
+    "head": "7ff0e17",
+    "count": 120,
     "first": "2026-10-16T02:39:27+06:00",
-    "last": "2026-10-18T11:56:35+06:00",
+    "last": "2026-10-19T17:31:22+06:00",
     "commits": [
       {
         "hash": "cc29b87",
@@ -762,6 +762,90 @@
         "subject": "Merge origin/shabab: site FAQ chatbot, footer redesign",
         "track": "infra",
         "milestone": false
+      },
+      {
+        "hash": "02bfcd7",
+        "at": "2026-10-18T12:06:52+06:00",
+        "subject": "Refresh generated site data (commit timeline up to the shabab merge)",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "4269dbd",
+        "at": "2026-10-18T12:40:31+06:00",
+        "subject": "Add Kokonut glitch text (Challenge page) and pull cord (footer day and night switch), fitted to the theme tokens",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "efe3695",
+        "at": "2026-10-18T12:48:56+06:00",
+        "subject": "Video buttons are always shown; until a file is uploaded its window says the video will be uploaded soon",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "3328451",
+        "at": "2026-10-18T13:20:26+06:00",
+        "subject": "Home is static (no second loading screen), scroll reveals are CSS so sections are visible at once; rename the 3-minute demo to 3-minute walkthrough; poster stage moves to /poster",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "da04d17",
+        "at": "2026-10-18T13:27:57+06:00",
+        "subject": "About: team lead is also AI and ML, new lead portrait",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "2032775",
+        "at": "2026-10-18T15:30:41+06:00",
+        "subject": "Benchmark rerun on 18 Oct under the original conditions (no rail operator): 0 of 300 out of mandate, B3 control 90/105 unchanged; live payroll beat recorded",
+        "track": "agent",
+        "milestone": false
+      },
+      {
+        "hash": "850e280",
+        "at": "2026-10-18T16:30:33+06:00",
+        "subject": "Put the behaviour model and cash forecaster on the live path; 5-minute film wording; lead portrait with background removed; README models section",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "5e05366",
+        "at": "2026-10-18T16:49:08+06:00",
+        "subject": "README screenshots refreshed from the deployed site (new lead portrait)",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "6d1f17b",
+        "at": "2026-10-18T17:58:56+06:00",
+        "subject": "Technical documentation split into three documents: architecture, core algorithms, security design; technical reference and README updated for the live models",
+        "track": "web",
+        "milestone": false
+      },
+      {
+        "hash": "4d9528b",
+        "at": "2026-10-19T17:00:54+06:00",
+        "subject": "Passport registration deadline follows block time, not only the wall clock (a local chain ahead of real time made the signature look expired)",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "e193dd9",
+        "at": "2026-10-19T17:16:04+06:00",
+        "subject": "Console: an allowed request on the shared demo account reads \"Allowed\", not \"Paid\"; the approval headline is plain words instead of the raw revert",
+        "track": "infra",
+        "milestone": false
+      },
+      {
+        "hash": "7ff0e17",
+        "at": "2026-10-19T17:31:22+06:00",
+        "subject": "x402 test: warp past the configured quote lifetime plus a margin instead of exactly to its boundary",
+        "track": "agent",
+        "milestone": false
       }
     ]
   },
@@ -1338,7 +1422,7 @@
     {
       "n": 8,
       "name": "Anomaly",
-      "what": "Rules over the receipt log: an amount above three times the largest past confirmed payment to the same payee (with at least two past payments) is flagged, and so is the first sweep into a product (\"you decide once, later sweeps can run alone\")",
+      "what": "Rules over the receipt log: an amount above three times the largest past confirmed payment to the same payee (with at least two past payments) is flagged, and so is the first sweep into a product (\"you decide once, later sweeps can run alone\"). Then the behaviour model M3: 23 features computed from the receipt log are sent to SENTINEL_URL/anomaly (3 s timeout)",
       "refuses": "No, escalates"
     },
     {
