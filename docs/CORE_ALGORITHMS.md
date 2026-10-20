@@ -24,6 +24,8 @@ This document describes the algorithms the system relies on: how rules become co
 
 ## 2. From a request to a tier: the decision algorithm
 
+![Life of a request: set up once, nine ordered checks, permission outcomes T0 to T4 or ask, on-chain enforcement and a receipt](img/workflow.png)
+
 A request passes nine ordered checks (`apps/agent/src/pipeline.ts`), each marked passed, stopped, escalated or skipped. The tier it ends with is computed by this procedure:
 
 ```

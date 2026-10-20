@@ -117,28 +117,9 @@ A dark and ash base with one lime-green accent, a separate ultramarine light the
 
 ## How it works
 
-```mermaid
-flowchart LR
-  subgraph Principal
-    U[User or directors]
-  end
-  subgraph Mandate
-    SEAL[Mandate Studio + compiler]
-  end
-  subgraph Agent
-    REQ[Request, invoice, email, quote] --> SCALES[Nine scales: normalise, sentinel, quarantine, ground, policy, counterparty, simulate, anomaly, chain]
-    SCALES -->|act / ask you / refuse| SIGNER[Isolated signer]
-  end
-  subgraph Ledgers
-    BASE[(Public ledger)]
-    FISCO[(FISCO BCOS consortium ledger, team-run, + regulator node)]
-  end
-  U -->|say, see, seal| SEAL
-  SEAL -->|ERC-7710 delegation, caveats = rules| BASE
-  SEAL -->|same enforcer bytecode| FISCO
-  SIGNER --> BASE & FISCO
-  BASE & FISCO --> VEIN[Receipts, Merkle anchors, supervisor view]
-```
+![System architecture: five layers from the browser to the two ledgers, with numbered interfaces](docs/img/architecture.png)
+
+![Life of a request: set up once, nine ordered checks, permission outcomes T0 to T4 or ask, on-chain enforcement and a receipt](docs/img/workflow.png)
 
 ### The five pillars
 

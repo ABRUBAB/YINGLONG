@@ -24,16 +24,7 @@ All value in the system is **test units** (`tHKD`, `tUSD`) or coin-free instruct
 
 ## 3. Layers of the system
 
-```mermaid
-flowchart LR
-  U["Owner: web app or API"] --> A["Agent: nine checks"]
-  A -. "advice only" .-> M["Models M1, M3, M5"]
-  A --> S["Signer: guard, re-simulation, agent key"]
-  S --> L[("FISCO BCOS and Base Sepolia: caveat enforcers decide")]
-  O["Owner passkey or 2-of-3 directors"] --> L
-  L --> E["Receipts, Merkle anchors, indexer"]
-  V["Verifier: yinglong verify"] --> L
-```
+![System architecture: five layers from the browser to the two ledgers; dashed boxes are trust zones, numbered lines are interfaces I1 to I12](img/architecture.png)
 
 | Layer | What is in it |
 |---|---|
